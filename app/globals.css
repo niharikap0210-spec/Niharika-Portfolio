@@ -1,0 +1,64 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&display=swap');
+
+:root {
+  --bg: #F9F8F7;
+  --ink-900: #111110;
+  --ink-700: #3A3937;
+  --ink-500: #737270;
+  --ink-300: #B0AEAC;
+  --ink-100: #E5E4E0;
+  --violet: #7C3AED;
+  --violet-light: #8B5CF6;
+  --violet-dark: #5B21B6;
+  --violet-muted: #EDE9FE;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--ink-900);
+  font-family: 'Inter', system-ui, sans-serif;
+  line-height: 1.7;
+}
+
+::selection {
+  background-color: rgba(124, 58, 237, 0.15);
+  color: var(--ink-900);
+}
+
+/* Focus visible styles */
+:focus-visible {
+  outline: 2px solid var(--violet);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--ink-300);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--ink-500);
+}
