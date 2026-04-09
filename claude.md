@@ -56,6 +56,17 @@
 - **Spacing:** Use intentional, consistent spacing tokens — not random Tailwind steps.
 - **Depth:** Surfaces should have a layering system (base → elevated → floating), not all sit at the same z-plane.
 
+## Icons
+- **All icons must come from [Phosphor Icons](https://phosphoricons.com)** — no other icon libraries (Heroicons, Lucide, react-icons, etc.).
+- Install via: `npm install @phosphor-icons/react`
+- Import individually: `import { ArrowRight, GithubLogo } from "@phosphor-icons/react"`
+- **Default weight: `regular`** — use this unless there is a strong visual reason to deviate.
+- **Accent/emphasis icons** (e.g., in CTAs, active nav items): use `bold`.
+- **Never mix weights within the same visual group** (e.g., a nav bar, a card's action row, a list of links must all use the same weight).
+- **Icon size:** default `size={20}` for inline/body use, `size={24}` for standalone/prominent icons. Never size with CSS width/height — always use the `size` prop.
+- **Color:** always inherit from text color via `color="currentColor"` (the default) — never hardcode a color on an icon.
+- **No decorative icon inconsistency:** if one item in a repeated pattern (list, grid, nav) has an icon, all items in that pattern must have an icon.
+
 ## Hard Rules
 - Do not add sections, features, or content not in the reference.
 - Do not "improve" a reference design — match it. Unless mentioned otherwise.
@@ -63,3 +74,4 @@
 - Do not use default Tailwind blue/indigo as primary color.
 - Do not use Next.js or any SSR framework unless explicitly instructed.
 - Do not install unnecessary dependencies. Keep the bundle lean.
+- Do not use any icon library other than `@phosphor-icons/react`.
