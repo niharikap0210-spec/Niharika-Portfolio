@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useMotionValue, useMotionTemplate, useAnimationFrame, type MotionValue } from "framer-motion";
 import { useRef, useCallback, useState, useEffect } from "react";
 import HandDrawnSketch from "./HandDrawnSketch";
 import DrawingSheetBorder from "./DrawingSheetBorder";
@@ -161,6 +161,49 @@ function EdgeAnnotations() {
   );
 }
 
+/* ─── Animated SVG Grid Pattern ─────────────────────────────────── */
+function GridSVGPattern({ id, offsetX, offsetY }: {
+  id: string;
+  offsetX: MotionValue<number>;
+  offsetY: MotionValue<number>;
+}) {
+  const patternRef = useRef<SVGPatternElement>(null);
+
+  useEffect(() => {
+    const unsubX = offsetX.on("change", (v) => {
+      patternRef.current?.setAttribute("x", String(v));
+    });
+    const unsubY = offsetY.on("change", (v) => {
+      patternRef.current?.setAttribute("y", String(v));
+    });
+    return () => { unsubX(); unsubY(); };
+  }, [offsetX, offsetY]);
+
+  return (
+    <svg width="100%" height="100%" aria-hidden>
+      <defs>
+        <pattern
+          ref={patternRef}
+          id={id}
+          width="20"
+          height="20"
+          patternUnits="userSpaceOnUse"
+          x="0"
+          y="0"
+        >
+          <path
+            d="M 20 0 L 0 0 0 20"
+            fill="none"
+            stroke="rgba(180,180,180,1)"
+            strokeWidth="0.5"
+          />
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill={`url(#${id})`} />
+    </svg>
+  );
+}
+
 /* ─── Main HeroSection ───────────────────────────────────────────── */
 
 // Line 1 words: timing starts at t=0.7s
@@ -205,12 +248,27 @@ export default function HeroSection() {
     return () => ids.forEach(clearTimeout);
   }, []);
 
+  /* ── Infinite grid interaction ── */
+  const mouseX = useMotionValue(-9999);
+  const mouseY = useMotionValue(-9999);
+  const gridOffsetX = useMotionValue(0);
+  const gridOffsetY = useMotionValue(0);
+  const maskImage = useMotionTemplate`radial-gradient(280px circle at ${mouseX}px ${mouseY}px, black, transparent)`;
+
+  useAnimationFrame(() => {
+    gridOffsetX.set((gridOffsetX.get() + 0.25) % 20);
+    gridOffsetY.set((gridOffsetY.get() + 0.25) % 20);
+  });
+
   /* ── Interactive spotlight ── */
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     if (!containerRef.current || !spotlightRef.current || !parallaxRef.current) return;
     const rect = containerRef.current.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
+
+    mouseX.set(x);
+    mouseY.set(y);
 
     // Spotlight
     spotlightRef.current.style.background = `radial-gradient(circle 200px at ${x}px ${y}px, rgba(255,255,255,0.42), transparent)`;
@@ -221,12 +279,14 @@ export default function HeroSection() {
     const dx = ((x - cx) / rect.width) * 6;
     const dy = ((y - cy) / rect.height) * 4;
     parallaxRef.current.style.transform = `translate(${-dx}px, ${-dy}px)`;
-  }, []);
+  }, [mouseX, mouseY]);
 
   const handleMouseLeave = useCallback(() => {
+    mouseX.set(-9999);
+    mouseY.set(-9999);
     if (spotlightRef.current) spotlightRef.current.style.background = "transparent";
     if (parallaxRef.current) parallaxRef.current.style.transform = "translate(0, 0)";
-  }, []);
+  }, [mouseX, mouseY]);
 
   return (
     <DrawingSheetBorder
@@ -259,6 +319,36 @@ export default function HeroSection() {
             transitionTimingFunction: "ease-out",
           }}
         />
+
+        {/* SVG grid base layer — auto-scrolls continuously at low opacity */}
+        <div
+          aria-hidden
+          style={{
+            position: "absolute",
+            inset: 0,
+            pointerEvents: "none",
+            zIndex: 0,
+            opacity: 0.09,
+          }}
+        >
+          <GridSVGPattern id="hero-grid-base" offsetX={gridOffsetX} offsetY={gridOffsetY} />
+        </div>
+
+        {/* SVG grid cursor-reveal layer — follows the mouse */}
+        <motion.div
+          aria-hidden
+          style={{
+            position: "absolute",
+            inset: 0,
+            pointerEvents: "none",
+            zIndex: 0,
+            opacity: 0.55,
+            maskImage,
+            WebkitMaskImage: maskImage,
+          }}
+        >
+          <GridSVGPattern id="hero-grid-reveal" offsetX={gridOffsetX} offsetY={gridOffsetY} />
+        </motion.div>
 
         {/* Parallax layer for decorative elements */}
         <div
