@@ -1,40 +1,70 @@
-import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useRef, useCallback, useState, useEffect } from "react";
+import HandDrawnSketch from "./HandDrawnSketch";
+import DrawingSheetBorder from "./DrawingSheetBorder";
 
-const LINE1 = "Hi, I'm Niharika.";
-const LINE2 = "I design products.";
-const SUBTEXT =
-  "Product Designer with a background in architecture and HCI. I transform complex problems into intuitive, research-driven experiences.";
+/* ─── Shared mono style ─────────────────────────────────────────── */
+const mono: React.CSSProperties = {
+  fontFamily: "'Space Mono', monospace",
+  textTransform: "uppercase",
+  letterSpacing: "0.12em",
+};
 
-// ── Blinking text cursor ───────────────────────────────────────────────────────
-function TypeCursor({ blinking }: { blinking: boolean }) {
+/* ─── Word Reveal (wipe left→right) ────────────────────────────── */
+function RevealWord({
+  text,
+  delay,
+  italic = false,
+}: {
+  text: string;
+  delay: number;
+  italic?: boolean;
+}) {
   return (
-    <motion.span
-      animate={blinking ? { opacity: [1, 0, 1, 0, 1, 0, 0] } : { opacity: 1 }}
-      transition={
-        blinking
-          ? {
-              duration: 1.4,
-              times: [0, 0.14, 0.28, 0.43, 0.57, 0.71, 1],
-              ease: "linear",
-            }
-          : {}
-      }
+    <span
       style={{
         display: "inline-block",
-        width: "0.1em",
-        minWidth: 3,
-        height: "0.82em",
-        backgroundColor: "var(--ink-900)",
-        marginLeft: "0.12em",
-        verticalAlign: "middle",
-        borderRadius: 1,
+        overflow: "hidden",
+        verticalAlign: "bottom",
+        paddingBottom: "0.06em", // prevents clipping descenders
+      }}
+    >
+      <motion.span
+        style={{ display: "inline-block", fontStyle: italic ? "italic" : "inherit" }}
+        initial={{ x: "-110%" }}
+        animate={{ x: 0 }}
+        transition={{ delay, duration: 0.24, ease: [0.16, 1, 0.3, 1] }}
+      >
+        {text}
+      </motion.span>
+    </span>
+  );
+}
+
+/* ─── Construction Guide Line (SVG) ─────────────────────────────── */
+function GuideLineH({ y, delay }: { y: string | number; delay: number }) {
+  return (
+    <motion.div
+      initial={{ scaleX: 0, opacity: 0 }}
+      animate={{ scaleX: 1, opacity: 1 }}
+      exit={{ opacity: 0, transition: { duration: 0.3 } }}
+      transition={{ delay, duration: 0.22, ease: "easeOut" }}
+      style={{
+        position: "absolute",
+        left: 0,
+        right: 0,
+        top: y,
+        height: "0.5px",
+        backgroundColor: "var(--construction)",
+        transformOrigin: "left",
+        pointerEvents: "none",
+        zIndex: 0,
       }}
     />
   );
 }
 
-// ── Figma-style selection box ──────────────────────────────────────────────────
+/* ─── Figma Selection Box ────────────────────────────────────────── */
 function SelectionBox({ visible }: { visible: boolean }) {
   const handles: React.CSSProperties[] = [
     { top: -4, left: -4 },
@@ -51,17 +81,17 @@ function SelectionBox({ visible }: { visible: boolean }) {
     <AnimatePresence>
       {visible && (
         <motion.div
-          initial={{ opacity: 0, scale: 0.97 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, transition: { duration: 0.35 } }}
-          transition={{ duration: 0.22, ease: "easeOut" }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0, transition: { duration: 0.45 } }}
+          transition={{ duration: 0.15 }}
           style={{
             position: "absolute",
-            inset: "-10px -12px",
-            border: "1.5px solid var(--violet)",
+            inset: "-8px -10px",
+            border: "1.5px solid var(--selection-blue)",
             borderRadius: 2,
             pointerEvents: "none",
-            zIndex: 2,
+            zIndex: 10,
           }}
         >
           {handles.map((pos, i) => (
@@ -71,8 +101,8 @@ function SelectionBox({ visible }: { visible: boolean }) {
                 position: "absolute",
                 width: 6,
                 height: 6,
-                backgroundColor: "var(--surface)",
-                border: "1.5px solid var(--violet)",
+                backgroundColor: "var(--bg-elevated)",
+                border: "1.5px solid var(--selection-blue)",
                 borderRadius: 1,
                 ...pos,
               }}
@@ -84,470 +114,372 @@ function SelectionBox({ visible }: { visible: boolean }) {
   );
 }
 
-// ── Fake collaborative cursor ──────────────────────────────────────────────────
-interface FakeCursorProps {
-  name: string;
-  color: string;
-  left: string;
-  top: string;
-  driftX: number[];
-  driftY: number[];
-  delay: number;
-  duration: number;
-}
-
-function FakeCursor({ name, color, left, top, driftX, driftY, delay, duration }: FakeCursorProps) {
+/* ─── Edge Annotations ───────────────────────────────────────────── */
+function EdgeAnnotations() {
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1, x: driftX, y: driftY }}
-      transition={{
-        opacity: { delay, duration: 0.5, ease: "easeOut" },
-        x: {
-          delay,
-          duration,
-          repeat: Infinity,
-          repeatType: "mirror",
-          ease: "easeInOut",
-        },
-        y: {
-          delay: delay + 0.6,
-          duration: duration * 0.87,
-          repeat: Infinity,
-          repeatType: "mirror",
-          ease: "easeInOut",
-        },
-      }}
-      style={{
-        position: "absolute",
-        left,
-        top,
-        pointerEvents: "none",
-        zIndex: 10,
-      }}
-    >
-      <svg width="16" height="20" viewBox="0 0 16 20" fill="none">
-        <path
-          d="M1 1L1 15.5L5 11.5L7.5 18L10 17L7.5 10.5L12.5 10.5L1 1Z"
-          fill={color}
-          stroke="white"
-          strokeWidth="1.4"
-          strokeLinejoin="round"
-        />
-      </svg>
+    <>
+      {/* Left edge — dimension markers */}
       <div
-        style={{
-          position: "absolute",
-          top: 17,
-          left: 9,
-          backgroundColor: color,
-          color: "white",
-          fontSize: 10,
-          fontWeight: 600,
-          fontFamily: "Inter, system-ui, sans-serif",
-          padding: "2px 7px",
-          borderRadius: 4,
-          whiteSpace: "nowrap",
-          letterSpacing: "0.01em",
-        }}
+        aria-hidden
+        className="hidden lg:flex flex-col absolute left-6 top-16 bottom-16 justify-between"
+        style={{ pointerEvents: "none" }}
       >
-        {name}
-      </div>
-    </motion.div>
-  );
-}
-
-// ── macOS window chrome + toolbar ──────────────────────────────────────────────
-function WindowChrome() {
-  const tools = [
-    // Move (arrow)
-    <svg key="v" width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
-      <path d="M1.5 1L2 11.5l3-3L7.5 15l2-.9L7 8.5l4.5.5L1.5 1z" />
-    </svg>,
-    // Text (T)
-    <svg key="t" width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
-      <path d="M2 3.5h10v1.4H8.2v6.6H5.8V4.9H2V3.5z" />
-    </svg>,
-    // Rectangle
-    <svg key="r" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5">
-      <rect x="2.5" y="2.5" width="9" height="9" rx="1.5" />
-    </svg>,
-    // Frame (#)
-    <svg key="f" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5">
-      <line x1="4" y1="1.5" x2="4" y2="12.5" />
-      <line x1="10" y1="1.5" x2="10" y2="12.5" />
-      <line x1="1.5" y1="4" x2="12.5" y2="4" />
-      <line x1="1.5" y1="10" x2="12.5" y2="10" />
-    </svg>,
-  ];
-
-  return (
-    <div
-      style={{
-        height: 44,
-        display: "flex",
-        alignItems: "center",
-        padding: "0 16px",
-        borderBottom: "1px solid var(--ink-100)",
-        backgroundColor: "rgba(249,248,247,0.96)",
-        gap: 12,
-        flexShrink: 0,
-      }}
-    >
-      {/* macOS traffic lights */}
-      <div style={{ display: "flex", gap: 6 }}>
-        {["#FF5F57", "#FFBD2E", "#28CA41"].map((c, i) => (
-          <div
-            key={i}
-            style={{ width: 10, height: 10, borderRadius: "50%", backgroundColor: c }}
-          />
-        ))}
-      </div>
-
-      <div style={{ flex: 1 }} />
-
-      {/* Toolbar */}
-      <div style={{ display: "flex", gap: 3 }}>
-        {tools.map((icon, i) => (
-          <div
-            key={i}
-            style={{
-              width: 30,
-              height: 26,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              borderRadius: 5,
-              backgroundColor: i === 0 ? "rgba(124,58,237,0.1)" : "rgba(17,17,16,0.05)",
-              color: i === 0 ? "var(--violet)" : "var(--ink-500)",
-              cursor: "default",
-            }}
-          >
-            {icon}
+        {["0", "120", "240", "360", "480"].map((n) => (
+          <div key={n} className="flex items-center gap-1">
+            <div style={{ width: 6, height: 0.5, backgroundColor: "var(--text-muted)", opacity: 0.3 }} />
+            <span style={{ ...mono, fontSize: 7, color: "var(--text-muted)", opacity: 0.3 }}>{n}</span>
           </div>
         ))}
       </div>
 
-      <div style={{ flex: 1 }} />
-    </div>
-  );
-}
-
-// ── Layers panel ───────────────────────────────────────────────────────────────
-interface Layer {
-  label: string;
-  type: "frame" | "text" | "rect" | "group";
-  indent: number;
-  active?: boolean;
-}
-
-const LAYERS: Layer[] = [
-  { label: "Portfolio Frame", type: "frame", indent: 0 },
-  { label: "Hero Heading", type: "text", indent: 1, active: true },
-  { label: "Subtext", type: "text", indent: 1 },
-  { label: "Background", type: "rect", indent: 1 },
-  { label: "Dot Grid", type: "group", indent: 1 },
-];
-
-function LayerIcon({ type, active }: { type: Layer["type"]; active?: boolean }) {
-  const color = active ? "var(--violet)" : "var(--ink-300)";
-  switch (type) {
-    case "frame":
-      return (
-        <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke={color} strokeWidth="1.3">
-          <line x1="3" y1="0" x2="3" y2="10" />
-          <line x1="7" y1="0" x2="7" y2="10" />
-          <line x1="0" y1="3" x2="10" y2="3" />
-          <line x1="0" y1="7" x2="10" y2="7" />
-        </svg>
-      );
-    case "text":
-      return (
-        <span style={{ fontSize: 9, fontWeight: 700, color, fontFamily: "Georgia, serif", lineHeight: 1 }}>
-          T
-        </span>
-      );
-    case "rect":
-      return (
-        <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke={color} strokeWidth="1.3">
-          <rect x="1" y="1" width="8" height="8" rx="1" />
-        </svg>
-      );
-    default:
-      return (
-        <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke={color} strokeWidth="1.3">
-          <circle cx="5" cy="5" r="3.5" />
-        </svg>
-      );
-  }
-}
-
-function LayersPanel() {
-  return (
-    <motion.div
-      initial={{ opacity: 0, x: 10 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.55, delay: 0.7, ease: [0.16, 1, 0.3, 1] }}
-      className="hidden md:block"
-      style={{
-        position: "absolute",
-        right: "2.5%",
-        top: "50%",
-        transform: "translateY(-50%)",
-        width: 172,
-        backgroundColor: "rgba(255,255,255,0.9)",
-        backdropFilter: "blur(10px)",
-        WebkitBackdropFilter: "blur(10px)",
-        border: "1px solid var(--ink-100)",
-        borderRadius: 8,
-        boxShadow: "0 1px 3px rgba(0,0,0,0.05), 0 4px 16px rgba(0,0,0,0.06)",
-        overflow: "hidden",
-        zIndex: 5,
-      }}
-    >
-      {/* Header */}
+      {/* Top edge — column labels */}
       <div
-        style={{
-          padding: "7px 10px",
-          borderBottom: "1px solid var(--ink-100)",
-          display: "flex",
-          alignItems: "center",
-          gap: 5,
-        }}
+        aria-hidden
+        className="hidden lg:flex absolute top-6 left-20 right-20 justify-between"
+        style={{ pointerEvents: "none" }}
       >
-        <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
-          <rect x="0.5" y="0.5" width="4.2" height="4.2" rx="0.5" fill="#B0AEAC" />
-          <rect x="6.3" y="0.5" width="4.2" height="4.2" rx="0.5" fill="#B0AEAC" />
-          <rect x="0.5" y="6.3" width="4.2" height="4.2" rx="0.5" fill="#B0AEAC" />
-          <rect x="6.3" y="6.3" width="4.2" height="4.2" rx="0.5" fill="#B0AEAC" />
-        </svg>
-        <span
-          style={{
-            fontSize: 10,
-            fontWeight: 600,
-            color: "var(--ink-500)",
-            letterSpacing: "0.06em",
-            fontFamily: "Inter, system-ui, sans-serif",
-            textTransform: "uppercase",
-          }}
-        >
-          Layers
-        </span>
+        {["A", "B", "C", "D", "E", "F"].map((l) => (
+          <span key={l} style={{ ...mono, fontSize: 7, color: "var(--text-muted)", opacity: 0.28 }}>
+            {l}
+          </span>
+        ))}
       </div>
 
-      {/* Layer rows */}
-      {LAYERS.map((layer, i) => (
-        <div
-          key={i}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 5,
-            padding: "5px 10px",
-            paddingLeft: 10 + layer.indent * 10,
-            backgroundColor: layer.active ? "rgba(124,58,237,0.07)" : "transparent",
-          }}
-        >
-          <span style={{ display: "flex", alignItems: "center", width: 12, flexShrink: 0 }}>
-            <LayerIcon type={layer.type} active={layer.active} />
-          </span>
-          <span
-            style={{
-              fontSize: 11,
-              color: layer.active ? "var(--violet)" : "var(--ink-700)",
-              fontFamily: "Inter, system-ui, sans-serif",
-              whiteSpace: "nowrap",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-            }}
-          >
-            {layer.label}
-          </span>
-        </div>
-      ))}
-    </motion.div>
+      {/* Top-left: north arrow */}
+      <div
+        aria-hidden
+        className="hidden lg:block absolute"
+        style={{ top: 20, left: 20, opacity: 0.3, pointerEvents: "none" }}
+      >
+        <svg width="18" height="22" viewBox="0 0 18 22" fill="none">
+          <path d="M9 2 L9 18" stroke="var(--text-muted)" strokeWidth="0.75" strokeLinecap="round" />
+          <path d="M9 2 L6 8 L9 6.5 L12 8 Z" fill="var(--text-muted)" />
+          <text x="9" y="21" textAnchor="middle" style={{ fontFamily: "'Space Mono', monospace", fontSize: "6px", fill: "var(--text-muted)" }}>N</text>
+        </svg>
+      </div>
+    </>
   );
 }
 
-// ── Main component ─────────────────────────────────────────────────────────────
+/* ─── Main HeroSection ───────────────────────────────────────────── */
+
+// Line 1 words: timing starts at t=0.7s
+const L1_WORDS = ["I ", "used ", "to ", "design ", "buildings."];
+const L2_WORDS = ["Now ", "I ", "design ", "the ", "spaces ", "between ", "taps."];
+const WORD_STAGGER = 0.085;
+const L1_START = 0.72;
+const L1_END = L1_START + L1_WORDS.length * WORD_STAGGER;
+const L2_START = L1_END + 0.26; // 260ms pause after line 1
+const L2_END = L2_START + L2_WORDS.length * WORD_STAGGER;
+const SUBTEXT_START = L2_END + 0.3; // subheading crosshair starts
+
 export default function HeroSection() {
-  const [line1, setLine1] = useState("");
-  const [line2, setLine2] = useState("");
-  const [activeLine, setActiveLine] = useState<1 | 2 | null>(null);
-  const [cursorBlinking, setCursorBlinking] = useState(false);
-  const [cursorGone, setCursorGone] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const spotlightRef = useRef<HTMLDivElement>(null);
+  const parallaxRef = useRef<HTMLDivElement>(null);
+
+  // Animation state
+  const [showGuides, setShowGuides] = useState(false);
+  const [showHeadline, setShowHeadline] = useState(false);
+  const [guidesGone, setGuidesGone] = useState(false);
+  const [subtextState, setSubtextState] = useState<"hidden" | "gliding" | "placed" | "done">("hidden");
   const [showSelBox, setShowSelBox] = useState(false);
-  const [showSubtext, setShowSubtext] = useState(false);
   const [selBoxFaded, setSelBoxFaded] = useState(false);
+  const [showMicrocopy, setShowMicrocopy] = useState(false);
+  const [showStatus, setShowStatus] = useState(false);
 
   useEffect(() => {
     const ids: ReturnType<typeof setTimeout>[] = [];
     const q = (fn: () => void, ms: number) => ids.push(setTimeout(fn, ms));
 
-    // Pre-compute all random delays once so re-renders don't reseed
-    const d1 = Array.from({ length: LINE1.length }, () => 55 + Math.random() * 35);
-    const d2 = Array.from({ length: LINE2.length }, () => 55 + Math.random() * 35);
-
-    let t = 850;
-
-    // Show cursor on line 1, start typing
-    q(() => setActiveLine(1), t);
-    for (let i = 0; i < LINE1.length; i++) {
-      t += d1[i];
-      const n = i + 1;
-      q(() => setLine1(LINE1.slice(0, n)), t);
-    }
-
-    // Brief pause → switch cursor to line 2
-    t += 500;
-    q(() => setActiveLine(2), t);
-
-    // Type line 2
-    for (let i = 0; i < LINE2.length; i++) {
-      t += d2[i];
-      const n = i + 1;
-      q(() => setLine2(LINE2.slice(0, n)), t);
-    }
-
-    // Blink cursor × 3 then vanish
-    t += 60;
-    q(() => setCursorBlinking(true), t);
-    t += 1400;
-    q(() => { setCursorGone(true); setActiveLine(null); }, t);
-
-    // Figma selection box appears
-    t += 300;
-    q(() => setShowSelBox(true), t);
-
-    // Subtext fades in
-    t += 380;
-    q(() => setShowSubtext(true), t);
-
-    // Selection box fades away
-    t += 1800;
-    q(() => setSelBoxFaded(true), t);
+    q(() => setShowGuides(true), 400);
+    q(() => setShowHeadline(true), 650);
+    q(() => setGuidesGone(true), (L2_END + 0.1) * 1000);
+    q(() => setSubtextState("gliding"), SUBTEXT_START * 1000);
+    q(() => { setSubtextState("placed"); setShowSelBox(true); }, (SUBTEXT_START + 0.85) * 1000);
+    q(() => setSelBoxFaded(true), (SUBTEXT_START + 2.4) * 1000);
+    q(() => setSubtextState("done"), (SUBTEXT_START + 1.2) * 1000);
+    q(() => setShowMicrocopy(true), (SUBTEXT_START + 1.1) * 1000);
+    q(() => setShowStatus(true), (SUBTEXT_START + 1.4) * 1000);
 
     return () => ids.forEach(clearTimeout);
   }, []);
 
-  return (
-    <div className="max-w-5xl mx-auto px-6 md:px-8 pt-6 md:pt-8 pb-10 md:pb-12">
-      <motion.div
-        initial={{ opacity: 0, y: 18 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
-        style={{
-          border: "1px solid var(--ink-100)",
-          borderRadius: 12,
-          overflow: "hidden",
-          boxShadow: "0 2px 8px rgba(0,0,0,0.04), 0 12px 48px rgba(0,0,0,0.08)",
-        }}
-      >
-        <WindowChrome />
+  /* ── Interactive spotlight ── */
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    if (!containerRef.current || !spotlightRef.current || !parallaxRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
 
-        {/* Canvas */}
+    // Spotlight
+    spotlightRef.current.style.background = `radial-gradient(circle 200px at ${x}px ${y}px, rgba(255,255,255,0.42), transparent)`;
+
+    // Parallax on background decorations (opposite to cursor)
+    const cx = rect.width / 2;
+    const cy = rect.height / 2;
+    const dx = ((x - cx) / rect.width) * 6;
+    const dy = ((y - cy) / rect.height) * 4;
+    parallaxRef.current.style.transform = `translate(${-dx}px, ${-dy}px)`;
+  }, []);
+
+  const handleMouseLeave = useCallback(() => {
+    if (spotlightRef.current) spotlightRef.current.style.background = "transparent";
+    if (parallaxRef.current) parallaxRef.current.style.transform = "translate(0, 0)";
+  }, []);
+
+  return (
+    <DrawingSheetBorder
+      titleBlock={{
+        name: "NIHARIKA PUNDLIK",
+        title: "PRODUCT DESIGNER • PORTFOLIO",
+        scale: "SCALE: 1:1 — DATE: 2026",
+        sheet: "01 OF 01",
+      }}
+      style={{ minHeight: "calc(100vh - 56px)" }}
+    >
+      <div
+        ref={containerRef}
+        className="hero-canvas blueprint-grid relative overflow-hidden"
+        style={{ minHeight: "calc(100vh - 56px)" }}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+      >
+        {/* Grid spotlight overlay */}
         <div
+          ref={spotlightRef}
+          aria-hidden
           style={{
-            position: "relative",
-            height: "clamp(400px, calc(100vh - 180px), 560px)",
-            backgroundColor: "#F4F3F1",
-            backgroundImage: "radial-gradient(circle, #C6C4C0 1.2px, transparent 1.2px)",
-            backgroundSize: "24px 24px",
-            overflow: "hidden",
+            position: "absolute",
+            inset: 0,
+            pointerEvents: "none",
+            zIndex: 2,
+            transitionProperty: "background",
+            transitionDuration: "200ms",
+            transitionTimingFunction: "ease-out",
+          }}
+        />
+
+        {/* Parallax layer for decorative elements */}
+        <div
+          ref={parallaxRef}
+          aria-hidden
+          style={{
+            position: "absolute",
+            inset: 0,
+            pointerEvents: "none",
+            zIndex: 1,
+            transitionProperty: "transform",
+            transitionDuration: "200ms",
+            transitionTimingFunction: "ease-out",
           }}
         >
-          {/* Heading + subtext */}
-          <div
-            style={{
-              position: "absolute",
-              left: "6%",
-              top: "50%",
-              transform: "translateY(-50%)",
-              width: "min(48%, 420px)",
-            }}
-          >
-            <h1
-              className="font-display"
-              style={{
-                fontSize: "clamp(36px, 4.8vw, 64px)",
-                fontWeight: 700,
-                letterSpacing: "-0.03em",
-                lineHeight: 1.08,
-                color: "var(--ink-900)",
-                marginBottom: 22,
-              }}
-            >
-              <span style={{ display: "block", minHeight: "1.12em" }}>
-                {line1}
-                {activeLine === 1 && !cursorGone && (
-                  <TypeCursor blinking={cursorBlinking} />
-                )}
-              </span>
-              <span style={{ display: "block", minHeight: "1.12em" }}>
-                {line2}
-                {activeLine === 2 && !cursorGone && (
-                  <TypeCursor blinking={cursorBlinking} />
-                )}
-              </span>
-            </h1>
-
-            {/* Subtext with Figma selection overlay */}
-            <div style={{ position: "relative", width: 340 }}>
-              <SelectionBox visible={showSelBox && !selBoxFaded} />
-              <motion.p
-                initial={{ opacity: 0, y: 6 }}
-                animate={showSubtext ? { opacity: 1, y: 0 } : { opacity: 0, y: 6 }}
-                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                style={{
-                  fontSize: "clamp(13px, 1.3vw, 15px)",
-                  color: "var(--ink-500)",
-                  lineHeight: 1.7,
-                  fontFamily: "Inter, system-ui, sans-serif",
-                  position: "relative",
-                  zIndex: 1,
-                }}
-              >
-                {SUBTEXT}
-              </motion.p>
-            </div>
+          {/* Sketch — upper right: floor plan */}
+          <div className="hidden lg:block absolute" style={{ top: "8%", right: "8%", opacity: 0.8 }}>
+            <HandDrawnSketch type="floorPlan" width={130} height={90} annotation="initial layout" delay={0.5} animateOnMount />
           </div>
 
-          {/* Layers panel — desktop only */}
-          <LayersPanel />
+          {/* Sketch — lower right: perspective */}
+          <div className="hidden lg:block absolute" style={{ bottom: "12%", right: "14%", opacity: 0.8 }}>
+            <HandDrawnSketch type="perspective" width={120} height={75} annotation="spatial flow" delay={1.0} animateOnMount />
+          </div>
 
-          {/* Collaborative cursors */}
-          <FakeCursor
-            name="Recruiter"
-            color="#10B981"
-            left="56%"
-            top="16%"
-            driftX={[-22, 16, -18, 20, -22]}
-            driftY={[-14, 18, -10, 14, -14]}
-            delay={1.2}
-            duration={10.5}
-          />
-          <FakeCursor
-            name="Design Lead"
-            color="#EC4899"
-            left="68%"
-            top="64%"
-            driftX={[14, -20, 22, -16, 14]}
-            driftY={[18, -14, 10, -18, 18]}
-            delay={2.2}
-            duration={12}
-          />
-          <FakeCursor
-            name="You"
-            color="#7C3AED"
-            left="30%"
-            top="83%"
-            driftX={[-16, 14, -20, 16, -16]}
-            driftY={[-10, 16, -8, 12, -10]}
-            delay={0.5}
-            duration={8.5}
-          />
+          {/* Sketch — mid right: wireframe */}
+          <div className="hidden lg:block absolute" style={{ top: "38%", right: "5%", opacity: 0.75 }}>
+            <HandDrawnSketch type="wireframe" width={60} height={80} annotation="v3 iteration" delay={1.5} animateOnMount />
+          </div>
         </div>
-      </motion.div>
-    </div>
+
+        {/* Edge annotations */}
+        <EdgeAnnotations />
+
+        {/* ── HERO CONTENT ── */}
+        <div
+          className="relative z-10 flex flex-col justify-center px-8 md:px-16 lg:px-24"
+          style={{ minHeight: "calc(100vh - 56px)", paddingTop: 60, paddingBottom: 120 }}
+        >
+          {/* Name label */}
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
+            style={{
+              ...mono,
+              fontSize: 12,
+              color: "var(--text-secondary)",
+              letterSpacing: "0.15em",
+              marginBottom: 24,
+            }}
+          >
+            Niharika Pundlik
+          </motion.p>
+
+          {/* Headline */}
+          <div
+            className="relative"
+            style={{ marginBottom: 32, maxWidth: "min(680px, 100%)" }}
+          >
+            {/* Construction guide lines */}
+            <AnimatePresence>
+              {showGuides && !guidesGone && (
+                <>
+                  <GuideLineH y="0%" delay={0} />
+                  <GuideLineH y="46%" delay={0.08} />
+                  <GuideLineH y="50%" delay={0.12} />
+                  <GuideLineH y="96%" delay={0.16} />
+                </>
+              )}
+            </AnimatePresence>
+
+            {/* Headline text */}
+            <h1
+              aria-label="I used to design buildings. Now I design the spaces between taps."
+              style={{
+                fontFamily: "'Playfair Display', Georgia, serif",
+                fontWeight: 700,
+                fontSize: "clamp(38px, 5.8vw, 82px)",
+                lineHeight: 1.05,
+                letterSpacing: "-0.02em",
+                color: "var(--text-primary)",
+                position: "relative",
+                zIndex: 1,
+              }}
+            >
+              {/* Line 1 */}
+              <span style={{ display: "block", marginBottom: "0.06em" }} aria-hidden>
+                {showHeadline &&
+                  L1_WORDS.map((w, i) => (
+                    <RevealWord key={i} text={w} delay={L1_START + i * WORD_STAGGER - 0.65} />
+                  ))}
+              </span>
+
+              {/* Line 2 */}
+              <span style={{ display: "block" }} aria-hidden>
+                {showHeadline &&
+                  L2_WORDS.map((w, i) => (
+                    <RevealWord
+                      key={i}
+                      text={w}
+                      delay={L2_START + i * WORD_STAGGER - 0.65}
+                      italic={w.trim() === "taps."}
+                    />
+                  ))}
+              </span>
+            </h1>
+          </div>
+
+          {/* Subheading — crosshair drag animation */}
+          <div
+            className="relative"
+            style={{ maxWidth: "min(550px, 90vw)", marginBottom: 24 }}
+          >
+            {/* Fake crosshair cursor */}
+            <AnimatePresence>
+              {subtextState === "gliding" && (
+                <motion.div
+                  key="crosshair"
+                  initial={{ x: 260, y: -10, opacity: 1 }}
+                  animate={{ x: 0, y: 0, opacity: 0 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
+                  style={{
+                    position: "absolute",
+                    top: -8,
+                    left: -8,
+                    pointerEvents: "none",
+                    zIndex: 20,
+                  }}
+                  aria-hidden
+                >
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <line x1="10" y1="2" x2="10" y2="18" stroke="var(--text-muted)" strokeWidth="1" />
+                    <line x1="2" y1="10" x2="18" y2="10" stroke="var(--text-muted)" strokeWidth="1" />
+                    <circle cx="10" cy="10" r="2" stroke="var(--text-muted)" strokeWidth="1" fill="none" />
+                  </svg>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Selection box */}
+            <SelectionBox visible={showSelBox && !selBoxFaded} />
+
+            {/* Subtext */}
+            <motion.p
+              initial={{ opacity: 0, x: 260 }}
+              animate={
+                subtextState === "hidden"
+                  ? { opacity: 0.18, x: 260 }
+                  : subtextState === "gliding"
+                  ? { opacity: 0.18, x: 0 }
+                  : { opacity: 1, x: 0 }
+              }
+              transition={{
+                x: { duration: 0.85, ease: [0.16, 1, 0.3, 1] },
+                opacity: subtextState === "done" ? { duration: 0.25 } : { duration: 0 },
+              }}
+              style={{
+                fontFamily: "'Inter', system-ui, sans-serif",
+                fontSize: "clamp(15px, 1.5vw, 18px)",
+                color: "var(--text-secondary)",
+                lineHeight: 1.75,
+                position: "relative",
+                zIndex: 1,
+              }}
+            >
+              Product Designer specializing in complex, high-stakes products — enterprise
+              tools, mobile apps, and everything in between. I bring an architect's
+              precision to every pixel.
+            </motion.p>
+          </div>
+
+          {/* Microcopy */}
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={showMicrocopy ? { opacity: 1 } : { opacity: 0 }}
+            transition={{ duration: 0.4 }}
+            style={{
+              fontFamily: "'Inter', system-ui, sans-serif",
+              fontSize: 13,
+              color: "var(--text-muted)",
+              fontStyle: "italic",
+              marginBottom: 14,
+            }}
+          >
+            Currently open to full-time Product Designer roles.
+          </motion.p>
+
+          {/* Status indicator */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={showStatus ? { opacity: 1 } : { opacity: 0 }}
+            transition={{ duration: 0.4 }}
+            className="flex items-center gap-2"
+          >
+            <span
+              className="status-pulse"
+              style={{
+                width: 8,
+                height: 8,
+                borderRadius: "50%",
+                backgroundColor: "var(--status-green)",
+                display: "inline-block",
+                flexShrink: 0,
+              }}
+              aria-hidden
+            />
+            <span
+              style={{
+                ...mono,
+                fontSize: 11,
+                color: "var(--text-muted)",
+                letterSpacing: "0.1em",
+              }}
+            >
+              Available for opportunities
+            </span>
+          </motion.div>
+        </div>
+      </div>
+    </DrawingSheetBorder>
   );
 }

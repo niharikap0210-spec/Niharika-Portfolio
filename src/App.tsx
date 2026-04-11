@@ -1,11 +1,13 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
-import { useLocation } from "react-router-dom";
+import { useState, useCallback } from "react";
 import Nav from "./components/Nav";
 import Footer from "./components/Footer";
+import SplashScreen from "./components/SplashScreen";
 import Home from "./pages/Home";
 import About from "./pages/About";
 import CaseStudy from "./pages/CaseStudy";
+import Resume from "./pages/Resume";
 import NotFound from "./pages/NotFound";
 
 function AnimatedRoutes() {
@@ -16,20 +18,44 @@ function AnimatedRoutes() {
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/work/:slug" element={<CaseStudy />} />
+        <Route path="/resume" element={<Resume />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </AnimatePresence>
   );
 }
 
-export default function App() {
+function AppShell() {
   return (
-    <BrowserRouter>
+    <>
       <Nav />
-      <main className="min-h-screen">
+      <main className="min-h-screen" id="main-content">
         <AnimatedRoutes />
       </main>
       <Footer />
+    </>
+  );
+}
+
+export default function App() {
+  const [showSplash, setShowSplash] = useState<boolean>(
+    () => !sessionStorage.getItem("np-splash-seen")
+  );
+
+  const handleSplashComplete = useCallback(() => {
+    sessionStorage.setItem("np-splash-seen", "1");
+    setShowSplash(false);
+  }, []);
+
+  return (
+    <BrowserRouter>
+      <AnimatePresence mode="wait">
+        {showSplash ? (
+          <SplashScreen key="splash" onComplete={handleSplashComplete} />
+        ) : (
+          <AppShell key="app" />
+        )}
+      </AnimatePresence>
     </BrowserRouter>
   );
 }
