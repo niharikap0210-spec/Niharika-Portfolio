@@ -220,6 +220,7 @@ export default function HeroSection() {
   const containerRef = useRef<HTMLDivElement>(null);
   const spotlightRef = useRef<HTMLDivElement>(null);
   const parallaxRef = useRef<HTMLDivElement>(null);
+  const cursorRef = useRef<HTMLDivElement>(null);
 
   // Animation state
   const [showGuides, setShowGuides] = useState(false);
@@ -270,6 +271,12 @@ export default function HeroSection() {
     mouseX.set(x);
     mouseY.set(y);
 
+    // Custom cursor
+    if (cursorRef.current) {
+      cursorRef.current.style.transform = `translate(${x - 40}px, ${y - 40}px)`;
+      cursorRef.current.style.opacity = "1";
+    }
+
     // Spotlight
     spotlightRef.current.style.background = `radial-gradient(circle 200px at ${x}px ${y}px, rgba(255,255,255,0.42), transparent)`;
 
@@ -284,6 +291,7 @@ export default function HeroSection() {
   const handleMouseLeave = useCallback(() => {
     mouseX.set(-9999);
     mouseY.set(-9999);
+    if (cursorRef.current) cursorRef.current.style.opacity = "0";
     if (spotlightRef.current) spotlightRef.current.style.background = "transparent";
     if (parallaxRef.current) parallaxRef.current.style.transform = "translate(0, 0)";
   }, [mouseX, mouseY]);
@@ -319,6 +327,39 @@ export default function HeroSection() {
             transitionTimingFunction: "ease-out",
           }}
         />
+
+        {/* Custom architectural crosshair cursor */}
+        <div
+          ref={cursorRef}
+          aria-hidden
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: 80,
+            height: 80,
+            pointerEvents: "none",
+            zIndex: 50,
+            opacity: 0,
+            willChange: "transform",
+            transitionProperty: "opacity",
+            transitionDuration: "120ms",
+            transitionTimingFunction: "ease-out",
+          }}
+        >
+          <svg width="80" height="80" viewBox="0 0 80 80" fill="none" aria-hidden>
+            {/* Top arm */}
+            <line x1="40" y1="0" x2="40" y2="33" stroke="var(--text-secondary)" strokeWidth="0.75" strokeLinecap="round" />
+            {/* Bottom arm */}
+            <line x1="40" y1="47" x2="40" y2="80" stroke="var(--text-secondary)" strokeWidth="0.75" strokeLinecap="round" />
+            {/* Left arm */}
+            <line x1="0" y1="40" x2="33" y2="40" stroke="var(--text-secondary)" strokeWidth="0.75" strokeLinecap="round" />
+            {/* Right arm */}
+            <line x1="47" y1="40" x2="80" y2="40" stroke="var(--text-secondary)" strokeWidth="0.75" strokeLinecap="round" />
+            {/* Center square */}
+            <rect x="33" y="33" width="14" height="14" stroke="var(--text-secondary)" strokeWidth="0.75" fill="none" />
+          </svg>
+        </div>
 
         {/* SVG grid base layer — auto-scrolls continuously at low opacity */}
         <div

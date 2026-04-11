@@ -110,7 +110,7 @@ body {
 
 /* ── Hero Cursor ────────────────────────────────────────────────── */
 .hero-canvas {
-  cursor: crosshair;
+  cursor: none;
 }
 .hero-canvas a,
 .hero-canvas button,
