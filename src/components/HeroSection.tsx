@@ -26,7 +26,8 @@ function RevealWord({
         display: "inline-block",
         overflow: "hidden",
         verticalAlign: "bottom",
-        paddingBottom: "0.06em", // prevents clipping descenders
+        paddingBottom: "0.06em",
+        whiteSpace: "pre",
       }}
     >
       <motion.span
@@ -208,7 +209,8 @@ function GridSVGPattern({ id, offsetX, offsetY }: {
 
 // Line 1 words: timing starts at t=0.7s
 const L1_WORDS = ["I ", "used ", "to ", "design ", "buildings."];
-const L2_WORDS = ["Now ", "I ", "design ", "the ", "spaces ", "between ", "taps."];
+const L2_WORDS = ["Now ", "I ", "design ", "the ", "spaces ", "between"];
+const ROTATING_WORDS = ["taps.", "clicks.", "friction.", "moments.", "intent."];
 const WORD_STAGGER = 0.085;
 const L1_START = 0.72;
 const L1_END = L1_START + L1_WORDS.length * WORD_STAGGER;
@@ -231,6 +233,10 @@ export default function HeroSection() {
   const [selBoxFaded, setSelBoxFaded] = useState(false);
   const [showMicrocopy, setShowMicrocopy] = useState(false);
   const [showStatus, setShowStatus] = useState(false);
+  const [wordIndex, setWordIndex] = useState(0);
+  const [displayWord, setDisplayWord] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [showRotatingWord, setShowRotatingWord] = useState(false);
 
   useEffect(() => {
     const ids: ReturnType<typeof setTimeout>[] = [];
@@ -239,6 +245,7 @@ export default function HeroSection() {
     q(() => setShowGuides(true), 400);
     q(() => setShowHeadline(true), 650);
     q(() => setGuidesGone(true), (L2_END + 0.1) * 1000);
+    q(() => setShowRotatingWord(true), (L2_END + 0.15) * 1000);
     q(() => setSubtextState("gliding"), SUBTEXT_START * 1000);
     q(() => { setSubtextState("placed"); setShowSelBox(true); }, (SUBTEXT_START + 0.85) * 1000);
     q(() => setSelBoxFaded(true), (SUBTEXT_START + 2.4) * 1000);
@@ -248,6 +255,27 @@ export default function HeroSection() {
 
     return () => ids.forEach(clearTimeout);
   }, []);
+
+  useEffect(() => {
+    if (!showRotatingWord) return;
+    const fullText = ROTATING_WORDS[wordIndex];
+    const handleTyping = () => {
+      if (isDeleting) {
+        setDisplayWord((prev) => prev.substring(0, prev.length - 1));
+      } else {
+        setDisplayWord((prev) => fullText.substring(0, prev.length + 1));
+      }
+    };
+    const speed = isDeleting ? 75 : 150;
+    const interval = setInterval(handleTyping, speed);
+    if (!isDeleting && displayWord === fullText) {
+      setTimeout(() => setIsDeleting(true), 2000);
+    } else if (isDeleting && displayWord === "") {
+      setIsDeleting(false);
+      setWordIndex((prev) => (prev + 1) % ROTATING_WORDS.length);
+    }
+    return () => clearInterval(interval);
+  }, [displayWord, isDeleting, wordIndex, showRotatingWord]);
 
   /* ── Infinite grid interaction ── */
   const mouseX = useMotionValue(-9999);
@@ -448,7 +476,7 @@ export default function HeroSection() {
           {/* Headline */}
           <div
             className="relative"
-            style={{ marginBottom: 32, maxWidth: "min(680px, 100%)" }}
+            style={{ marginBottom: 40, maxWidth: "min(680px, 100%)" }}
           >
             {/* Construction guide lines */}
             <AnimatePresence>
@@ -464,14 +492,14 @@ export default function HeroSection() {
 
             {/* Headline text */}
             <h1
-              aria-label="I used to design buildings. Now I design the spaces between taps."
+              aria-label="I used to design buildings. Now I design the spaces between."
               style={{
                 fontFamily: "'Playfair Display', Georgia, serif",
                 fontWeight: 700,
-                fontSize: "clamp(38px, 5.8vw, 82px)",
+                fontSize: "clamp(60px, 5.2vw, 72px)",
                 lineHeight: 1.05,
-                letterSpacing: "-0.02em",
-                color: "var(--text-primary)",
+                letterSpacing: "-0.01em",
+                color: "#1A1A1A",
                 position: "relative",
                 zIndex: 1,
               }}
@@ -485,16 +513,33 @@ export default function HeroSection() {
               </span>
 
               {/* Line 2 */}
-              <span style={{ display: "block" }} aria-hidden>
+              <span style={{ display: "block", marginBottom: "0.06em" }} aria-hidden>
                 {showHeadline &&
                   L2_WORDS.map((w, i) => (
                     <RevealWord
                       key={i}
                       text={w}
                       delay={L2_START + i * WORD_STAGGER - 0.65}
-                      italic={w.trim() === "taps."}
                     />
                   ))}
+              </span>
+
+              {/* Line 3 — rotating typewriter word */}
+              <span
+                style={{ display: "block", minHeight: "1.1em" }}
+                aria-live="polite"
+                aria-atomic="true"
+              >
+                <span style={{ fontStyle: "italic", color: "#B5924C" }}>
+                  {displayWord}
+                </span>
+                {showRotatingWord && (
+                  <span
+                    className="cursor-blink"
+                    aria-hidden
+                    style={{ fontStyle: "italic", color: "#B5924C" }}
+                  >|</span>
+                )}
               </span>
             </h1>
           </div>
@@ -550,9 +595,9 @@ export default function HeroSection() {
               }}
               style={{
                 fontFamily: "'Inter', system-ui, sans-serif",
-                fontSize: "clamp(15px, 1.5vw, 18px)",
-                color: "var(--text-secondary)",
-                lineHeight: 1.75,
+                fontSize: "clamp(15px, 1.4vw, 18px)",
+                color: "#6B6B6B",
+                lineHeight: 1.65,
                 position: "relative",
                 zIndex: 1,
               }}
@@ -570,10 +615,10 @@ export default function HeroSection() {
             transition={{ duration: 0.4 }}
             style={{
               fontFamily: "'Inter', system-ui, sans-serif",
-              fontSize: 13,
-              color: "var(--text-muted)",
+              fontSize: 14,
+              color: "#9A9A9A",
               fontStyle: "italic",
-              marginBottom: 14,
+              marginBottom: 16,
             }}
           >
             Currently open to full-time Product Designer roles.
@@ -602,7 +647,8 @@ export default function HeroSection() {
               style={{
                 ...mono,
                 fontSize: 11,
-                color: "var(--text-muted)",
+                fontWeight: 500,
+                color: "#9A9A9A",
                 letterSpacing: "0.1em",
               }}
             >
