@@ -446,7 +446,7 @@ export default function HeroSection() {
 
           {/* Sketch — lower left: morph transition */}
           <div className="hidden lg:block absolute" style={{ bottom: "14%", left: "5%", opacity: 0.65 }}>
-            <HandDrawnSketch type="morphTransition" width={140} height={75} annotation="from arch to digital" delay={1.6} animateOnMount />
+            <HandDrawnSketch type="morphTransition" width={130} height={100} annotation="from arch to digital" delay={1.6} animateOnMount />
           </div>
         </div>
 
@@ -581,9 +581,9 @@ export default function HeroSection() {
               <svg width="22" height="26" viewBox="0 0 22 26" fill="none">
                 <path
                   d="M 3 2 L 3 20 L 7.5 15.5 L 11.5 24 L 14.5 22.5 L 10.5 14 L 17 14 Z"
-                  fill="rgba(250,250,250,0.95)"
-                  stroke="var(--text-secondary)"
-                  strokeWidth="0.75"
+                  fill="#1A1A1A"
+                  stroke="rgba(255,255,255,0.55)"
+                  strokeWidth="0.85"
                   strokeLinejoin="round"
                 />
               </svg>
@@ -618,7 +618,7 @@ export default function HeroSection() {
                 zIndex: 1,
               }}
             >
-              Product Designer specializing in complex, high-stakes products — enterprise
+              Product Designer specializing in complex, high-stakes products: enterprise
               tools, mobile apps, and everything in between. I bring an architect's
               precision to every pixel.
             </motion.p>
