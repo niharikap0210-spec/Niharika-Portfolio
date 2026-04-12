@@ -1,7 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion";
 import { useState, useEffect, useRef } from "react";
-import { List, X, LinkedinLogo } from "@phosphor-icons/react";
+import { List, X } from "@phosphor-icons/react";
 
 /* ─── Types ──────────────────────────────────────────────────────── */
 interface NavItem {
@@ -17,7 +17,7 @@ const navItems: NavItem[] = [
   { label: "Work",     href: "/",      external: false },
   { label: "About",    href: "/about", external: false },
   { label: "Resume",   href: "https://drive.google.com/file/d/1WbopauZ0xwmOnLNuEb1XZX5TmzxQCA6K/view?usp=sharing", external: true },
-  { label: "LinkedIn", href: "https://linkedin.com/in/niharika-pundlik", external: true, icon: LinkedinLogo },
+  { label: "LinkedIn", href: "https://linkedin.com/in/niharika-pundlik", external: true },
 ];
 
 /* ─── Color tokens ───────────────────────────────────────────────── */
