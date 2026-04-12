@@ -95,8 +95,12 @@ export default function Nav() {
   }, [menuOpen]);
 
   /* ── Helpers ── */
-  const isActive = (item: NavItem) =>
-    !item.external && item.label !== "Home" && pathname === item.href;
+  const isActive = (item: NavItem) => {
+    if (item.external) return false;
+    if (item.label === "Home") return false;
+    if (item.label === "Work") return pathname.startsWith("/work/");
+    return pathname === item.href;
+  };
 
   const linkColor = (item: NavItem) => {
     if (isActive(item))          return C_ACTIVE;

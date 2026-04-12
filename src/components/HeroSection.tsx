@@ -433,19 +433,19 @@ export default function HeroSection() {
             transitionTimingFunction: "ease-out",
           }}
         >
-          {/* Sketch — upper right: floor plan */}
-          <div className="hidden lg:block absolute" style={{ top: "8%", right: "8%", opacity: 0.8 }}>
+          {/* Sketch — upper left: floor plan */}
+          <div className="hidden lg:block absolute" style={{ top: "10%", left: "5%", opacity: 0.75 }}>
             <HandDrawnSketch type="floorPlan" width={130} height={90} annotation="initial layout" delay={0.5} animateOnMount />
           </div>
 
-          {/* Sketch — lower right: perspective */}
-          <div className="hidden lg:block absolute" style={{ bottom: "12%", right: "14%", opacity: 0.8 }}>
-            <HandDrawnSketch type="perspective" width={120} height={75} annotation="spatial flow" delay={1.0} animateOnMount />
+          {/* Sketch — upper right: wireframe */}
+          <div className="hidden lg:block absolute" style={{ top: "10%", right: "5%", opacity: 0.75 }}>
+            <HandDrawnSketch type="wireframe" width={60} height={80} annotation="v3 iteration" delay={0.9} animateOnMount />
           </div>
 
-          {/* Sketch — mid right: wireframe */}
-          <div className="hidden lg:block absolute" style={{ top: "38%", right: "5%", opacity: 0.75 }}>
-            <HandDrawnSketch type="wireframe" width={60} height={80} annotation="v3 iteration" delay={1.5} animateOnMount />
+          {/* Sketch — lower right: perspective */}
+          <div className="hidden lg:block absolute" style={{ bottom: "10%", right: "5%", opacity: 0.75 }}>
+            <HandDrawnSketch type="perspective" width={120} height={75} annotation="spatial flow" delay={1.3} animateOnMount />
           </div>
         </div>
 
@@ -454,7 +454,7 @@ export default function HeroSection() {
 
         {/* ── HERO CONTENT ── */}
         <div
-          className="relative z-10 flex flex-col justify-center px-8 md:px-16 lg:px-24"
+          className="relative z-10 flex flex-col justify-center items-center text-center px-8 md:px-16 lg:px-24"
           style={{ minHeight: "100vh", paddingTop: 60, paddingBottom: 120 }}
         >
           {/* Name label */}
@@ -502,6 +502,7 @@ export default function HeroSection() {
                 color: "#1A1A1A",
                 position: "relative",
                 zIndex: 1,
+                textAlign: "center",
               }}
             >
               {/* Line 1 */}
@@ -547,21 +548,21 @@ export default function HeroSection() {
           {/* Subheading — crosshair drag animation */}
           <div
             className="relative"
-            style={{ maxWidth: "min(550px, 90vw)", marginBottom: 24 }}
+            style={{ maxWidth: "min(550px, 90vw)", marginBottom: 24, textAlign: "center" }}
           >
             {/* Fake crosshair cursor */}
             <AnimatePresence>
               {subtextState === "gliding" && (
                 <motion.div
                   key="crosshair"
-                  initial={{ x: 260, y: -10, opacity: 1 }}
+                  initial={{ x: 60, y: -10, opacity: 1 }}
                   animate={{ x: 0, y: 0, opacity: 0 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
                   style={{
                     position: "absolute",
                     top: -8,
-                    left: -8,
+                    left: "50%",
                     pointerEvents: "none",
                     zIndex: 20,
                   }}
@@ -581,16 +582,16 @@ export default function HeroSection() {
 
             {/* Subtext */}
             <motion.p
-              initial={{ opacity: 0, x: 260 }}
+              initial={{ opacity: 0, y: 16 }}
               animate={
                 subtextState === "hidden"
-                  ? { opacity: 0.18, x: 260 }
+                  ? { opacity: 0.18, y: 16 }
                   : subtextState === "gliding"
-                  ? { opacity: 0.18, x: 0 }
-                  : { opacity: 1, x: 0 }
+                  ? { opacity: 0.18, y: 0 }
+                  : { opacity: 1, y: 0 }
               }
               transition={{
-                x: { duration: 0.85, ease: [0.16, 1, 0.3, 1] },
+                y: { duration: 0.85, ease: [0.16, 1, 0.3, 1] },
                 opacity: subtextState === "done" ? { duration: 0.25 } : { duration: 0 },
               }}
               style={{
