@@ -621,7 +621,7 @@ export default function HeroSection() {
               }}
             >
               {/* Line 1 */}
-              <span style={{ display: "block", marginBottom: "0.06em" }} aria-hidden>
+              <span style={{ display: "block", marginBottom: "0.06em", minHeight: "1.12em" }} aria-hidden>
                 {showHeadline &&
                   L1_WORDS.map((w, i) => (
                     <RevealWord key={i} text={w} delay={L1_START + i * WORD_STAGGER - 0.65} />
@@ -629,7 +629,7 @@ export default function HeroSection() {
               </span>
 
               {/* Line 2 */}
-              <span style={{ display: "block", marginBottom: "0.06em" }} aria-hidden>
+              <span style={{ display: "block", marginBottom: "0.06em", minHeight: "1.12em" }} aria-hidden>
                 {showHeadline &&
                   L2_WORDS.map((w, i) => (
                     <RevealWord
