@@ -34,7 +34,7 @@ function RevealWord({
         style={{ display: "inline-block", fontStyle: italic ? "italic" : "inherit" }}
         initial={{ x: "-110%" }}
         animate={{ x: 0 }}
-        transition={{ delay, duration: 0.24, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ delay, duration: 0.34, ease: [0.16, 1, 0.3, 1] }}
       >
         {text}
       </motion.span>
@@ -49,7 +49,7 @@ function GuideLineH({ y, delay }: { y: string | number; delay: number }) {
       initial={{ scaleX: 0, opacity: 0 }}
       animate={{ scaleX: 1, opacity: 1 }}
       exit={{ opacity: 0, transition: { duration: 0.3 } }}
-      transition={{ delay, duration: 0.22, ease: "easeOut" }}
+      transition={{ delay, duration: 0.3, ease: "easeOut" }}
       style={{
         position: "absolute",
         left: 0,
@@ -211,12 +211,12 @@ function GridSVGPattern({ id, offsetX, offsetY }: {
 const L1_WORDS = ["I ", "used ", "to ", "design ", "buildings."];
 const L2_WORDS = ["Now ", "I ", "design ", "the ", "spaces ", "between"];
 const ROTATING_WORDS = ["taps.", "clicks.", "friction.", "moments.", "intent."];
-const WORD_STAGGER = 0.085;
+const WORD_STAGGER = 0.11;
 const L1_START = 0.72;
 const L1_END = L1_START + L1_WORDS.length * WORD_STAGGER;
-const L2_START = L1_END + 0.26; // 260ms pause after line 1
+const L2_START = L1_END + 0.42; // pause between lines
 const L2_END = L2_START + L2_WORDS.length * WORD_STAGGER;
-const SUBTEXT_START = L2_END + 0.3; // subheading crosshair starts
+const SUBTEXT_START = L2_END + 0.65; // subtext drag starts after headline settles
 
 export default function HeroSection() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -242,12 +242,12 @@ export default function HeroSection() {
 
     q(() => setShowGuides(true), 400);
     q(() => setShowHeadline(true), 650);
-    q(() => setGuidesGone(true), (L2_END + 0.1) * 1000);
-    q(() => setShowRotatingWord(true), (L2_END + 0.15) * 1000);
+    q(() => setGuidesGone(true), (L2_END + 0.2) * 1000);
+    q(() => setShowRotatingWord(true), (L2_END + 0.3) * 1000);
     q(() => setSubtextState("gliding"), SUBTEXT_START * 1000);
-    q(() => { setSubtextState("placed"); setShowSelBox(true); }, (SUBTEXT_START + 0.85) * 1000);
-    q(() => setSelBoxFaded(true), (SUBTEXT_START + 2.4) * 1000);
-    q(() => setSubtextState("done"), (SUBTEXT_START + 1.2) * 1000);
+    q(() => { setSubtextState("placed"); setShowSelBox(true); }, (SUBTEXT_START + 1.2) * 1000);
+    q(() => setSubtextState("done"), (SUBTEXT_START + 1.5) * 1000);
+    q(() => setSelBoxFaded(true), (SUBTEXT_START + 3.2) * 1000);
 
     return () => ids.forEach(clearTimeout);
   }, []);
@@ -546,54 +546,68 @@ export default function HeroSection() {
             </h1>
           </div>
 
-          {/* Subheading — crosshair drag animation */}
+          {/* Subheading — dragged into position by cursor */}
           <div
             className="relative"
             style={{ maxWidth: "min(550px, 90vw)", marginBottom: 24, textAlign: "center" }}
           >
-            {/* Fake crosshair cursor */}
-            <AnimatePresence>
-              {subtextState === "gliding" && (
-                <motion.div
-                  key="crosshair"
-                  initial={{ x: 60, y: -10, opacity: 1 }}
-                  animate={{ x: 0, y: 0, opacity: 0 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
-                  style={{
-                    position: "absolute",
-                    top: -8,
-                    left: "50%",
-                    pointerEvents: "none",
-                    zIndex: 20,
-                  }}
-                  aria-hidden
-                >
-                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                    <line x1="10" y1="2" x2="10" y2="18" stroke="var(--text-muted)" strokeWidth="1" />
-                    <line x1="2" y1="10" x2="18" y2="10" stroke="var(--text-muted)" strokeWidth="1" />
-                    <circle cx="10" cy="10" r="2" stroke="var(--text-muted)" strokeWidth="1" fill="none" />
-                  </svg>
-                </motion.div>
-              )}
-            </AnimatePresence>
+            {/* Drag cursor — moves with the text box, fades on arrival */}
+            <motion.div
+              aria-hidden
+              initial={{ x: 72, y: -22, opacity: 0 }}
+              animate={
+                subtextState === "hidden"
+                  ? { x: 72, y: -22, opacity: 0 }
+                  : subtextState === "gliding"
+                  ? { x: 0, y: 0, opacity: 1 }
+                  : { x: 0, y: 0, opacity: 0 }
+              }
+              transition={{
+                x: { duration: 1.2, ease: [0.16, 1, 0.3, 1] },
+                y: { duration: 1.2, ease: [0.16, 1, 0.3, 1] },
+                opacity: subtextState === "gliding"
+                  ? { duration: 0.12 }
+                  : { duration: 0.35 },
+              }}
+              style={{
+                position: "absolute",
+                top: -6,
+                left: -6,
+                pointerEvents: "none",
+                zIndex: 20,
+              }}
+            >
+              {/* OS-style arrow cursor */}
+              <svg width="22" height="26" viewBox="0 0 22 26" fill="none">
+                <path
+                  d="M 3 2 L 3 20 L 7.5 15.5 L 11.5 24 L 14.5 22.5 L 10.5 14 L 17 14 Z"
+                  fill="rgba(250,250,250,0.95)"
+                  stroke="var(--text-secondary)"
+                  strokeWidth="0.75"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </motion.div>
 
             {/* Selection box */}
             <SelectionBox visible={showSelBox && !selBoxFaded} />
 
-            {/* Subtext */}
+            {/* Subtext — starts at same offset as cursor, dragged to position */}
             <motion.p
-              initial={{ opacity: 0, y: 16 }}
+              initial={{ x: 72, y: -22, opacity: 0 }}
               animate={
                 subtextState === "hidden"
-                  ? { opacity: 0.18, y: 16 }
+                  ? { x: 72, y: -22, opacity: 0 }
                   : subtextState === "gliding"
-                  ? { opacity: 0.18, y: 0 }
-                  : { opacity: 1, y: 0 }
+                  ? { x: 0, y: 0, opacity: 0.2 }
+                  : { x: 0, y: 0, opacity: 1 }
               }
               transition={{
-                y: { duration: 0.85, ease: [0.16, 1, 0.3, 1] },
-                opacity: subtextState === "done" ? { duration: 0.25 } : { duration: 0 },
+                x: { duration: 1.2, ease: [0.16, 1, 0.3, 1] },
+                y: { duration: 1.2, ease: [0.16, 1, 0.3, 1] },
+                opacity: subtextState === "placed" || subtextState === "done"
+                  ? { duration: 0.35 }
+                  : { duration: 0.15 },
               }}
               style={{
                 fontFamily: "'Inter', system-ui, sans-serif",
