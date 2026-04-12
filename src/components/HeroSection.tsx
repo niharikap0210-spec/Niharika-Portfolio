@@ -34,7 +34,7 @@ function RevealWord({
         style={{ display: "inline-block", fontStyle: italic ? "italic" : "inherit" }}
         initial={{ x: "-110%" }}
         animate={{ x: 0 }}
-        transition={{ delay, duration: 0.24, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ delay, duration: 0.34, ease: [0.16, 1, 0.3, 1] }}
       >
         {text}
       </motion.span>
@@ -49,7 +49,7 @@ function GuideLineH({ y, delay }: { y: string | number; delay: number }) {
       initial={{ scaleX: 0, opacity: 0 }}
       animate={{ scaleX: 1, opacity: 1 }}
       exit={{ opacity: 0, transition: { duration: 0.3 } }}
-      transition={{ delay, duration: 0.22, ease: "easeOut" }}
+      transition={{ delay, duration: 0.3, ease: "easeOut" }}
       style={{
         position: "absolute",
         left: 0,
@@ -211,18 +211,26 @@ function GridSVGPattern({ id, offsetX, offsetY }: {
 const L1_WORDS = ["I ", "used ", "to ", "design ", "buildings."];
 const L2_WORDS = ["Now ", "I ", "design ", "the ", "spaces ", "between"];
 const ROTATING_WORDS = ["taps.", "clicks.", "friction.", "moments.", "intent."];
-const WORD_STAGGER = 0.085;
+const WORD_STAGGER = 0.11;
 const L1_START = 0.72;
 const L1_END = L1_START + L1_WORDS.length * WORD_STAGGER;
-const L2_START = L1_END + 0.26; // 260ms pause after line 1
+const L2_START = L1_END + 0.42; // pause between lines
 const L2_END = L2_START + L2_WORDS.length * WORD_STAGGER;
-const SUBTEXT_START = L2_END + 0.3; // subheading crosshair starts
+const SUBTEXT_START = L2_END + 0.65; // subtext drag starts after headline settles
 
 export default function HeroSection() {
   const containerRef = useRef<HTMLDivElement>(null);
   const spotlightRef = useRef<HTMLDivElement>(null);
   const parallaxRef = useRef<HTMLDivElement>(null);
   const cursorRef = useRef<HTMLDivElement>(null);
+
+  /* ── Canvas accent effect refs ── */
+  const canvasRef    = useRef<HTMLCanvasElement>(null);
+  const cMouse       = useRef({ x: 0, y: 0 });
+  const cOpacity     = useRef(0);          // current lerped opacity
+  const cTarget      = useRef(0);          // 0 = fade out, 1 = fade in
+  const cRaf         = useRef<number | null>(null);
+  const cLastDraw    = useRef({ x: -1000, y: -1000 });
 
   // Animation state
   const [showGuides, setShowGuides] = useState(false);
@@ -231,8 +239,6 @@ export default function HeroSection() {
   const [subtextState, setSubtextState] = useState<"hidden" | "gliding" | "placed" | "done">("hidden");
   const [showSelBox, setShowSelBox] = useState(false);
   const [selBoxFaded, setSelBoxFaded] = useState(false);
-  const [showMicrocopy, setShowMicrocopy] = useState(false);
-  const [showStatus, setShowStatus] = useState(false);
   const [wordIndex, setWordIndex] = useState(0);
   const [displayWord, setDisplayWord] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
@@ -244,14 +250,12 @@ export default function HeroSection() {
 
     q(() => setShowGuides(true), 400);
     q(() => setShowHeadline(true), 650);
-    q(() => setGuidesGone(true), (L2_END + 0.1) * 1000);
-    q(() => setShowRotatingWord(true), (L2_END + 0.15) * 1000);
+    q(() => setGuidesGone(true), (L2_END + 0.2) * 1000);
+    q(() => setShowRotatingWord(true), (L2_END + 0.3) * 1000);
     q(() => setSubtextState("gliding"), SUBTEXT_START * 1000);
-    q(() => { setSubtextState("placed"); setShowSelBox(true); }, (SUBTEXT_START + 0.85) * 1000);
-    q(() => setSelBoxFaded(true), (SUBTEXT_START + 2.4) * 1000);
-    q(() => setSubtextState("done"), (SUBTEXT_START + 1.2) * 1000);
-    q(() => setShowMicrocopy(true), (SUBTEXT_START + 1.1) * 1000);
-    q(() => setShowStatus(true), (SUBTEXT_START + 1.4) * 1000);
+    q(() => { setSubtextState("placed"); setShowSelBox(true); }, (SUBTEXT_START + 1.2) * 1000);
+    q(() => setSubtextState("done"), (SUBTEXT_START + 1.5) * 1000);
+    q(() => setSelBoxFaded(true), (SUBTEXT_START + 3.2) * 1000);
 
     return () => ids.forEach(clearTimeout);
   }, []);
@@ -277,6 +281,88 @@ export default function HeroSection() {
     return () => clearInterval(interval);
   }, [displayWord, isDeleting, wordIndex, showRotatingWord]);
 
+  /* ── Canvas accent: draw loop ── */
+  const drawCanvasFrame = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    // Lerp current opacity toward target (0.08 factor ≈ 200ms fade-in, 400ms fade-out feel)
+    cOpacity.current += (cTarget.current - cOpacity.current) * 0.08;
+
+    const { x, y } = cMouse.current;
+    const moved   = Math.hypot(x - cLastDraw.current.x, y - cLastDraw.current.y) > 2;
+    const lerping = Math.abs(cOpacity.current - cTarget.current) > 0.002;
+
+    if (moved || lerping) {
+      const alpha = cOpacity.current;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      if (alpha > 0.005) {
+        // Effect 1 — faint warm radial wash
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, 180);
+        grad.addColorStop(0, `rgba(181,146,76,${0.14 * alpha})`);
+        grad.addColorStop(1, "rgba(181,146,76,0)");
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Effect 2 — accent dots at 80px grid intersections within 160px radius
+        const GRID   = 80;
+        const RADIUS = 160;
+        const n0 = Math.floor((x - RADIUS) / GRID);
+        const n1 = Math.ceil((x  + RADIUS) / GRID);
+        const m0 = Math.floor((y - RADIUS) / GRID);
+        const m1 = Math.ceil((y  + RADIUS) / GRID);
+
+        for (let n = n0; n <= n1; n++) {
+          for (let m = m0; m <= m1; m++) {
+            const gx   = n * GRID;
+            const gy   = m * GRID;
+            const dist = Math.hypot(gx - x, gy - y);
+            if (dist <= RADIUS) {
+              const dotAlpha = 0.5 * (1 - dist / RADIUS) * alpha;
+              ctx.beginPath();
+              ctx.arc(gx, gy, 2, 0, Math.PI * 2);
+              ctx.fillStyle = `rgba(181,146,76,${dotAlpha})`;
+              ctx.fill();
+            }
+          }
+        }
+      }
+      cLastDraw.current = { x, y };
+    }
+
+    // Keep looping while there is visible opacity; stop cleanly when faded out
+    if (cTarget.current > 0 || cOpacity.current > 0.002) {
+      cRaf.current = requestAnimationFrame(drawCanvasFrame);
+    } else {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      cOpacity.current = 0;
+      cRaf.current = null;
+    }
+  }, []); // all values are refs — stable, no deps needed
+
+  // Resize canvas to match container whenever container size changes
+  useEffect(() => {
+    const canvas    = canvasRef.current;
+    const container = containerRef.current;
+    if (!canvas || !container) return;
+    const sync = () => {
+      canvas.width  = container.offsetWidth;
+      canvas.height = container.offsetHeight;
+    };
+    sync();
+    const ro = new ResizeObserver(sync);
+    ro.observe(container);
+    return () => ro.disconnect();
+  }, []);
+
+  // Cancel RAF on unmount
+  useEffect(() => {
+    return () => { if (cRaf.current !== null) cancelAnimationFrame(cRaf.current); };
+  }, []);
+
   /* ── Infinite grid interaction ── */
   const mouseX = useMotionValue(-9999);
   const mouseY = useMotionValue(-9999);
@@ -298,6 +384,13 @@ export default function HeroSection() {
 
     mouseX.set(x);
     mouseY.set(y);
+
+    // Canvas accent — update mouse, kick off loop if not running
+    cMouse.current = { x, y };
+    if (cTarget.current === 0) {
+      cTarget.current = 1;
+      if (cRaf.current === null) cRaf.current = requestAnimationFrame(drawCanvasFrame);
+    }
 
     // Custom cursor
     if (cursorRef.current) {
@@ -322,6 +415,8 @@ export default function HeroSection() {
     if (cursorRef.current) cursorRef.current.style.opacity = "0";
     if (spotlightRef.current) spotlightRef.current.style.background = "transparent";
     if (parallaxRef.current) parallaxRef.current.style.transform = "translate(0, 0)";
+    // Canvas accent — begin fade-out; RAF loop will stop itself when fully transparent
+    cTarget.current = 0;
   }, [mouseX, mouseY]);
 
   return (
@@ -332,12 +427,12 @@ export default function HeroSection() {
         scale: "SCALE: 1:1 — DATE: 2026",
         sheet: "01 OF 01",
       }}
-      style={{ minHeight: "calc(100vh - 56px)" }}
+      style={{ minHeight: "100svh" }}
     >
       <div
         ref={containerRef}
         className="hero-canvas blueprint-grid relative overflow-hidden"
-        style={{ minHeight: "calc(100vh - 56px)" }}
+        style={{ minHeight: "100svh" }}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
       >
@@ -419,6 +514,21 @@ export default function HeroSection() {
           <GridSVGPattern id="hero-grid-reveal" offsetX={gridOffsetX} offsetY={gridOffsetY} />
         </motion.div>
 
+        {/* Canvas accent layer — accent glow + grid-node dots, above grid, below content */}
+        <canvas
+          ref={canvasRef}
+          aria-hidden
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            pointerEvents: "none",
+            zIndex: 1,
+          }}
+        />
+
         {/* Parallax layer for decorative elements */}
         <div
           ref={parallaxRef}
@@ -433,19 +543,24 @@ export default function HeroSection() {
             transitionTimingFunction: "ease-out",
           }}
         >
-          {/* Sketch — upper right: floor plan */}
-          <div className="hidden lg:block absolute" style={{ top: "8%", right: "8%", opacity: 0.8 }}>
-            <HandDrawnSketch type="floorPlan" width={130} height={90} annotation="initial layout" delay={0.5} animateOnMount />
+          {/* Sketch — upper left: floor plan */}
+          <div className="hidden lg:block absolute" style={{ top: "8%", left: "4%", opacity: 0.72 }}>
+            <HandDrawnSketch type="floorPlan" width={120} height={85} annotation="initial layout" delay={0.5} animateOnMount />
           </div>
 
-          {/* Sketch — lower right: perspective */}
-          <div className="hidden lg:block absolute" style={{ bottom: "12%", right: "14%", opacity: 0.8 }}>
-            <HandDrawnSketch type="perspective" width={120} height={75} annotation="spatial flow" delay={1.0} animateOnMount />
+          {/* Sketch — upper right: wireframe (slightly lower than floor plan) */}
+          <div className="hidden lg:block absolute" style={{ top: "15%", right: "6%", opacity: 0.68 }}>
+            <HandDrawnSketch type="wireframe" width={55} height={75} annotation="v3 iteration" delay={0.8} animateOnMount />
           </div>
 
-          {/* Sketch — mid right: wireframe */}
-          <div className="hidden lg:block absolute" style={{ top: "38%", right: "5%", opacity: 0.75 }}>
-            <HandDrawnSketch type="wireframe" width={60} height={80} annotation="v3 iteration" delay={1.5} animateOnMount />
+          {/* Sketch — lower right: perspective (well above title block) */}
+          <div className="hidden lg:block absolute" style={{ bottom: "26%", right: "5%", opacity: 0.72 }}>
+            <HandDrawnSketch type="perspective" width={115} height={70} annotation="spatial flow" delay={1.2} animateOnMount />
+          </div>
+
+          {/* Sketch — lower left: morph transition */}
+          <div className="hidden lg:block absolute" style={{ bottom: "14%", left: "5%", opacity: 0.65 }}>
+            <HandDrawnSketch type="morphTransition" width={130} height={100} annotation="from arch to digital" delay={1.6} animateOnMount />
           </div>
         </div>
 
@@ -454,8 +569,8 @@ export default function HeroSection() {
 
         {/* ── HERO CONTENT ── */}
         <div
-          className="relative z-10 flex flex-col justify-center px-8 md:px-16 lg:px-24"
-          style={{ minHeight: "calc(100vh - 56px)", paddingTop: 60, paddingBottom: 120 }}
+          className="relative z-10 flex flex-col justify-center items-center text-center px-8 md:px-16 lg:px-24"
+          style={{ minHeight: "100svh", paddingTop: 96, paddingBottom: 96 }}
         >
           {/* Name label */}
           <motion.p
@@ -464,7 +579,7 @@ export default function HeroSection() {
             transition={{ delay: 0.2, duration: 0.5 }}
             style={{
               ...mono,
-              fontSize: 12,
+              fontSize: 14,
               color: "var(--text-secondary)",
               letterSpacing: "0.15em",
               marginBottom: 24,
@@ -476,7 +591,7 @@ export default function HeroSection() {
           {/* Headline */}
           <div
             className="relative"
-            style={{ marginBottom: 40, maxWidth: "min(680px, 100%)" }}
+            style={{ marginBottom: 40, width: "100%" }}
           >
             {/* Construction guide lines */}
             <AnimatePresence>
@@ -496,16 +611,17 @@ export default function HeroSection() {
               style={{
                 fontFamily: "'Playfair Display', Georgia, serif",
                 fontWeight: 700,
-                fontSize: "clamp(60px, 5.2vw, 72px)",
-                lineHeight: 1.05,
+                fontSize: "clamp(40px, 4.2vw, 62px)",
+                lineHeight: 1.12,
                 letterSpacing: "-0.01em",
                 color: "#1A1A1A",
                 position: "relative",
                 zIndex: 1,
+                textAlign: "center",
               }}
             >
               {/* Line 1 */}
-              <span style={{ display: "block", marginBottom: "0.06em" }} aria-hidden>
+              <span style={{ display: "block", marginBottom: "0.06em", minHeight: "1.12em" }} aria-hidden>
                 {showHeadline &&
                   L1_WORDS.map((w, i) => (
                     <RevealWord key={i} text={w} delay={L1_START + i * WORD_STAGGER - 0.65} />
@@ -513,7 +629,7 @@ export default function HeroSection() {
               </span>
 
               {/* Line 2 */}
-              <span style={{ display: "block", marginBottom: "0.06em" }} aria-hidden>
+              <span style={{ display: "block", marginBottom: "0.06em", minHeight: "1.12em" }} aria-hidden>
                 {showHeadline &&
                   L2_WORDS.map((w, i) => (
                     <RevealWord
@@ -544,54 +660,65 @@ export default function HeroSection() {
             </h1>
           </div>
 
-          {/* Subheading — crosshair drag animation */}
+          {/* Subheading — dragged up from below by cursor */}
           <div
             className="relative"
-            style={{ maxWidth: "min(550px, 90vw)", marginBottom: 24 }}
+            style={{ maxWidth: "min(550px, 90vw)", marginBottom: 24, textAlign: "center" }}
           >
-            {/* Fake crosshair cursor */}
-            <AnimatePresence>
-              {subtextState === "gliding" && (
-                <motion.div
-                  key="crosshair"
-                  initial={{ x: 260, y: -10, opacity: 1 }}
-                  animate={{ x: 0, y: 0, opacity: 0 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
-                  style={{
-                    position: "absolute",
-                    top: -8,
-                    left: -8,
-                    pointerEvents: "none",
-                    zIndex: 20,
-                  }}
-                  aria-hidden
-                >
-                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                    <line x1="10" y1="2" x2="10" y2="18" stroke="var(--text-muted)" strokeWidth="1" />
-                    <line x1="2" y1="10" x2="18" y2="10" stroke="var(--text-muted)" strokeWidth="1" />
-                    <circle cx="10" cy="10" r="2" stroke="var(--text-muted)" strokeWidth="1" fill="none" />
-                  </svg>
-                </motion.div>
-              )}
-            </AnimatePresence>
+            {/* Drag cursor — bottom-centre of text box, rises with it */}
+            <motion.div
+              aria-hidden
+              initial={{ y: 40, opacity: 0 }}
+              animate={
+                subtextState === "hidden"
+                  ? { y: 40, opacity: 0 }
+                  : subtextState === "gliding"
+                  ? { y: 0, opacity: 1 }
+                  : { y: 0, opacity: 0 }
+              }
+              transition={{
+                y: { duration: 1.4, ease: [0.25, 1, 0.5, 1] },
+                opacity: subtextState === "gliding"
+                  ? { duration: 0.1 }
+                  : { duration: 0.5 },
+              }}
+              style={{
+                position: "absolute",
+                bottom: -12,
+                left: "calc(50% - 11px)",
+                pointerEvents: "none",
+                zIndex: 20,
+              }}
+            >
+              <svg width="22" height="26" viewBox="0 0 22 26" fill="none">
+                <path
+                  d="M 3 2 L 3 20 L 7.5 15.5 L 11.5 24 L 14.5 22.5 L 10.5 14 L 17 14 Z"
+                  fill="#1A1A1A"
+                  stroke="rgba(255,255,255,0.55)"
+                  strokeWidth="0.85"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </motion.div>
 
             {/* Selection box */}
             <SelectionBox visible={showSelBox && !selBoxFaded} />
 
-            {/* Subtext */}
+            {/* Subtext — floats up from below, cursor lifts it into place */}
             <motion.p
-              initial={{ opacity: 0, x: 260 }}
+              initial={{ y: 40, opacity: 0 }}
               animate={
                 subtextState === "hidden"
-                  ? { opacity: 0.18, x: 260 }
+                  ? { y: 40, opacity: 0 }
                   : subtextState === "gliding"
-                  ? { opacity: 0.18, x: 0 }
-                  : { opacity: 1, x: 0 }
+                  ? { y: 0, opacity: 0.2 }
+                  : { y: 0, opacity: 1 }
               }
               transition={{
-                x: { duration: 0.85, ease: [0.16, 1, 0.3, 1] },
-                opacity: subtextState === "done" ? { duration: 0.25 } : { duration: 0 },
+                y: { duration: 1.4, ease: [0.25, 1, 0.5, 1] },
+                opacity: subtextState === "placed" || subtextState === "done"
+                  ? { duration: 0.4 }
+                  : { duration: 0.18 },
               }}
               style={{
                 fontFamily: "'Inter', system-ui, sans-serif",
@@ -602,59 +729,12 @@ export default function HeroSection() {
                 zIndex: 1,
               }}
             >
-              Product Designer specializing in complex, high-stakes products — enterprise
+              Product Designer specializing in complex, high-stakes products: enterprise
               tools, mobile apps, and everything in between. I bring an architect's
               precision to every pixel.
             </motion.p>
           </div>
 
-          {/* Microcopy */}
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={showMicrocopy ? { opacity: 1 } : { opacity: 0 }}
-            transition={{ duration: 0.4 }}
-            style={{
-              fontFamily: "'Inter', system-ui, sans-serif",
-              fontSize: 14,
-              color: "#9A9A9A",
-              fontStyle: "italic",
-              marginBottom: 16,
-            }}
-          >
-            Currently open to full-time Product Designer roles.
-          </motion.p>
-
-          {/* Status indicator */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={showStatus ? { opacity: 1 } : { opacity: 0 }}
-            transition={{ duration: 0.4 }}
-            className="flex items-center gap-2"
-          >
-            <span
-              className="status-pulse"
-              style={{
-                width: 8,
-                height: 8,
-                borderRadius: "50%",
-                backgroundColor: "var(--status-green)",
-                display: "inline-block",
-                flexShrink: 0,
-              }}
-              aria-hidden
-            />
-            <span
-              style={{
-                ...mono,
-                fontSize: 11,
-                fontWeight: 500,
-                color: "#9A9A9A",
-                letterSpacing: "0.1em",
-              }}
-            >
-              Available for opportunities
-            </span>
-          </motion.div>
         </div>
       </div>
     </DrawingSheetBorder>

@@ -114,7 +114,7 @@ export default function Home() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3 }}
-      className="pt-14"
+      className=""
     >
       {/* Hero */}
       <HeroSection />
