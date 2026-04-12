@@ -161,9 +161,17 @@ Do NOT use `--accent` anywhere else in the portfolio.
 - After updating, verify `src/index.css` (token definitions) and `tailwind.config.js` (theme wiring) are in sync.
 
 ## Brand Assets
-- Always check the `brand_assets/` folder before designing. It may contain logos, color guides, style guides, or images.
-- If assets exist there, use them. Do not use placeholders where real assets are available.
-- If a logo is present, use it. If a color palette is defined, use those exact values — do not invent brand colors.
+- The canonical brand guide is at `Brand Guide/Brand Guide.png` — read it before making any visual decisions.
+- **Follow the brand guide at all times unless the user explicitly says to change something.**
+- Do not use placeholders where real assets are available.
+- Do not invent brand colors — always reference the token system which is derived from the brand guide.
+
+### Brand Guide Summary (`Brand Guide/Brand Guide.png`)
+**Color palette** (in order): White (#FAFAFA) → Black (#1A1A1A) → Medium Gray (#6B6B6B) → Light Gray (#9A9A9A) → Gold/Amber (#B5924C). These map exactly to the CSS tokens defined below.
+**Typography**: Playfair Display (serif) for all headings — Inter (sans-serif) for body text — Space Mono (monospace) for labels, annotations, and metadata.
+**Accent**: The gold (#B5924C) is used sparingly — see accent usage rules below.
+**Layout style**: Blueprint grid background, minimal architectural aesthetic, dark footer bar.
+**Headline**: "Design buildings, taps." — "taps." is italic and rendered in the gold accent color.
 
 ## Anti-Generic Guardrails
 - **Colors:** Never use default Tailwind palette (indigo-500, blue-600, etc.). Pick a custom brand color and derive from it.
