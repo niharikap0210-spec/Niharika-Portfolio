@@ -332,12 +332,12 @@ export default function HeroSection() {
         scale: "SCALE: 1:1 — DATE: 2026",
         sheet: "01 OF 01",
       }}
-      style={{ minHeight: "calc(100vh - 56px)" }}
+      style={{ minHeight: "100vh" }}
     >
       <div
         ref={containerRef}
         className="hero-canvas blueprint-grid relative overflow-hidden"
-        style={{ minHeight: "calc(100vh - 56px)" }}
+        style={{ minHeight: "100vh" }}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
       >
@@ -455,7 +455,7 @@ export default function HeroSection() {
         {/* ── HERO CONTENT ── */}
         <div
           className="relative z-10 flex flex-col justify-center px-8 md:px-16 lg:px-24"
-          style={{ minHeight: "calc(100vh - 56px)", paddingTop: 60, paddingBottom: 120 }}
+          style={{ minHeight: "100vh", paddingTop: 60, paddingBottom: 120 }}
         >
           {/* Name label */}
           <motion.p
