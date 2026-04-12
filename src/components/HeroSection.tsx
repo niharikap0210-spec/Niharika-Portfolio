@@ -321,7 +321,7 @@ export default function HeroSection() {
             const gy   = m * GRID;
             const dist = Math.hypot(gx - x, gy - y);
             if (dist <= RADIUS) {
-              const dotAlpha = 0.3 * (1 - dist / RADIUS) * alpha;
+              const dotAlpha = 0.5 * (1 - dist / RADIUS) * alpha;
               ctx.beginPath();
               ctx.arc(gx, gy, 2, 0, Math.PI * 2);
               ctx.fillStyle = `rgba(181,146,76,${dotAlpha})`;
