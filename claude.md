@@ -119,6 +119,7 @@ Triggers (invoke when):
 - For Vite projects: start the dev server with `npm run dev` (default serves at `http://localhost:5173`).
 - If a custom `serve.mjs` exists in the project root, use `node serve.mjs` instead.
 - If the server is already running, do not start a second instance.
+- **Vercel has been unlinked.** The site is not deployed anywhere. It is only viewable locally via the dev server. Do not reference a live URL or suggest Vercel deployment.
 
 ## Output Defaults
 - For quick prototypes or single-page tests: single `index.html` file with inline styles is acceptable.
