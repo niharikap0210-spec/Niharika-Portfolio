@@ -587,9 +587,9 @@ export default function HeroSection() {
           >
             <span
               style={{
-                fontSize: 16,
+                fontSize: 13,
                 letterSpacing: 0,
-                marginRight: 6,
+                marginRight: 10,
                 verticalAlign: "middle",
                 display: "inline-block",
               }}
