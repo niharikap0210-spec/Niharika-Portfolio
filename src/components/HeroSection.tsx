@@ -301,8 +301,8 @@ export default function HeroSection() {
 
       if (alpha > 0.005) {
         // Effect 1 — faint warm radial wash
-        const grad = ctx.createRadialGradient(x, y, 0, x, y, 120);
-        grad.addColorStop(0, `rgba(181,146,76,${0.06 * alpha})`);
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, 180);
+        grad.addColorStop(0, `rgba(181,146,76,${0.14 * alpha})`);
         grad.addColorStop(1, "rgba(181,146,76,0)");
         ctx.fillStyle = grad;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -321,7 +321,7 @@ export default function HeroSection() {
             const gy   = m * GRID;
             const dist = Math.hypot(gx - x, gy - y);
             if (dist <= RADIUS) {
-              const dotAlpha = 0.7 * (1 - dist / RADIUS) * alpha;
+              const dotAlpha = 0.3 * (1 - dist / RADIUS) * alpha;
               ctx.beginPath();
               ctx.arc(gx, gy, 2, 0, Math.PI * 2);
               ctx.fillStyle = `rgba(181,146,76,${dotAlpha})`;
