@@ -455,7 +455,7 @@ export default function HeroSection() {
         {/* ── HERO CONTENT ── */}
         <div
           className="relative z-10 flex flex-col justify-center items-center text-center px-8 md:px-16 lg:px-24"
-          style={{ minHeight: "100vh", paddingTop: 60, paddingBottom: 120 }}
+          style={{ minHeight: "100vh", paddingTop: 100, paddingBottom: 100 }}
         >
           {/* Name label */}
           <motion.p
@@ -476,7 +476,7 @@ export default function HeroSection() {
           {/* Headline */}
           <div
             className="relative"
-            style={{ marginBottom: 40, maxWidth: "min(680px, 100%)" }}
+            style={{ marginBottom: 40, width: "100%" }}
           >
             {/* Construction guide lines */}
             <AnimatePresence>
@@ -496,8 +496,8 @@ export default function HeroSection() {
               style={{
                 fontFamily: "'Playfair Display', Georgia, serif",
                 fontWeight: 700,
-                fontSize: "clamp(60px, 5.2vw, 72px)",
-                lineHeight: 1.05,
+                fontSize: "clamp(36px, 3.6vw, 52px)",
+                lineHeight: 1.12,
                 letterSpacing: "-0.01em",
                 color: "#1A1A1A",
                 position: "relative",
