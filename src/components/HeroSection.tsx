@@ -660,38 +660,36 @@ export default function HeroSection() {
             </h1>
           </div>
 
-          {/* Subheading — dragged into position by cursor */}
+          {/* Subheading — dragged up from below by cursor */}
           <div
             className="relative"
             style={{ maxWidth: "min(550px, 90vw)", marginBottom: 24, textAlign: "center" }}
           >
-            {/* Drag cursor — moves with the text box, fades on arrival */}
+            {/* Drag cursor — bottom-centre of text box, rises with it */}
             <motion.div
               aria-hidden
-              initial={{ x: 72, y: -22, opacity: 0 }}
+              initial={{ y: 40, opacity: 0 }}
               animate={
                 subtextState === "hidden"
-                  ? { x: 72, y: -22, opacity: 0 }
+                  ? { y: 40, opacity: 0 }
                   : subtextState === "gliding"
-                  ? { x: 0, y: 0, opacity: 1 }
-                  : { x: 0, y: 0, opacity: 0 }
+                  ? { y: 0, opacity: 1 }
+                  : { y: 0, opacity: 0 }
               }
               transition={{
-                x: { duration: 1.2, ease: [0.16, 1, 0.3, 1] },
-                y: { duration: 1.2, ease: [0.16, 1, 0.3, 1] },
+                y: { duration: 1.4, ease: [0.25, 1, 0.5, 1] },
                 opacity: subtextState === "gliding"
-                  ? { duration: 0.12 }
-                  : { duration: 0.35 },
+                  ? { duration: 0.1 }
+                  : { duration: 0.5 },
               }}
               style={{
                 position: "absolute",
-                top: -6,
-                left: -6,
+                bottom: -12,
+                left: "calc(50% - 11px)",
                 pointerEvents: "none",
                 zIndex: 20,
               }}
             >
-              {/* OS-style arrow cursor */}
               <svg width="22" height="26" viewBox="0 0 22 26" fill="none">
                 <path
                   d="M 3 2 L 3 20 L 7.5 15.5 L 11.5 24 L 14.5 22.5 L 10.5 14 L 17 14 Z"
@@ -706,22 +704,21 @@ export default function HeroSection() {
             {/* Selection box */}
             <SelectionBox visible={showSelBox && !selBoxFaded} />
 
-            {/* Subtext — starts at same offset as cursor, dragged to position */}
+            {/* Subtext — floats up from below, cursor lifts it into place */}
             <motion.p
-              initial={{ x: 72, y: -22, opacity: 0 }}
+              initial={{ y: 40, opacity: 0 }}
               animate={
                 subtextState === "hidden"
-                  ? { x: 72, y: -22, opacity: 0 }
+                  ? { y: 40, opacity: 0 }
                   : subtextState === "gliding"
-                  ? { x: 0, y: 0, opacity: 0.2 }
-                  : { x: 0, y: 0, opacity: 1 }
+                  ? { y: 0, opacity: 0.2 }
+                  : { y: 0, opacity: 1 }
               }
               transition={{
-                x: { duration: 1.2, ease: [0.16, 1, 0.3, 1] },
-                y: { duration: 1.2, ease: [0.16, 1, 0.3, 1] },
+                y: { duration: 1.4, ease: [0.25, 1, 0.5, 1] },
                 opacity: subtextState === "placed" || subtextState === "done"
-                  ? { duration: 0.35 }
-                  : { duration: 0.15 },
+                  ? { duration: 0.4 }
+                  : { duration: 0.18 },
               }}
               style={{
                 fontFamily: "'Inter', system-ui, sans-serif",
