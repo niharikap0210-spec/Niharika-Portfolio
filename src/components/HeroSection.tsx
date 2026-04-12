@@ -585,7 +585,16 @@ export default function HeroSection() {
               marginBottom: 24,
             }}
           >
-            Niharika Pundlik
+            <span
+              style={{
+                fontSize: 16,
+                letterSpacing: 0,
+                marginRight: 6,
+                verticalAlign: "middle",
+                display: "inline-block",
+              }}
+              aria-hidden
+            >👋🏼</span>Niharika Pundlik
           </motion.p>
 
           {/* Headline */}
