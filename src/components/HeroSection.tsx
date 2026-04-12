@@ -224,6 +224,14 @@ export default function HeroSection() {
   const parallaxRef = useRef<HTMLDivElement>(null);
   const cursorRef = useRef<HTMLDivElement>(null);
 
+  /* ── Canvas accent effect refs ── */
+  const canvasRef    = useRef<HTMLCanvasElement>(null);
+  const cMouse       = useRef({ x: 0, y: 0 });
+  const cOpacity     = useRef(0);          // current lerped opacity
+  const cTarget      = useRef(0);          // 0 = fade out, 1 = fade in
+  const cRaf         = useRef<number | null>(null);
+  const cLastDraw    = useRef({ x: -1000, y: -1000 });
+
   // Animation state
   const [showGuides, setShowGuides] = useState(false);
   const [showHeadline, setShowHeadline] = useState(false);
@@ -273,6 +281,88 @@ export default function HeroSection() {
     return () => clearInterval(interval);
   }, [displayWord, isDeleting, wordIndex, showRotatingWord]);
 
+  /* ── Canvas accent: draw loop ── */
+  const drawCanvasFrame = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    // Lerp current opacity toward target (0.08 factor ≈ 200ms fade-in, 400ms fade-out feel)
+    cOpacity.current += (cTarget.current - cOpacity.current) * 0.08;
+
+    const { x, y } = cMouse.current;
+    const moved   = Math.hypot(x - cLastDraw.current.x, y - cLastDraw.current.y) > 2;
+    const lerping = Math.abs(cOpacity.current - cTarget.current) > 0.002;
+
+    if (moved || lerping) {
+      const alpha = cOpacity.current;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      if (alpha > 0.005) {
+        // Effect 1 — faint warm radial wash
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, 120);
+        grad.addColorStop(0, `rgba(181,146,76,${0.06 * alpha})`);
+        grad.addColorStop(1, "rgba(181,146,76,0)");
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Effect 2 — accent dots at 80px grid intersections within 160px radius
+        const GRID   = 80;
+        const RADIUS = 160;
+        const n0 = Math.floor((x - RADIUS) / GRID);
+        const n1 = Math.ceil((x  + RADIUS) / GRID);
+        const m0 = Math.floor((y - RADIUS) / GRID);
+        const m1 = Math.ceil((y  + RADIUS) / GRID);
+
+        for (let n = n0; n <= n1; n++) {
+          for (let m = m0; m <= m1; m++) {
+            const gx   = n * GRID;
+            const gy   = m * GRID;
+            const dist = Math.hypot(gx - x, gy - y);
+            if (dist <= RADIUS) {
+              const dotAlpha = 0.7 * (1 - dist / RADIUS) * alpha;
+              ctx.beginPath();
+              ctx.arc(gx, gy, 2, 0, Math.PI * 2);
+              ctx.fillStyle = `rgba(181,146,76,${dotAlpha})`;
+              ctx.fill();
+            }
+          }
+        }
+      }
+      cLastDraw.current = { x, y };
+    }
+
+    // Keep looping while there is visible opacity; stop cleanly when faded out
+    if (cTarget.current > 0 || cOpacity.current > 0.002) {
+      cRaf.current = requestAnimationFrame(drawCanvasFrame);
+    } else {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      cOpacity.current = 0;
+      cRaf.current = null;
+    }
+  }, []); // all values are refs — stable, no deps needed
+
+  // Resize canvas to match container whenever container size changes
+  useEffect(() => {
+    const canvas    = canvasRef.current;
+    const container = containerRef.current;
+    if (!canvas || !container) return;
+    const sync = () => {
+      canvas.width  = container.offsetWidth;
+      canvas.height = container.offsetHeight;
+    };
+    sync();
+    const ro = new ResizeObserver(sync);
+    ro.observe(container);
+    return () => ro.disconnect();
+  }, []);
+
+  // Cancel RAF on unmount
+  useEffect(() => {
+    return () => { if (cRaf.current !== null) cancelAnimationFrame(cRaf.current); };
+  }, []);
+
   /* ── Infinite grid interaction ── */
   const mouseX = useMotionValue(-9999);
   const mouseY = useMotionValue(-9999);
@@ -294,6 +384,13 @@ export default function HeroSection() {
 
     mouseX.set(x);
     mouseY.set(y);
+
+    // Canvas accent — update mouse, kick off loop if not running
+    cMouse.current = { x, y };
+    if (cTarget.current === 0) {
+      cTarget.current = 1;
+      if (cRaf.current === null) cRaf.current = requestAnimationFrame(drawCanvasFrame);
+    }
 
     // Custom cursor
     if (cursorRef.current) {
@@ -318,6 +415,8 @@ export default function HeroSection() {
     if (cursorRef.current) cursorRef.current.style.opacity = "0";
     if (spotlightRef.current) spotlightRef.current.style.background = "transparent";
     if (parallaxRef.current) parallaxRef.current.style.transform = "translate(0, 0)";
+    // Canvas accent — begin fade-out; RAF loop will stop itself when fully transparent
+    cTarget.current = 0;
   }, [mouseX, mouseY]);
 
   return (
@@ -414,6 +513,21 @@ export default function HeroSection() {
         >
           <GridSVGPattern id="hero-grid-reveal" offsetX={gridOffsetX} offsetY={gridOffsetY} />
         </motion.div>
+
+        {/* Canvas accent layer — accent glow + grid-node dots, above grid, below content */}
+        <canvas
+          ref={canvasRef}
+          aria-hidden
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            pointerEvents: "none",
+            zIndex: 1,
+          }}
+        />
 
         {/* Parallax layer for decorative elements */}
         <div
