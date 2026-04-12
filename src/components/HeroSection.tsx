@@ -231,8 +231,6 @@ export default function HeroSection() {
   const [subtextState, setSubtextState] = useState<"hidden" | "gliding" | "placed" | "done">("hidden");
   const [showSelBox, setShowSelBox] = useState(false);
   const [selBoxFaded, setSelBoxFaded] = useState(false);
-  const [showMicrocopy, setShowMicrocopy] = useState(false);
-  const [showStatus, setShowStatus] = useState(false);
   const [wordIndex, setWordIndex] = useState(0);
   const [displayWord, setDisplayWord] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
@@ -250,8 +248,6 @@ export default function HeroSection() {
     q(() => { setSubtextState("placed"); setShowSelBox(true); }, (SUBTEXT_START + 0.85) * 1000);
     q(() => setSelBoxFaded(true), (SUBTEXT_START + 2.4) * 1000);
     q(() => setSubtextState("done"), (SUBTEXT_START + 1.2) * 1000);
-    q(() => setShowMicrocopy(true), (SUBTEXT_START + 1.1) * 1000);
-    q(() => setShowStatus(true), (SUBTEXT_START + 1.4) * 1000);
 
     return () => ids.forEach(clearTimeout);
   }, []);
@@ -332,12 +328,12 @@ export default function HeroSection() {
         scale: "SCALE: 1:1 — DATE: 2026",
         sheet: "01 OF 01",
       }}
-      style={{ minHeight: "100vh" }}
+      style={{ minHeight: "100svh" }}
     >
       <div
         ref={containerRef}
         className="hero-canvas blueprint-grid relative overflow-hidden"
-        style={{ minHeight: "100vh" }}
+        style={{ minHeight: "100svh" }}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
       >
@@ -434,18 +430,23 @@ export default function HeroSection() {
           }}
         >
           {/* Sketch — upper left: floor plan */}
-          <div className="hidden lg:block absolute" style={{ top: "10%", left: "5%", opacity: 0.75 }}>
-            <HandDrawnSketch type="floorPlan" width={130} height={90} annotation="initial layout" delay={0.5} animateOnMount />
+          <div className="hidden lg:block absolute" style={{ top: "8%", left: "4%", opacity: 0.72 }}>
+            <HandDrawnSketch type="floorPlan" width={120} height={85} annotation="initial layout" delay={0.5} animateOnMount />
           </div>
 
-          {/* Sketch — upper right: wireframe */}
-          <div className="hidden lg:block absolute" style={{ top: "10%", right: "5%", opacity: 0.75 }}>
-            <HandDrawnSketch type="wireframe" width={60} height={80} annotation="v3 iteration" delay={0.9} animateOnMount />
+          {/* Sketch — upper right: wireframe (slightly lower than floor plan) */}
+          <div className="hidden lg:block absolute" style={{ top: "15%", right: "6%", opacity: 0.68 }}>
+            <HandDrawnSketch type="wireframe" width={55} height={75} annotation="v3 iteration" delay={0.8} animateOnMount />
           </div>
 
-          {/* Sketch — lower right: perspective */}
-          <div className="hidden lg:block absolute" style={{ bottom: "10%", right: "5%", opacity: 0.75 }}>
-            <HandDrawnSketch type="perspective" width={120} height={75} annotation="spatial flow" delay={1.3} animateOnMount />
+          {/* Sketch — lower right: perspective (well above title block) */}
+          <div className="hidden lg:block absolute" style={{ bottom: "26%", right: "5%", opacity: 0.72 }}>
+            <HandDrawnSketch type="perspective" width={115} height={70} annotation="spatial flow" delay={1.2} animateOnMount />
+          </div>
+
+          {/* Sketch — lower left: morph transition */}
+          <div className="hidden lg:block absolute" style={{ bottom: "14%", left: "5%", opacity: 0.65 }}>
+            <HandDrawnSketch type="morphTransition" width={140} height={75} annotation="from arch to digital" delay={1.6} animateOnMount />
           </div>
         </div>
 
@@ -455,7 +456,7 @@ export default function HeroSection() {
         {/* ── HERO CONTENT ── */}
         <div
           className="relative z-10 flex flex-col justify-center items-center text-center px-8 md:px-16 lg:px-24"
-          style={{ minHeight: "100vh", paddingTop: 100, paddingBottom: 100 }}
+          style={{ minHeight: "100svh", paddingTop: 96, paddingBottom: 96 }}
         >
           {/* Name label */}
           <motion.p
@@ -464,7 +465,7 @@ export default function HeroSection() {
             transition={{ delay: 0.2, duration: 0.5 }}
             style={{
               ...mono,
-              fontSize: 12,
+              fontSize: 14,
               color: "var(--text-secondary)",
               letterSpacing: "0.15em",
               marginBottom: 24,
@@ -496,7 +497,7 @@ export default function HeroSection() {
               style={{
                 fontFamily: "'Playfair Display', Georgia, serif",
                 fontWeight: 700,
-                fontSize: "clamp(36px, 3.6vw, 52px)",
+                fontSize: "clamp(40px, 4.2vw, 62px)",
                 lineHeight: 1.12,
                 letterSpacing: "-0.01em",
                 color: "#1A1A1A",
@@ -609,53 +610,6 @@ export default function HeroSection() {
             </motion.p>
           </div>
 
-          {/* Microcopy */}
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={showMicrocopy ? { opacity: 1 } : { opacity: 0 }}
-            transition={{ duration: 0.4 }}
-            style={{
-              fontFamily: "'Inter', system-ui, sans-serif",
-              fontSize: 14,
-              color: "#9A9A9A",
-              fontStyle: "italic",
-              marginBottom: 16,
-            }}
-          >
-            Currently open to full-time Product Designer roles.
-          </motion.p>
-
-          {/* Status indicator */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={showStatus ? { opacity: 1 } : { opacity: 0 }}
-            transition={{ duration: 0.4 }}
-            className="flex items-center gap-2"
-          >
-            <span
-              className="status-pulse"
-              style={{
-                width: 8,
-                height: 8,
-                borderRadius: "50%",
-                backgroundColor: "var(--status-green)",
-                display: "inline-block",
-                flexShrink: 0,
-              }}
-              aria-hidden
-            />
-            <span
-              style={{
-                ...mono,
-                fontSize: 11,
-                fontWeight: 500,
-                color: "#9A9A9A",
-                letterSpacing: "0.1em",
-              }}
-            >
-              Available for opportunities
-            </span>
-          </motion.div>
         </div>
       </div>
     </DrawingSheetBorder>
