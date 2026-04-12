@@ -585,16 +585,7 @@ export default function HeroSection() {
               marginBottom: 24,
             }}
           >
-            <span
-              style={{
-                fontSize: 13,
-                letterSpacing: 0,
-                marginRight: 10,
-                verticalAlign: "middle",
-                display: "inline-block",
-              }}
-              aria-hidden
-            >👋🏼</span>Niharika Pundlik
+            Niharika Pundlik
           </motion.p>
 
           {/* Headline */}
