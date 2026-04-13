@@ -37,11 +37,11 @@ function DrawingSheet({
         titleBlock={{ sheet: sheetNumber }}
         className="blueprint-grid-subtle"
         style={{
-          padding: "56px 0 64px",
+          padding: "clamp(36px, 6vw, 56px) 0 clamp(40px, 6vw, 64px)",
           borderTop: "1px solid var(--border)",
         }}
       >
-        <div className="max-w-4xl mx-auto px-6 md:px-10">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-10">
           <SectionMarker label={sheetTitle} letter={letter} className="mb-8" />
           {children}
         </div>
@@ -75,9 +75,9 @@ export default function CaseStudy() {
           sheet: "01 OF 04",
         }}
         className="blueprint-grid"
-        style={{ padding: "80px 0 64px" }}
+        style={{ padding: "clamp(48px, 8vw, 80px) 0 clamp(40px, 6vw, 64px)" }}
       >
-        <div className="max-w-4xl mx-auto px-6 md:px-10">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-10">
           {/* Back link */}
           <Link
             to="/"
@@ -204,7 +204,7 @@ export default function CaseStudy() {
       </DrawingSheetBorder>
 
       {/* Hero image */}
-      <div className="max-w-4xl mx-auto px-6 md:px-10 py-8">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-10 py-6 md:py-8">
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -516,24 +516,25 @@ export default function CaseStudy() {
 
       {/* Project navigation */}
       <div
-        className="max-w-4xl mx-auto px-6 md:px-10 py-16 flex justify-between items-center"
+        className="max-w-4xl mx-auto px-4 sm:px-6 md:px-10 py-10 md:py-16 flex flex-wrap justify-between items-center gap-6"
         style={{ borderTop: "1px solid var(--border)" }}
       >
         {adjacent.prev ? (
           <Link
             to={`/work/${adjacent.prev.slug}`}
-            className="group flex items-center gap-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded"
+            className="group flex items-center gap-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded min-w-0 max-w-[45%]"
             style={{ textDecoration: "none" }}
           >
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style={{ flexShrink: 0 }}>
               <path d="M13 8H3M7 4L3 8l4 4" stroke="var(--text-muted)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
-            <div>
+            <div className="min-w-0">
               <p style={{ ...mono, fontSize: 8, color: "var(--text-muted)", marginBottom: 3 }}>Previous</p>
               <p
+                className="truncate"
                 style={{
                   fontFamily: "'Playfair Display', Georgia, serif",
-                  fontSize: 20,
+                  fontSize: "clamp(14px, 2.5vw, 20px)",
                   color: "var(--text-secondary)",
                   transitionProperty: "color",
                   transitionDuration: "150ms",
@@ -552,15 +553,16 @@ export default function CaseStudy() {
         {adjacent.next && (
           <Link
             to={`/work/${adjacent.next.slug}`}
-            className="group flex items-center gap-3 text-right focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded"
+            className="group flex items-center gap-3 text-right focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded ml-auto min-w-0 max-w-[45%]"
             style={{ textDecoration: "none" }}
           >
-            <div>
+            <div className="min-w-0">
               <p style={{ ...mono, fontSize: 8, color: "var(--text-muted)", marginBottom: 3 }}>Next</p>
               <p
+                className="truncate"
                 style={{
                   fontFamily: "'Playfair Display', Georgia, serif",
-                  fontSize: 20,
+                  fontSize: "clamp(14px, 2.5vw, 20px)",
                   color: "var(--text-secondary)",
                   transitionProperty: "color",
                   transitionDuration: "150ms",
@@ -571,7 +573,7 @@ export default function CaseStudy() {
                 {adjacent.next.title}
               </p>
             </div>
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style={{ flexShrink: 0 }}>
               <path d="M3 8h10M9 4l4 4-4 4" stroke="var(--text-muted)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </Link>

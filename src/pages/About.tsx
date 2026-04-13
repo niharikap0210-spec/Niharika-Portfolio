@@ -194,8 +194,8 @@ function ExperienceTimeline() {
               initial={{ opacity: 0, x: -16 }}
               animate={inView ? { opacity: 1, x: 0 } : { opacity: 0, x: -16 }}
               transition={{ duration: 0.5, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
-              className="flex gap-8"
-              style={{ paddingLeft: 0, paddingBottom: i < experiences.length - 1 ? 40 : 0 }}
+              className="flex gap-4 sm:gap-8"
+              style={{ paddingLeft: 0, paddingBottom: i < experiences.length - 1 ? 32 : 0 }}
             >
               {/* Elevation marker */}
               <div
@@ -313,9 +313,9 @@ export default function About() {
       <DrawingSheetBorder
         titleBlock={{ name: "NIHARIKA PUNDLIK", sheet: "ABOUT", scale: "SCALE: 1:1" }}
         className="blueprint-grid"
-        style={{ padding: "80px 0 64px" }}
+        style={{ padding: "clamp(48px, 8vw, 80px) 0 clamp(40px, 6vw, 64px)" }}
       >
-        <div className="max-w-6xl mx-auto px-6 md:px-10">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10">
           <SectionMarker label="About" letter="B" className="mb-8" />
           <motion.h1
             custom={1}
@@ -337,18 +337,18 @@ export default function About() {
       </DrawingSheetBorder>
 
       {/* Photo + bio */}
-      <section className="max-w-6xl mx-auto px-6 md:px-10 py-20">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
+      <section className="max-w-6xl mx-auto px-6 md:px-10 py-12 md:py-20">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16">
           {/* Photo col */}
           <motion.div
-            className="lg:col-span-4"
+            className="lg:col-span-4 flex justify-center lg:block"
             custom={2}
             variants={itemVariants}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
           >
-            <div className="relative inline-block">
+            <div className="relative inline-block w-full lg:w-auto">
               {/* Tape decoration */}
               <div
                 aria-hidden
@@ -379,14 +379,14 @@ export default function About() {
                 }}
               />
 
-              {/* Annotation */}
+              {/* Annotation — only safe to show when photo column is narrow enough (lg grid layout) */}
               <div
                 aria-hidden
+                className="hidden lg:flex"
                 style={{
                   position: "absolute",
                   bottom: 24,
                   right: -32,
-                  display: "flex",
                   alignItems: "center",
                   gap: 6,
                 }}
@@ -515,10 +515,10 @@ export default function About() {
         style={{
           borderTop: "1px solid var(--border)",
           borderBottom: "1px solid var(--border)",
-          padding: "80px 0",
+          padding: "60px 0",
         }}
       >
-        <div className="max-w-6xl mx-auto px-6 md:px-10">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10">
           <SectionMarker label="Toolkit" letter="C" className="mb-10" />
           <motion.h2
             initial={{ opacity: 0, y: 16 }}
@@ -541,7 +541,7 @@ export default function About() {
       </section>
 
       {/* Experience timeline */}
-      <section className="max-w-6xl mx-auto px-6 md:px-10 py-20">
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10 py-12 md:py-20">
         <SectionMarker label="Experience" letter="D" className="mb-10" />
         <motion.h2
           initial={{ opacity: 0, y: 16 }}
@@ -567,10 +567,10 @@ export default function About() {
         className="blueprint-grid-subtle"
         style={{
           borderTop: "1px solid var(--border)",
-          padding: "80px 0",
+          padding: "60px 0",
         }}
       >
-        <div className="max-w-6xl mx-auto px-6 md:px-10">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10">
           <SectionMarker label="Education" letter="E" className="mb-10" />
           <motion.h2
             initial={{ opacity: 0, y: 16 }}

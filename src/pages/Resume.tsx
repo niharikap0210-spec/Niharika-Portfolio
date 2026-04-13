@@ -49,9 +49,9 @@ export default function Resume() {
       <DrawingSheetBorder
         titleBlock={{ name: "NIHARIKA PUNDLIK", sheet: "RESUME / CONTACT" }}
         className="blueprint-grid"
-        style={{ padding: "80px 0 64px" }}
+        style={{ padding: "clamp(48px, 8vw, 80px) 0 clamp(40px, 6vw, 64px)" }}
       >
-        <div className="max-w-6xl mx-auto px-6 md:px-10">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10">
           <SectionMarker label="Resume & Contact" letter="R" className="mb-8" />
           <motion.h1
             initial={{ opacity: 0, y: 16 }}
@@ -88,7 +88,7 @@ export default function Resume() {
       </DrawingSheetBorder>
 
       {/* Contact + Resume section */}
-      <section className="max-w-6xl mx-auto px-6 md:px-10 py-20">
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10 py-12 md:py-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
           {/* Contact links */}
           <motion.div
@@ -288,11 +288,11 @@ export default function Resume() {
         style={{
           borderTop: "1px solid var(--border)",
           borderBottom: "1px solid var(--border)",
-          padding: "32px 0",
+          padding: "28px 0",
           backgroundColor: "rgba(124,58,237,0.03)",
         }}
       >
-        <div className="max-w-6xl mx-auto px-6 md:px-10 flex items-center justify-center gap-3">
+        <div className="max-w-6xl mx-auto px-6 md:px-10 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 text-center sm:text-left">
           <span
             className="status-pulse"
             style={{
@@ -307,7 +307,7 @@ export default function Resume() {
           <p
             style={{
               fontFamily: "'Space Mono', monospace",
-              fontSize: 11,
+              fontSize: "clamp(9px, 2vw, 11px)",
               color: "var(--text-muted)",
               letterSpacing: "0.1em",
               textTransform: "uppercase",

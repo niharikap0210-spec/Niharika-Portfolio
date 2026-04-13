@@ -181,6 +181,18 @@ body {
   animation: cursor-blink 0.75s step-end infinite;
 }
 
+/* ── Mobile: restore default cursor on touch-only devices ───────── */
+@media (hover: none) {
+  .hero-canvas {
+    cursor: auto;
+  }
+}
+
+/* ── Prevent long words from overflowing on small screens ──────── */
+p, h1, h2, h3, h4, blockquote {
+  overflow-wrap: break-word;
+}
+
 /* ── Reduced motion ─────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
