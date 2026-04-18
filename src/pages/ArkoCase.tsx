@@ -1,11 +1,8 @@
 import { motion, useInView } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useRef } from "react";
-import { ArrowLeft, ArrowRight } from "@phosphor-icons/react";
 import SectionMarker from "../components/SectionMarker";
-import DrawingSheetBorder from "../components/DrawingSheetBorder";
 import HandDrawnSketch from "../components/HandDrawnSketch";
-import AnnotationLabel from "../components/AnnotationLabel";
 import { getAdjacentProjects } from "../data/projects";
 
 const mono: React.CSSProperties = {
@@ -14,11 +11,14 @@ const mono: React.CSSProperties = {
   letterSpacing: "0.12em",
 };
 
+const serif = "'Playfair Display', Georgia, serif";
+const sans  = "'Inter', system-ui, sans-serif";
+
 /* ── Fade in on scroll ──────────────────────────────────────────── */
-function FadeIn({
+function Reveal({
   children,
   delay = 0,
-  y = 20,
+  y = 24,
   className = "",
 }: {
   children: React.ReactNode;
@@ -27,13 +27,13 @@ function FadeIn({
   className?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-50px" });
+  const inView = useInView(ref, { once: true, margin: "-60px" });
   return (
     <motion.div
       ref={ref}
       initial={{ opacity: 0, y }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.65, delay, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: 0.7, delay, ease: [0.16, 1, 0.3, 1] }}
       className={className}
     >
       {children}
@@ -41,162 +41,107 @@ function FadeIn({
   );
 }
 
-/* ── Architectural dimension line annotation ────────────────────── */
-function DimensionAnnotation({ label }: { label: string }) {
+/* ── Thin section divider with label ────────────────────────────── */
+function Divider({ label }: { label: string }) {
   return (
     <div
-      style={{ display: "flex", alignItems: "center", gap: 6 }}
-      aria-hidden
+      className="flex items-center gap-4"
+      style={{ margin: "clamp(56px, 7vw, 80px) 0 clamp(40px, 5vw, 56px)" }}
     >
-      <svg viewBox="0 0 8 20" width={8} height={20} fill="none">
-        <line x1="4" y1="0" x2="4" y2="20" stroke="var(--text-muted)" strokeWidth="0.75" opacity="0.45" />
-        <line x1="0" y1="0" x2="8" y2="0" stroke="var(--text-muted)" strokeWidth="0.75" opacity="0.45" />
-        <line x1="0" y1="20" x2="8" y2="20" stroke="var(--text-muted)" strokeWidth="0.75" opacity="0.45" />
-      </svg>
+      <div
+        style={{ flex: 1, height: "0.75px", backgroundColor: "var(--border)" }}
+      />
       <span
-        style={{
-          ...mono,
-          fontSize: 8,
-          color: "var(--text-muted)",
-          opacity: 0.55,
-          writingMode: "vertical-rl" as const,
-          transform: "rotate(180deg)",
-        }}
+        style={{ ...mono, fontSize: 9, color: "var(--text-muted)", whiteSpace: "nowrap" }}
       >
         {label}
       </span>
+      <div
+        style={{ flex: 1, height: "0.75px", backgroundColor: "var(--border)" }}
+      />
     </div>
   );
 }
 
-/* ── Room wireframe illustration ────────────────────────────────── */
-function RoomWireframe() {
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-40px" });
-  const paths = [
-    "M 10 75 L 60 25",
-    "M 110 75 L 60 25",
-    "M 10 75 L 110 75",
-    "M 10 15 L 60 25",
-    "M 110 15 L 60 25",
-    "M 10 15 L 110 15",
-    "M 10 15 L 10 75",
-    "M 110 15 L 110 75",
-    "M 82 22 L 82 48 L 106 48 L 106 22",
-    "M 94 22 L 94 48",
-    "M 30 65 L 78 65 L 78 55 L 30 55 Z",
-    "M 30 55 L 30 51",
-    "M 78 55 L 78 51",
-    "M 30 51 L 78 51",
-  ];
+/* ── Screen image — web screenshot ──────────────────────────────── */
+function Screen({
+  src,
+  alt,
+  caption,
+  style: extraStyle,
+}: {
+  src: string;
+  alt: string;
+  caption?: string;
+  style?: React.CSSProperties;
+}) {
   return (
-    <div ref={ref} aria-hidden style={{ opacity: 0.18 }}>
-      <svg
-        viewBox="0 0 120 90"
-        fill="none"
-        width="100%"
-        stroke="var(--text-secondary)"
-        strokeWidth="0.85"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        {paths.map((d, i) => (
-          <motion.path
-            key={i}
-            d={d}
-            initial={{ pathLength: 0, opacity: 0 }}
-            animate={
-              inView
-                ? {
-                    pathLength: 1,
-                    opacity: 1,
-                    transition: {
-                      pathLength: { delay: i * 0.06, duration: 0.7, ease: "easeInOut" },
-                      opacity: { delay: i * 0.06, duration: 0.2 },
-                    },
-                  }
-                : {}
-            }
-          />
-        ))}
-      </svg>
+    <div style={extraStyle}>
+      <img
+        src={src}
+        alt={alt}
+        style={{
+          width: "100%",
+          display: "block",
+          border: "1px solid var(--border)",
+          boxShadow:
+            "0 1px 3px rgba(0,0,0,0.04), 0 8px 32px rgba(0,0,0,0.07), 0 24px 64px rgba(0,0,0,0.04)",
+        }}
+      />
+      {caption && (
+        <p
+          style={{
+            ...mono,
+            fontSize: 9,
+            color: "var(--text-muted)",
+            marginTop: 10,
+          }}
+        >
+          {caption}
+        </p>
+      )}
     </div>
   );
 }
 
-/* ── Simple flow diagram ─────────────────────────────────────────── */
-function FlowDiagram() {
-  const steps = ["Scan", "Design", "Share", "Approve"];
+/* ── Phone image (device frame is already baked into asset) ─────── */
+function Phone({
+  src,
+  alt,
+  label,
+  width = 200,
+}: {
+  src: string;
+  alt: string;
+  label?: string;
+  width?: number;
+}) {
   return (
     <div
-      style={{ display: "flex", alignItems: "center", gap: 0 }}
-      aria-hidden
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: 10,
+        flexShrink: 0,
+        width,
+      }}
     >
-      {steps.map((s, i) => (
-        <div key={s} style={{ display: "flex", alignItems: "center" }}>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              gap: 5,
-            }}
-          >
-            <div
-              style={{
-                width: 30,
-                height: 30,
-                borderRadius: "50%",
-                border: "0.75px solid var(--text-muted)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                opacity: 0.35,
-              }}
-            >
-              <span style={{ ...mono, fontSize: 7, color: "var(--text-muted)" }}>
-                {String(i + 1).padStart(2, "0")}
-              </span>
-            </div>
-            <span
-              style={{
-                fontFamily: "'Caveat', cursive",
-                fontSize: 11,
-                color: "var(--text-secondary)",
-                opacity: 0.45,
-              }}
-            >
-              {s}
-            </span>
-          </div>
-          {i < steps.length - 1 && (
-            <svg
-              viewBox="0 0 32 12"
-              width={32}
-              height={12}
-              fill="none"
-              style={{ marginBottom: 16 }}
-            >
-              <line
-                x1="0"
-                y1="6"
-                x2="26"
-                y2="6"
-                stroke="var(--text-muted)"
-                strokeWidth="0.75"
-                strokeDasharray="3 2"
-                opacity="0.3"
-              />
-              <path
-                d="M 22 3 L 26 6 L 22 9"
-                stroke="var(--text-muted)"
-                strokeWidth="0.75"
-                opacity="0.3"
-              />
-            </svg>
-          )}
-        </div>
-      ))}
+      <img src={src} alt={alt} style={{ width: "100%", display: "block" }} />
+      {label && (
+        <p
+          style={{
+            ...mono,
+            fontSize: 8,
+            color: "var(--text-muted)",
+            textAlign: "center",
+            lineHeight: 1.5,
+            whiteSpace: "pre-line",
+          }}
+        >
+          {label}
+        </p>
+      )}
     </div>
   );
 }
@@ -212,26 +157,15 @@ export default function ArkoCase() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.35 }}
+      transition={{ duration: 0.4 }}
       className="pt-14"
     >
+      <div className="max-w-4xl mx-auto px-6 md:px-10">
 
-      {/* ═══════════════════════════════════════════════════════
-          SHEET 01 — OVERVIEW
-      ═══════════════════════════════════════════════════════ */}
-      <DrawingSheetBorder
-        titleBlock={{
-          project: "Arko",
-          role: "Product Designer",
-          duration: "14 Weeks",
-          sheet: "01 OF 05",
-        }}
-        className="blueprint-grid"
-        style={{ padding: "clamp(56px, 8vw, 88px) 0 clamp(48px, 7vw, 72px)" }}
-      >
-        <div className="max-w-5xl mx-auto px-6 md:px-10">
+        {/* ── HERO ─────────────────────────────────────────────── */}
+        <section style={{ paddingTop: "clamp(52px, 8vw, 88px)", paddingBottom: "clamp(48px, 7vw, 72px)" }}>
 
-          {/* Back link */}
+          {/* Back */}
           <Link
             to="/"
             style={{
@@ -253,876 +187,690 @@ export default function ArkoCase() {
               ((e.currentTarget as HTMLElement).style.color = "var(--text-muted)")
             }
           >
-            <ArrowLeft size={14} />
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M11.5 7h-9M5 3.5L1.5 7 5 10.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
             All Work
           </Link>
 
-          {/* Asymmetric grid: title left, hero screenshot right */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
-
-            {/* Left — Title block */}
-            <div className="lg:col-span-5">
-              <motion.div
-                initial={{ opacity: 0, x: -16 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.1, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-              >
-                {/* Tags */}
-                <div
-                  style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 24 }}
-                >
-                  {["B2B SaaS", "Web + iOS", "14 Weeks"].map((t) => (
-                    <span
-                      key={t}
-                      style={{
-                        ...mono,
-                        fontSize: 9,
-                        color: "var(--text-muted)",
-                        border: "1px solid var(--border)",
-                        padding: "3px 8px",
-                        backgroundColor: "var(--bg-elevated)",
-                      }}
-                    >
-                      {t}
-                    </span>
-                  ))}
-                </div>
-
-                <h1
-                  style={{
-                    fontFamily: "'Playfair Display', Georgia, serif",
-                    fontWeight: 700,
-                    fontSize: "clamp(52px, 8vw, 88px)",
-                    color: "var(--text-primary)",
-                    letterSpacing: "-0.03em",
-                    lineHeight: 0.95,
-                    marginBottom: 20,
-                  }}
-                >
-                  Arko
-                </h1>
-
-                <p
-                  style={{
-                    fontFamily: "'Inter', system-ui, sans-serif",
-                    fontSize: "clamp(15px, 1.6vw, 18px)",
-                    color: "var(--text-secondary)",
-                    lineHeight: 1.7,
-                    marginBottom: 36,
-                    maxWidth: 380,
-                  }}
-                >
-                  Spatial design platform letting interior design firms scan
-                  spaces in AR, design them digitally, and get client approval
-                  — without the back-and-forth.
-                </p>
-
-                {/* Meta */}
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "1fr 1fr",
-                    gap: "16px 24px",
-                    paddingTop: 24,
-                    borderTop: "0.75px solid var(--border)",
-                    marginBottom: 32,
-                  }}
-                >
-                  {[
-                    { label: "Role", value: "Product Designer" },
-                    { label: "Platform", value: "Web + iOS" },
-                    { label: "Timeline", value: "14 weeks" },
-                    { label: "Tools", value: "Figma · Framer · Protopie" },
-                  ].map((m) => (
-                    <div key={m.label}>
-                      <p
-                        style={{
-                          ...mono,
-                          fontSize: 8,
-                          color: "var(--text-muted)",
-                          marginBottom: 4,
-                        }}
-                      >
-                        {m.label}
-                      </p>
-                      <p
-                        style={{
-                          fontFamily: "'Inter', system-ui, sans-serif",
-                          fontSize: 13,
-                          fontWeight: 500,
-                          color: "var(--text-primary)",
-                          lineHeight: 1.4,
-                        }}
-                      >
-                        {m.value}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Hand-drawn decoration */}
-                <HandDrawnSketch
-                  type="morphTransition"
-                  width={180}
-                  height={72}
-                  annotation="from physical to digital"
-                  delay={0.5}
-                />
-              </motion.div>
-            </div>
-
-            {/* Right — Hero screenshot */}
-            <motion.div
-              className="lg:col-span-7"
-              initial={{ opacity: 0, y: 32 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.22, duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <div style={{ position: "relative" }}>
-                <img
-                  src="/arko/web-1.png"
-                  alt="Arko — Design rooms your clients can actually walk through"
-                  style={{
-                    width: "100%",
-                    display: "block",
-                    border: "1px solid var(--border)",
-                    boxShadow:
-                      "0 2px 8px rgba(0,0,0,0.04), 0 16px 56px rgba(0,0,0,0.10)",
-                  }}
-                />
-                <AnnotationLabel
-                  text="marketing landing page"
-                  direction="left"
-                  delay={0.7}
-                  style={{ position: "absolute", bottom: -24, right: 0 }}
-                />
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </DrawingSheetBorder>
-
-      {/* ═══════════════════════════════════════════════════════
-          SHEET 02 — THE PROBLEM & USERS
-      ═══════════════════════════════════════════════════════ */}
-      <DrawingSheetBorder
-        titleBlock={{ sheet: "02 OF 05" }}
-        className="blueprint-grid-subtle"
-        style={{
-          padding: "clamp(56px, 8vw, 88px) 0 clamp(48px, 7vw, 72px)",
-          borderTop: "1px solid var(--border)",
-        }}
-      >
-        <div className="max-w-5xl mx-auto px-6 md:px-10">
-
-          <FadeIn>
-            <SectionMarker label="The Problem" letter="A" className="mb-10" />
-          </FadeIn>
-
-          {/* Three stats with dimension annotation */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-px" style={{ marginBottom: 48 }}>
-            {[
-              {
-                number: "6–8 hrs",
-                label: "Lost per project",
-                note: "to revision cycles caused by clients who couldn't visualize the space",
-              },
-              {
-                number: "3 tools",
-                label: "That don't talk to each other",
-                note: "AutoCAD exports, PDF boards, physical walkthroughs — all disconnected",
-              },
-              {
-                number: "₀ binding",
-                label: "In a verbal yes",
-                note: "Clients approve in the meeting and change their minds when they see it built",
-              },
-            ].map((s, i) => (
-              <FadeIn key={i} delay={i * 0.1}>
-                <div
-                  style={{
-                    backgroundColor: "var(--bg-elevated)",
-                    border: "1px solid var(--border)",
-                    padding: "28px 24px",
-                    display: "flex",
-                    gap: 12,
-                  }}
-                >
-                  <DimensionAnnotation label={`0${i + 1}`} />
-                  <div>
-                    <p
-                      style={{
-                        fontFamily: "'Playfair Display', Georgia, serif",
-                        fontWeight: 700,
-                        fontSize: "clamp(32px, 4vw, 44px)",
-                        color: "var(--text-primary)",
-                        letterSpacing: "-0.03em",
-                        lineHeight: 1,
-                        marginBottom: 6,
-                      }}
-                    >
-                      {s.number}
-                    </p>
-                    <p
-                      style={{
-                        ...mono,
-                        fontSize: 8,
-                        color: "var(--text-muted)",
-                        marginBottom: 10,
-                      }}
-                    >
-                      {s.label}
-                    </p>
-                    <p
-                      style={{
-                        fontFamily: "'Inter', system-ui, sans-serif",
-                        fontSize: 13,
-                        color: "var(--text-secondary)",
-                        lineHeight: 1.65,
-                      }}
-                    >
-                      {s.note}
-                    </p>
-                  </div>
-                </div>
-              </FadeIn>
-            ))}
-          </div>
-
-          {/* Handwritten note between problem and users */}
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              marginBottom: 48,
-            }}
-            aria-hidden
+          {/* Tags */}
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.08, duration: 0.5 }}
+            style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 20 }}
           >
-            <span
-              style={{
-                fontFamily: "'Caveat', cursive",
-                fontSize: 14,
-                color: "var(--text-secondary)",
-                opacity: 0.35,
-              }}
-            >
-              → two very different people needed to use this product
-            </span>
-          </div>
-
-          {/* Two Users */}
-          <FadeIn>
-            <SectionMarker label="The Users" letter="B" className="mb-8" />
-          </FadeIn>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
-            {/* Designer */}
-            <FadeIn delay={0.05}>
-              <div
+            {["Product Design", "B2B SaaS", "Web + iOS", "AR / Spatial"].map((t) => (
+              <span
+                key={t}
                 style={{
-                  padding: "32px 28px",
+                  ...mono,
+                  fontSize: 9,
+                  color: "var(--text-muted)",
                   border: "1px solid var(--border)",
-                  backgroundColor: "var(--bg-elevated)",
-                  borderRight: "none",
-                  position: "relative",
+                  padding: "3px 9px",
                 }}
               >
-                <div style={{ marginBottom: 16 }}>
-                  <p style={{ ...mono, fontSize: 8, color: "var(--text-muted)", marginBottom: 6 }}>
-                    Primary
-                  </p>
-                  <p
-                    style={{
-                      fontFamily: "'Playfair Display', Georgia, serif",
-                      fontWeight: 700,
-                      fontSize: 22,
-                      color: "var(--text-primary)",
-                      marginBottom: 12,
-                    }}
-                  >
-                    The Designer
-                  </p>
-                  <p
-                    style={{
-                      fontFamily: "'Inter', system-ui, sans-serif",
-                      fontSize: 14,
-                      color: "var(--text-secondary)",
-                      lineHeight: 1.75,
-                    }}
-                  >
-                    A project lead managing 4–8 active clients. Uses Arko daily
-                    to scan spaces, place furniture, adjust finishes, and track
-                    project status. Needs speed, precision, and a clear handoff.
-                  </p>
-                </div>
-                <HandDrawnSketch
-                  type="floorPlan"
-                  width={100}
-                  height={64}
-                  annotation="designer's workspace"
-                  delay={0.3}
-                />
-              </div>
-            </FadeIn>
+                {t}
+              </span>
+            ))}
+          </motion.div>
 
-            {/* Client */}
-            <FadeIn delay={0.12}>
-              <div
-                style={{
-                  padding: "32px 28px",
-                  border: "1px solid var(--border)",
-                  backgroundColor: "var(--bg-primary)",
-                  position: "relative",
-                }}
-              >
-                <div style={{ marginBottom: 16 }}>
-                  <p style={{ ...mono, fontSize: 8, color: "var(--text-muted)", marginBottom: 6 }}>
-                    Secondary
-                  </p>
-                  <p
-                    style={{
-                      fontFamily: "'Playfair Display', Georgia, serif",
-                      fontWeight: 700,
-                      fontSize: 22,
-                      color: "var(--text-primary)",
-                      marginBottom: 12,
-                    }}
-                  >
-                    The Client
-                  </p>
-                  <p
-                    style={{
-                      fontFamily: "'Inter', system-ui, sans-serif",
-                      fontSize: 14,
-                      color: "var(--text-secondary)",
-                      lineHeight: 1.75,
-                    }}
-                  >
-                    A homeowner or developer reviewing remotely. Not
-                    design-literate. Needs to understand the space instantly,
-                    leave specific feedback, and approve with confidence — no
-                    app download, no account.
-                  </p>
-                </div>
-                <HandDrawnSketch
-                  type="wireframe"
-                  width={60}
-                  height={80}
-                  annotation="client's view"
-                  delay={0.4}
-                />
-              </div>
-            </FadeIn>
-          </div>
+          {/* Title */}
+          <motion.h1
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.12, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+            style={{
+              fontFamily: serif,
+              fontWeight: 700,
+              fontSize: "clamp(52px, 9vw, 100px)",
+              color: "var(--text-primary)",
+              letterSpacing: "-0.035em",
+              lineHeight: 0.92,
+              marginBottom: 24,
+            }}
+          >
+            Arko
+          </motion.h1>
 
-          {/* Key Insight */}
-          <FadeIn delay={0.1}>
-            <div
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.19, duration: 0.6 }}
+            style={{
+              fontFamily: sans,
+              fontSize: "clamp(16px, 1.8vw, 20px)",
+              color: "var(--text-secondary)",
+              lineHeight: 1.65,
+              marginBottom: 48,
+              maxWidth: 560,
+            }}
+          >
+            Spatial design platform for interior design firms and architecture
+            studios — scan, design, and get client sign-off without leaving the
+            platform.
+          </motion.p>
+
+          {/* Hero cover image */}
+          <motion.div
+            initial={{ opacity: 0, y: 32 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.26, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <img
+              src="/arko/web-1.png"
+              alt="Arko — design rooms your clients can actually walk through"
               style={{
-                marginTop: 48,
-                padding: "36px 32px",
+                width: "100%",
+                display: "block",
                 border: "1px solid var(--border)",
-                backgroundColor: "var(--bg-elevated)",
-                position: "relative",
+                boxShadow:
+                  "0 2px 8px rgba(0,0,0,0.05), 0 16px 56px rgba(0,0,0,0.10), 0 40px 96px rgba(0,0,0,0.05)",
+              }}
+            />
+          </motion.div>
+        </section>
+
+        {/* ── META STRIP ───────────────────────────────────────── */}
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(2, 1fr)",
+            gap: 0,
+            borderTop: "1px solid var(--border)",
+            borderLeft: "1px solid var(--border)",
+            marginBottom: "clamp(64px, 9vw, 96px)",
+          }}
+          className="md:grid-cols-4"
+        >
+          {[
+            { label: "Role", value: "Product Designer\n(End-to-end)" },
+            { label: "Platform", value: "Web + iOS" },
+            { label: "Timeline", value: "14 weeks" },
+            { label: "Tools", value: "Figma · Framer\nProtopie" },
+          ].map((m) => (
+            <div
+              key={m.label}
+              style={{
+                padding: "22px 20px",
+                borderRight: "1px solid var(--border)",
+                borderBottom: "1px solid var(--border)",
               }}
             >
-              {/* Corner marks */}
-              {[
-                { top: 8, left: 8 },
-                { top: 8, right: 8 },
-                { bottom: 8, left: 8 },
-                { bottom: 8, right: 8 },
-              ].map((pos, i) => (
-                <div
-                  key={i}
-                  aria-hidden
-                  style={{
-                    position: "absolute",
-                    width: 10,
-                    height: 10,
-                    borderTop: i < 2 ? "0.75px solid var(--construction)" : undefined,
-                    borderBottom: i >= 2 ? "0.75px solid var(--construction)" : undefined,
-                    borderLeft: i % 2 === 0 ? "0.75px solid var(--construction)" : undefined,
-                    borderRight: i % 2 === 1 ? "0.75px solid var(--construction)" : undefined,
-                    ...pos,
-                  }}
-                />
-              ))}
-
-              <p style={{ ...mono, fontSize: 8, color: "var(--text-muted)", marginBottom: 16 }}>
-                Key Insight
+              <p style={{ ...mono, fontSize: 8, color: "var(--text-muted)", marginBottom: 6 }}>
+                {m.label}
               </p>
-              <blockquote
-                style={{
-                  fontFamily: "'Playfair Display', Georgia, serif",
-                  fontWeight: 700,
-                  fontSize: "clamp(20px, 2.8vw, 32px)",
-                  color: "var(--text-primary)",
-                  letterSpacing: "-0.02em",
-                  lineHeight: 1.3,
-                  quotes: "none",
-                  marginBottom: 12,
-                }}
-              >
-                Clients don't reject designs because they have bad taste.
-                They reject them because they{" "}
-                <em
-                  style={{
-                    fontStyle: "italic",
-                    color: "var(--accent)",
-                  }}
-                >
-                  couldn't see it clearly enough
-                </em>{" "}
-                to say yes the first time.
-              </blockquote>
               <p
                 style={{
-                  fontFamily: "'Caveat', cursive",
-                  fontSize: 14,
-                  color: "var(--text-secondary)",
-                  opacity: 0.5,
+                  fontFamily: sans,
+                  fontSize: 13,
+                  fontWeight: 500,
+                  color: "var(--text-primary)",
+                  lineHeight: 1.5,
+                  whiteSpace: "pre-line",
                 }}
               >
-                → this reframed the entire design direction
+                {m.value}
               </p>
             </div>
-          </FadeIn>
+          ))}
         </div>
-      </DrawingSheetBorder>
 
-      {/* ═══════════════════════════════════════════════════════
-          SHEET 03 — DESIGNER · WEB PLATFORM
-      ═══════════════════════════════════════════════════════ */}
-      <DrawingSheetBorder
-        titleBlock={{ sheet: "03 OF 05" }}
-        style={{
-          padding: "clamp(56px, 8vw, 88px) 0 clamp(48px, 7vw, 72px)",
-          borderTop: "1px solid var(--border)",
-        }}
-      >
-        <div className="max-w-5xl mx-auto px-6 md:px-10">
-
-          <FadeIn>
-            <div className="flex items-center justify-between mb-8 flex-wrap gap-4">
-              <SectionMarker label="Designer · Web Application" letter="C" />
-              <span
-                style={{
-                  fontFamily: "'Caveat', cursive",
-                  fontSize: 14,
-                  color: "var(--text-secondary)",
-                  opacity: 0.4,
-                }}
-              >
-                dense, powerful, built for daily professional use
-              </span>
-            </div>
-          </FadeIn>
-
-          {/* Dashboard — full width */}
-          <FadeIn>
-            <div style={{ marginBottom: 8 }}>
-              <img
-                src="/arko/web-3.png"
-                alt="Arko Dashboard — Good morning, Sarah"
-                style={{
-                  width: "100%",
-                  display: "block",
-                  border: "1px solid var(--border)",
-                  boxShadow: "0 2px 8px rgba(0,0,0,0.04), 0 16px 48px rgba(0,0,0,0.07)",
-                }}
-              />
-            </div>
-            <p style={{ ...mono, fontSize: 8, color: "var(--text-muted)", marginBottom: 24 }}>
-              Fig. 01 — Dashboard · active projects, team activity, approval stats
-            </p>
-          </FadeIn>
-
-          {/* All Projects + Project Detail — side by side */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5" style={{ marginBottom: 24 }}>
-            {[
-              { src: "/arko/web-4.png", fig: "02", label: "All Projects · filter by status, one-click access" },
-              { src: "/arko/web-5.png", fig: "03", label: "Project Detail · rooms, progress, activity log, Share CTA" },
-            ].map((s) => (
-              <FadeIn key={s.fig}>
-                <div>
-                  <img
-                    src={s.src}
-                    alt={s.label}
-                    style={{
-                      width: "100%",
-                      display: "block",
-                      border: "1px solid var(--border)",
-                      boxShadow: "0 2px 8px rgba(0,0,0,0.04), 0 12px 32px rgba(0,0,0,0.06)",
-                      marginBottom: 8,
-                    }}
-                  />
-                  <p style={{ ...mono, fontSize: 8, color: "var(--text-muted)" }}>
-                    Fig. {s.fig} — {s.label}
-                  </p>
-                </div>
-              </FadeIn>
-            ))}
-          </div>
-
-          {/* AR Comments view — full width */}
-          <FadeIn>
-            <div style={{ position: "relative", marginBottom: 8 }}>
-              <img
-                src="/arko/web-6.png"
-                alt="AR Comments view — client feedback pinned in the room"
-                style={{
-                  width: "100%",
-                  display: "block",
-                  border: "1px solid var(--border)",
-                  boxShadow: "0 2px 8px rgba(0,0,0,0.04), 0 16px 48px rgba(0,0,0,0.07)",
-                }}
-              />
-              <AnnotationLabel
-                text="client comments pinned in 3D space"
-                direction="left"
-                delay={0.3}
-                style={{ position: "absolute", bottom: -22, right: 0 }}
-              />
-            </div>
-            <p style={{ ...mono, fontSize: 8, color: "var(--text-muted)", marginBottom: 4 }}>
-              Fig. 04 — AR Comments · spatial feedback from the client, visible in context
-            </p>
-          </FadeIn>
-        </div>
-      </DrawingSheetBorder>
-
-      {/* ═══════════════════════════════════════════════════════
-          SHEET 04 — MOBILE EXPERIENCE
-      ═══════════════════════════════════════════════════════ */}
-      <DrawingSheetBorder
-        titleBlock={{ sheet: "04 OF 05" }}
-        className="blueprint-grid-subtle"
-        style={{
-          padding: "clamp(56px, 8vw, 88px) 0 clamp(48px, 7vw, 72px)",
-          borderTop: "1px solid var(--border)",
-        }}
-      >
-        <div className="max-w-5xl mx-auto px-6 md:px-10">
-
-          {/* — Scan Flow — */}
-          <FadeIn>
-            <div className="flex items-start justify-between flex-wrap gap-6 mb-10">
-              <div>
-                <SectionMarker label="Designer · iOS — Scan Flow" letter="D" className="mb-4" />
-                <p
-                  style={{
-                    fontFamily: "'Inter', system-ui, sans-serif",
-                    fontSize: 15,
-                    color: "var(--text-secondary)",
-                    lineHeight: 1.7,
-                    maxWidth: 440,
-                  }}
-                >
-                  A pre-scan checklist ensures quality capture before AR begins.
-                  The scanner detects floor planes, measures accuracy, and
-                  confirms spatial data before the editor opens.
-                </p>
-              </div>
-              <div className="hidden md:block">
-                <RoomWireframe />
-              </div>
-            </div>
-          </FadeIn>
-
-          {/* Phone screens — horizontal strip (screens include device frames) */}
-          <div
+        {/* ── OVERVIEW ─────────────────────────────────────────── */}
+        <Reveal>
+          <SectionMarker label="Overview" letter="A" className="mb-6" />
+          <p
             style={{
-              display: "flex",
-              gap: 20,
-              overflowX: "auto",
-              paddingBottom: 8,
-              scrollbarWidth: "none",
-              marginBottom: 12,
+              fontFamily: sans,
+              fontSize: "clamp(16px, 1.6vw, 18px)",
+              color: "var(--text-secondary)",
+              lineHeight: 1.85,
+              maxWidth: 660,
             }}
           >
-            {[
-              { src: "/arko/phone-3.png", label: "Pre-scan checklist" },
-              { src: "/arko/phone-4.png", label: "Detecting floor" },
-              { src: "/arko/phone-5.png", label: "Floor confirmed" },
-              { src: "/arko/phone-6.png", label: "92% spatial accuracy" },
-            ].map((s, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-30px" }}
-                transition={{ delay: i * 0.1, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            Interior designers spend hours chasing client approvals over email,
+            WhatsApp, and in-person walkthroughs that still end in
+            miscommunication. Arko is a B2B SaaS platform that lets design
+            teams scan physical spaces in AR, furnish and finish them digitally,
+            and share interactive walkthroughs with clients for remote review
+            and one-click approval — eliminating the back-and-forth entirely.
+          </p>
+        </Reveal>
+
+        {/* ── THE PROBLEM ──────────────────────────────────────── */}
+        <Divider label="The Problem" />
+
+        <Reveal>
+          <SectionMarker label="Problem" letter="B" className="mb-8" />
+          <h2
+            style={{
+              fontFamily: serif,
+              fontWeight: 700,
+              fontSize: "clamp(28px, 4vw, 48px)",
+              color: "var(--text-primary)",
+              letterSpacing: "-0.025em",
+              lineHeight: 1.15,
+              marginBottom: 24,
+              maxWidth: 620,
+            }}
+          >
+            Clients can't visualize a space from a floor plan. That
+            miscommunication costs real money.
+          </h2>
+          <p
+            style={{
+              fontFamily: sans,
+              fontSize: 16,
+              color: "var(--text-secondary)",
+              lineHeight: 1.8,
+              maxWidth: 600,
+              marginBottom: 48,
+            }}
+          >
+            Design firms lose an average of 6–8 hours per project on revision
+            cycles caused by one root problem — clients cannot visualize a
+            space from a floor plan or mood board alone. They say yes in the
+            meeting and change their mind when they see it built. The existing
+            tools — AutoCAD exports, PDF presentations, physical walkthroughs —
+            are either too technical for clients to interpret or too costly to
+            arrange repeatedly.
+          </p>
+        </Reveal>
+
+        {/* Three stats */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4" style={{ marginBottom: 0 }}>
+          {[
+            {
+              number: "6–8 hrs",
+              label: "Lost per project",
+              detail: "to revision cycles driven by clients who couldn't visualize the space",
+            },
+            {
+              number: "3 tools",
+              label: "Disconnected",
+              detail: "AutoCAD exports, PDF boards, physical walkthroughs — none talk to each other",
+            },
+            {
+              number: "₀ binding",
+              label: "In a verbal yes",
+              detail: "Clients approve in the room and change their minds once they see it built",
+            },
+          ].map((s, i) => (
+            <Reveal key={i} delay={i * 0.09}>
+              <div
                 style={{
-                  flexShrink: 0,
-                  width: "clamp(160px, 22vw, 220px)",
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  gap: 10,
+                  padding: "24px",
+                  border: "1px solid var(--border)",
+                  backgroundColor: "var(--bg-secondary)",
+                  height: "100%",
                 }}
               >
-                <img src={s.src} alt={s.label} style={{ width: "100%", display: "block" }} />
                 <p
                   style={{
-                    ...mono,
-                    fontSize: 8,
-                    color: "var(--text-muted)",
-                    textAlign: "center",
+                    fontFamily: serif,
+                    fontWeight: 700,
+                    fontSize: "clamp(32px, 4vw, 44px)",
+                    color: "var(--text-primary)",
+                    letterSpacing: "-0.03em",
+                    lineHeight: 1,
+                    marginBottom: 6,
                   }}
                 >
+                  {s.number}
+                </p>
+                <p style={{ ...mono, fontSize: 8, color: "var(--text-muted)", marginBottom: 12 }}>
                   {s.label}
                 </p>
-              </motion.div>
-            ))}
-          </div>
+                <p style={{ fontFamily: sans, fontSize: 13, color: "var(--text-secondary)", lineHeight: 1.65 }}>
+                  {s.detail}
+                </p>
+              </div>
+            </Reveal>
+          ))}
+        </div>
 
-          {/* Divider */}
-          <div
+        {/* ── THE USERS ────────────────────────────────────────── */}
+        <Divider label="The Users" />
+
+        <Reveal>
+          <SectionMarker label="Users" letter="C" className="mb-8" />
+          <h2
             style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 12,
-              margin: "44px 0",
+              fontFamily: serif,
+              fontWeight: 700,
+              fontSize: "clamp(26px, 3.5vw, 40px)",
+              color: "var(--text-primary)",
+              letterSpacing: "-0.025em",
+              lineHeight: 1.2,
+              marginBottom: 32,
+              maxWidth: 540,
             }}
-            aria-hidden
           >
-            <div style={{ flex: 1, height: "0.75px", backgroundColor: "var(--border)" }} />
-            <span
+            One platform. Two completely different contexts of use.
+          </h2>
+        </Reveal>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          {[
+            {
+              role: "Primary — The Designer",
+              title: "The Design Firm",
+              desc: "A project lead managing 4–8 active client projects simultaneously. Uses Arko daily to scan spaces, place furniture, adjust finishes, and track project status across the team. Needs speed, precision, and a clear handoff mechanism.",
+              sketch: "floorPlan" as const,
+              note: "designer workspace",
+            },
+            {
+              role: "Secondary — The Client",
+              title: "The Client",
+              desc: "A homeowner or property developer reviewing a design remotely. Not design-literate. Needs to understand the space instantly, leave specific feedback, and approve with confidence — without downloading an app or creating an account.",
+              sketch: "wireframe" as const,
+              note: "client view",
+            },
+          ].map((u, i) => (
+            <Reveal key={i} delay={i * 0.1}>
+              <div
+                style={{
+                  padding: "28px 24px",
+                  border: "1px solid var(--border)",
+                  backgroundColor: "var(--bg-elevated)",
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 12,
+                }}
+              >
+                <p style={{ ...mono, fontSize: 8, color: "var(--text-muted)" }}>{u.role}</p>
+                <p
+                  style={{
+                    fontFamily: serif,
+                    fontWeight: 700,
+                    fontSize: 22,
+                    color: "var(--text-primary)",
+                    letterSpacing: "-0.01em",
+                  }}
+                >
+                  {u.title}
+                </p>
+                <p style={{ fontFamily: sans, fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.75, flex: 1 }}>
+                  {u.desc}
+                </p>
+                <HandDrawnSketch
+                  type={u.sketch}
+                  width={u.sketch === "wireframe" ? 60 : 100}
+                  height={u.sketch === "wireframe" ? 80 : 64}
+                  annotation={u.note}
+                  delay={0.3 + i * 0.1}
+                />
+              </div>
+            </Reveal>
+          ))}
+        </div>
+
+      </div>{/* /max-w-4xl */}
+
+      {/* ── KEY INSIGHT — full bleed dark ────────────────────── */}
+      <section
+        style={{
+          backgroundColor: "var(--text-primary)",
+          padding: "clamp(72px, 10vw, 120px) 0",
+          margin: "clamp(64px, 9vw, 96px) 0",
+        }}
+      >
+        <Reveal y={16}>
+          <div className="max-w-4xl mx-auto px-6 md:px-10">
+            <p style={{ ...mono, fontSize: 9, color: "var(--text-muted)", marginBottom: 28 }}>
+              Key Insight
+            </p>
+            <blockquote
               style={{
-                fontFamily: "'Caveat', cursive",
-                fontSize: 13,
-                color: "var(--text-secondary)",
-                opacity: 0.35,
-                whiteSpace: "nowrap",
+                fontFamily: serif,
+                fontWeight: 700,
+                fontSize: "clamp(24px, 4.5vw, 52px)",
+                color: "var(--bg-primary)",
+                letterSpacing: "-0.025em",
+                lineHeight: 1.25,
+                quotes: "none",
+                marginBottom: 28,
+                maxWidth: 760,
               }}
             >
-              AR Room Editor
-            </span>
-            <div style={{ flex: 1, height: "0.75px", backgroundColor: "var(--border)" }} />
-          </div>
-
-          {/* AR Editor — landscape (phone already shows landscape device) */}
-          <FadeIn>
-            <SectionMarker label="AR Room Editor" letter="E" className="mb-6" />
+              Clients don't reject designs because they have bad taste.
+              They reject them because they{" "}
+              <em style={{ fontStyle: "italic", color: "var(--text-muted)" }}>
+                couldn't see it clearly enough to say yes
+              </em>{" "}
+              the first time.
+            </blockquote>
             <p
               style={{
-                fontFamily: "'Inter', system-ui, sans-serif",
-                fontSize: 15,
-                color: "var(--text-secondary)",
-                lineHeight: 1.7,
-                maxWidth: 480,
-                marginBottom: 28,
+                fontFamily: sans,
+                fontSize: 16,
+                color: "var(--text-muted)",
+                lineHeight: 1.75,
+                maxWidth: 520,
               }}
             >
-              Canvas first. Tools at the edges — progressive disclosure keeps
-              the furniture library from overwhelming the space.
+              This reframed the design direction entirely. The goal wasn't to
+              build a better design tool — it was to build a better{" "}
+              <em>communication</em> tool that happened to be powered by design.
             </p>
-          </FadeIn>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            {[
-              { src: "/arko/phone-7.png", fig: "05", label: "Room Type — breadcrumb navigation in the editor" },
-              { src: "/arko/phone-8.png", fig: "06", label: "Furniture Library — collapsible sidebar, full canvas" },
-              { src: "/arko/phone-10.png", fig: "07", label: "Item Selected — Properties panel slides in on tap" },
-              { src: "/arko/phone-12.png", fig: "08", label: "Preview Mode — client-ready view, Send to Client CTA" },
-            ].map((s, i) => (
-              <FadeIn key={i} delay={i * 0.07}>
-                <div>
-                  <img
-                    src={s.src}
-                    alt={s.label}
-                    style={{
-                      width: "100%",
-                      display: "block",
-                      border: "1px solid var(--border)",
-                      boxShadow: "0 2px 8px rgba(0,0,0,0.03), 0 8px 24px rgba(0,0,0,0.05)",
-                      marginBottom: 8,
-                    }}
-                  />
-                  <p style={{ ...mono, fontSize: 8, color: "var(--text-muted)" }}>
-                    Fig. {s.fig} — {s.label}
-                  </p>
-                </div>
-              </FadeIn>
-            ))}
           </div>
+        </Reveal>
+      </section>
 
-          {/* Divider */}
-          <div
+      <div className="max-w-4xl mx-auto px-6 md:px-10">
+
+        {/* ── DESIGNER — WEB ───────────────────────────────────── */}
+        <Reveal>
+          <SectionMarker label="Designer · Web Application" letter="D" className="mb-6" />
+          <h2
             style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 12,
-              margin: "44px 0",
-            }}
-            aria-hidden
-          >
-            <div style={{ flex: 1, height: "0.75px", backgroundColor: "var(--border)" }} />
-            <span
-              style={{
-                fontFamily: "'Caveat', cursive",
-                fontSize: 13,
-                color: "var(--text-secondary)",
-                opacity: 0.35,
-                whiteSpace: "nowrap",
-              }}
-            >
-              Client Experience
-            </span>
-            <div style={{ flex: 1, height: "0.75px", backgroundColor: "var(--border)" }} />
-          </div>
-
-          {/* Client Flow */}
-          <FadeIn>
-            <div className="flex items-start justify-between flex-wrap gap-6 mb-10">
-              <div>
-                <SectionMarker label="Client · Mobile" letter="F" className="mb-4" />
-                <p
-                  style={{
-                    fontFamily: "'Inter', system-ui, sans-serif",
-                    fontSize: 15,
-                    color: "var(--text-secondary)",
-                    lineHeight: 1.7,
-                    maxWidth: 440,
-                  }}
-                >
-                  No login. No jargon. The client opens a link, sees their room,
-                  leaves a pinned comment, and approves — all without creating
-                  an account.
-                </p>
-              </div>
-              <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                <FlowDiagram />
-              </div>
-            </div>
-          </FadeIn>
-
-          {/* Client phone screens horizontal strip */}
-          <div
-            style={{
-              display: "flex",
-              gap: 20,
-              overflowX: "auto",
-              paddingBottom: 8,
-              scrollbarWidth: "none",
+              fontFamily: serif,
+              fontWeight: 700,
+              fontSize: "clamp(24px, 3vw, 36px)",
+              color: "var(--text-primary)",
+              letterSpacing: "-0.025em",
+              lineHeight: 1.2,
               marginBottom: 12,
             }}
           >
-            {[
-              { src: "/arko/phone-13.png", label: "Client landing\nDesigner info + View Design" },
-              { src: "/arko/phone-14.png", label: "Review mode\nComments + Approve button" },
-              { src: "/arko/phone-15.png", label: "Pin a comment\nSpatial feedback on room" },
-              { src: "/arko/phone-16.png", label: "Design approved\nTimestamped PDF summary" },
-            ].map((s, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-30px" }}
-                transition={{ delay: i * 0.1, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            A professional-grade workspace. Dense, powerful, built for daily use.
+          </h2>
+          <p
+            style={{
+              fontFamily: sans,
+              fontSize: 15,
+              color: "var(--text-secondary)",
+              lineHeight: 1.8,
+              maxWidth: 580,
+              marginBottom: 40,
+            }}
+          >
+            The designer interface doesn't simplify. Sidebar navigation, project
+            management, team activity, AR editing tools — all accessible, nothing
+            hidden. The goal was a workspace a design lead would open on day one
+            and never want to leave.
+          </p>
+        </Reveal>
+
+        {/* Dashboard full width */}
+        <Reveal>
+          <Screen
+            src="/arko/web-3.png"
+            alt="Arko Dashboard"
+            caption="Fig. 01 — Dashboard · active projects, team stats, pending approvals"
+            style={{ marginBottom: 20 }}
+          />
+        </Reveal>
+
+        {/* All Projects + Project Detail */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5" style={{ marginBottom: 20 }}>
+          <Reveal delay={0.05}>
+            <Screen
+              src="/arko/web-4.png"
+              alt="All Projects"
+              caption="Fig. 02 — All Projects · status filters, search, quick access"
+            />
+          </Reveal>
+          <Reveal delay={0.1}>
+            <Screen
+              src="/arko/web-5.png"
+              alt="Project Detail"
+              caption="Fig. 03 — Project Detail · rooms, progress bars, live activity"
+            />
+          </Reveal>
+        </div>
+
+        {/* Comments view full width */}
+        <Reveal>
+          <Screen
+            src="/arko/web-6.png"
+            alt="AR Comments view"
+            caption="Fig. 04 — Comments View · client feedback pinned in the room, resolved in context"
+            style={{ marginBottom: 0 }}
+          />
+        </Reveal>
+
+        {/* ── DESIGNER — MOBILE SCAN ───────────────────────────── */}
+        <Divider label="Designer · iOS — Scan to AR Editor" />
+
+        <Reveal>
+          <SectionMarker label="Designer · iOS" letter="E" className="mb-6" />
+          <h2
+            style={{
+              fontFamily: serif,
+              fontWeight: 700,
+              fontSize: "clamp(24px, 3vw, 36px)",
+              color: "var(--text-primary)",
+              letterSpacing: "-0.025em",
+              lineHeight: 1.2,
+              marginBottom: 12,
+            }}
+          >
+            From empty room to furnished space in minutes.
+          </h2>
+          <p
+            style={{
+              fontFamily: sans,
+              fontSize: 15,
+              color: "var(--text-secondary)",
+              lineHeight: 1.8,
+              maxWidth: 560,
+              marginBottom: 40,
+            }}
+          >
+            A pre-scan checklist ensures quality spatial capture before the AR
+            session begins. The scanner detects floor planes, measures accuracy,
+            and confirms the data before the editor opens. The room editor keeps
+            the canvas front and center — tools at the edges, space in focus.
+          </p>
+        </Reveal>
+
+        {/* Scan flow — phone horizontal strip */}
+        <Reveal>
+          <p style={{ ...mono, fontSize: 9, color: "var(--text-muted)", marginBottom: 16 }}>
+            Scan Flow — Pre-Scan Checklist → Scan Step 1 → Floor Detected → Spatial Accuracy
+          </p>
+        </Reveal>
+
+        <div
+          style={{
+            display: "flex",
+            gap: 20,
+            overflowX: "auto",
+            paddingBottom: 12,
+            marginBottom: 12,
+            scrollbarWidth: "none",
+          }}
+        >
+          {[
+            { src: "/arko/phone-3.png", label: "Pre-Scan\nChecklist" },
+            { src: "/arko/phone-4.png", label: "Detecting\nFloor" },
+            { src: "/arko/phone-5.png", label: "Floor\nConfirmed" },
+            { src: "/arko/phone-6.png", label: "92% Spatial\nAccuracy" },
+          ].map((s, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-30px" }}
+              transition={{ delay: i * 0.09, duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+              style={{ flexShrink: 0, width: "clamp(150px, 20vw, 210px)" }}
+            >
+              <Phone src={s.src} alt={s.label} label={s.label} width={undefined as unknown as number} />
+            </motion.div>
+          ))}
+        </div>
+
+        {/* AR Editor — landscape screens */}
+        <Reveal>
+          <p
+            style={{
+              ...mono,
+              fontSize: 9,
+              color: "var(--text-muted)",
+              marginTop: 36,
+              marginBottom: 16,
+            }}
+          >
+            AR Room Editor — Canvas first, tools at the edges
+          </p>
+        </Reveal>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {[
+            { src: "/arko/phone-7.png", caption: "Fig. 05 — Room type breadcrumb navigation" },
+            { src: "/arko/phone-8.png", caption: "Fig. 06 — Furniture library, collapsible sidebar" },
+            { src: "/arko/phone-10.png", caption: "Fig. 07 — Item selected, Properties panel" },
+            { src: "/arko/phone-12.png", caption: "Fig. 08 — Preview mode, Send to Client" },
+          ].map((s, i) => (
+            <Reveal key={i} delay={i * 0.07}>
+              <Screen src={s.src} alt={s.caption} caption={s.caption} />
+            </Reveal>
+          ))}
+        </div>
+
+        {/* ── CLIENT EXPERIENCE ────────────────────────────────── */}
+        <Divider label="Client · Mobile Experience" />
+
+        <Reveal>
+          <SectionMarker label="Client · Mobile" letter="F" className="mb-6" />
+          <h2
+            style={{
+              fontFamily: serif,
+              fontWeight: 700,
+              fontSize: "clamp(24px, 3vw, 36px)",
+              color: "var(--text-primary)",
+              letterSpacing: "-0.025em",
+              lineHeight: 1.2,
+              marginBottom: 12,
+            }}
+          >
+            No login. No jargon. Just the room, a comment, and an approve.
+          </h2>
+          <p
+            style={{
+              fontFamily: sans,
+              fontSize: 15,
+              color: "var(--text-secondary)",
+              lineHeight: 1.8,
+              maxWidth: 560,
+              marginBottom: 40,
+            }}
+          >
+            The client interface strips everything away. A link, their space,
+            a comment button, and an approve button. No app download. No account.
+            When a client approves, the designer gets an instant notification
+            and a timestamped PDF summary — closing the loop every other tool
+            leaves open.
+          </p>
+        </Reveal>
+
+        <Reveal>
+          <p style={{ ...mono, fontSize: 9, color: "var(--text-muted)", marginBottom: 16 }}>
+            Client Flow — Landing → Room View → Comment Input → Approval Confirmation
+          </p>
+        </Reveal>
+
+        <div
+          style={{
+            display: "flex",
+            gap: 20,
+            overflowX: "auto",
+            paddingBottom: 12,
+            marginBottom: 12,
+            scrollbarWidth: "none",
+          }}
+        >
+          {[
+            { src: "/arko/phone-13.png", label: "Client\nLanding" },
+            { src: "/arko/phone-14.png", label: "Room View +\nComments" },
+            { src: "/arko/phone-15.png", label: "Comment\nInput" },
+            { src: "/arko/phone-16.png", label: "Design\nApproved" },
+          ].map((s, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-30px" }}
+              transition={{ delay: i * 0.09, duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+              style={{ flexShrink: 0, width: "clamp(150px, 20vw, 210px)" }}
+            >
+              <Phone src={s.src} alt={s.label} label={s.label} width={undefined as unknown as number} />
+            </motion.div>
+          ))}
+        </div>
+
+        {/* ── DESIGN DECISIONS ─────────────────────────────────── */}
+        <Divider label="Design Decisions" />
+
+        <Reveal>
+          <SectionMarker label="Design Decisions" letter="G" className="mb-8" />
+          <h2
+            style={{
+              fontFamily: serif,
+              fontWeight: 700,
+              fontSize: "clamp(24px, 3vw, 36px)",
+              color: "var(--text-primary)",
+              letterSpacing: "-0.025em",
+              lineHeight: 1.2,
+              marginBottom: 48,
+            }}
+          >
+            Four decisions that defined the product.
+          </h2>
+        </Reveal>
+
+        <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
+          {[
+            {
+              num: "01",
+              title: "Two entirely separate experiences",
+              body: "The designer interface is dense, powerful, and built for daily professional use — sidebar navigation, project management, team activity, AR editing tools. The client interface strips everything away: no login, no nav, no jargon. Just the room, a comment button, and an approve button. The same product. Two completely different contexts of use.",
+              img: "/arko/web-5.png",
+            },
+            {
+              num: "02",
+              title: "AR editor built for professionals, not consumers",
+              body: "The AR room editor puts the canvas first and keeps all tools at the edges — collapsible Furniture Library on the left, Properties panel on the right, minimal toolbar at the bottom. Every element category (Elements → Furniture → Room Type → Category) is structured as progressive disclosure so the library never overwhelms the space.",
+              img: "/arko/phone-10.png",
+            },
+            {
+              num: "03",
+              title: "The approval flow as the product's core value",
+              body: "Most design tools stop at visualization. Arko makes client sign-off a first-class feature — the Share modal, client walkthrough, comment pinning, and one-tap approval are designed as a single seamless flow. When a client approves, the designer gets a notification and a timestamped PDF. This closes the loop that every other tool leaves open.",
+              img: "/arko/phone-16.png",
+            },
+            {
+              num: "04",
+              title: "Empty states as onboarding",
+              body: "Both the dashboard and project detail have fully designed empty states that guide the user to their first action rather than leaving them stranded. For a B2B product where adoption depends on the first session, a stranded user is a churned user. Empty states are a product feature — not an afterthought.",
+              img: "/arko/web-3.png",
+            },
+          ].map((d, i) => (
+            <Reveal key={i} delay={0.04}>
+              <div
+                className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-start"
                 style={{
-                  flexShrink: 0,
-                  width: "clamp(160px, 22vw, 220px)",
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  gap: 10,
+                  padding: "44px 0",
+                  borderTop: "1px solid var(--border)",
                 }}
               >
-                <img src={s.src} alt={s.label} style={{ width: "100%", display: "block" }} />
-                <p
-                  style={{
-                    ...mono,
-                    fontSize: 8,
-                    color: "var(--text-muted)",
-                    textAlign: "center",
-                    whiteSpace: "pre-line",
-                  }}
-                >
-                  {s.label}
-                </p>
-              </motion.div>
-            ))}
-          </div>
-
-          <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 4 }}>
-            <span
-              style={{
-                fontFamily: "'Caveat', cursive",
-                fontSize: 14,
-                color: "var(--text-secondary)",
-                opacity: 0.35,
-              }}
-              aria-hidden
-            >
-              approved in one tap →
-            </span>
-          </div>
-        </div>
-      </DrawingSheetBorder>
-
-      {/* ═══════════════════════════════════════════════════════
-          SHEET 05 — DECISIONS & OUTCOMES
-      ═══════════════════════════════════════════════════════ */}
-      <DrawingSheetBorder
-        titleBlock={{ sheet: "05 OF 05" }}
-        style={{
-          padding: "clamp(56px, 8vw, 88px) 0 clamp(48px, 7vw, 72px)",
-          borderTop: "1px solid var(--border)",
-        }}
-      >
-        <div className="max-w-5xl mx-auto px-6 md:px-10">
-
-          <FadeIn>
-            <SectionMarker label="Design Decisions" letter="G" className="mb-10" />
-          </FadeIn>
-
-          {/* 2×2 decision cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4" style={{ marginBottom: 64 }}>
-            {[
-              {
-                num: "01",
-                title: "Two entirely separate experiences",
-                body: "Designer interface: dense, powerful, built for daily professional use. Client interface: no login, no nav, no jargon — just the room and an approve button.",
-                img: "/arko/web-5.png",
-              },
-              {
-                num: "02",
-                title: "AR editor built for professionals",
-                body: "Canvas first, tools at the edges. Progressive disclosure through Elements → Furniture → Room Type → Category means the library never overwhelms.",
-                img: "/arko/phone-10.png",
-              },
-              {
-                num: "03",
-                title: "Approval flow as a first-class feature",
-                body: "Share modal → walkthrough → pinned comments → one-tap approve is one seamless loop. The designer gets a timestamped PDF. The loop closes.",
-                img: "/arko/phone-16.png",
-              },
-              {
-                num: "04",
-                title: "Empty states as onboarding",
-                body: "For B2B tools where adoption hinges on the first session, a stranded user is a churned user. Empty states guide — they don't leave users to figure it out.",
-                img: "/arko/web-3.png",
-              },
-            ].map((d, i) => (
-              <FadeIn key={i} delay={i * 0.08}>
-                <div
-                  style={{
-                    border: "1px solid var(--border)",
-                    backgroundColor: "var(--bg-elevated)",
-                    padding: "28px 24px",
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: 16,
-                    height: "100%",
-                  }}
-                >
-                  <div style={{ display: "flex", alignItems: "baseline", gap: 14 }}>
+                {/* Text */}
+                <div className={i % 2 === 1 ? "md:order-2" : ""}>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "baseline",
+                      gap: 14,
+                      marginBottom: 16,
+                    }}
+                  >
                     <span
                       style={{
                         fontFamily: "'Space Mono', monospace",
-                        fontSize: 32,
+                        fontSize: 40,
                         fontWeight: 700,
                         color: "var(--border)",
                         lineHeight: 1,
@@ -1133,12 +881,12 @@ export default function ArkoCase() {
                     </span>
                     <h3
                       style={{
-                        fontFamily: "'Playfair Display', Georgia, serif",
+                        fontFamily: serif,
                         fontWeight: 700,
-                        fontSize: "clamp(16px, 1.8vw, 20px)",
+                        fontSize: "clamp(17px, 2vw, 22px)",
                         color: "var(--text-primary)",
-                        letterSpacing: "-0.01em",
-                        lineHeight: 1.25,
+                        letterSpacing: "-0.015em",
+                        lineHeight: 1.3,
                       }}
                     >
                       {d.title}
@@ -1146,211 +894,178 @@ export default function ArkoCase() {
                   </div>
                   <p
                     style={{
-                      fontFamily: "'Inter', system-ui, sans-serif",
+                      fontFamily: sans,
                       fontSize: 14,
                       color: "var(--text-secondary)",
-                      lineHeight: 1.7,
+                      lineHeight: 1.85,
                     }}
                   >
                     {d.body}
                   </p>
-                  <div
-                    style={{
-                      marginTop: "auto",
-                      border: "1px solid var(--border)",
-                      overflow: "hidden",
-                    }}
-                  >
-                    <img
-                      src={d.img}
-                      alt={d.title}
-                      style={{ width: "100%", display: "block", maxHeight: 140, objectFit: "cover", objectPosition: "top" }}
-                    />
-                  </div>
                 </div>
-              </FadeIn>
-            ))}
-          </div>
 
-          {/* Outcomes */}
-          <FadeIn>
-            <SectionMarker label="Outcomes & Reflection" letter="H" className="mb-10" />
-          </FadeIn>
-
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-start">
-            {/* What's next */}
-            <FadeIn delay={0.05} className="md:col-span-5">
-              <div
-                style={{
-                  backgroundColor: "var(--bg-secondary)",
-                  border: "1px solid var(--border)",
-                  padding: "28px 24px",
-                }}
-              >
-                <p style={{ ...mono, fontSize: 8, color: "var(--text-muted)", marginBottom: 12 }}>
-                  What I'd Build Next
-                </p>
-                <p
-                  style={{
-                    fontFamily: "'Inter', system-ui, sans-serif",
-                    fontSize: 14,
-                    color: "var(--text-secondary)",
-                    lineHeight: 1.8,
-                  }}
-                >
-                  An analytics layer for designers — which rooms clients spend
-                  most time reviewing, which furniture gets swapped most, where
-                  comments cluster spatially. Turning client behavior into
-                  design intelligence.
-                </p>
-              </div>
-            </FadeIn>
-
-            {/* Perspective sketch + reflection */}
-            <div className="md:col-span-7">
-              <FadeIn delay={0.1}>
-                <div style={{ marginBottom: 24 }}>
-                  <HandDrawnSketch
-                    type="perspective"
-                    width={200}
-                    height={96}
-                    annotation="architecture → digital product"
-                    delay={0.2}
+                {/* Screenshot */}
+                <div className={i % 2 === 1 ? "md:order-1" : ""}>
+                  <img
+                    src={d.img}
+                    alt={d.title}
+                    style={{
+                      width: "100%",
+                      display: "block",
+                      border: "1px solid var(--border)",
+                      boxShadow: "0 2px 8px rgba(0,0,0,0.04), 0 12px 40px rgba(0,0,0,0.07)",
+                      maxHeight: 280,
+                      objectFit: "cover",
+                      objectPosition: "top",
+                    }}
                   />
                 </div>
-                <blockquote
-                  style={{
-                    fontFamily: "'Playfair Display', Georgia, serif",
-                    fontWeight: 700,
-                    fontSize: "clamp(18px, 2.2vw, 26px)",
-                    color: "var(--text-primary)",
-                    letterSpacing: "-0.02em",
-                    lineHeight: 1.4,
-                    quotes: "none",
-                    borderLeft: "2px solid var(--border)",
-                    paddingLeft: 20,
-                  }}
-                >
-                  The best B2B products make the professional look good in
-                  front of their client. Every decision in Arko was made with
-                  that in mind.
-                </blockquote>
-              </FadeIn>
-            </div>
-          </div>
+              </div>
+            </Reveal>
+          ))}
         </div>
-      </DrawingSheetBorder>
 
-      {/* ═══════════════════════════════════════════════════════
-          NAVIGATION
-      ═══════════════════════════════════════════════════════ */}
-      <div
-        className="max-w-5xl mx-auto px-6 md:px-10 py-12 flex flex-wrap justify-between items-center gap-6"
-        style={{ borderTop: "1px solid var(--border)" }}
-      >
-        {adjacent.prev ? (
-          <Link
-            to={`/work/${adjacent.prev.slug}`}
+        {/* ── OUTCOMES ─────────────────────────────────────────── */}
+        <Divider label="Outcomes & Reflection" />
+
+        <Reveal>
+          <SectionMarker label="Reflection" letter="H" className="mb-8" />
+          <h2
             style={{
-              textDecoration: "none",
-              display: "flex",
-              alignItems: "center",
-              gap: 10,
-              maxWidth: "45%",
+              fontFamily: serif,
+              fontWeight: 700,
+              fontSize: "clamp(24px, 3vw, 36px)",
+              color: "var(--text-primary)",
+              letterSpacing: "-0.025em",
+              lineHeight: 1.2,
+              marginBottom: 16,
             }}
           >
-            <ArrowLeft
-              size={16}
-              style={{ color: "var(--text-muted)", flexShrink: 0 }}
-            />
-            <div>
-              <p
-                style={{
-                  ...mono,
-                  fontSize: 8,
-                  color: "var(--text-muted)",
-                  marginBottom: 4,
-                }}
-              >
-                Previous
-              </p>
-              <p
-                style={{
-                  fontFamily: "'Playfair Display', Georgia, serif",
-                  fontSize: "clamp(14px, 2vw, 20px)",
-                  color: "var(--text-secondary)",
-                  transitionProperty: "color",
-                  transitionDuration: "150ms",
-                }}
-                onMouseEnter={(e) =>
-                  ((e.currentTarget as HTMLElement).style.color =
-                    "var(--text-primary)")
-                }
-                onMouseLeave={(e) =>
-                  ((e.currentTarget as HTMLElement).style.color =
-                    "var(--text-secondary)")
-                }
-              >
-                {adjacent.prev.title}
-              </p>
-            </div>
-          </Link>
-        ) : (
-          <div />
-        )}
-
-        {adjacent.next ? (
-          <Link
-            to={`/work/${adjacent.next.slug}`}
+            Three workflows. One platform. No compromise on either user.
+          </h2>
+          <p
             style={{
-              textDecoration: "none",
-              display: "flex",
-              alignItems: "center",
-              gap: 10,
-              maxWidth: "45%",
-              marginLeft: "auto",
+              fontFamily: sans,
+              fontSize: 15,
+              color: "var(--text-secondary)",
+              lineHeight: 1.8,
+              maxWidth: 600,
+              marginBottom: 40,
             }}
           >
-            <div style={{ textAlign: "right" }}>
-              <p
-                style={{
-                  ...mono,
-                  fontSize: 8,
-                  color: "var(--text-muted)",
-                  marginBottom: 4,
-                }}
-              >
-                Next
+            Arko consolidates space scanning, interior design, and client
+            approval into one platform. The result is a product that serves
+            two very different users without compromising either experience.
+          </p>
+        </Reveal>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5" style={{ marginBottom: 56 }}>
+          <Reveal delay={0.05}>
+            <div
+              style={{
+                padding: "28px 24px",
+                border: "1px solid var(--border)",
+                backgroundColor: "var(--bg-secondary)",
+                height: "100%",
+              }}
+            >
+              <p style={{ ...mono, fontSize: 8, color: "var(--text-muted)", marginBottom: 14 }}>
+                What I'd build next
               </p>
-              <p
-                style={{
-                  fontFamily: "'Playfair Display', Georgia, serif",
-                  fontSize: "clamp(14px, 2vw, 20px)",
-                  color: "var(--text-secondary)",
-                  transitionProperty: "color",
-                  transitionDuration: "150ms",
-                }}
-                onMouseEnter={(e) =>
-                  ((e.currentTarget as HTMLElement).style.color =
-                    "var(--text-primary)")
-                }
-                onMouseLeave={(e) =>
-                  ((e.currentTarget as HTMLElement).style.color =
-                    "var(--text-secondary)")
-                }
-              >
-                {adjacent.next.title}
+              <p style={{ fontFamily: sans, fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.8 }}>
+                An analytics layer for designers — showing which rooms clients
+                spend the most time reviewing, which furniture items get swapped
+                most often, and where comments cluster spatially. Turning client
+                behavior into actionable design intelligence.
               </p>
             </div>
-            <ArrowRight
-              size={16}
-              style={{ color: "var(--text-muted)", flexShrink: 0 }}
-            />
-          </Link>
-        ) : (
-          <div />
-        )}
-      </div>
+          </Reveal>
+
+          <Reveal delay={0.1}>
+            <div
+              style={{
+                padding: "28px 24px",
+                border: "1px solid var(--border)",
+                backgroundColor: "var(--bg-elevated)",
+                height: "100%",
+              }}
+            >
+              <p style={{ ...mono, fontSize: 8, color: "var(--text-muted)", marginBottom: 14 }}>
+                What this reinforced
+              </p>
+              <p style={{ fontFamily: sans, fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.8 }}>
+                The best B2B products are the ones that make the professional
+                look good in front of their client. Every design decision in
+                Arko was made with that in mind.
+              </p>
+            </div>
+          </Reveal>
+        </div>
+
+        {/* Sketch decoration before nav */}
+        <div className="flex justify-center" aria-hidden style={{ marginBottom: 40 }}>
+          <HandDrawnSketch
+            type="perspective"
+            width={200}
+            height={96}
+            annotation="from architecture to digital product"
+            delay={0.2}
+          />
+        </div>
+
+        {/* ── NAVIGATION ───────────────────────────────────────── */}
+        <div
+          className="flex flex-wrap justify-between items-center gap-6"
+          style={{
+            paddingTop: 32,
+            paddingBottom: 64,
+            borderTop: "1px solid var(--border)",
+          }}
+        >
+          {adjacent.prev ? (
+            <Link
+              to={`/work/${adjacent.prev.slug}`}
+              style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 10, maxWidth: "45%" }}
+            >
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style={{ flexShrink: 0 }}>
+                <path d="M13 8H3M7 4L3 8l4 4" stroke="var(--text-muted)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              <div>
+                <p style={{ ...mono, fontSize: 8, color: "var(--text-muted)", marginBottom: 4 }}>Previous</p>
+                <p
+                  style={{ fontFamily: serif, fontSize: "clamp(14px, 2vw, 20px)", color: "var(--text-secondary)", transitionProperty: "color", transitionDuration: "150ms" }}
+                  onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = "var(--text-primary)")}
+                  onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = "var(--text-secondary)")}
+                >
+                  {adjacent.prev.title}
+                </p>
+              </div>
+            </Link>
+          ) : <div />}
+
+          {adjacent.next ? (
+            <Link
+              to={`/work/${adjacent.next.slug}`}
+              style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 10, maxWidth: "45%", marginLeft: "auto" }}
+            >
+              <div style={{ textAlign: "right" }}>
+                <p style={{ ...mono, fontSize: 8, color: "var(--text-muted)", marginBottom: 4 }}>Next</p>
+                <p
+                  style={{ fontFamily: serif, fontSize: "clamp(14px, 2vw, 20px)", color: "var(--text-secondary)", transitionProperty: "color", transitionDuration: "150ms" }}
+                  onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = "var(--text-primary)")}
+                  onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = "var(--text-secondary)")}
+                >
+                  {adjacent.next.title}
+                </p>
+              </div>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style={{ flexShrink: 0 }}>
+                <path d="M3 8h10M9 4l4 4-4 4" stroke="var(--text-muted)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </Link>
+          ) : <div />}
+        </div>
+
+      </div>{/* /max-w-4xl */}
     </motion.div>
   );
 }
