@@ -1,4 +1,4 @@
-import { motion, AnimatePresence, useScroll, useSpring, useTransform, useInView } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useSpring, useInView } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useRef, useState } from "react";
 import SectionMarker from "../components/SectionMarker";
@@ -333,9 +333,8 @@ function DecisionStepper() {
 ═══════════════════════════════════════════════════════════════════ */
 export default function ArkoCase() {
   const adjacent = getAdjacentProjects("arko");
-  const { scrollY, scrollYProgress } = useScroll();
-  const scaleX      = useSpring(scrollYProgress, { stiffness: 200, damping: 30 });
-  const heroImageY  = useTransform(scrollY, [0, 700], [0, -80]);
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, { stiffness: 200, damping: 30 });
 
   return (
     <motion.div
@@ -485,51 +484,76 @@ export default function ArkoCase() {
             ))}
           </motion.div>
 
-          {/* ── Product showcase — phones flanking the web screenshot ── */}
-          <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "center", gap: "clamp(10px, 2vw, 20px)" }}>
+        </div>
+      </section>
 
-            {/* Left phone — floats higher */}
-            <motion.div
-              style={{ width: "clamp(68px, 12%, 124px)", marginBottom: "clamp(32px, 5vw, 60px)", flexShrink: 0 }}
-              initial={{ opacity: 0, y: 44 }} animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.62, duration: 1.0, ease: [0.16, 1, 0.3, 1] }}>
-              <motion.div animate={{ y: [0, -15, 0] }}
-                transition={{ repeat: Infinity, duration: 4.4, ease: "easeInOut" }}>
-                <img src="/arko/phone-16.png" alt="Design approved"
-                  style={{ width: "100%", display: "block", filter: "drop-shadow(0 14px 40px rgba(0,0,0,0.20))" }} />
+      {/* ── Product showcase — Sous-inspired rounded container ───────── */}
+      <div style={{ padding: "0 clamp(16px, 4vw, 48px) clamp(48px, 7vw, 80px)" }}>
+        <div className="max-w-5xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 32 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5, duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
+            style={{
+              background: "var(--bg-secondary)",
+              borderRadius: 20,
+              border: "1px solid var(--border)",
+              padding: "clamp(32px, 5vw, 52px) clamp(20px, 4vw, 44px) 0",
+              overflow: "hidden",
+            }}
+          >
+            <div style={{
+              display: "flex",
+              alignItems: "flex-end",
+              justifyContent: "center",
+              gap: "clamp(10px, 2.5vw, 24px)",
+            }}>
+
+              {/* Left phone */}
+              <motion.div
+                style={{ width: "clamp(90px, 17%, 168px)", flexShrink: 0 }}
+                initial={{ opacity: 0, y: 56 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.68, duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
+                whileHover={{ y: -12, scale: 1.03, transition: { duration: 0.3, ease: [0.16, 1, 0.3, 1] } }}
+              >
+                <img src="/arko/phone-13.png" alt="Client landing"
+                  style={{ width: "100%", display: "block", filter: "drop-shadow(0 12px 36px rgba(0,0,0,0.18))" }} />
               </motion.div>
-            </motion.div>
 
-            {/* Center — web screenshot with parallax */}
-            <motion.div
-              style={{ flex: 1, maxWidth: "clamp(380px, 70%, 760px)" }}
-              initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.42, duration: 1.0, ease: [0.16, 1, 0.3, 1] }}>
-              <motion.div style={{ y: heroImageY }}>
+              {/* Center — web screenshot, tallest/most prominent */}
+              <motion.div
+                style={{ flex: 1, maxWidth: "clamp(300px, 58%, 640px)" }}
+                initial={{ opacity: 0, y: 40 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5, duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
+                whileHover={{ y: -8, transition: { duration: 0.3, ease: [0.16, 1, 0.3, 1] } }}
+              >
                 <img src="/arko/web-1.png" alt="Arko web app"
                   style={{
                     width: "100%", display: "block",
                     border: "1px solid var(--border)",
-                    boxShadow: "0 4px 16px rgba(0,0,0,0.06), 0 28px 72px rgba(0,0,0,0.13)",
+                    borderBottom: "none",
+                    boxShadow: "0 4px 16px rgba(0,0,0,0.06), 0 24px 64px rgba(0,0,0,0.12)",
                   }} />
               </motion.div>
-            </motion.div>
 
-            {/* Right phone — floats lower */}
-            <motion.div
-              style={{ width: "clamp(68px, 12%, 124px)", marginBottom: "clamp(12px, 2vw, 24px)", flexShrink: 0 }}
-              initial={{ opacity: 0, y: 44 }} animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.74, duration: 1.0, ease: [0.16, 1, 0.3, 1] }}>
-              <motion.div animate={{ y: [0, -11, 0] }}
-                transition={{ repeat: Infinity, duration: 3.6, ease: "easeInOut", delay: 1.4 }}>
-                <img src="/arko/phone-13.png" alt="Client landing"
-                  style={{ width: "100%", display: "block", filter: "drop-shadow(0 18px 48px rgba(0,0,0,0.22))" }} />
+              {/* Right phone */}
+              <motion.div
+                style={{ width: "clamp(90px, 17%, 168px)", flexShrink: 0 }}
+                initial={{ opacity: 0, y: 56 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.82, duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
+                whileHover={{ y: -12, scale: 1.03, transition: { duration: 0.3, ease: [0.16, 1, 0.3, 1] } }}
+              >
+                <img src="/arko/phone-16.png" alt="Design approved"
+                  style={{ width: "100%", display: "block", filter: "drop-shadow(0 12px 36px rgba(0,0,0,0.18))" }} />
               </motion.div>
-            </motion.div>
 
-          </div>
+            </div>
+          </motion.div>
         </div>
-      </section>
+      </div>
 
       {/* ══════════════════════════════════════════════════════════════
           OVERVIEW — blueprint grid-subtle background
