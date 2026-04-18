@@ -327,7 +327,14 @@ export default function ArkoCase() {
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
       transition={{ duration: 0.4 }} className="pt-14"
     >
-      {/* ── Progress bar — background masks scrolling content ────────── */}
+      {/* ── Full-width top mask — hides content scrolling into nav zone ── */}
+      <div style={{
+        position: "fixed", top: 0, left: 0, right: 0, height: 59,
+        background: "var(--bg-primary)", zIndex: 45,
+        pointerEvents: "none",
+      }} />
+
+      {/* ── Progress bar ─────────────────────────────────────────────── */}
       <div style={{
         position: "fixed", top: 56, left: 0, right: 0, height: 3,
         background: "var(--bg-primary)", zIndex: 50,
