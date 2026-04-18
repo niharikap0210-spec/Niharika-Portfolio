@@ -1,6 +1,6 @@
 import { motion, AnimatePresence, useScroll, useSpring, useTransform, useInView } from "framer-motion";
 import { Link } from "react-router-dom";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import SectionMarker from "../components/SectionMarker";
 import HandDrawnSketch from "../components/HandDrawnSketch";
 import { getAdjacentProjects } from "../data/projects";
@@ -328,6 +328,97 @@ function DecisionStepper() {
   );
 }
 
+/* ══════════════════════════════════════════════════════════════════
+   TABLE OF CONTENTS — sticky left rail
+══════════════════════════════════════════════════════════════════ */
+const TOC_ITEMS = [
+  { id: "sec-overview",   label: "Overview" },
+  { id: "sec-problem",    label: "Problem" },
+  { id: "sec-users",      label: "Users" },
+  { id: "sec-web",        label: "Web Platform" },
+  { id: "sec-scan",       label: "Scan Flow" },
+  { id: "sec-client",     label: "Client Mobile" },
+  { id: "sec-decisions",  label: "Design Decisions" },
+  { id: "sec-reflection", label: "Reflection" },
+];
+
+function CaseTOC({ activeId }: { activeId: string }) {
+  return (
+    <nav
+      aria-label="Page sections"
+      className="hidden xl:block"
+      style={{
+        position: "fixed",
+        top: "50%",
+        transform: "translateY(-50%)",
+        left: "max(20px, calc(50vw - 560px))",
+        zIndex: 40,
+      }}
+    >
+      {TOC_ITEMS.map((s) => {
+        const active = s.id === activeId;
+        return (
+          <a
+            key={s.id}
+            href={`#${s.id}`}
+            onClick={(e) => {
+              e.preventDefault();
+              const el = document.getElementById(s.id);
+              if (el) {
+                const top = el.getBoundingClientRect().top + window.scrollY - 88;
+                window.scrollTo({ top, behavior: "smooth" });
+              }
+            }}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 10,
+              padding: "6px 0",
+              textDecoration: "none",
+              opacity: active ? 1 : 0.42,
+              transitionProperty: "opacity",
+              transitionDuration: "220ms",
+            }}
+            onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.opacity = "1"; }}
+            onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.opacity = active ? "1" : "0.42"; }}
+            onFocus={(e) => { (e.currentTarget as HTMLElement).style.opacity = "1"; }}
+            onBlur={(e) => { (e.currentTarget as HTMLElement).style.opacity = active ? "1" : "0.42"; }}
+          >
+            {/* Indicator — morphs dot ↔ line */}
+            <span
+              style={{
+                display: "block",
+                flexShrink: 0,
+                width: active ? 20 : 4,
+                height: active ? 1.5 : 4,
+                borderRadius: active ? 1 : "50%",
+                background: active ? "var(--text-primary)" : "var(--text-muted)",
+                marginLeft: active ? 0 : 8,
+                transitionProperty: "width, height, border-radius, margin-left, background",
+                transitionDuration: "260ms",
+                transitionTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)",
+              }}
+            />
+            <span
+              style={{
+                ...mono,
+                fontSize: 9,
+                color: active ? "var(--text-primary)" : "var(--text-secondary)",
+                fontWeight: active ? 700 : 400,
+                transitionProperty: "color",
+                transitionDuration: "220ms",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {s.label}
+            </span>
+          </a>
+        );
+      })}
+    </nav>
+  );
+}
+
 /* ═══════════════════════════════════════════════════════════════════
    PAGE
 ═══════════════════════════════════════════════════════════════════ */
@@ -336,12 +427,32 @@ export default function ArkoCase() {
   const { scrollY, scrollYProgress } = useScroll();
   const scaleX      = useSpring(scrollYProgress, { stiffness: 200, damping: 30 });
   const heroImageY  = useTransform(scrollY, [0, 700], [0, -80]);
+  const [activeSection, setActiveSection] = useState("sec-overview");
+
+  useEffect(() => {
+    const obs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) setActiveSection(entry.target.id);
+        });
+      },
+      { rootMargin: "-10% 0px -80% 0px", threshold: 0 }
+    );
+    TOC_ITEMS.forEach((s) => {
+      const el = document.getElementById(s.id);
+      if (el) obs.observe(el);
+    });
+    return () => obs.disconnect();
+  }, []);
 
   return (
     <motion.div
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
       transition={{ duration: 0.4 }} className="pt-14"
     >
+      {/* ── Sticky TOC ───────────────────────────────────────────────── */}
+      <CaseTOC activeId={activeSection} />
+
       {/* ── Full-width top mask — hides content scrolling into nav zone ── */}
       <div style={{
         position: "fixed", top: 0, left: 0, right: 0, height: 59,
@@ -536,6 +647,7 @@ export default function ArkoCase() {
       ══════════════════════════════════════════════════════════════ */}
       <section className="blueprint-grid-subtle" style={{ padding: "clamp(60px, 8vw, 88px) 0" }}>
         <div className="max-w-4xl mx-auto px-6 md:px-10">
+          <div id="sec-overview" />
           <Reveal>
             <SectionMarker label="Overview" letter="A" className="mb-6" />
             <p style={{ fontFamily: sans, fontSize: "clamp(16px, 1.6vw, 18px)", color: "var(--text-secondary)", lineHeight: 1.85, maxWidth: 660 }}>
@@ -554,6 +666,7 @@ export default function ArkoCase() {
         {/* ── THE PROBLEM ─────────────────────────────────────────────── */}
         <SectionBreak />
 
+        <div id="sec-problem" />
         <Reveal>
           <SectionMarker label="Problem" letter="B" className="mb-6" />
           <h2 style={{
@@ -604,6 +717,7 @@ export default function ArkoCase() {
         {/* ── THE USERS ───────────────────────────────────────────────── */}
         <SectionBreak />
 
+        <div id="sec-users" />
         <Reveal>
           <SectionMarker label="Users" letter="C" className="mb-6" />
           <h2 style={{
@@ -653,6 +767,7 @@ export default function ArkoCase() {
       <div className="max-w-4xl mx-auto px-6 md:px-10">
 
         {/* ── WEB PLATFORM ────────────────────────────────────────────── */}
+        <div id="sec-web" />
         <Reveal>
           <SectionMarker label="Designer · Web Application" letter="D" className="mb-6" />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-end" style={{ marginBottom: 36 }}>
@@ -689,6 +804,7 @@ export default function ArkoCase() {
         {/* ── SCAN FLOW ───────────────────────────────────────────────── */}
         <SectionBreak />
 
+        <div id="sec-scan" />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-start">
           <Reveal>
             <SectionMarker label="Scan Flow" letter="E" className="mb-6" />
@@ -790,6 +906,7 @@ export default function ArkoCase() {
         {/* ── CLIENT EXPERIENCE ───────────────────────────────────────── */}
         <SectionBreak />
 
+        <div id="sec-client" />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-start">
           <Reveal delay={0.1}>
             <PhoneCarousel slides={[
@@ -823,6 +940,7 @@ export default function ArkoCase() {
         {/* ── DESIGN DECISIONS ────────────────────────────────────────── */}
         <SectionBreak />
 
+        <div id="sec-decisions" />
         <Reveal>
           <SectionMarker label="Design Decisions" letter="G" className="mb-6" />
           <h2 style={{
@@ -843,6 +961,7 @@ export default function ArkoCase() {
       {/* ── OUTCOMES — blueprint grid-subtle background ──────────────── */}
       <section className="blueprint-grid-subtle" style={{ padding: "clamp(64px, 9vw, 96px) 0", marginTop: "clamp(72px, 10vw, 104px)" }}>
         <div className="max-w-4xl mx-auto px-6 md:px-10">
+          <div id="sec-reflection" />
           <Reveal>
             <SectionMarker label="Reflection" letter="H" className="mb-6" />
             <h2 style={{
