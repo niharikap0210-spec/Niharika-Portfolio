@@ -360,200 +360,203 @@ export default function ArkoCase() {
       </div>
 
       {/* ══════════════════════════════════════════════════════════════
-          HERO — centered editorial with integrated product showcase
+          HERO
       ══════════════════════════════════════════════════════════════ */}
-      <section
-        className="blueprint-grid"
-        style={{
-          position: "relative", overflow: "hidden",
-          paddingTop: "clamp(96px, 12vw, 128px)",
-          paddingBottom: "clamp(48px, 6vw, 72px)",
-        }}
-      >
-        {/* Inset architectural border */}
-        <motion.div aria-hidden initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-          transition={{ delay: 1.0, duration: 1.6 }}
-          style={{ position: "absolute", inset: 10, border: "0.75px solid var(--construction)", pointerEvents: "none" }}
-        />
-        {/* Corner TL */}
-        <motion.div aria-hidden initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2, duration: 1.0 }}
-          style={{ position: "absolute", top: 18, left: 18, ...mono, fontSize: 7, color: "var(--construction)", lineHeight: 1.4, pointerEvents: "none" }}>
-          <div>x: 0.00</div><div>y: 0.00</div>
-        </motion.div>
-        {/* Corner BR */}
-        <motion.div aria-hidden initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2, duration: 1.0 }}
-          style={{ position: "absolute", bottom: 18, right: 18, ...mono, fontSize: 7, color: "var(--construction)", lineHeight: 1.4, textAlign: "right", pointerEvents: "none" }}>
-          <div>Sheet 01 / Arko</div><div>Product Design · 2025</div>
-        </motion.div>
+      <section style={{ position: "relative" }}>
 
-        {/* Back link */}
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.05 }}
-          style={{ position: "absolute", top: 28, left: "clamp(28px, 5vw, 48px)", zIndex: 2 }}>
-          <Link to="/"
-            style={{ display: "inline-flex", alignItems: "center", gap: 8, ...mono, fontSize: 10, color: "var(--text-muted)", textDecoration: "none", transitionProperty: "color", transitionDuration: "150ms" }}
-            onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = "var(--text-primary)")}
-            onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = "var(--text-muted)")}>
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-              <path d="M11.5 7h-9M5 3.5L1.5 7 5 10.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-            All Work
-          </Link>
-        </motion.div>
-
-        <div className="max-w-5xl mx-auto px-6 md:px-10" style={{ position: "relative", zIndex: 1 }}>
-
-          {/* Tags — centered */}
-          <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.6 }}
-            style={{ display: "flex", justifyContent: "center", flexWrap: "wrap", gap: 6, marginBottom: 24 }}>
-            {["Product Design", "B2B SaaS", "Web + iOS", "AR / Spatial"].map((t) => (
-              <span key={t} style={{ ...mono, fontSize: 9, color: "var(--text-muted)", border: "1px solid var(--border)", padding: "3px 10px", background: "var(--bg-primary)" }}>
-                {t}
-              </span>
-            ))}
+        {/* ── Band 1 — text ───────────────────────────────────────── */}
+        <div
+          className="blueprint-grid"
+          style={{
+            position: "relative",
+            paddingTop: "clamp(96px, 12vw, 128px)",
+            paddingBottom: "clamp(44px, 5.5vw, 60px)",
+          }}
+        >
+          {/* Inset architectural border */}
+          <motion.div aria-hidden initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+            transition={{ delay: 1.0, duration: 1.6 }}
+            style={{ position: "absolute", inset: 10, border: "0.75px solid var(--construction)", pointerEvents: "none" }}
+          />
+          {/* Corner TL */}
+          <motion.div aria-hidden initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2, duration: 1.0 }}
+            style={{ position: "absolute", top: 18, left: 18, ...mono, fontSize: 7, color: "var(--construction)", lineHeight: 1.4, pointerEvents: "none" }}>
+            <div>x: 0.00</div><div>y: 0.00</div>
+          </motion.div>
+          {/* Corner BR */}
+          <motion.div aria-hidden initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2, duration: 1.0 }}
+            style={{ position: "absolute", bottom: 18, right: 18, ...mono, fontSize: 7, color: "var(--construction)", lineHeight: 1.4, textAlign: "right", pointerEvents: "none" }}>
+            <div>Sheet 01 / Arko</div><div>Product Design · 2025</div>
           </motion.div>
 
-          {/* Title — centered, huge, slide-up reveal */}
-          <div style={{ textAlign: "center", overflow: "hidden", marginBottom: 20 }}>
-            <motion.h1
-              initial={{ y: "108%" }} animate={{ y: 0 }}
-              transition={{ delay: 0.08, duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
+          {/* Back link */}
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.05 }}
+            style={{ position: "absolute", top: 28, left: "clamp(28px, 5vw, 48px)", zIndex: 2 }}>
+            <Link to="/"
+              style={{ display: "inline-flex", alignItems: "center", gap: 8, ...mono, fontSize: 10, color: "var(--text-muted)", textDecoration: "none", transitionProperty: "color", transitionDuration: "150ms" }}
+              onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = "var(--text-primary)")}
+              onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = "var(--text-muted)")}>
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <path d="M11.5 7h-9M5 3.5L1.5 7 5 10.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              All Work
+            </Link>
+          </motion.div>
+
+          <div className="max-w-5xl mx-auto px-6 md:px-10" style={{ position: "relative", zIndex: 1 }}>
+
+            {/* Tags */}
+            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.6 }}
+              style={{ display: "flex", justifyContent: "center", flexWrap: "wrap", gap: 6, marginBottom: 24 }}>
+              {["Product Design", "B2B SaaS", "Web + iOS", "AR / Spatial"].map((t) => (
+                <span key={t} style={{ ...mono, fontSize: 9, color: "var(--text-muted)", border: "1px solid var(--border)", padding: "3px 10px", background: "var(--bg-primary)" }}>
+                  {t}
+                </span>
+              ))}
+            </motion.div>
+
+            {/* Title */}
+            <div style={{ textAlign: "center", overflow: "hidden", marginBottom: 20 }}>
+              <motion.h1
+                initial={{ y: "108%" }} animate={{ y: 0 }}
+                transition={{ delay: 0.08, duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
+                style={{
+                  fontFamily: serif, fontWeight: 700,
+                  fontSize: "clamp(80px, 13vw, 136px)",
+                  color: "var(--text-primary)", letterSpacing: "-0.04em", lineHeight: 0.9,
+                }}>
+                Arko
+              </motion.h1>
+            </div>
+
+            {/* Tagline */}
+            <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.34, duration: 0.7 }}
               style={{
-                fontFamily: serif, fontWeight: 700,
-                fontSize: "clamp(80px, 13vw, 136px)",
-                color: "var(--text-primary)", letterSpacing: "-0.04em", lineHeight: 0.9,
+                textAlign: "center", fontFamily: sans,
+                fontSize: "clamp(13px, 1.4vw, 17px)",
+                color: "var(--text-secondary)", lineHeight: 1.75,
+                maxWidth: 480, margin: "0 auto 36px",
               }}>
-              Arko
-            </motion.h1>
+              Spatial design platform for interior design firms — scan spaces in AR,
+              design them digitally, and get client sign-off without the back-and-forth.
+            </motion.p>
+
+            {/* Meta strip — desktop */}
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.44, duration: 0.6 }}
+              className="hidden md:flex"
+              style={{ justifyContent: "center", borderTop: "0.75px solid var(--border)", borderBottom: "0.75px solid var(--border)" }}>
+              {([
+                { label: "Role",     value: "Product Designer" },
+                { label: "Platform", value: "Web + iOS" },
+                { label: "Timeline", value: "14 weeks" },
+                { label: "Tools",    value: "Figma · Framer · Protopie" },
+              ] as { label: string; value: string }[]).map((m, i, arr) => (
+                <div key={m.label} style={{
+                  padding: "14px clamp(16px, 3.5vw, 48px)",
+                  borderRight: i < arr.length - 1 ? "0.75px solid var(--border)" : "none",
+                  textAlign: "center",
+                }}>
+                  <p style={{ ...mono, fontSize: 7, color: "var(--text-muted)", marginBottom: 5 }}>{m.label}</p>
+                  <p style={{ fontFamily: sans, fontSize: 12, fontWeight: 500, color: "var(--text-primary)" }}>{m.value}</p>
+                </div>
+              ))}
+            </motion.div>
+
+            {/* Meta — mobile */}
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.44, duration: 0.6 }}
+              className="flex md:hidden flex-col">
+              {[
+                { label: "Role", value: "Product Designer" },
+                { label: "Timeline", value: "14 weeks" },
+                { label: "Tools",    value: "Figma · Framer · Protopie" },
+              ].map((m, i) => (
+                <div key={m.label} style={{
+                  display: "flex", gap: 16, alignItems: "baseline", padding: "10px 0",
+                  borderTop: i === 0 ? "0.75px solid var(--border)" : "none",
+                  borderBottom: "0.75px solid var(--border)",
+                }}>
+                  <span style={{ ...mono, fontSize: 8, color: "var(--text-muted)", minWidth: 60, flexShrink: 0 }}>{m.label}</span>
+                  <span style={{ fontFamily: sans, fontSize: 12, color: "var(--text-secondary)" }}>{m.value}</span>
+                </div>
+              ))}
+            </motion.div>
+
           </div>
-
-          {/* Tagline — centered */}
-          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.34, duration: 0.7 }}
-            style={{
-              textAlign: "center", fontFamily: sans,
-              fontSize: "clamp(13px, 1.4vw, 17px)",
-              color: "var(--text-secondary)", lineHeight: 1.75,
-              maxWidth: 480, margin: "0 auto 40px",
-            }}>
-            Spatial design platform for interior design firms — scan spaces in AR,
-            design them digitally, and get client sign-off without the back-and-forth.
-          </motion.p>
-
-          {/* Meta strip — horizontal rule with 4 items */}
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.44, duration: 0.6 }}
-            className="hidden md:flex"
-            style={{
-              justifyContent: "center",
-              borderTop: "0.75px solid var(--border)", borderBottom: "0.75px solid var(--border)",
-              marginBottom: 56,
-            }}>
-            {([
-              { label: "Role",     value: "Product Designer" },
-              { label: "Platform", value: "Web + iOS" },
-              { label: "Timeline", value: "14 weeks" },
-              { label: "Tools",    value: "Figma · Framer · Protopie" },
-            ] as { label: string; value: string }[]).map((m, i, arr) => (
-              <div key={m.label} style={{
-                padding: "14px clamp(16px, 3.5vw, 48px)",
-                borderRight: i < arr.length - 1 ? "0.75px solid var(--border)" : "none",
-                textAlign: "center",
-              }}>
-                <p style={{ ...mono, fontSize: 7, color: "var(--text-muted)", marginBottom: 5 }}>{m.label}</p>
-                <p style={{ fontFamily: sans, fontSize: 12, fontWeight: 500, color: "var(--text-primary)" }}>{m.value}</p>
-              </div>
-            ))}
-          </motion.div>
-
-          {/* Mobile meta — simple list */}
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.44, duration: 0.6 }}
-            className="flex md:hidden flex-col"
-            style={{ gap: 0, marginBottom: 40 }}>
-            {[
-              { label: "Role",     value: "Product Designer" },
-              { label: "Timeline", value: "14 weeks" },
-              { label: "Tools",    value: "Figma · Framer · Protopie" },
-            ].map((m, i) => (
-              <div key={m.label} style={{
-                display: "flex", gap: 16, alignItems: "baseline",
-                padding: "10px 0",
-                borderTop: i === 0 ? "0.75px solid var(--border)" : "none",
-                borderBottom: "0.75px solid var(--border)",
-              }}>
-                <span style={{ ...mono, fontSize: 8, color: "var(--text-muted)", minWidth: 60, flexShrink: 0 }}>{m.label}</span>
-                <span style={{ fontFamily: sans, fontSize: 12, color: "var(--text-secondary)" }}>{m.value}</span>
-              </div>
-            ))}
-          </motion.div>
-
         </div>
-      </section>
 
-      {/* ── Product showcase — Sous-inspired rounded container ───────── */}
-      <div style={{ padding: "0 clamp(16px, 4vw, 48px) clamp(48px, 7vw, 80px)" }}>
-        <div className="max-w-5xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 32 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5, duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
+        {/* ── Band 2 — product showcase ───────────────────────────── */}
+        <div
+          className="blueprint-grid-subtle"
+          style={{
+            position: "relative",
+            borderTop: "1px solid var(--border)",
+            paddingTop: "clamp(40px, 5.5vw, 60px)",
+            paddingLeft: "clamp(20px, 4vw, 60px)",
+            paddingRight: "clamp(20px, 4vw, 60px)",
+            paddingBottom: 0,
+            overflow: "hidden",
+          }}
+        >
+          {/* Subtle top bracket annotation */}
+          <motion.div aria-hidden
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+            transition={{ delay: 1.4, duration: 1.2 }}
+            style={{ position: "absolute", top: 10, left: 18, ...mono, fontSize: 7, color: "var(--construction)", pointerEvents: "none" }}>
+            Final Design
+          </motion.div>
+
+          <div
+            className="max-w-6xl mx-auto"
             style={{
-              background: "var(--bg-secondary)",
-              borderRadius: 20,
-              border: "1px solid var(--border)",
-              padding: "clamp(32px, 5vw, 52px) clamp(20px, 4vw, 44px) 0",
-              overflow: "hidden",
-            }}
-          >
-            <div style={{
               display: "flex",
               alignItems: "flex-end",
               justifyContent: "center",
-              gap: "clamp(10px, 2.5vw, 24px)",
-            }}>
+              gap: "clamp(12px, 2.5vw, 24px)",
+            }}
+          >
+            {/* Left phone */}
+            <motion.div
+              style={{ width: "clamp(140px, 20%, 240px)", flexShrink: 0 }}
+              initial={{ opacity: 0, y: 80 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.68, duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
+              whileHover={{ y: -18, scale: 1.03, transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] } }}
+            >
+              <img src="/arko/phone-13.png" alt="Client mobile view"
+                style={{ width: "100%", display: "block", filter: "drop-shadow(0 20px 56px rgba(0,0,0,0.22))" }} />
+            </motion.div>
 
-              {/* Left phone */}
-              <motion.div
-                style={{ width: "clamp(90px, 17%, 168px)", flexShrink: 0 }}
-                initial={{ opacity: 0, y: 56 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.68, duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
-                whileHover={{ y: -12, scale: 1.03, transition: { duration: 0.3, ease: [0.16, 1, 0.3, 1] } }}
-              >
-                <img src="/arko/phone-13.png" alt="Client landing"
-                  style={{ width: "100%", display: "block", filter: "drop-shadow(0 12px 36px rgba(0,0,0,0.18))" }} />
-              </motion.div>
+            {/* Center — web dashboard, most prominent */}
+            <motion.div
+              style={{ flex: 1, maxWidth: "clamp(380px, 56%, 680px)" }}
+              initial={{ opacity: 0, y: 52 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.46, duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
+              whileHover={{ y: -12, transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] } }}
+            >
+              <img src="/arko/web-1.png" alt="Arko designer dashboard"
+                style={{
+                  width: "100%", display: "block",
+                  border: "1px solid var(--border)", borderBottom: "none",
+                  boxShadow: "0 4px 16px rgba(0,0,0,0.06), 0 28px 72px rgba(0,0,0,0.14)",
+                }} />
+            </motion.div>
 
-              {/* Center — web screenshot, tallest/most prominent */}
-              <motion.div
-                style={{ flex: 1, maxWidth: "clamp(300px, 58%, 640px)" }}
-                initial={{ opacity: 0, y: 40 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5, duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
-                whileHover={{ y: -8, transition: { duration: 0.3, ease: [0.16, 1, 0.3, 1] } }}
-              >
-                <img src="/arko/web-1.png" alt="Arko web app"
-                  style={{
-                    width: "100%", display: "block",
-                    border: "1px solid var(--border)",
-                    borderBottom: "none",
-                    boxShadow: "0 4px 16px rgba(0,0,0,0.06), 0 24px 64px rgba(0,0,0,0.12)",
-                  }} />
-              </motion.div>
-
-              {/* Right phone */}
-              <motion.div
-                style={{ width: "clamp(90px, 17%, 168px)", flexShrink: 0 }}
-                initial={{ opacity: 0, y: 56 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.82, duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
-                whileHover={{ y: -12, scale: 1.03, transition: { duration: 0.3, ease: [0.16, 1, 0.3, 1] } }}
-              >
-                <img src="/arko/phone-16.png" alt="Design approved"
-                  style={{ width: "100%", display: "block", filter: "drop-shadow(0 12px 36px rgba(0,0,0,0.18))" }} />
-              </motion.div>
-
-            </div>
-          </motion.div>
+            {/* Right phone */}
+            <motion.div
+              style={{ width: "clamp(140px, 20%, 240px)", flexShrink: 0 }}
+              initial={{ opacity: 0, y: 80 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.84, duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
+              whileHover={{ y: -18, scale: 1.03, transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] } }}
+            >
+              <img src="/arko/phone-16.png" alt="Design approved"
+                style={{ width: "100%", display: "block", filter: "drop-shadow(0 20px 56px rgba(0,0,0,0.22))" }} />
+            </motion.div>
+          </div>
         </div>
-      </div>
+
+      </section>
 
       {/* ══════════════════════════════════════════════════════════════
           OVERVIEW — blueprint grid-subtle background
