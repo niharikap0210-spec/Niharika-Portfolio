@@ -175,6 +175,7 @@ function UserTabs() {
       imgCaption: "Designer dashboard — daily workspace",
       sketch: "floorPlan" as const,
       annotation: "their daily canvas",
+      isPhone: false,
     },
     {
       label: "Secondary — The Client",
@@ -184,6 +185,7 @@ function UserTabs() {
       imgCaption: "Client landing — no login, no friction",
       sketch: "wireframe" as const,
       annotation: "what they see",
+      isPhone: true,
     },
   ];
 
@@ -218,7 +220,13 @@ function UserTabs() {
             </div>
             <div>
               <img src={tabs[tab].img} alt={tabs[tab].heading}
-                style={{ width: "100%", display: "block", border: "1px solid var(--border)", boxShadow: "0 2px 8px rgba(0,0,0,0.04), 0 12px 40px rgba(0,0,0,0.07)" }} />
+                style={{
+                  width: "100%", display: "block",
+                  ...(tabs[tab].isPhone
+                    ? { filter: "drop-shadow(0 8px 28px rgba(0,0,0,0.16))" }
+                    : { border: "1px solid var(--border)", boxShadow: "0 2px 8px rgba(0,0,0,0.04), 0 12px 40px rgba(0,0,0,0.07)" }
+                  ),
+                }} />
               <p style={{ ...mono, fontSize: 8, color: "var(--text-muted)", marginTop: 9 }}>{tabs[tab].imgCaption}</p>
             </div>
           </div>
