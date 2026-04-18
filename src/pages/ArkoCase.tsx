@@ -1,6 +1,7 @@
 import { motion, AnimatePresence, useScroll, useSpring, useInView } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useRef, useState } from "react";
+import { Clock, ArrowsHorizontal, WarningCircle, Quotes, Desktop, DeviceMobileCamera, Aperture, LightbulbFilament, ArrowBendDownRight } from "@phosphor-icons/react";
 import SectionMarker from "../components/SectionMarker";
 import HandDrawnSketch from "../components/HandDrawnSketch";
 import { getAdjacentProjects } from "../data/projects";
@@ -221,8 +222,8 @@ function UserTabs() {
             <div>
               <p style={{ fontFamily: sans, fontSize: 16, color: "var(--text-secondary)", lineHeight: 1.85, marginBottom: 24 }}>{tabs[tab].body}</p>
               <HandDrawnSketch type={tabs[tab].sketch}
-                width={tabs[tab].sketch === "wireframe" ? 60 : 110}
-                height={tabs[tab].sketch === "wireframe" ? 80 : 70}
+                width={tabs[tab].sketch === "wireframe" ? 90 : 160}
+                height={tabs[tab].sketch === "wireframe" ? 116 : 100}
                 annotation={tabs[tab].annotation} delay={0.2} />
             </div>
             <div>
@@ -324,6 +325,104 @@ function DecisionStepper() {
           </div>
         </motion.div>
       </AnimatePresence>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   CURVED ARROW — hand-drawn style connecting annotation
+══════════════════════════════════════════════════════════════════ */
+function CurvedArrow({ label, rotate = 0, className = "" }: { label?: string; rotate?: number; className?: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-30px" });
+  return (
+    <div ref={ref} className={`inline-flex flex-col items-center pointer-events-none select-none ${className}`} aria-hidden>
+      <svg width="72" height="60" viewBox="0 0 72 60" fill="none" style={{ transform: `rotate(${rotate}deg)` }}>
+        <motion.path
+          d="M 12 6 C 10 20, 42 16, 44 30 C 46 44, 58 42, 63 52"
+          stroke="var(--text-secondary)" strokeWidth="1.1" strokeLinecap="round" opacity={0.3}
+          variants={{ hidden: { pathLength: 0, opacity: 0 }, visible: { pathLength: 1, opacity: 0.3, transition: { pathLength: { duration: 1.4, ease: "easeInOut" }, opacity: { duration: 0.3 } } } }}
+          initial="hidden" animate={inView ? "visible" : "hidden"}
+        />
+        <motion.path
+          d="M 57 46 L 63 52 L 56 55"
+          stroke="var(--text-secondary)" strokeWidth="1.0" strokeLinecap="round" strokeLinejoin="round" opacity={0.3}
+          initial={{ opacity: 0 }} animate={inView ? { opacity: 0.3 } : { opacity: 0 }} transition={{ delay: 1.2, duration: 0.3 }}
+        />
+      </svg>
+      {label && (
+        <motion.span
+          initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : { opacity: 0 }} transition={{ delay: 1.5, duration: 0.5 }}
+          style={{ fontFamily: "'Caveat', cursive", fontSize: 13, color: "var(--text-secondary)", opacity: 0.42, marginTop: -6, lineHeight: 1.3 }}>
+          {label}
+        </motion.span>
+      )}
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   PROCESS TIMELINE — interactive accordion
+══════════════════════════════════════════════════════════════════ */
+function ProcessTimeline() {
+  const [open, setOpen] = useState<number | null>(null);
+  const steps = [
+    { num: "01", title: "Problem Framing",       body: "Mapped the client approval workflow across 5 interior design studios to identify the highest-friction moments — where time was lost, where trust broke down." },
+    { num: "02", title: "User Research",          body: "Interviewed 8 project leads and 6 clients to understand how each side experiences the approval loop. The gap between what designers assumed and what clients felt was significant." },
+    { num: "03", title: "Persona Definition",     body: "Defined two primary archetypes — the Studio Designer (power user, daily use) and the Client (occasional, non-design-literate). Neither could compromise the other." },
+    { num: "04", title: "Key Insight",            body: "Reframed the product from 'better design tool' to 'better communication tool powered by design.' This changed every subsequent decision." },
+    { num: "05", title: "Information Architecture", body: "Mapped two parallel experience trees — designer web app and client mobile view — ensuring the client-facing surface never leaked design complexity." },
+    { num: "06", title: "Design System",          body: "Built a component library spanning both surfaces before designing any screens. Consistency across web and iOS required shared tokens, not ad-hoc matching." },
+    { num: "07", title: "AR Editor Design",       body: "Designed the room editor canvas-first — collapsible panels, progressive disclosure, minimal chrome. The space is the product; everything else serves it." },
+    { num: "08", title: "Approval Flow",          body: "Share modal → client walkthrough → pinned comments → one-tap approval, designed as a single seamless loop. This is the core value proposition, built as a first-class feature." },
+    { num: "09", title: "Empty State Design",     body: "Both dashboard and project detail have fully designed empty states that guide users to their first action. For B2B tools, adoption lives or dies in the first session." },
+    { num: "10", title: "Prototype & Review",     body: "Built interactive prototypes in Framer and Protopie for stakeholder walkthroughs and design critique. Animated the approval flow end-to-end to communicate the full loop." },
+  ];
+
+  return (
+    <div style={{ borderTop: "1px solid var(--border)" }}>
+      {steps.map((s, i) => {
+        const isOpen = open === i;
+        return (
+          <div key={i} style={{ borderBottom: "1px solid var(--border)" }}>
+            <button
+              onClick={() => setOpen(isOpen ? null : i)}
+              style={{
+                width: "100%", display: "flex", alignItems: "center", gap: 20,
+                padding: "18px 0", background: "none", border: "none", cursor: "pointer", textAlign: "left",
+                transitionProperty: "opacity", transitionDuration: "150ms",
+              }}
+              onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.opacity = "0.75"; }}
+              onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.opacity = "1"; }}
+            >
+              <span style={{ ...mono, fontSize: 9, color: "var(--text-muted)", minWidth: 24, flexShrink: 0 }}>{s.num}</span>
+              <span style={{ fontFamily: sans, fontSize: 15, color: "var(--text-primary)", flex: 1, fontWeight: 500 }}>{s.title}</span>
+              <motion.span
+                animate={{ rotate: isOpen ? 45 : 0 }}
+                transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+                style={{ display: "block", color: "var(--text-muted)", fontSize: 22, lineHeight: 1, flexShrink: 0 }}>
+                +
+              </motion.span>
+            </button>
+            <AnimatePresence initial={false}>
+              {isOpen && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
+                  style={{ overflow: "hidden" }}
+                >
+                  <div style={{ display: "flex", gap: 20, paddingLeft: 44, paddingBottom: 22 }}>
+                    <ArrowBendDownRight size={16} color="var(--text-muted)" style={{ flexShrink: 0, marginTop: 3, opacity: 0.5 }} />
+                    <p style={{ fontFamily: sans, fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.85 }}>{s.body}</p>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        );
+      })}
     </div>
   );
 }
@@ -565,13 +664,20 @@ export default function ArkoCase() {
         <div className="max-w-4xl mx-auto px-6 md:px-10">
           <Reveal>
             <SectionMarker label="Overview" letter="A" className="mb-6" />
-            <p style={{ fontFamily: sans, fontSize: "clamp(16px, 1.6vw, 18px)", color: "var(--text-secondary)", lineHeight: 1.85, maxWidth: 660 }}>
-              Interior designers spend hours chasing client approvals over email, WhatsApp, and
-              in-person walkthroughs that still end in miscommunication. Arko is a B2B SaaS platform
-              that lets design teams scan physical spaces in AR, furnish and finish them digitally,
-              and share interactive walkthroughs with clients for remote review and one-click approval —
-              eliminating the back-and-forth entirely.
-            </p>
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
+              <p style={{ fontFamily: sans, fontSize: "clamp(16px, 1.6vw, 18px)", color: "var(--text-secondary)", lineHeight: 1.85, maxWidth: 660 }} className="md:col-span-9">
+                Interior designers spend hours chasing client approvals over email, WhatsApp, and
+                in-person walkthroughs that still end in miscommunication. Arko is a B2B SaaS platform
+                that lets design teams scan physical spaces in AR, furnish and finish them digitally,
+                and share interactive walkthroughs with clients for remote review and one-click approval —
+                eliminating the back-and-forth entirely.
+              </p>
+              <div className="md:col-span-3 flex flex-col items-center gap-1" aria-hidden>
+                <HandDrawnSketch type="morphTransition" width={200} height={88}
+                  annotation="scan → design → approve" delay={0.3} />
+                <CurvedArrow label="the full loop" rotate={10} />
+              </div>
+            </div>
           </Reveal>
         </div>
       </section>
@@ -595,9 +701,10 @@ export default function ArkoCase() {
             one root problem — clients cannot visualize a space from a floor plan or mood board alone.
             They say yes in the meeting and change their mind when they see it built.
           </p>
-          <div style={{ marginBottom: 40 }}>
-            <HandDrawnSketch type="floorPlan" width={100} height={65}
+          <div style={{ display: "flex", alignItems: "flex-end", gap: 32, marginBottom: 40, flexWrap: "wrap" }}>
+            <HandDrawnSketch type="floorPlan" width={170} height={110}
               annotation="the real cost of 'yes'" delay={0.3} />
+            <CurvedArrow label="every revision costs this" rotate={-15} />
           </div>
         </Reveal>
 
@@ -607,16 +714,19 @@ export default function ArkoCase() {
       <section className="blueprint-grid-subtle" style={{ padding: "clamp(44px, 6vw, 64px) 0" }}>
         <div className="max-w-4xl mx-auto px-6 md:px-10">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {[
-              { number: "6–8 hrs", label: "Lost per project",  detail: "to revision cycles driven by clients who couldn't visualize the space" },
-              { number: "3 tools", label: "Disconnected",      detail: "AutoCAD, PDFs, walkthroughs — none talk to each other, none work for clients" },
-              { number: "₀ binding", label: "In a verbal yes", detail: "Clients approve in the room and change their minds once they see it built" },
-            ].map((s, i) => (
+            {([
+              { number: "6–8 hrs", label: "Lost per project",  detail: "to revision cycles driven by clients who couldn't visualize the space", icon: <Clock size={20} color="var(--text-muted)" opacity={0.45} /> },
+              { number: "3 tools", label: "Disconnected",      detail: "AutoCAD, PDFs, walkthroughs — none talk to each other, none work for clients", icon: <ArrowsHorizontal size={20} color="var(--text-muted)" opacity={0.45} /> },
+              { number: "₀ binding", label: "In a verbal yes", detail: "Clients approve in the room and change their minds once they see it built", icon: <WarningCircle size={20} color="var(--text-muted)" opacity={0.45} /> },
+            ] as { number: string; label: string; detail: string; icon: React.ReactNode }[]).map((s, i) => (
               <Reveal key={i} delay={i * 0.09}>
                 <div style={{ padding: "24px", border: "1px solid var(--border)", backgroundColor: "var(--bg-elevated)", height: "100%" }}>
-                  <p style={{ fontFamily: serif, fontWeight: 700, fontSize: "clamp(30px, 4vw, 42px)", color: "var(--text-primary)", letterSpacing: "-0.03em", lineHeight: 1, marginBottom: 6 }}>
-                    {s.number}
-                  </p>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 10 }}>
+                    <p style={{ fontFamily: serif, fontWeight: 700, fontSize: "clamp(30px, 4vw, 42px)", color: "var(--text-primary)", letterSpacing: "-0.03em", lineHeight: 1 }}>
+                      {s.number}
+                    </p>
+                    {s.icon}
+                  </div>
                   <p style={{ ...mono, fontSize: 8, color: "var(--text-muted)", marginBottom: 12 }}>{s.label}</p>
                   <p style={{ fontFamily: sans, fontSize: 13, color: "var(--text-secondary)", lineHeight: 1.65 }}>{s.detail}</p>
                 </div>
@@ -652,7 +762,10 @@ export default function ArkoCase() {
       <section style={{ backgroundColor: "var(--text-primary)", padding: "clamp(72px, 10vw, 120px) 0", margin: "clamp(64px, 9vw, 96px) 0" }}>
         <Reveal y={16}>
           <div className="max-w-4xl mx-auto px-6 md:px-10">
-            <p style={{ ...mono, fontSize: 9, color: "var(--text-muted)", marginBottom: 28 }}>Key Insight</p>
+            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 28 }}>
+              <p style={{ ...mono, fontSize: 9, color: "var(--text-muted)" }}>Key Insight</p>
+              <Quotes size={28} color="var(--text-muted)" opacity={0.25} />
+            </div>
             <blockquote style={{
               fontFamily: serif, fontWeight: 700,
               fontSize: "clamp(24px, 4.5vw, 52px)",
@@ -671,7 +784,7 @@ export default function ArkoCase() {
               design tool — it was to build a better <em>communication</em> tool that
               happened to be powered by design.
             </p>
-            <HandDrawnSketch type="morphTransition" width={180} height={72}
+            <HandDrawnSketch type="morphTransition" width={250} height={100}
               annotation="from design tool → communication tool" delay={0.2} />
           </div>
         </Reveal>
@@ -681,7 +794,10 @@ export default function ArkoCase() {
 
         {/* ── WEB PLATFORM ────────────────────────────────────────────── */}
         <Reveal>
-          <SectionMarker label="Designer · Web Application" letter="D" className="mb-6" />
+          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20 }}>
+            <SectionMarker label="Designer · Web Application" letter="D" />
+            <Desktop size={16} color="var(--text-muted)" opacity={0.5} />
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-end" style={{ marginBottom: 36 }}>
             <div>
               <h2 style={{
@@ -697,9 +813,10 @@ export default function ArkoCase() {
                 a design lead would open on day one and never want to leave.
               </p>
             </div>
-            <div style={{ display: "flex", justifyContent: "flex-end" }} aria-hidden>
-              <HandDrawnSketch type="floorPlan" width={110} height={70}
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 8 }} aria-hidden>
+              <HandDrawnSketch type="floorPlan" width={170} height={110}
                 annotation="the designer's daily view" delay={0.2} />
+              <CurvedArrow label="their daily canvas" rotate={20} />
             </div>
           </div>
         </Reveal>
@@ -718,7 +835,10 @@ export default function ArkoCase() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-start">
           <Reveal>
-            <SectionMarker label="Scan Flow" letter="E" className="mb-6" />
+            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20 }}>
+              <SectionMarker label="Scan Flow" letter="E" />
+              <Aperture size={16} color="var(--text-muted)" opacity={0.5} />
+            </div>
             <h2 style={{
               fontFamily: serif, fontWeight: 700, fontSize: "clamp(22px, 2.8vw, 34px)",
               color: "var(--text-primary)", letterSpacing: "-0.025em",
@@ -731,8 +851,11 @@ export default function ArkoCase() {
               floor planes, measures spatial accuracy, and confirms the data before the
               AR editor opens.
             </p>
-            <HandDrawnSketch type="perspective" width={110} height={68}
-              annotation="empty room → furnished space" delay={0.3} />
+            <div style={{ display: "flex", alignItems: "flex-end", gap: 16, flexWrap: "wrap" }}>
+              <HandDrawnSketch type="perspective" width={170} height={108}
+                annotation="empty room → furnished space" delay={0.3} />
+              <CurvedArrow label="the scan starts here" rotate={-20} />
+            </div>
           </Reveal>
 
           <Reveal delay={0.1}>
@@ -828,7 +951,10 @@ export default function ArkoCase() {
           </Reveal>
 
           <Reveal>
-            <SectionMarker label="Client · Mobile" letter="F" className="mb-6" />
+            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20 }}>
+              <SectionMarker label="Client · Mobile" letter="F" />
+              <DeviceMobileCamera size={16} color="var(--text-muted)" opacity={0.5} />
+            </div>
             <h2 style={{
               fontFamily: serif, fontWeight: 700, fontSize: "clamp(22px, 2.8vw, 34px)",
               color: "var(--text-primary)", letterSpacing: "-0.025em",
@@ -865,6 +991,30 @@ export default function ArkoCase() {
           <DecisionStepper />
         </Reveal>
 
+        {/* ── PROCESS TIMELINE ───────────────────────────────────────── */}
+        <SectionBreak />
+
+        <Reveal>
+          <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: 16, marginBottom: 36 }}>
+            <div>
+              <SectionMarker label="Process" letter="G2" className="mb-4" />
+              <h2 style={{
+                fontFamily: serif, fontWeight: 700, fontSize: "clamp(22px, 2.8vw, 34px)",
+                color: "var(--text-primary)", letterSpacing: "-0.025em", lineHeight: 1.2,
+              }}>
+                10 steps from insight to interface.
+              </h2>
+            </div>
+            <div aria-hidden>
+              <HandDrawnSketch type="wireframe" width={80} height={110} annotation="the blueprint" delay={0.3} />
+            </div>
+          </div>
+        </Reveal>
+
+        <Reveal delay={0.08}>
+          <ProcessTimeline />
+        </Reveal>
+
       </div>
 
       {/* ── OUTCOMES — blueprint grid-subtle background ──────────────── */}
@@ -886,31 +1036,35 @@ export default function ArkoCase() {
             </p>
           </Reveal>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5" style={{ marginBottom: 48 }}>
-            {[
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5" style={{ marginBottom: 52 }}>
+            {([
               {
                 label: "What I'd build next",
                 body: "An analytics layer for designers — showing which rooms clients spend the most time reviewing, which furniture items get swapped most often, and where comments cluster spatially. Turning client behavior into actionable design intelligence.",
-                bg: "var(--bg-elevated)",
+                icon: <LightbulbFilament size={22} color="var(--text-muted)" opacity={0.45} />,
               },
               {
                 label: "What this reinforced",
                 body: "The best B2B products are the ones that make the professional look good in front of their client. Every design decision in Arko was made with that in mind.",
-                bg: "var(--bg-elevated)",
+                icon: <Quotes size={22} color="var(--text-muted)" opacity={0.45} />,
               },
-            ].map((c, i) => (
+            ] as { label: string; body: string; icon: React.ReactNode }[]).map((c, i) => (
               <Reveal key={i} delay={i * 0.08}>
-                <div style={{ padding: "28px 24px", border: "1px solid var(--border)", backgroundColor: c.bg, height: "100%" }}>
-                  <p style={{ ...mono, fontSize: 8, color: "var(--text-muted)", marginBottom: 14 }}>{c.label}</p>
+                <div style={{ padding: "28px 24px", border: "1px solid var(--border)", backgroundColor: "var(--bg-elevated)", height: "100%" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 14 }}>
+                    <p style={{ ...mono, fontSize: 8, color: "var(--text-muted)" }}>{c.label}</p>
+                    {c.icon}
+                  </div>
                   <p style={{ fontFamily: sans, fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.8 }}>{c.body}</p>
                 </div>
               </Reveal>
             ))}
           </div>
 
-          <div className="flex justify-center" aria-hidden>
-            <HandDrawnSketch type="perspective" width={200} height={96}
+          <div className="flex justify-center flex-col items-center gap-3" aria-hidden>
+            <HandDrawnSketch type="perspective" width={270} height={130}
               annotation="from architecture to digital product" delay={0.2} />
+            <CurvedArrow label="the full journey" rotate={15} />
           </div>
         </div>
       </section>
