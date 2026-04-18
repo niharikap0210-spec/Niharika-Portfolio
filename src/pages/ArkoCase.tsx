@@ -12,6 +12,13 @@ const mono: React.CSSProperties = {
 };
 const serif = "'Playfair Display', Georgia, serif";
 const sans  = "'Inter', system-ui, sans-serif";
+const caption: React.CSSProperties = {
+  fontFamily: "'Playfair Display', Georgia, serif",
+  fontStyle: "italic",
+  fontSize: 13,
+  color: "var(--text-muted)",
+  lineHeight: 1.5,
+};
 
 /* ── Scroll-triggered fade ──────────────────────────────────────── */
 function Reveal({
@@ -110,7 +117,7 @@ function PhoneCarousel({ slides }: { slides: { src: string; label: string }[] })
       <AnimatePresence mode="wait">
         <motion.p key={active} initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0 }} transition={{ duration: 0.2 }}
-          style={{ ...mono, fontSize: 9, color: "var(--text-muted)", textAlign: "center", margin: "14px 0 12px" }}>
+          style={{ ...caption, textAlign: "center", margin: "14px 0 12px" }}>
           {slides[active].label}
         </motion.p>
       </AnimatePresence>
@@ -136,7 +143,7 @@ function WebGallery({ screens }: { screens: { src: string; label: string }[] }) 
       </div>
       <AnimatePresence mode="wait">
         <motion.p key={active} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}
-          style={{ ...mono, fontSize: 9, color: "var(--text-muted)", marginBottom: 14 }}>
+          style={{ ...caption, marginBottom: 14 }}>
           {screens[active].label}
         </motion.p>
       </AnimatePresence>
@@ -227,7 +234,7 @@ function UserTabs() {
                     : { border: "1px solid var(--border)", boxShadow: "0 2px 8px rgba(0,0,0,0.04), 0 12px 40px rgba(0,0,0,0.07)" }
                   ),
                 }} />
-              <p style={{ ...mono, fontSize: 8, color: "var(--text-muted)", marginTop: 9 }}>{tabs[tab].imgCaption}</p>
+              <p style={{ ...caption, marginTop: 10 }}>{tabs[tab].imgCaption}</p>
             </div>
           </div>
         </motion.div>
@@ -674,31 +681,70 @@ export default function ArkoCase() {
           </Reveal>
         </div>
 
-        {/* AR Editor — 2×2 grid, no white rectangle borders */}
-        <div style={{ marginTop: 56 }}>
+        {/* AR Editor — alternating image + description layout */}
+        <div style={{ marginTop: 64 }}>
           <Reveal>
-            <p style={{ ...mono, fontSize: 9, color: "var(--text-muted)", marginBottom: 20 }}>
+            <p style={{ ...mono, fontSize: 9, color: "var(--text-muted)", marginBottom: 40 }}>
               AR Room Editor — Canvas first, tools at the edges
             </p>
           </Reveal>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {[
-              { src: "/arko/phone-7.png",  label: "Room type breadcrumb navigation" },
-              { src: "/arko/phone-8.png",  label: "Furniture library — collapsible sidebar" },
-              { src: "/arko/phone-10.png", label: "Item selected — Properties panel" },
-              { src: "/arko/phone-12.png", label: "Preview mode — Send to Client" },
-            ].map((s, i) => (
-              <Reveal key={i} delay={i * 0.07}>
-                <motion.div
-                  whileHover={{ y: -4 }}
-                  transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}>
-                  <img src={s.src} alt={s.label}
-                    style={{
-                      width: "100%", display: "block", marginBottom: 8,
-                      filter: "drop-shadow(0 6px 20px rgba(0,0,0,0.14))",
-                    }} />
-                  <p style={{ ...mono, fontSize: 8, color: "var(--text-muted)" }}>{s.label}</p>
-                </motion.div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 52 }}>
+            {([
+              {
+                src: "/arko/phone-7.png",
+                num: "01",
+                label: "Room type breadcrumb navigation",
+                desc: "Navigate between room types without losing context. The full path stays visible at all times — every step in the hierarchy is one tap to reverse.",
+              },
+              {
+                src: "/arko/phone-8.png",
+                num: "02",
+                label: "Furniture library — collapsible sidebar",
+                desc: "The library collapses when you need the canvas. One tap to open, one tap to confirm. The space stays the focus, not the tool.",
+              },
+              {
+                src: "/arko/phone-10.png",
+                num: "03",
+                label: "Item selected — Properties panel",
+                desc: "Tap any object to reveal its controls inline. Scale, rotate, swap materials — no modal interrupts the flow.",
+              },
+              {
+                src: "/arko/phone-12.png",
+                num: "04",
+                label: "Preview mode — Send to Client",
+                desc: "Strip away every tool and see exactly what the client will see. One tap to share. The revision loop, closed.",
+              },
+            ] as { src: string; num: string; label: string; desc: string }[]).map((s, i) => (
+              <Reveal key={i} delay={i * 0.05}>
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-10 items-center">
+                  {i % 2 === 0 ? (
+                    <>
+                      <motion.div className="md:col-span-8"
+                        whileHover={{ y: -3 }} transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}>
+                        <img src={s.src} alt={s.label}
+                          style={{ width: "100%", display: "block", filter: "drop-shadow(0 6px 22px rgba(0,0,0,0.15))" }} />
+                      </motion.div>
+                      <div className="md:col-span-4">
+                        <span style={{ ...mono, fontSize: 22, fontWeight: 700, color: "var(--border)", display: "block", lineHeight: 1, marginBottom: 16 }}>{s.num}</span>
+                        <p style={{ fontFamily: serif, fontStyle: "italic", fontSize: "clamp(16px, 1.8vw, 20px)", color: "var(--text-primary)", lineHeight: 1.35, marginBottom: 14 }}>{s.label}</p>
+                        <p style={{ fontFamily: sans, fontSize: 13, color: "var(--text-secondary)", lineHeight: 1.75 }}>{s.desc}</p>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="md:col-span-4 order-2 md:order-1">
+                        <span style={{ ...mono, fontSize: 22, fontWeight: 700, color: "var(--border)", display: "block", lineHeight: 1, marginBottom: 16 }}>{s.num}</span>
+                        <p style={{ fontFamily: serif, fontStyle: "italic", fontSize: "clamp(16px, 1.8vw, 20px)", color: "var(--text-primary)", lineHeight: 1.35, marginBottom: 14 }}>{s.label}</p>
+                        <p style={{ fontFamily: sans, fontSize: 13, color: "var(--text-secondary)", lineHeight: 1.75 }}>{s.desc}</p>
+                      </div>
+                      <motion.div className="md:col-span-8 order-1 md:order-2"
+                        whileHover={{ y: -3 }} transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}>
+                        <img src={s.src} alt={s.label}
+                          style={{ width: "100%", display: "block", filter: "drop-shadow(0 6px 22px rgba(0,0,0,0.15))" }} />
+                      </motion.div>
+                    </>
+                  )}
+                </div>
               </Reveal>
             ))}
           </div>
