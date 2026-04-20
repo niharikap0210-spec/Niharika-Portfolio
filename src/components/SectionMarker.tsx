@@ -2,63 +2,102 @@ interface SectionMarkerProps {
   label: string;
   letter?: string;
   className?: string;
+  accentColor?: string;
+  total?: number;
 }
 
-export default function SectionMarker({ label, letter = "A", className = "" }: SectionMarkerProps) {
+export default function SectionMarker({
+  label,
+  letter = "A",
+  className = "",
+  accentColor = "var(--accent)",
+  total = 8,
+}: SectionMarkerProps) {
+  const index = Math.max(1, letter.toUpperCase().charCodeAt(0) - 64);
+  const counter = String(index).padStart(2, "0");
+  const totalStr = String(total).padStart(2, "0");
+
   return (
     <div
-      className={`flex items-center gap-4 ${className}`}
+      className={className}
       aria-hidden
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        gap: 24,
+        paddingBottom: 14,
+        borderBottom: "0.75px solid var(--border)",
+      }}
     >
-      {/* Architectural section circle */}
-      <div
-        style={{
-          width: 28,
-          height: 28,
-          borderRadius: "50%",
-          border: "1.5px solid var(--accent)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          flexShrink: 0,
-        }}
-      >
+      {/* Left cluster: accent bar + letter + label */}
+      <div style={{ display: "flex", alignItems: "center", gap: 16, minWidth: 0 }}>
         <span
           style={{
-            fontFamily: "'Space Mono', monospace",
-            fontSize: 10,
-            color: "var(--accent)",
-            letterSpacing: 0,
+            width: 3,
+            height: 26,
+            backgroundColor: accentColor,
+            flexShrink: 0,
+          }}
+        />
+        <span
+          style={{
+            fontFamily: "'Playfair Display', Georgia, serif",
+            fontStyle: "italic",
+            fontWeight: 700,
+            fontSize: 22,
+            color: accentColor,
             lineHeight: 1,
+            letterSpacing: "-0.02em",
+            flexShrink: 0,
           }}
         >
           {letter}
         </span>
+        <span
+          style={{
+            fontFamily: "'Space Mono', monospace",
+            fontSize: 13,
+            color: "var(--text-primary)",
+            letterSpacing: "0.22em",
+            textTransform: "uppercase",
+            fontWeight: 600,
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+          }}
+        >
+          {label}
+        </span>
       </div>
 
-      {/* Line extending right */}
-      <div
-        style={{
-          width: 36,
-          height: 1,
-          backgroundColor: "var(--text-muted)",
-          opacity: 0.5,
-          flexShrink: 0,
-        }}
-      />
-
-      {/* Label */}
-      <span
-        style={{
-          fontFamily: "'Space Mono', monospace",
-          fontSize: 13,
-          color: "var(--text-secondary)",
-          letterSpacing: "0.18em",
-          textTransform: "uppercase",
-        }}
-      >
-        {label}
-      </span>
+      {/* Right cluster: section counter */}
+      <div style={{ display: "flex", alignItems: "center", gap: 10, flexShrink: 0 }}>
+        <span
+          style={{
+            fontFamily: "'Space Mono', monospace",
+            fontSize: 11,
+            color: "var(--text-secondary)",
+            letterSpacing: "0.2em",
+            textTransform: "uppercase",
+          }}
+        >
+          Section
+        </span>
+        <span
+          style={{
+            fontFamily: "'Space Mono', monospace",
+            fontSize: 13,
+            color: accentColor,
+            letterSpacing: "0.14em",
+            fontWeight: 600,
+          }}
+        >
+          {counter}
+          <span style={{ color: "var(--text-secondary)", margin: "0 4px" }}>/</span>
+          <span style={{ color: "var(--text-secondary)", fontWeight: 400 }}>{totalStr}</span>
+        </span>
+      </div>
     </div>
   );
 }
