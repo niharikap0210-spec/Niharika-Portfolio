@@ -7,6 +7,7 @@ import SplashScreen from "./components/SplashScreen";
 import Home from "./pages/Home";
 import About from "./pages/About";
 import CaseStudy from "./pages/CaseStudy";
+import ArkoCase from "./pages/ArkoCase";
 import Resume from "./pages/Resume";
 import NotFound from "./pages/NotFound";
 
@@ -17,6 +18,7 @@ function AnimatedRoutes() {
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
+        <Route path="/work/arko" element={<ArkoCase />} />
         <Route path="/work/:slug" element={<CaseStudy />} />
         <Route path="/resume" element={<Resume />} />
         <Route path="*" element={<NotFound />} />

@@ -1,7 +1,7 @@
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 
-type SketchType = "floorPlan" | "perspective" | "wireframe" | "morphTransition";
+type SketchType = "floorPlan" | "perspective" | "wireframe" | "morphTransition" | "furnitureRoom" | "phoneInHand" | "approvalStamp" | "commentBubble";
 
 interface HandDrawnSketchProps {
   type: SketchType;
@@ -14,6 +14,12 @@ interface HandDrawnSketchProps {
   style?: React.CSSProperties;
   /** If true, animate on mount rather than scroll-into-view */
   animateOnMount?: boolean;
+  /** Override stroke color (e.g. for dark backgrounds). Defaults to var(--text-secondary). */
+  strokeColor?: string;
+  /** Override opacity (default ~0.15). */
+  opacity?: number;
+  /** Override annotation color (e.g. for dark backgrounds). */
+  annotationColor?: string;
 }
 
 const pathVariants = (delay: number) => ({
@@ -37,7 +43,7 @@ function FloorPlanSketch({ delay }: { delay: number }) {
   ];
 
   return (
-    <svg viewBox="0 0 100 80" fill="none" stroke="var(--text-secondary)" strokeLinecap="round" strokeLinejoin="round">
+    <svg viewBox="0 0 100 80" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
       {paths.map((d, i) => (
         <motion.path
           key={i}
@@ -69,7 +75,7 @@ function PerspectiveSketch({ delay }: { delay: number }) {
   ];
 
   return (
-    <svg viewBox="0 0 120 80" fill="none" stroke="var(--text-secondary)" strokeLinecap="round" strokeLinejoin="round">
+    <svg viewBox="0 0 120 80" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
       {paths.map((d, i) => (
         <motion.path
           key={i}
@@ -100,7 +106,7 @@ function WireframeSketch({ delay }: { delay: number }) {
   ];
 
   return (
-    <svg viewBox="0 0 60 80" fill="none" stroke="var(--text-secondary)" strokeLinecap="round" strokeLinejoin="round">
+    <svg viewBox="0 0 60 80" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
       {paths.map((d, i) => (
         <motion.path
           key={i}
@@ -136,13 +142,146 @@ function MorphTransitionSketch({ delay }: { delay: number }) {
   ];
 
   return (
-    <svg viewBox="0 0 125 80" fill="none" stroke="var(--text-secondary)" strokeLinecap="round" strokeLinejoin="round">
+    <svg viewBox="0 0 125 80" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
       {paths.map((d, i) => (
         <motion.path
           key={i}
           d={d}
           strokeWidth="0.8"
           opacity={0.18}
+          variants={pathVariants(delay + i * 0.1)}
+          initial="hidden"
+          animate="visible"
+        />
+      ))}
+    </svg>
+  );
+}
+
+/* ─── Furniture Room (couch, chair, table in a room) ────────────── */
+function FurnitureRoomSketch({ delay }: { delay: number }) {
+  const paths = [
+    "M 8 15 L 8 72 L 112 72 L 112 15 Z",         // room
+    "M 8 15 L 112 15",                             // top wall emphasis
+    "M 22 48 L 22 66 L 56 66 L 56 48 Z",           // couch body
+    "M 22 48 Q 22 44 26 44 L 52 44 Q 56 44 56 48", // couch back
+    "M 26 66 L 26 70",                             // couch leg L
+    "M 52 66 L 52 70",                             // couch leg R
+    "M 72 50 L 72 66 L 90 66 L 90 50 Z",           // chair
+    "M 72 50 L 90 50",                             // chair back line
+    "M 74 66 L 74 70",                             // chair leg L
+    "M 88 66 L 88 70",                             // chair leg R
+    "M 96 28 L 108 28 L 108 40 L 96 40 Z",         // painting/window
+    "M 96 28 L 108 40",                            // X on painting
+    "M 108 28 L 96 40",                            // X on painting
+    "M 38 30 Q 46 18 54 30",                       // pendant lamp arc
+    "M 46 18 L 46 28",                             // lamp cord
+  ];
+
+  return (
+    <svg viewBox="0 0 120 80" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
+      {paths.map((d, i) => (
+        <motion.path
+          key={i}
+          d={d}
+          strokeWidth="0.8"
+          opacity={0.16}
+          variants={pathVariants(delay + i * 0.08)}
+          initial="hidden"
+          animate="visible"
+        />
+      ))}
+    </svg>
+  );
+}
+
+/* ─── Phone In Hand (phone held up by a hand) ───────────────────── */
+function PhoneInHandSketch({ delay }: { delay: number }) {
+  const paths = [
+    "M 30 10 Q 30 6 34 6 L 66 6 Q 70 6 70 10 L 70 58 Q 70 62 66 62 L 34 62 Q 30 62 30 58 Z", // phone
+    "M 30 14 L 70 14",                          // top bar
+    "M 30 54 L 70 54",                          // bottom bar
+    "M 36 20 L 64 20 L 64 32 L 36 32 Z",        // screen content
+    "M 36 36 L 60 36",                          // text line
+    "M 36 40 L 56 40",                          // text line
+    "M 36 44 L 58 44",                          // text line
+    "M 46 58 L 54 58",                          // home indicator
+    // hand (thumb and fingers cradling bottom of phone)
+    "M 22 62 Q 16 66 18 74 Q 24 78 36 74",      // thumb curve
+    "M 70 62 Q 78 64 80 70 Q 80 76 68 76",      // other hand side
+    "M 36 74 L 68 76",                          // palm edge
+  ];
+
+  return (
+    <svg viewBox="0 0 100 80" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
+      {paths.map((d, i) => (
+        <motion.path
+          key={i}
+          d={d}
+          strokeWidth="0.8"
+          opacity={0.17}
+          variants={pathVariants(delay + i * 0.1)}
+          initial="hidden"
+          animate="visible"
+        />
+      ))}
+    </svg>
+  );
+}
+
+/* ─── Approval Stamp (checkmark in circle with rays) ─────────────── */
+function ApprovalStampSketch({ delay }: { delay: number }) {
+  const paths = [
+    "M 40 14 a 26 26 0 1 1 0 52 a 26 26 0 1 1 0 -52",  // outer circle
+    "M 40 20 a 20 20 0 1 1 0 40 a 20 20 0 1 1 0 -40",  // inner circle
+    "M 30 40 L 37 48 L 52 32",                          // checkmark
+    // rays / sparkles around
+    "M 8 40 L 14 40",        // left ray
+    "M 66 40 L 72 40",       // right ray
+    "M 40 8 L 40 14",        // top ray
+    "M 40 66 L 40 72",       // bottom ray
+    "M 18 18 L 22 22",        // diagonal TL
+    "M 58 58 L 62 62",        // diagonal BR
+    "M 58 22 L 62 18",        // diagonal TR
+    "M 18 62 L 22 58",        // diagonal BL
+  ];
+
+  return (
+    <svg viewBox="0 0 80 80" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
+      {paths.map((d, i) => (
+        <motion.path
+          key={i}
+          d={d}
+          strokeWidth="0.9"
+          opacity={0.18}
+          variants={pathVariants(delay + i * 0.09)}
+          initial="hidden"
+          animate="visible"
+        />
+      ))}
+    </svg>
+  );
+}
+
+/* ─── Comment Bubble (speech bubble with lines inside) ───────────── */
+function CommentBubbleSketch({ delay }: { delay: number }) {
+  const paths = [
+    "M 10 14 Q 10 8 16 8 L 84 8 Q 90 8 90 14 L 90 46 Q 90 52 84 52 L 34 52 L 24 62 L 28 52 L 16 52 Q 10 52 10 46 Z", // bubble w/ tail
+    "M 20 22 L 70 22",  // line 1
+    "M 20 30 L 78 30",  // line 2
+    "M 20 38 L 60 38",  // line 3
+    // pin drop on tail
+    "M 24 66 a 3 3 0 1 1 0 6 a 3 3 0 1 1 0 -6",
+  ];
+
+  return (
+    <svg viewBox="0 0 100 80" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
+      {paths.map((d, i) => (
+        <motion.path
+          key={i}
+          d={d}
+          strokeWidth="0.85"
+          opacity={0.17}
           variants={pathVariants(delay + i * 0.1)}
           initial="hidden"
           animate="visible"
@@ -163,6 +302,9 @@ export default function HandDrawnSketch({
   className = "",
   style,
   animateOnMount = false,
+  strokeColor,
+  opacity,
+  annotationColor,
 }: HandDrawnSketchProps) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-50px" });
@@ -173,6 +315,10 @@ export default function HandDrawnSketch({
     perspective: <PerspectiveSketch delay={shouldAnimate ? delay : 9999} />,
     wireframe: <WireframeSketch delay={shouldAnimate ? delay : 9999} />,
     morphTransition: <MorphTransitionSketch delay={shouldAnimate ? delay : 9999} />,
+    furnitureRoom: <FurnitureRoomSketch delay={shouldAnimate ? delay : 9999} />,
+    phoneInHand: <PhoneInHandSketch delay={shouldAnimate ? delay : 9999} />,
+    approvalStamp: <ApprovalStampSketch delay={shouldAnimate ? delay : 9999} />,
+    commentBubble: <CommentBubbleSketch delay={shouldAnimate ? delay : 9999} />,
   };
 
   const annotationEl = annotation && (
@@ -182,9 +328,9 @@ export default function HandDrawnSketch({
       transition={{ delay: delay + 1.0, duration: 0.6 }}
       style={{
         fontFamily: "'Caveat', cursive",
-        fontSize: 13,
-        color: "var(--text-secondary)",
-        opacity: 0.35,
+        fontSize: 18,
+        color: annotationColor ?? "var(--text-secondary)",
+        opacity: 0.65,
         display: "block",
         textAlign: "center",
         lineHeight: 1.3,
@@ -202,7 +348,7 @@ export default function HandDrawnSketch({
       aria-hidden
     >
       {annotationPosition === "above" && annotationEl}
-      <div style={{ width, height }}>
+      <div style={{ width, height, color: strokeColor ?? "var(--text-secondary)", opacity: opacity ?? 1 }}>
         {sketchMap[type]}
       </div>
       {(annotationPosition === "below" || !annotationPosition) && annotationEl}
