@@ -7,16 +7,16 @@ interface SectionMarkerProps {
 export default function SectionMarker({ label, letter = "A", className = "" }: SectionMarkerProps) {
   return (
     <div
-      className={`flex items-center gap-3 ${className}`}
+      className={`flex items-center gap-4 ${className}`}
       aria-hidden
     >
       {/* Architectural section circle */}
       <div
         style={{
-          width: 18,
-          height: 18,
+          width: 28,
+          height: 28,
           borderRadius: "50%",
-          border: "1px solid var(--text-muted)",
+          border: "1.5px solid var(--accent)",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -26,8 +26,8 @@ export default function SectionMarker({ label, letter = "A", className = "" }: S
         <span
           style={{
             fontFamily: "'Space Mono', monospace",
-            fontSize: 8,
-            color: "var(--text-muted)",
+            fontSize: 10,
+            color: "var(--accent)",
             letterSpacing: 0,
             lineHeight: 1,
           }}
@@ -39,8 +39,8 @@ export default function SectionMarker({ label, letter = "A", className = "" }: S
       {/* Line extending right */}
       <div
         style={{
-          width: 24,
-          height: 0.75,
+          width: 36,
+          height: 1,
           backgroundColor: "var(--text-muted)",
           opacity: 0.5,
           flexShrink: 0,
@@ -51,9 +51,9 @@ export default function SectionMarker({ label, letter = "A", className = "" }: S
       <span
         style={{
           fontFamily: "'Space Mono', monospace",
-          fontSize: 10,
-          color: "var(--text-muted)",
-          letterSpacing: "0.15em",
+          fontSize: 13,
+          color: "var(--text-secondary)",
+          letterSpacing: "0.18em",
           textTransform: "uppercase",
         }}
       >

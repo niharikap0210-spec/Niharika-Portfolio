@@ -182,9 +182,9 @@ export default function HandDrawnSketch({
       transition={{ delay: delay + 1.0, duration: 0.6 }}
       style={{
         fontFamily: "'Caveat', cursive",
-        fontSize: 13,
+        fontSize: 18,
         color: "var(--text-secondary)",
-        opacity: 0.35,
+        opacity: 0.65,
         display: "block",
         textAlign: "center",
         lineHeight: 1.3,

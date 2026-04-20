@@ -1,7 +1,7 @@
 import { motion, AnimatePresence, useScroll, useSpring, useInView } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useRef, useState } from "react";
-import { Clock, ArrowsHorizontal, WarningCircle, Quotes, Desktop, DeviceMobileCamera, Aperture, LightbulbFilament, ArrowBendDownRight } from "@phosphor-icons/react";
+import { ClockIcon as Clock, ArrowsHorizontalIcon as ArrowsHorizontal, WarningCircleIcon as WarningCircle, QuotesIcon as Quotes, DesktopIcon as Desktop, DeviceMobileCameraIcon as DeviceMobileCamera, ApertureIcon as Aperture, LightbulbFilamentIcon as LightbulbFilament, ArrowBendDownRightIcon as ArrowBendDownRight } from "@phosphor-icons/react";
 import SectionMarker from "../components/SectionMarker";
 import HandDrawnSketch from "../components/HandDrawnSketch";
 import { getAdjacentProjects } from "../data/projects";
@@ -16,7 +16,7 @@ const sans  = "'Inter', system-ui, sans-serif";
 const caption: React.CSSProperties = {
   fontFamily: "'Playfair Display', Georgia, serif",
   fontStyle: "italic",
-  fontSize: 13,
+  fontSize: 15,
   color: "var(--text-muted)",
   lineHeight: 1.5,
 };
@@ -36,11 +36,7 @@ function Reveal({
 }
 
 /* ── Section break — clean rule, no centered label ───────────────── */
-function SectionBreak() {
-  return (
-    <div style={{ margin: "clamp(72px, 10vw, 104px) 0 clamp(52px, 7vw, 72px)", borderTop: "1px solid var(--border)" }} />
-  );
-}
+
 
 /* ── Arrow button ────────────────────────────────────────────────── */
 function ArrowBtn({ onClick, dir }: { onClick: () => void; dir: "left" | "right" }) {
@@ -130,40 +126,181 @@ function PhoneCarousel({ slides }: { slides: { src: string; label: string }[] })
 /* ══════════════════════════════════════════════════════════════════
    WEB GALLERY
 ══════════════════════════════════════════════════════════════════ */
+/* ══════════════════════════════════════════════════════════════════
+   BROWSER MOCKUP — macOS browser chrome for inline screenshots
+══════════════════════════════════════════════════════════════════ */
+function BrowserMockup({ src, alt }: { src: string; alt: string }) {
+  return (
+    <div style={{
+      borderRadius: 10, overflow: "hidden",
+      boxShadow: "0 2px 4px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.08), 0 24px 56px rgba(0,0,0,0.10)",
+      border: "1px solid rgba(0,0,0,0.08)",
+    }}>
+      <div style={{
+        background: "#EBEBEB", padding: "8px 12px",
+        display: "flex", alignItems: "center", gap: 8,
+        borderBottom: "1px solid #D8D8D8",
+      }}>
+        <div style={{ display: "flex", gap: 5.5, flexShrink: 0 }}>
+          <div style={{ width: 11, height: 11, borderRadius: "50%", background: "#FF5F57", border: "0.5px solid rgba(0,0,0,0.12)" }} />
+          <div style={{ width: 11, height: 11, borderRadius: "50%", background: "#FEBC2E", border: "0.5px solid rgba(0,0,0,0.12)" }} />
+          <div style={{ width: 11, height: 11, borderRadius: "50%", background: "#28C840", border: "0.5px solid rgba(0,0,0,0.12)" }} />
+        </div>
+        <div style={{
+          flex: 1, height: 22, background: "#FAFAFA",
+          borderRadius: 5, border: "1px solid #D0D0D0",
+          display: "flex", alignItems: "center", justifyContent: "center", gap: 5,
+          maxWidth: 240, margin: "0 auto",
+        }}>
+          <svg width="9" height="9" viewBox="0 0 9 9" fill="none" aria-hidden>
+            <rect x="1.5" y="3.8" width="6" height="4.6" rx="0.9" fill="#AEAEB2"/>
+            <path d="M2.8 3.8V2.6a1.7 1.7 0 013.4 0v1.2" stroke="#AEAEB2" strokeWidth="1.1" strokeLinecap="round"/>
+          </svg>
+          <span style={{ fontFamily: sans, fontSize: 9.5, color: "#636366" }}>app.arko.design</span>
+        </div>
+        <div style={{ width: 60, flexShrink: 0 }} />
+      </div>
+      <img src={src} alt={alt} style={{ width: "100%", display: "block" }} />
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   LAPTOP MOCKUP — SVG-based realistic MacBook frame
+══════════════════════════════════════════════════════════════════ */
+function LaptopMockup({ src, alt }: { src: string; alt: string }) {
+  // ViewBox: 960 wide. Lid 576 tall. Screen 16:10 inside.
+  // Base trapezoid wider than lid. Foot strip at very bottom.
+  return (
+    <div style={{ position: "relative", width: "100%", userSelect: "none" }}>
+      <svg
+        viewBox="0 0 960 650"
+        xmlns="http://www.w3.org/2000/svg"
+        style={{ width: "100%", display: "block", overflow: "visible" }}
+      >
+        <defs>
+          <linearGradient id="lm-lid" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%"   stopColor="#2C2C2E"/>
+            <stop offset="50%"  stopColor="#1D1D1F"/>
+            <stop offset="100%" stopColor="#141416"/>
+          </linearGradient>
+          <linearGradient id="lm-base" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%"   stopColor="#E8E8EA"/>
+            <stop offset="100%" stopColor="#C4C4C6"/>
+          </linearGradient>
+          <linearGradient id="lm-foot" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%"   stopColor="#C0C0C2"/>
+            <stop offset="100%" stopColor="#A8A8AA"/>
+          </linearGradient>
+          <linearGradient id="lm-hinge" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%"   stopColor="#060606"/>
+            <stop offset="100%" stopColor="#1A1A1A"/>
+          </linearGradient>
+          <linearGradient id="lm-bezel" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%"   stopColor="rgba(255,255,255,0.06)"/>
+            <stop offset="100%" stopColor="rgba(255,255,255,0)"/>
+          </linearGradient>
+          {/* Clip the screenshot to rounded rect */}
+          <clipPath id="lm-clip">
+            <rect x="18" y="30" width="924" height="522" rx="3" ry="3"/>
+          </clipPath>
+          {/* Drop shadow on entire device */}
+          <filter id="lm-dropshadow" x="-8%" y="-4%" width="116%" height="130%">
+            <feDropShadow dx="0" dy="18" stdDeviation="26" floodColor="#000" floodOpacity="0.24"/>
+            <feDropShadow dx="0" dy="4"  stdDeviation="6"  floodColor="#000" floodOpacity="0.10"/>
+          </filter>
+        </defs>
+
+        <g filter="url(#lm-dropshadow)">
+
+          {/* ── Lid body ── */}
+          <rect x="0" y="0" width="960" height="578" rx="14" ry="14" fill="url(#lm-lid)"/>
+
+          {/* ── Camera notch pill ── */}
+          <rect x="436" y="0" width="88" height="20" rx="10" ry="10" fill="#1D1D1F"/>
+          {/* Camera lens rings */}
+          <circle cx="480" cy="12" r="6"   fill="#28282A"/>
+          <circle cx="480" cy="12" r="4"   fill="#1A1A1C"/>
+          <circle cx="480" cy="12" r="2.5" fill="#323234"/>
+
+          {/* ── Inner black bezel ── */}
+          <rect x="12" y="24" width="936" height="542" rx="6" ry="6" fill="#000"/>
+
+          {/* ── Screenshot ── */}
+          <foreignObject x="18" y="30" width="924" height="522" clipPath="url(#lm-clip)">
+            <div style={{ width: "100%", height: "100%", overflow: "hidden", background: "#000" }}>
+              <img
+                src={src} alt={alt}
+                style={{ width: "100%", display: "block" }}
+              />
+            </div>
+          </foreignObject>
+
+          {/* ── Screen top glare ── */}
+          <rect x="18" y="30" width="924" height="60" fill="url(#lm-bezel)" rx="3"/>
+
+          {/* ── Hinge ── */}
+          <rect x="-4" y="578" width="968" height="6" fill="url(#lm-hinge)"/>
+
+          {/* ── Base (trapezoid — wider than lid) ── */}
+          <path d="M-12,584 L972,584 L984,618 L-24,618 Z" fill="url(#lm-base)"/>
+          {/* Base top highlight */}
+          <path d="M-12,584 L972,584 L974,589 L-14,589 Z" fill="rgba(255,255,255,0.55)"/>
+          {/* Base bottom edge */}
+          <path d="M-24,615 L984,615 L984,618 L-24,618 Z" fill="rgba(0,0,0,0.10)"/>
+
+          {/* ── Trackpad ── */}
+          <rect x="384" y="592" width="192" height="18" rx="4" ry="4"
+            fill="rgba(0,0,0,0.07)" stroke="rgba(0,0,0,0.09)" strokeWidth="0.6"/>
+
+          {/* ── Foot ── */}
+          <rect x="56" y="618" width="848" height="5" rx="2.5" ry="2.5" fill="url(#lm-foot)"/>
+
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+
 function WebGallery({ screens }: { screens: { src: string; label: string }[] }) {
   const [active, setActive] = useState(0);
   return (
-    <div>
-      <div style={{ position: "relative", marginBottom: 12 }}>
-        <AnimatePresence mode="wait">
-          <motion.div key={active} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}>
-            <img src={screens[active].src} alt={screens[active].label}
-              style={{ width: "100%", display: "block", border: "1px solid var(--border)", boxShadow: "0 2px 8px rgba(0,0,0,0.04), 0 16px 56px rgba(0,0,0,0.09)" }} />
-          </motion.div>
-        </AnimatePresence>
-      </div>
-      <AnimatePresence mode="wait">
-        <motion.p key={active} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}
-          style={{ ...caption, marginBottom: 14 }}>
-          {screens[active].label}
-        </motion.p>
-      </AnimatePresence>
-      <div style={{ display: "flex", gap: 8 }}>
+    <div style={{ display: "flex", gap: 16, alignItems: "flex-start" }}>
+      {/* Vertical filmstrip — thumbnails */}
+      <div style={{ display: "flex", flexDirection: "column", gap: 8, flexShrink: 0, width: 140 }}>
         {screens.map((s, i) => (
           <button key={i} onClick={() => setActive(i)}
             style={{
-              flex: 1, padding: 0, background: "none", cursor: "pointer", overflow: "hidden",
-              border: i === active ? "2px solid var(--text-primary)" : "1px solid var(--border)",
-              opacity: i === active ? 1 : 0.5,
-              transitionProperty: "transform, opacity", transitionDuration: "200ms",
+              padding: 0, background: "none", cursor: "pointer", overflow: "hidden",
+              border: i === active ? "2px solid var(--accent)" : "1px solid var(--border)",
+              borderRadius: 4,
+              opacity: i === active ? 1 : 0.55,
+              transitionProperty: "opacity, border-color", transitionDuration: "200ms",
             }}
-            onMouseEnter={(e) => { if (i !== active) (e.currentTarget as HTMLElement).style.opacity = "0.8"; }}
-            onMouseLeave={(e) => { if (i !== active) (e.currentTarget as HTMLElement).style.opacity = "0.5"; }}
+            onMouseEnter={(e) => { if (i !== active) (e.currentTarget as HTMLElement).style.opacity = "0.85"; }}
+            onMouseLeave={(e) => { if (i !== active) (e.currentTarget as HTMLElement).style.opacity = "0.55"; }}
             onFocus={(e) => { (e.currentTarget as HTMLElement).style.outline = "2px solid var(--accent)"; (e.currentTarget as HTMLElement).style.outlineOffset = "2px"; }}
             onBlur={(e) => { (e.currentTarget as HTMLElement).style.outline = "none"; }}>
             <img src={s.src} alt={s.label} style={{ width: "100%", display: "block" }} />
           </button>
         ))}
+      </div>
+
+      {/* Main image + caption */}
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <AnimatePresence mode="wait">
+          <motion.div key={active} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.25 }}
+            style={{ marginBottom: 12 }}>
+            <BrowserMockup src={screens[active].src} alt={screens[active].label} />
+          </motion.div>
+        </AnimatePresence>
+        <AnimatePresence mode="wait">
+          <motion.p key={active} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}
+            style={{ ...caption }}>
+            {screens[active].label}
+          </motion.p>
+        </AnimatePresence>
       </div>
     </div>
   );
@@ -227,14 +364,12 @@ function UserTabs() {
                 annotation={tabs[tab].annotation} delay={0.2} />
             </div>
             <div>
-              <img src={tabs[tab].img} alt={tabs[tab].heading}
-                style={{
-                  width: "100%", display: "block",
-                  ...(tabs[tab].isPhone
-                    ? { filter: "drop-shadow(0 8px 28px rgba(0,0,0,0.16))" }
-                    : { border: "1px solid var(--border)", boxShadow: "0 2px 8px rgba(0,0,0,0.04), 0 12px 40px rgba(0,0,0,0.07)" }
-                  ),
-                }} />
+              {tabs[tab].isPhone ? (
+                <img src={tabs[tab].img} alt={tabs[tab].heading}
+                  style={{ width: "clamp(160px, 65%, 240px)", display: "block", margin: "0 auto", filter: "drop-shadow(0 16px 40px rgba(0,0,0,0.22))" }} />
+              ) : (
+                <BrowserMockup src={tabs[tab].img} alt={tabs[tab].heading} />
+              )}
               <p style={{ ...caption, marginTop: 10 }}>{tabs[tab].imgCaption}</p>
             </div>
           </div>
@@ -255,24 +390,28 @@ function DecisionStepper() {
       title: "Two entirely separate experiences",
       body: "The designer interface is dense, powerful, and built for daily professional use — sidebar navigation, project management, team activity, AR editing tools. The client interface strips everything away: no login, no nav, no jargon. Just the room, a comment button, and an approve button. The same product — two completely different contexts of use.",
       img: "/arko/web-5.png",
+      landscape: false,
     },
     {
       num: "02", short: "AR editor for\nprofessionals",
       title: "AR editor built for professionals, not consumers",
       body: "The AR room editor puts the canvas first and keeps all tools at the edges — collapsible Furniture Library on the left, Properties panel on the right, minimal toolbar at the bottom. The designer stays focused on the space, not the interface. Every element category is structured as progressive disclosure so the library never overwhelms.",
       img: "/arko/phone-10.png",
+      landscape: true,
     },
     {
       num: "03", short: "Approval as the\ncore value",
       title: "The approval flow as the product's core value",
       body: "Most design tools stop at visualization. Arko makes client sign-off a first-class feature — the Share modal, client walkthrough, comment pinning, and one-tap approval are designed as a single seamless flow. When a client approves, the designer gets an instant notification and a timestamped PDF summary. This closes the loop that every other tool leaves open.",
       img: "/arko/phone-16.png",
+      landscape: false,
     },
     {
       num: "04", short: "Empty states as\nonboarding",
       title: "Empty states as onboarding",
       body: "Both the dashboard and project detail have fully designed empty states that guide the user to their first action rather than leaving them stranded. For a B2B product where adoption depends on the first session, this matters. A stranded user is a churned user — empty states are a product feature, not an afterthought.",
       img: "/arko/web-3.png",
+      landscape: false,
     },
   ];
 
@@ -307,8 +446,8 @@ function DecisionStepper() {
       <AnimatePresence mode="wait">
         <motion.div key={active} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-          style={{ padding: "44px 0", borderBottom: "1px solid var(--border)" }}>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-14 items-center">
+          style={{ padding: "44px 0", borderBottom: "1px solid var(--border)", minHeight: "clamp(380px, 45vw, 500px)", display: "flex", alignItems: "center" }}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-14 items-center" style={{ width: "100%" }}>
             <div>
               <h3 style={{ fontFamily: serif, fontWeight: 700, fontSize: "clamp(20px, 2.5vw, 28px)", color: "var(--text-primary)", letterSpacing: "-0.02em", lineHeight: 1.25, marginBottom: 18 }}>
                 {decisions[active].title}
@@ -319,8 +458,15 @@ function DecisionStepper() {
             </div>
             <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}>
-              <img src={decisions[active].img} alt={decisions[active].title}
-                style={{ width: "100%", display: "block", border: "1px solid var(--border)", boxShadow: "0 2px 8px rgba(0,0,0,0.04), 0 12px 40px rgba(0,0,0,0.08)" }} />
+              {decisions[active].img.includes("web-") ? (
+                <BrowserMockup src={decisions[active].img} alt={decisions[active].title} />
+              ) : decisions[active].landscape ? (
+                <img src={decisions[active].img} alt={decisions[active].title}
+                  style={{ width: "100%", display: "block", filter: "drop-shadow(0 20px 48px rgba(0,0,0,0.22))" }} />
+              ) : (
+                <img src={decisions[active].img} alt={decisions[active].title}
+                  style={{ width: "clamp(200px, 65%, 280px)", display: "block", margin: "0 auto", filter: "drop-shadow(0 20px 48px rgba(0,0,0,0.22))" }} />
+              )}
             </motion.div>
           </div>
         </motion.div>
@@ -337,23 +483,23 @@ function CurvedArrow({ label, rotate = 0, className = "" }: { label?: string; ro
   const inView = useInView(ref, { once: true, margin: "-30px" });
   return (
     <div ref={ref} className={`inline-flex flex-col items-center pointer-events-none select-none ${className}`} aria-hidden>
-      <svg width="72" height="60" viewBox="0 0 72 60" fill="none" style={{ transform: `rotate(${rotate}deg)` }}>
+      <svg width="96" height="80" viewBox="0 0 96 80" fill="none" style={{ transform: `rotate(${rotate}deg)`, overflow: "visible" }}>
         <motion.path
-          d="M 12 6 C 10 20, 42 16, 44 30 C 46 44, 58 42, 63 52"
-          stroke="var(--text-secondary)" strokeWidth="1.1" strokeLinecap="round" opacity={0.3}
-          variants={{ hidden: { pathLength: 0, opacity: 0 }, visible: { pathLength: 1, opacity: 0.3, transition: { pathLength: { duration: 1.4, ease: "easeInOut" }, opacity: { duration: 0.3 } } } }}
+          d="M 16 8 C 14 44, 72 44, 80 72"
+          stroke="var(--text-secondary)" strokeWidth="2.2" strokeLinecap="round" opacity={0.55}
+          variants={{ hidden: { pathLength: 0, opacity: 0 }, visible: { pathLength: 1, opacity: 0.55, transition: { pathLength: { duration: 1.2, ease: "easeInOut" }, opacity: { duration: 0.3 } } } }}
           initial="hidden" animate={inView ? "visible" : "hidden"}
         />
         <motion.path
-          d="M 57 46 L 63 52 L 56 55"
-          stroke="var(--text-secondary)" strokeWidth="1.0" strokeLinecap="round" strokeLinejoin="round" opacity={0.3}
-          initial={{ opacity: 0 }} animate={inView ? { opacity: 0.3 } : { opacity: 0 }} transition={{ delay: 1.2, duration: 0.3 }}
+          d="M 83 63 L 80 72 L 73 65"
+          stroke="var(--text-secondary)" strokeWidth="2.0" strokeLinecap="round" strokeLinejoin="round" opacity={0.55}
+          initial={{ opacity: 0 }} animate={inView ? { opacity: 0.55 } : { opacity: 0 }} transition={{ delay: 1.0, duration: 0.3 }}
         />
       </svg>
       {label && (
         <motion.span
           initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : { opacity: 0 }} transition={{ delay: 1.5, duration: 0.5 }}
-          style={{ fontFamily: "'Caveat', cursive", fontSize: 13, color: "var(--text-secondary)", opacity: 0.42, marginTop: -6, lineHeight: 1.3 }}>
+          style={{ fontFamily: "'Caveat', cursive", fontSize: 18, color: "var(--text-secondary)", opacity: 0.7, marginTop: -4, lineHeight: 1.3 }}>
           {label}
         </motion.span>
       )}
@@ -364,68 +510,6 @@ function CurvedArrow({ label, rotate = 0, className = "" }: { label?: string; ro
 /* ══════════════════════════════════════════════════════════════════
    PROCESS TIMELINE — interactive accordion
 ══════════════════════════════════════════════════════════════════ */
-function ProcessTimeline() {
-  const [open, setOpen] = useState<number | null>(null);
-  const steps = [
-    { num: "01", title: "Problem Framing",       body: "Mapped the client approval workflow across 5 interior design studios to identify the highest-friction moments — where time was lost, where trust broke down." },
-    { num: "02", title: "User Research",          body: "Interviewed 8 project leads and 6 clients to understand how each side experiences the approval loop. The gap between what designers assumed and what clients felt was significant." },
-    { num: "03", title: "Persona Definition",     body: "Defined two primary archetypes — the Studio Designer (power user, daily use) and the Client (occasional, non-design-literate). Neither could compromise the other." },
-    { num: "04", title: "Key Insight",            body: "Reframed the product from 'better design tool' to 'better communication tool powered by design.' This changed every subsequent decision." },
-    { num: "05", title: "Information Architecture", body: "Mapped two parallel experience trees — designer web app and client mobile view — ensuring the client-facing surface never leaked design complexity." },
-    { num: "06", title: "Design System",          body: "Built a component library spanning both surfaces before designing any screens. Consistency across web and iOS required shared tokens, not ad-hoc matching." },
-    { num: "07", title: "AR Editor Design",       body: "Designed the room editor canvas-first — collapsible panels, progressive disclosure, minimal chrome. The space is the product; everything else serves it." },
-    { num: "08", title: "Approval Flow",          body: "Share modal → client walkthrough → pinned comments → one-tap approval, designed as a single seamless loop. This is the core value proposition, built as a first-class feature." },
-    { num: "09", title: "Empty State Design",     body: "Both dashboard and project detail have fully designed empty states that guide users to their first action. For B2B tools, adoption lives or dies in the first session." },
-    { num: "10", title: "Prototype & Review",     body: "Built interactive prototypes in Framer and Protopie for stakeholder walkthroughs and design critique. Animated the approval flow end-to-end to communicate the full loop." },
-  ];
-
-  return (
-    <div style={{ borderTop: "1px solid var(--border)" }}>
-      {steps.map((s, i) => {
-        const isOpen = open === i;
-        return (
-          <div key={i} style={{ borderBottom: "1px solid var(--border)" }}>
-            <button
-              onClick={() => setOpen(isOpen ? null : i)}
-              style={{
-                width: "100%", display: "flex", alignItems: "center", gap: 20,
-                padding: "18px 0", background: "none", border: "none", cursor: "pointer", textAlign: "left",
-                transitionProperty: "opacity", transitionDuration: "150ms",
-              }}
-              onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.opacity = "0.75"; }}
-              onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.opacity = "1"; }}
-            >
-              <span style={{ ...mono, fontSize: 9, color: "var(--text-muted)", minWidth: 24, flexShrink: 0 }}>{s.num}</span>
-              <span style={{ fontFamily: sans, fontSize: 15, color: "var(--text-primary)", flex: 1, fontWeight: 500 }}>{s.title}</span>
-              <motion.span
-                animate={{ rotate: isOpen ? 45 : 0 }}
-                transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-                style={{ display: "block", color: "var(--text-muted)", fontSize: 22, lineHeight: 1, flexShrink: 0 }}>
-                +
-              </motion.span>
-            </button>
-            <AnimatePresence initial={false}>
-              {isOpen && (
-                <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: "auto", opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
-                  style={{ overflow: "hidden" }}
-                >
-                  <div style={{ display: "flex", gap: 20, paddingLeft: 44, paddingBottom: 22 }}>
-                    <ArrowBendDownRight size={16} color="var(--text-muted)" style={{ flexShrink: 0, marginTop: 3, opacity: 0.5 }} />
-                    <p style={{ fontFamily: sans, fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.85 }}>{s.body}</p>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-        );
-      })}
-    </div>
-  );
-}
 
 /* ═══════════════════════════════════════════════════════════════════
    PAGE
@@ -458,210 +542,153 @@ export default function ArkoCase() {
         }} />
       </div>
 
-      {/* ══════════════════════════════════════════════════════════════
+            {/* ══════════════════════════════════════════════════════════════
           HERO
       ══════════════════════════════════════════════════════════════ */}
-      <section style={{ position: "relative" }}>
+      <section className="blueprint-grid" style={{ position: "relative", overflow: "hidden" }}>
 
-        {/* ── Band 1 — text ───────────────────────────────────────── */}
-        <div
-          className="blueprint-grid"
-          style={{
-            position: "relative",
-            paddingTop: "clamp(96px, 12vw, 128px)",
-            paddingBottom: "clamp(44px, 5.5vw, 60px)",
-          }}
-        >
-          {/* Inset architectural border */}
-          <motion.div aria-hidden initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-            transition={{ delay: 1.0, duration: 1.6 }}
-            style={{ position: "absolute", inset: 10, border: "0.75px solid var(--construction)", pointerEvents: "none" }}
-          />
-          {/* Corner TL */}
-          <motion.div aria-hidden initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2, duration: 1.0 }}
-            style={{ position: "absolute", top: 18, left: 18, ...mono, fontSize: 7, color: "var(--construction)", lineHeight: 1.4, pointerEvents: "none" }}>
-            <div>x: 0.00</div><div>y: 0.00</div>
-          </motion.div>
-          {/* Corner BR */}
-          <motion.div aria-hidden initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2, duration: 1.0 }}
-            style={{ position: "absolute", bottom: 18, right: 18, ...mono, fontSize: 7, color: "var(--construction)", lineHeight: 1.4, textAlign: "right", pointerEvents: "none" }}>
-            <div>Sheet 01 / Arko</div><div>Product Design · 2025</div>
-          </motion.div>
+        {/* Inset border */}
+        <motion.div aria-hidden initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.0, duration: 1.8 }}
+          style={{ position: "absolute", inset: 10, border: "0.75px solid var(--construction)", pointerEvents: "none", zIndex: 1 }} />
+        {/* Corner TL */}
+        <motion.div aria-hidden initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.3, duration: 1.0 }}
+          style={{ position: "absolute", top: 18, left: 18, ...mono, fontSize: 7, color: "var(--construction)", lineHeight: 1.4, pointerEvents: "none", zIndex: 2 }}>
+          <div>x: 0.00</div><div>y: 0.00</div>
+        </motion.div>
+        {/* Corner BR */}
+        <motion.div aria-hidden initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.3, duration: 1.0 }}
+          style={{ position: "absolute", bottom: 18, right: 18, ...mono, fontSize: 7, color: "var(--construction)", lineHeight: 1.4, textAlign: "right", pointerEvents: "none", zIndex: 2 }}>
+          <div>Sheet 01 / Arko</div><div>Product Design · 2025</div>
+        </motion.div>
 
-          {/* Back link */}
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.05 }}
-            style={{ position: "absolute", top: 28, left: "clamp(28px, 5vw, 48px)", zIndex: 2 }}>
-            <Link to="/"
-              style={{ display: "inline-flex", alignItems: "center", gap: 8, ...mono, fontSize: 10, color: "var(--text-muted)", textDecoration: "none", transitionProperty: "color", transitionDuration: "150ms" }}
-              onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = "var(--text-primary)")}
-              onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = "var(--text-muted)")}>
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                <path d="M11.5 7h-9M5 3.5L1.5 7 5 10.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-              All Work
-            </Link>
-          </motion.div>
+        {/* Back link */}
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.05 }}
+          style={{ position: "absolute", top: 28, left: "clamp(28px, 5vw, 48px)", zIndex: 10 }}>
+          <Link to="/"
+            style={{ display: "inline-flex", alignItems: "center", gap: 8, ...mono, fontSize: 10, color: "var(--text-muted)", textDecoration: "none", transitionProperty: "color", transitionDuration: "150ms" }}
+            onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = "var(--text-primary)")}
+            onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = "var(--text-muted)")}>
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M11.5 7h-9M5 3.5L1.5 7 5 10.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            All Work
+          </Link>
+        </motion.div>
 
-          <div className="max-w-5xl mx-auto px-6 md:px-10" style={{ position: "relative", zIndex: 1 }}>
+        {/* Two-column grid */}
+        <div className="max-w-7xl mx-auto px-6 md:px-10" style={{
+          position: "relative", zIndex: 3,
+          paddingTop: "clamp(88px, 11vw, 120px)",
+          paddingBottom: "clamp(40px, 5vw, 56px)",
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gap: "clamp(32px, 5vw, 72px)",
+          alignItems: "center",
+        }}>
 
-            {/* Tags */}
-            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.6 }}
-              style={{ display: "flex", justifyContent: "center", flexWrap: "wrap", gap: 6, marginBottom: 24 }}>
+          {/* Left — text */}
+          <div>
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.18, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+              style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 28 }}>
               {["Product Design", "B2B SaaS", "Web + iOS", "AR / Spatial"].map((t) => (
-                <span key={t} style={{ ...mono, fontSize: 9, color: "var(--text-muted)", border: "1px solid var(--border)", padding: "3px 10px", background: "var(--bg-primary)" }}>
+                <span key={t} style={{ ...mono, fontSize: 9, color: "var(--text-muted)", border: "1px solid var(--border)", padding: "4px 12px", background: "var(--bg-primary)" }}>
                   {t}
                 </span>
               ))}
             </motion.div>
 
-            {/* Title */}
-            <div style={{ textAlign: "center", overflow: "hidden", marginBottom: 20 }}>
+            <div style={{ overflow: "hidden", marginBottom: 24 }}>
               <motion.h1
-                initial={{ y: "108%" }} animate={{ y: 0 }}
-                transition={{ delay: 0.08, duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
-                style={{
-                  fontFamily: serif, fontWeight: 700,
-                  fontSize: "clamp(80px, 13vw, 136px)",
-                  color: "var(--text-primary)", letterSpacing: "-0.04em", lineHeight: 0.9,
-                }}>
+                initial={{ y: "110%" }} animate={{ y: 0 }}
+                transition={{ delay: 0.06, duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
+                style={{ fontFamily: serif, fontWeight: 700, fontSize: "clamp(64px, 9vw, 120px)", color: "var(--text-primary)", letterSpacing: "-0.04em", lineHeight: 0.88 }}>
                 Arko
               </motion.h1>
             </div>
 
-            {/* Tagline */}
-            <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.34, duration: 0.7 }}
-              style={{
-                textAlign: "center", fontFamily: sans,
-                fontSize: "clamp(13px, 1.4vw, 17px)",
-                color: "var(--text-secondary)", lineHeight: 1.75,
-                maxWidth: 480, margin: "0 auto 36px",
-              }}>
+            <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+              style={{ fontFamily: sans, fontSize: "clamp(14px, 1.4vw, 16px)", color: "var(--text-secondary)", lineHeight: 1.8, maxWidth: 420, marginBottom: 36 }}>
               Spatial design platform for interior design firms — scan spaces in AR,
-              design them digitally, and get client sign-off without the back-and-forth.
+              design digitally, and get client sign-off without the back-and-forth.
             </motion.p>
 
-            {/* Meta strip — desktop */}
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.44, duration: 0.6 }}
-              className="hidden md:flex"
-              style={{ justifyContent: "center", borderTop: "0.75px solid var(--border)", borderBottom: "0.75px solid var(--border)" }}>
+              className="hidden md:grid"
+              style={{ gridTemplateColumns: "1fr 1fr", gap: "12px 32px" }}>
               {([
                 { label: "Role",     value: "Product Designer" },
                 { label: "Platform", value: "Web + iOS" },
                 { label: "Timeline", value: "14 weeks" },
                 { label: "Tools",    value: "Figma · Framer · Protopie" },
-              ] as { label: string; value: string }[]).map((m, i, arr) => (
-                <div key={m.label} style={{
-                  padding: "14px clamp(16px, 3.5vw, 48px)",
-                  borderRight: i < arr.length - 1 ? "0.75px solid var(--border)" : "none",
-                  textAlign: "center",
-                }}>
-                  <p style={{ ...mono, fontSize: 7, color: "var(--text-muted)", marginBottom: 5 }}>{m.label}</p>
-                  <p style={{ fontFamily: sans, fontSize: 12, fontWeight: 500, color: "var(--text-primary)" }}>{m.value}</p>
+              ] as { label: string; value: string }[]).map((m) => (
+                <div key={m.label}>
+                  <p style={{ ...mono, fontSize: 9, color: "var(--text-muted)", marginBottom: 5 }}>{m.label}</p>
+                  <p style={{ fontFamily: sans, fontSize: 15, fontWeight: 500, color: "var(--text-primary)" }}>{m.value}</p>
                 </div>
               ))}
             </motion.div>
-
-            {/* Meta — mobile */}
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.44, duration: 0.6 }}
-              className="flex md:hidden flex-col">
-              {[
-                { label: "Role", value: "Product Designer" },
-                { label: "Timeline", value: "14 weeks" },
-                { label: "Tools",    value: "Figma · Framer · Protopie" },
-              ].map((m, i) => (
-                <div key={m.label} style={{
-                  display: "flex", gap: 16, alignItems: "baseline", padding: "10px 0",
-                  borderTop: i === 0 ? "0.75px solid var(--border)" : "none",
-                  borderBottom: "0.75px solid var(--border)",
-                }}>
-                  <span style={{ ...mono, fontSize: 8, color: "var(--text-muted)", minWidth: 60, flexShrink: 0 }}>{m.label}</span>
-                  <span style={{ fontFamily: sans, fontSize: 12, color: "var(--text-secondary)" }}>{m.value}</span>
-                </div>
-              ))}
-            </motion.div>
-
           </div>
-        </div>
 
-        {/* ── Band 2 — product showcase ───────────────────────────── */}
-        <div
-          className="blueprint-grid-subtle"
-          style={{
-            position: "relative",
-            borderTop: "1px solid var(--border)",
-            paddingTop: "clamp(40px, 5.5vw, 60px)",
-            paddingLeft: "clamp(20px, 4vw, 60px)",
-            paddingRight: "clamp(20px, 4vw, 60px)",
-            paddingBottom: 0,
-            overflow: "hidden",
-          }}
-        >
-          {/* Subtle top bracket annotation */}
-          <motion.div aria-hidden
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-            transition={{ delay: 1.4, duration: 1.2 }}
-            style={{ position: "absolute", top: 10, left: 18, ...mono, fontSize: 7, color: "var(--construction)", pointerEvents: "none" }}>
-            Final Design
+          {/* Right — device mockup group */}
+          <motion.div initial={{ opacity: 0, x: 40 }} animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.22, duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
+            style={{ position: "relative", paddingLeft: "8%" }}>
+
+            {/* Laptop */}
+            <motion.div
+              animate={{ y: [0, -7, 0] }}
+              transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", repeatType: "loop" }}
+              whileHover={{ y: -14, transition: { duration: 0.45, ease: [0.34, 1.56, 0.64, 1] } }}
+              style={{ position: "relative", zIndex: 2, filter: "drop-shadow(0 32px 64px rgba(0,0,0,0.18))" }}>
+              <LaptopMockup src="/arko/web-1.png" alt="Arko designer dashboard" />
+            </motion.div>
+
+            {/* Phone — overlapping left */}
+            <motion.div
+              animate={{ y: [0, -10, 0] }}
+              transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", repeatType: "loop", delay: 0.6 }}
+              whileHover={{ y: -22, scale: 1.04, transition: { duration: 0.45, ease: [0.34, 1.56, 0.64, 1] } }}
+              style={{ position: "absolute", left: "-4%", bottom: "2%", width: "26%", zIndex: 4, filter: "drop-shadow(0 28px 52px rgba(0,0,0,0.36))" }}>
+              <img src="/arko/phone-13.png" alt="Client mobile view" style={{ width: "100%", display: "block" }} />
+            </motion.div>
+
+            {/* Annotation */}
+            <motion.div aria-hidden initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.6, duration: 1.0 }}
+              style={{ position: "absolute", top: -24, right: 0, ...mono, fontSize: 7, color: "var(--construction)", textAlign: "right", pointerEvents: "none" }}>
+              Final Design
+            </motion.div>
           </motion.div>
-
-          <div
-            className="max-w-6xl mx-auto"
-            style={{
-              display: "flex",
-              alignItems: "flex-end",
-              justifyContent: "center",
-              gap: "clamp(12px, 2.5vw, 24px)",
-            }}
-          >
-            {/* Left phone */}
-            <motion.div
-              style={{ width: "clamp(140px, 20%, 240px)", flexShrink: 0 }}
-              initial={{ opacity: 0, y: 80 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.68, duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
-              whileHover={{ y: -18, scale: 1.03, transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] } }}
-            >
-              <img src="/arko/phone-13.png" alt="Client mobile view"
-                style={{ width: "100%", display: "block", filter: "drop-shadow(0 20px 56px rgba(0,0,0,0.22))" }} />
-            </motion.div>
-
-            {/* Center — web dashboard, most prominent */}
-            <motion.div
-              style={{ flex: 1, maxWidth: "clamp(380px, 56%, 680px)" }}
-              initial={{ opacity: 0, y: 52 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.46, duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
-              whileHover={{ y: -12, transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] } }}
-            >
-              <img src="/arko/web-1.png" alt="Arko designer dashboard"
-                style={{
-                  width: "100%", display: "block",
-                  border: "1px solid var(--border)", borderBottom: "none",
-                  boxShadow: "0 4px 16px rgba(0,0,0,0.06), 0 28px 72px rgba(0,0,0,0.14)",
-                }} />
-            </motion.div>
-
-            {/* Right phone */}
-            <motion.div
-              style={{ width: "clamp(140px, 20%, 240px)", flexShrink: 0 }}
-              initial={{ opacity: 0, y: 80 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.84, duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
-              whileHover={{ y: -18, scale: 1.03, transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] } }}
-            >
-              <img src="/arko/phone-16.png" alt="Design approved"
-                style={{ width: "100%", display: "block", filter: "drop-shadow(0 20px 56px rgba(0,0,0,0.22))" }} />
-            </motion.div>
-          </div>
         </div>
+
+        {/* Mobile meta */}
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5, duration: 0.6 }}
+          className="flex md:hidden flex-col"
+          style={{ position: "relative", zIndex: 3, padding: "0 clamp(24px,6vw,40px) 32px" }}>
+          {[
+            { label: "Role", value: "Product Designer" },
+            { label: "Timeline", value: "14 weeks" },
+            { label: "Tools",   value: "Figma · Framer · Protopie" },
+          ].map((m, i) => (
+            <div key={m.label} style={{
+              display: "flex", gap: 16, alignItems: "baseline", padding: "10px 0",
+              borderTop: i === 0 ? "0.75px solid var(--border)" : "none",
+              borderBottom: "0.75px solid var(--border)",
+            }}>
+              <span style={{ ...mono, fontSize: 8, color: "var(--text-muted)", minWidth: 64, flexShrink: 0 }}>{m.label}</span>
+              <span style={{ fontFamily: sans, fontSize: 12, color: "var(--text-secondary)" }}>{m.value}</span>
+            </div>
+          ))}
+        </motion.div>
 
       </section>
 
       {/* ══════════════════════════════════════════════════════════════
           OVERVIEW — blueprint grid-subtle background
       ══════════════════════════════════════════════════════════════ */}
-      <section className="blueprint-grid-subtle" style={{ padding: "clamp(60px, 8vw, 88px) 0" }}>
-        <div className="max-w-4xl mx-auto px-6 md:px-10">
+      <section style={{ padding: "clamp(60px, 8vw, 88px) 0" }}>
+        <div className="max-w-7xl mx-auto px-6 md:px-10">
           <Reveal>
             <SectionMarker label="Overview" letter="A" className="mb-6" />
             <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
@@ -682,11 +709,10 @@ export default function ArkoCase() {
         </div>
       </section>
 
-      <div className="max-w-4xl mx-auto px-6 md:px-10">
+      <section className="blueprint-grid-subtle" style={{ paddingTop: "clamp(60px, 8vw, 88px)" }}>
+        <div className="max-w-7xl mx-auto px-6 md:px-10">
 
         {/* ── THE PROBLEM ─────────────────────────────────────────────── */}
-        <SectionBreak />
-
         <Reveal>
           <SectionMarker label="Problem" letter="B" className="mb-6" />
           <h2 style={{
@@ -701,18 +727,19 @@ export default function ArkoCase() {
             one root problem — clients cannot visualize a space from a floor plan or mood board alone.
             They say yes in the meeting and change their mind when they see it built.
           </p>
-          <div style={{ display: "flex", alignItems: "flex-end", gap: 32, marginBottom: 40, flexWrap: "wrap" }}>
+          <div style={{ display: "flex", alignItems: "flex-end", gap: 32, marginBottom: 0, flexWrap: "wrap" }}>
             <HandDrawnSketch type="floorPlan" width={170} height={110}
               annotation="the real cost of 'yes'" delay={0.3} />
             <CurvedArrow label="every revision costs this" rotate={-15} />
           </div>
         </Reveal>
 
-      </div>
+        </div>
+      </section>
 
       {/* Problem stats — grid background */}
-      <section className="blueprint-grid-subtle" style={{ padding: "clamp(44px, 6vw, 64px) 0" }}>
-        <div className="max-w-4xl mx-auto px-6 md:px-10">
+      <section className="blueprint-grid-subtle" style={{ padding: "clamp(32px, 4vw, 48px) 0" }}>
+        <div className="max-w-7xl mx-auto px-6 md:px-10">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {([
               { number: "6–8 hrs", label: "Lost per project",  detail: "to revision cycles driven by clients who couldn't visualize the space", icon: <Clock size={20} color="var(--text-muted)" opacity={0.45} /> },
@@ -722,7 +749,7 @@ export default function ArkoCase() {
               <Reveal key={i} delay={i * 0.09}>
                 <div style={{ padding: "24px", border: "1px solid var(--border)", backgroundColor: "var(--bg-elevated)", height: "100%" }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 10 }}>
-                    <p style={{ fontFamily: serif, fontWeight: 700, fontSize: "clamp(30px, 4vw, 42px)", color: "var(--text-primary)", letterSpacing: "-0.03em", lineHeight: 1 }}>
+                    <p style={{ fontFamily: serif, fontWeight: 700, fontSize: "clamp(30px, 4vw, 42px)", color: "var(--accent)", letterSpacing: "-0.03em", lineHeight: 1 }}>
                       {s.number}
                     </p>
                     {s.icon}
@@ -736,10 +763,7 @@ export default function ArkoCase() {
         </div>
       </section>
 
-      <div className="max-w-4xl mx-auto px-6 md:px-10">
-
-        {/* ── THE USERS ───────────────────────────────────────────────── */}
-        <SectionBreak />
+      <div className="max-w-7xl mx-auto px-6 md:px-10" style={{ padding: "clamp(60px, 8vw, 88px) 0" }}>
 
         <Reveal>
           <SectionMarker label="Users" letter="C" className="mb-6" />
@@ -759,9 +783,9 @@ export default function ArkoCase() {
       </div>
 
       {/* ── KEY INSIGHT — full bleed dark ───────────────────────────── */}
-      <section style={{ backgroundColor: "var(--text-primary)", padding: "clamp(72px, 10vw, 120px) 0", margin: "clamp(64px, 9vw, 96px) 0" }}>
+      <section style={{ backgroundColor: "var(--text-primary)", padding: "clamp(72px, 10vw, 120px) 0" }}>
         <Reveal y={16}>
-          <div className="max-w-4xl mx-auto px-6 md:px-10">
+          <div className="max-w-7xl mx-auto px-6 md:px-10">
             <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 28 }}>
               <p style={{ ...mono, fontSize: 9, color: "var(--text-muted)" }}>Key Insight</p>
               <Quotes size={28} color="var(--text-muted)" opacity={0.25} />
@@ -790,7 +814,8 @@ export default function ArkoCase() {
         </Reveal>
       </section>
 
-      <div className="max-w-4xl mx-auto px-6 md:px-10">
+      <section className="blueprint-grid-subtle" style={{ padding: "clamp(60px, 8vw, 88px) 0" }}>
+        <div className="max-w-7xl mx-auto px-6 md:px-10">
 
         {/* ── WEB PLATFORM ────────────────────────────────────────────── */}
         <Reveal>
@@ -830,8 +855,13 @@ export default function ArkoCase() {
           ]} />
         </Reveal>
 
+        </div>
+      </section>
+
+      <section style={{ padding: "clamp(60px, 8vw, 88px) 0" }}>
+        <div className="max-w-7xl mx-auto px-6 md:px-10">
+
         {/* ── SCAN FLOW ───────────────────────────────────────────────── */}
-        <SectionBreak />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-start">
           <Reveal>
@@ -913,16 +943,16 @@ export default function ArkoCase() {
                       </motion.div>
                       <div className="md:col-span-4">
                         <span style={{ ...mono, fontSize: 22, fontWeight: 700, color: "var(--border)", display: "block", lineHeight: 1, marginBottom: 16 }}>{s.num}</span>
-                        <p style={{ fontFamily: serif, fontStyle: "italic", fontSize: "clamp(16px, 1.8vw, 20px)", color: "var(--text-primary)", lineHeight: 1.35, marginBottom: 14 }}>{s.label}</p>
-                        <p style={{ fontFamily: sans, fontSize: 13, color: "var(--text-secondary)", lineHeight: 1.75 }}>{s.desc}</p>
+                        <p style={{ fontFamily: serif, fontStyle: "italic", fontSize: "clamp(20px, 2.2vw, 26px)", color: "var(--text-primary)", lineHeight: 1.3, marginBottom: 14 }}>{s.label}</p>
+                        <p style={{ fontFamily: sans, fontSize: 16, color: "var(--text-secondary)", lineHeight: 1.75 }}>{s.desc}</p>
                       </div>
                     </>
                   ) : (
                     <>
                       <div className="md:col-span-4 order-2 md:order-1">
                         <span style={{ ...mono, fontSize: 22, fontWeight: 700, color: "var(--border)", display: "block", lineHeight: 1, marginBottom: 16 }}>{s.num}</span>
-                        <p style={{ fontFamily: serif, fontStyle: "italic", fontSize: "clamp(16px, 1.8vw, 20px)", color: "var(--text-primary)", lineHeight: 1.35, marginBottom: 14 }}>{s.label}</p>
-                        <p style={{ fontFamily: sans, fontSize: 13, color: "var(--text-secondary)", lineHeight: 1.75 }}>{s.desc}</p>
+                        <p style={{ fontFamily: serif, fontStyle: "italic", fontSize: "clamp(20px, 2.2vw, 26px)", color: "var(--text-primary)", lineHeight: 1.3, marginBottom: 14 }}>{s.label}</p>
+                        <p style={{ fontFamily: sans, fontSize: 16, color: "var(--text-secondary)", lineHeight: 1.75 }}>{s.desc}</p>
                       </div>
                       <motion.div className="md:col-span-8 order-1 md:order-2"
                         whileHover={{ y: -3 }} transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}>
@@ -937,8 +967,13 @@ export default function ArkoCase() {
           </div>
         </div>
 
+        </div>
+      </section>
+
+      <section className="blueprint-grid-subtle" style={{ padding: "clamp(60px, 8vw, 88px) 0" }}>
+        <div className="max-w-7xl mx-auto px-6 md:px-10">
+
         {/* ── CLIENT EXPERIENCE ───────────────────────────────────────── */}
-        <SectionBreak />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-start">
           <Reveal delay={0.1}>
@@ -973,8 +1008,13 @@ export default function ArkoCase() {
           </Reveal>
         </div>
 
+        </div>
+      </section>
+
+      <section style={{ padding: "clamp(60px, 8vw, 88px) 0" }}>
+        <div className="max-w-7xl mx-auto px-6 md:px-10">
+
         {/* ── DESIGN DECISIONS ────────────────────────────────────────── */}
-        <SectionBreak />
 
         <Reveal>
           <SectionMarker label="Design Decisions" letter="G" className="mb-6" />
@@ -991,35 +1031,12 @@ export default function ArkoCase() {
           <DecisionStepper />
         </Reveal>
 
-        {/* ── PROCESS TIMELINE ───────────────────────────────────────── */}
-        <SectionBreak />
-
-        <Reveal>
-          <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: 16, marginBottom: 36 }}>
-            <div>
-              <SectionMarker label="Process" letter="G2" className="mb-4" />
-              <h2 style={{
-                fontFamily: serif, fontWeight: 700, fontSize: "clamp(22px, 2.8vw, 34px)",
-                color: "var(--text-primary)", letterSpacing: "-0.025em", lineHeight: 1.2,
-              }}>
-                10 steps from insight to interface.
-              </h2>
-            </div>
-            <div aria-hidden>
-              <HandDrawnSketch type="wireframe" width={80} height={110} annotation="the blueprint" delay={0.3} />
-            </div>
-          </div>
-        </Reveal>
-
-        <Reveal delay={0.08}>
-          <ProcessTimeline />
-        </Reveal>
-
-      </div>
+        </div>
+      </section>
 
       {/* ── OUTCOMES — blueprint grid-subtle background ──────────────── */}
-      <section className="blueprint-grid-subtle" style={{ padding: "clamp(64px, 9vw, 96px) 0", marginTop: "clamp(72px, 10vw, 104px)" }}>
-        <div className="max-w-4xl mx-auto px-6 md:px-10">
+      <section style={{ padding: "clamp(64px, 9vw, 96px) 0" }}>
+        <div className="max-w-7xl mx-auto px-6 md:px-10">
           <Reveal>
             <SectionMarker label="Reflection" letter="H" className="mb-6" />
             <h2 style={{
@@ -1070,7 +1087,7 @@ export default function ArkoCase() {
       </section>
 
       {/* ── NAVIGATION ───────────────────────────────────────────────── */}
-      <div className="max-w-4xl mx-auto px-6 md:px-10">
+      <div className="max-w-7xl mx-auto px-6 md:px-10">
         <div className="flex flex-wrap justify-between items-center gap-6"
           style={{ paddingTop: 32, paddingBottom: 64, borderTop: "1px solid var(--border)" }}>
           {adjacent.prev ? (
