@@ -1,7 +1,8 @@
-import { motion, AnimatePresence, useScroll, useSpring, useInView, useMotionValue, animate } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useSpring, useInView, useMotionValue, animate, useTransform } from "framer-motion";
+import type { MotionValue } from "framer-motion";
 import { Link } from "react-router-dom";
-import { Fragment, useEffect, useRef, useState } from "react";
-import { ClockIcon as Clock, ArrowsHorizontalIcon as ArrowsHorizontal, QuotesIcon as Quotes, DeviceMobileCameraIcon as DeviceMobileCamera, ApertureIcon as Aperture, LightbulbFilamentIcon as LightbulbFilament, CheckCircleIcon as CheckCircle, UsersThreeIcon as UsersThree, SparkleIcon as Sparkle, PushPinIcon as PushPin, CubeIcon as Cube, CompassIcon as Compass, ArrowRightIcon as ArrowRight } from "@phosphor-icons/react";
+import { useEffect, useRef, useState } from "react";
+import { ClockIcon as Clock, QuotesIcon as Quotes, DeviceMobileCameraIcon as DeviceMobileCamera, ApertureIcon as Aperture, LightbulbFilamentIcon as LightbulbFilament, CheckCircleIcon as CheckCircle, UsersThreeIcon as UsersThree, SparkleIcon as Sparkle, PushPinIcon as PushPin, CubeIcon as Cube, CompassIcon as Compass, ArrowUpIcon as ArrowUp, MicrophoneIcon as Microphone, ChatCircleDotsIcon as ChatCircleDots, EyeIcon as Eye, EnvelopeSimpleIcon as Envelope, SquaresFourIcon as SquaresFour, FolderOpenIcon as FolderOpen, ClipboardTextIcon as ClipboardText } from "@phosphor-icons/react";
 import { getAdjacentProjects } from "../data/projects";
 
 /* ── Arko brand palette (scoped to this page only) ─────────────── */
@@ -69,13 +70,13 @@ const t = {
   } as React.CSSProperties,
   bodyLg: {
     fontFamily: sans,
-    fontSize: "clamp(16px, 1.2vw, 18px)",
+    fontSize: "clamp(18px, 1.4vw, 21px)",
     lineHeight: 1.75,
     color: "var(--text-secondary)",
   } as React.CSSProperties,
   body: {
     fontFamily: sans,
-    fontSize: 16,
+    fontSize: 18,
     lineHeight: 1.75,
     color: "var(--text-secondary)",
   } as React.CSSProperties,
@@ -131,53 +132,12 @@ function CountUp({
   );
 }
 
-function ArrowBtn({ onClick, dir }: { onClick: () => void; dir: "left" | "right" }) {
-  return (
-    <button onClick={onClick}
-      style={{
-        width: 40, height: 40, borderRadius: "50%",
-        border: "1px solid var(--border)", background: "var(--bg-elevated)",
-        display: "flex", alignItems: "center", justifyContent: "center",
-        cursor: "pointer", color: "var(--text-secondary)", flexShrink: 0,
-        transitionProperty: "transform, opacity, border-color, color", transitionDuration: "150ms",
-      }}
-      onMouseEnter={(e) => { const el = e.currentTarget as HTMLElement; el.style.borderColor = arko.primary; el.style.color = arko.primary; }}
-      onMouseLeave={(e) => { const el = e.currentTarget as HTMLElement; el.style.borderColor = "var(--border)"; el.style.color = "var(--text-secondary)"; }}
-      onMouseDown={(e) => { (e.currentTarget as HTMLElement).style.transform = "scale(0.93)"; }}
-      onMouseUp={(e) => { (e.currentTarget as HTMLElement).style.transform = "scale(1)"; }}
-    >
-      {dir === "left" ? (
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M11.5 4.5L6.5 9l5 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
-      ) : (
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M6.5 4.5L11.5 9l-5 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
-      )}
-    </button>
-  );
-}
-
-function Dots({ count, active, onGo }: { count: number; active: number; onGo: (i: number) => void }) {
-  return (
-    <div style={{ display: "flex", gap: 6, justifyContent: "center" }}>
-      {Array.from({ length: count }).map((_, i) => (
-        <button key={i} onClick={() => onGo(i)} aria-label={`Go to slide ${i + 1}`}
-          style={{
-            height: 6, width: i === active ? 22 : 6, borderRadius: 3, border: "none", padding: 0, cursor: "pointer",
-            background: i === active ? arko.primary : "var(--border)",
-            transitionProperty: "transform, opacity, width, background-color", transitionDuration: "250ms",
-            transitionTimingFunction: "cubic-bezier(0.34, 1.56, 0.64, 1)",
-          }}
-        />
-      ))}
-    </div>
-  );
-}
-
 /* ══════════════════════════════════════════════════════════════════
    SECTION HEADER — replaces the old decorative ChapterMark
    Clean editorial eyebrow: number · section · phase + rule line
 ══════════════════════════════════════════════════════════════════ */
 function SectionHeader({
-  num, title, phase, total = "10",
+  num, title, phase, total = "09",
 }: {
   num: string; title: string; phase: string; total?: string;
 }) {
@@ -194,7 +154,7 @@ function SectionHeader({
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
           style={{
-            ...mono, fontSize: 12, color: arko.primary,
+            ...mono, fontSize: 14, color: arko.primary,
             letterSpacing: "0.22em", fontWeight: 700,
           }}>
           {num} <span style={{ color: "var(--text-muted)", fontWeight: 400 }}>/ {total}</span>
@@ -204,7 +164,7 @@ function SectionHeader({
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ delay: 0.08, duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
           style={{
-            ...mono, fontSize: 12, color: "var(--text-primary)",
+            ...mono, fontSize: 14, color: "var(--text-primary)",
             letterSpacing: "0.22em", fontWeight: 600,
           }}>
           {title}
@@ -214,7 +174,7 @@ function SectionHeader({
           animate={inView ? { opacity: 1 } : {}}
           transition={{ delay: 0.2, duration: 0.55 }}
           style={{
-            ...mono, fontSize: 11, color: "var(--text-muted)",
+            ...mono, fontSize: 13, color: "var(--text-muted)",
             letterSpacing: "0.2em", marginLeft: "auto",
           }}>
           {phase}
@@ -233,149 +193,347 @@ function SectionHeader({
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   PHONE CAROUSEL
-══════════════════════════════════════════════════════════════════ */
-const slideVariants = {
-  enter: (d: number) => ({ opacity: 0, x: d * 60 }),
-  center: { opacity: 1, x: 0 },
-  exit:  (d: number) => ({ opacity: 0, x: d * -40 }),
-};
-
-function PhoneCarousel({ slides }: { slides: { src: string; label: string }[] }) {
-  const [active, setActive] = useState(0);
-  const [dir, setDir]       = useState(1);
-  const go = (i: number) => { setDir(i > active ? 1 : -1); setActive(i); };
-
-  return (
-    <div>
-      <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-        <ArrowBtn dir="left"  onClick={() => go(active === 0 ? slides.length - 1 : active - 1)} />
-        <div style={{ flex: 1, overflow: "hidden", display: "flex", justifyContent: "center", minHeight: 420 }}>
-          <AnimatePresence mode="wait" custom={dir}>
-            <motion.div key={active} custom={dir} variants={slideVariants}
-              initial="enter" animate="center" exit="exit"
-              transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1] }}
-              style={{ width: "clamp(190px, 30vw, 280px)" }}>
-              <img src={slides[active].src} alt={slides[active].label} style={{ width: "100%", display: "block", filter: "drop-shadow(0 20px 40px rgba(0,0,0,0.18))" }} />
-            </motion.div>
-          </AnimatePresence>
-        </div>
-        <ArrowBtn dir="right" onClick={() => go(active === slides.length - 1 ? 0 : active + 1)} />
-      </div>
-      <AnimatePresence mode="wait">
-        <motion.p key={active} initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0 }} transition={{ duration: 0.2 }}
-          style={{ ...caption, textAlign: "center", margin: "14px 0 12px" }}>
-          {slides[active].label}
-        </motion.p>
-      </AnimatePresence>
-      <Dots count={slides.length} active={active} onGo={go} />
-    </div>
-  );
-}
-
-/* ══════════════════════════════════════════════════════════════════
-   BROWSER MOCKUP — macOS browser chrome
-══════════════════════════════════════════════════════════════════ */
-function BrowserMockup({ src, alt }: { src: string; alt: string }) {
-  return (
-    <div style={{
-      borderRadius: 10, overflow: "hidden",
-      boxShadow: "0 2px 4px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.08), 0 24px 56px rgba(0,0,0,0.10)",
-      border: "1px solid rgba(0,0,0,0.08)",
-    }}>
-      <div style={{
-        background: "#EBEBEB", padding: "8px 12px",
-        display: "flex", alignItems: "center", gap: 8,
-        borderBottom: "1px solid #D8D8D8",
-      }}>
-        <div style={{ display: "flex", gap: 5.5, flexShrink: 0 }}>
-          <div style={{ width: 11, height: 11, borderRadius: "50%", background: "#FF5F57", border: "0.5px solid rgba(0,0,0,0.12)" }} />
-          <div style={{ width: 11, height: 11, borderRadius: "50%", background: "#FEBC2E", border: "0.5px solid rgba(0,0,0,0.12)" }} />
-          <div style={{ width: 11, height: 11, borderRadius: "50%", background: "#28C840", border: "0.5px solid rgba(0,0,0,0.12)" }} />
-        </div>
-        <div style={{
-          flex: 1, height: 22, background: "#FAFAFA",
-          borderRadius: 5, border: "1px solid #D0D0D0",
-          display: "flex", alignItems: "center", justifyContent: "center", gap: 5,
-          maxWidth: 240, margin: "0 auto",
-        }}>
-          <svg width="9" height="9" viewBox="0 0 9 9" fill="none" aria-hidden>
-            <rect x="1.5" y="3.8" width="6" height="4.6" rx="0.9" fill="#AEAEB2"/>
-            <path d="M2.8 3.8V2.6a1.7 1.7 0 013.4 0v1.2" stroke="#AEAEB2" strokeWidth="1.1" strokeLinecap="round"/>
-          </svg>
-          <span style={{ fontFamily: sans, fontSize: 9.5, color: "#636366" }}>app.arko.design</span>
-        </div>
-        <div style={{ width: 60, flexShrink: 0 }} />
-      </div>
-      <img src={src} alt={alt} style={{ width: "100%", display: "block" }} />
-    </div>
-  );
-}
-
-/* ══════════════════════════════════════════════════════════════════
-   LAPTOP MOCKUP — SVG MacBook frame
+   LAPTOP MOCKUP — inline CSS chassis, no external SVG.
+   Minimal flat frame with a thin dark bezel, screen cutout, and a
+   tapered base + hinge shelf below. Matches the architectural aesthetic.
 ══════════════════════════════════════════════════════════════════ */
 function LaptopMockup({ src, alt }: { src: string; alt: string }) {
   return (
-    <div style={{ position: "relative", width: "100%", userSelect: "none" }}>
-      <svg
-        viewBox="0 0 960 650"
-        xmlns="http://www.w3.org/2000/svg"
-        style={{ width: "100%", display: "block", overflow: "visible" }}
+    <div style={{ width: "100%", userSelect: "none", position: "relative" }}>
+      {/* Lid · bezel + screen */}
+      <div
+        style={{
+          position: "relative",
+          background: "#1A1A1A",
+          padding: "14px 14px 14px",
+          borderRadius: "12px 12px 3px 3px",
+          boxShadow:
+            "0 1px 0 rgba(255,255,255,0.05) inset, 0 24px 48px -20px rgba(26,26,26,0.35), 0 4px 10px rgba(0,0,0,0.06)",
+        }}
       >
-        <defs>
-          <linearGradient id="lm-lid" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%"   stopColor="#2C2C2E"/>
-            <stop offset="50%"  stopColor="#1D1D1F"/>
-            <stop offset="100%" stopColor="#141416"/>
-          </linearGradient>
-          <linearGradient id="lm-base" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%"   stopColor="#E8E8EA"/>
-            <stop offset="100%" stopColor="#C4C4C6"/>
-          </linearGradient>
-          <linearGradient id="lm-foot" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%"   stopColor="#C0C0C2"/>
-            <stop offset="100%" stopColor="#A8A8AA"/>
-          </linearGradient>
-          <linearGradient id="lm-hinge" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%"   stopColor="#060606"/>
-            <stop offset="100%" stopColor="#1A1A1A"/>
-          </linearGradient>
-          <linearGradient id="lm-bezel" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%"   stopColor="rgba(255,255,255,0.06)"/>
-            <stop offset="100%" stopColor="rgba(255,255,255,0)"/>
-          </linearGradient>
-          <clipPath id="lm-clip">
-            <rect x="18" y="30" width="924" height="522" rx="3" ry="3"/>
-          </clipPath>
-          <filter id="lm-dropshadow" x="-8%" y="-4%" width="116%" height="130%">
-            <feDropShadow dx="0" dy="18" stdDeviation="26" floodColor="#000" floodOpacity="0.24"/>
-            <feDropShadow dx="0" dy="4"  stdDeviation="6"  floodColor="#000" floodOpacity="0.10"/>
-          </filter>
-        </defs>
-        <g filter="url(#lm-dropshadow)">
-          <rect x="0" y="0" width="960" height="578" rx="14" ry="14" fill="url(#lm-lid)"/>
-          <rect x="436" y="0" width="88" height="20" rx="10" ry="10" fill="#1D1D1F"/>
-          <circle cx="480" cy="12" r="6"   fill="#28282A"/>
-          <circle cx="480" cy="12" r="4"   fill="#1A1A1C"/>
-          <circle cx="480" cy="12" r="2.5" fill="#323234"/>
-          <rect x="12" y="24" width="936" height="542" rx="6" ry="6" fill="#000"/>
-          <foreignObject x="18" y="30" width="924" height="522" clipPath="url(#lm-clip)">
-            <div style={{ width: "100%", height: "100%", overflow: "hidden", background: "#000" }}>
-              <img src={src} alt={alt} style={{ width: "100%", display: "block" }} />
+        {/* Camera dot */}
+        <span
+          aria-hidden
+          style={{
+            position: "absolute",
+            top: 6,
+            left: "50%",
+            transform: "translateX(-50%)",
+            width: 4,
+            height: 4,
+            borderRadius: "50%",
+            background: "#3a3a3a",
+            boxShadow: "inset 0 0 0 1px rgba(255,255,255,0.08)",
+          }}
+        />
+        {/* Screen cutout */}
+        <div
+          style={{
+            position: "relative",
+            aspectRatio: "16 / 10",
+            overflow: "hidden",
+            background: "#0a0a0a",
+            borderRadius: 1,
+          }}
+        >
+          <img
+            src={src}
+            alt={alt}
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              objectPosition: "top center",
+              display: "block",
+            }}
+          />
+        </div>
+      </div>
+
+      {/* Base · hinge shelf + tapered deck */}
+      <div aria-hidden style={{ position: "relative" }}>
+        {/* Hinge shadow strip */}
+        <div
+          style={{
+            height: 3,
+            margin: "0 -3%",
+            background:
+              "linear-gradient(180deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.12) 100%)",
+          }}
+        />
+        {/* Deck */}
+        <div
+          style={{
+            position: "relative",
+            margin: "0 -5.5%",
+            height: 12,
+            background:
+              "linear-gradient(180deg, #2a2a2a 0%, #1a1a1a 60%, #151515 100%)",
+            borderRadius: "0 0 14px 14px",
+            boxShadow:
+              "0 10px 22px -8px rgba(0,0,0,0.22), 0 2px 4px rgba(0,0,0,0.08)",
+          }}
+        >
+          {/* Trackpad groove indent */}
+          <span
+            style={{
+              position: "absolute",
+              top: 0,
+              left: "50%",
+              transform: "translateX(-50%)",
+              width: "22%",
+              height: 4,
+              background: "#0e0e0e",
+              borderRadius: "0 0 6px 6px",
+            }}
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   LOOP CARD — single integrated "before state" visualization.
+   Replaces the earlier stacked workflow + anatomy table.
+══════════════════════════════════════════════════════════════════ */
+function LoopCard() {
+  const [active, setActive] = useState(0);
+
+  const stages = [
+    {
+      marker: "01", label: "Design",      tool: "AutoCAD",     time: "60 min",
+      why: { k: "Plan, not space", t: "Clients approve a drawing they cannot mentally render." },
+    },
+    {
+      marker: "02", label: "Handoff",     tool: "PDF · email", time: "instant",
+      why: { k: "No shared surface", t: "Feedback lives in email threads. Every round restarts the export." },
+    },
+    {
+      marker: "03", label: "Walkthrough", tool: "On-site",     time: "2–3 days",
+      why: { k: "Days of drift", t: "The 3D visual arrives days later. Memory of the plan has already faded." },
+    },
+    {
+      marker: "04", label: "Result",      tool: "Revision",    time: "6–8 hrs", bad: true,
+      why: { k: "The compound effect", t: "Every gap between plan and render becomes another round of edits." },
+    },
+  ];
+
+  const current = stages[active];
+
+  return (
+    <div style={{
+      border: "1px solid var(--border)",
+      background: "var(--bg-elevated)",
+      overflow: "hidden",
+    }}>
+      {/* Header band */}
+      <div style={{
+        padding: "20px 28px",
+        borderBottom: "1px solid var(--border)",
+        display: "flex", justifyContent: "space-between", alignItems: "center",
+        flexWrap: "wrap", gap: 16,
+      }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <span aria-hidden style={{ width: 3, height: 14, background: arko.primary, display: "inline-block" }} />
+          <p style={{ ...mono, fontSize: 13, color: arko.dark, letterSpacing: "0.22em", fontWeight: 600 }}>
+            The revision loop · before state
+          </p>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <Clock size={16} color={arko.primary} weight="duotone" />
+          <span style={{ ...mono, fontSize: 13, color: "var(--text-muted)", letterSpacing: "0.14em" }}>
+            Total lost
+          </span>
+          <span style={{
+            fontFamily: serif, fontWeight: 700, fontSize: 22,
+            color: arko.dark, letterSpacing: "-0.015em", lineHeight: 1,
+          }}>
+            6–8 hrs
+          </span>
+          <span style={{ ...mono, fontSize: 12, color: "var(--text-muted)", letterSpacing: "0.18em" }}>
+            / project
+          </span>
+        </div>
+      </div>
+
+      {/* Four-stage flow — minimal */}
+      <div style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(4, 1fr)",
+        position: "relative",
+      }}>
+        {stages.map((s, i) => {
+          const isActive = active === i;
+          return (
+            <motion.div
+              key={s.marker}
+              onHoverStart={() => setActive(i)}
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-40px" }}
+              transition={{ delay: 0.08 + i * 0.07, duration: 0.5 }}
+              style={{
+                padding: "32px 24px 28px",
+                borderRight: i < stages.length - 1 ? "1px solid var(--border-light)" : "none",
+                background: isActive ? arko.subtle : "transparent",
+                cursor: "default",
+                position: "relative",
+                transition: "background-color 260ms ease-out",
+                minWidth: 0,
+              }}
+            >
+              {/* Active rail */}
+              <span
+                aria-hidden
+                style={{
+                  position: "absolute", top: 0, left: 0, right: 0, height: 2,
+                  background: arko.primary,
+                  transformOrigin: "left center",
+                  transform: isActive ? "scaleX(1)" : "scaleX(0)",
+                  transition: "transform 350ms ease-out",
+                }}
+              />
+              {/* Marker row */}
+              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 22 }}>
+                <span style={{
+                  ...mono, fontSize: 12, fontWeight: 700,
+                  color: isActive ? arko.primary : "var(--text-muted)",
+                  letterSpacing: "0.22em",
+                  transition: "color 240ms ease-out",
+                }}>
+                  {s.marker}
+                </span>
+                <span
+                  aria-hidden
+                  style={{
+                    flex: 1, height: 1,
+                    background: isActive ? arko.light : "var(--border-light)",
+                    transition: "background-color 260ms ease-out",
+                  }}
+                />
+                {s.bad && (
+                  <span aria-hidden style={{
+                    width: 7, height: 7, borderRadius: "50%",
+                    background: arko.primary,
+                    boxShadow: `0 0 0 3px ${arko.subtle}`,
+                  }} />
+                )}
+              </div>
+              {/* Label */}
+              <p style={{
+                ...mono, fontSize: 12, color: "var(--text-muted)",
+                letterSpacing: "0.22em", marginBottom: 10,
+              }}>
+                {s.label}
+              </p>
+              {/* Tool */}
+              <p style={{
+                fontFamily: serif, fontWeight: 700,
+                fontSize: "clamp(20px, 1.8vw, 26px)",
+                color: isActive || s.bad ? arko.dark : "var(--text-primary)",
+                letterSpacing: "-0.02em", lineHeight: 1.1,
+                marginBottom: 18,
+                transition: "color 250ms ease-out",
+              }}>
+                {s.tool}
+              </p>
+              {/* Time */}
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <Clock
+                  size={13}
+                  color={isActive ? arko.primary : "var(--text-muted)"}
+                  weight="regular"
+                />
+                <span style={{
+                  ...mono, fontSize: 13,
+                  color: isActive ? arko.primary : "var(--text-secondary)",
+                  letterSpacing: "0.14em", fontWeight: isActive ? 700 : 500,
+                  transition: "color 240ms ease-out",
+                }}>
+                  {s.time}
+                </span>
+              </div>
+            </motion.div>
+          );
+        })}
+      </div>
+
+      {/* Dynamic why-this-breaks band — changes with active stage */}
+      <div style={{
+        padding: "26px 28px 28px",
+        borderTop: "1px solid var(--border)",
+        background: arko.subtle,
+        position: "relative",
+      }}>
+        <div style={{
+          display: "flex", alignItems: "center", gap: 12, marginBottom: 14,
+        }}>
+          <span aria-hidden style={{ width: 3, height: 14, background: arko.primary }} />
+          <p style={{ ...mono, fontSize: 12, color: arko.dark, letterSpacing: "0.22em", fontWeight: 600 }}>
+            Why this stage breaks
+          </p>
+          <span aria-hidden style={{ flex: 1, height: 1, background: arko.light, opacity: 0.4 }} />
+          {/* Stepper dots */}
+          <div style={{ display: "flex", gap: 6 }}>
+            {stages.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setActive(i)}
+                onMouseEnter={() => setActive(i)}
+                aria-label={`Show stage ${i + 1}`}
+                style={{
+                  width: active === i ? 18 : 6, height: 6, borderRadius: 3,
+                  background: active === i ? arko.primary : arko.light,
+                  border: "none", padding: 0, cursor: "pointer",
+                  transition: "width 260ms ease-out, background-color 200ms ease-out",
+                }}
+              />
+            ))}
+          </div>
+        </div>
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={active}
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -6 }}
+            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            style={{ display: "flex", alignItems: "baseline", gap: 16, flexWrap: "wrap" }}
+          >
+            <span style={{
+              ...mono, fontSize: 13, color: arko.primary,
+              letterSpacing: "0.2em", fontWeight: 700,
+            }}>
+              {current.marker}
+            </span>
+            <div style={{ flex: 1, minWidth: 240 }}>
+              <p style={{
+                fontFamily: serif, fontWeight: 700,
+                fontSize: "clamp(19px, 1.7vw, 23px)",
+                color: "var(--text-primary)",
+                letterSpacing: "-0.015em", lineHeight: 1.3,
+                marginBottom: 6,
+              }}>
+                {current.why.k}
+              </p>
+              <p style={{
+                fontFamily: sans, fontSize: 16.5,
+                color: "var(--text-secondary)",
+                lineHeight: 1.6, maxWidth: 720,
+              }}>
+                {current.why.t}
+              </p>
             </div>
-          </foreignObject>
-          <rect x="18" y="30" width="924" height="60" fill="url(#lm-bezel)" rx="3"/>
-          <rect x="-4" y="578" width="968" height="6" fill="url(#lm-hinge)"/>
-          <path d="M-12,584 L972,584 L984,618 L-24,618 Z" fill="url(#lm-base)"/>
-          <path d="M-12,584 L972,584 L974,589 L-14,589 Z" fill="rgba(255,255,255,0.55)"/>
-          <path d="M-24,615 L984,615 L984,618 L-24,618 Z" fill="rgba(0,0,0,0.10)"/>
-          <rect x="384" y="592" width="192" height="18" rx="4" ry="4"
-            fill="rgba(0,0,0,0.07)" stroke="rgba(0,0,0,0.09)" strokeWidth="0.6"/>
-          <rect x="56" y="618" width="848" height="5" rx="2.5" ry="2.5" fill="url(#lm-foot)"/>
-        </g>
-      </svg>
+          </motion.div>
+        </AnimatePresence>
+        <p style={{
+          ...mono, fontSize: 11.5, color: "var(--text-muted)",
+          letterSpacing: "0.2em", marginTop: 18, textAlign: "right",
+        }}>
+          Fig. 02.1 · hover any stage to see where it breaks
+        </p>
+      </div>
     </div>
   );
 }
@@ -383,71 +541,253 @@ function LaptopMockup({ src, alt }: { src: string; alt: string }) {
 /* ══════════════════════════════════════════════════════════════════
    WEB GALLERY
 ══════════════════════════════════════════════════════════════════ */
-function WebGallery({ screens }: { screens: { src: string; label: string }[] }) {
+function WebGallery({
+  screens,
+}: {
+  screens: { src: string; label: string; Icon?: typeof SquaresFour }[];
+}) {
   const [active, setActive] = useState(0);
+
+  const tabs = screens.map((s) => {
+    const parts = s.label.split(" · ");
+    return { fig: parts[0] ?? "", name: parts[1] ?? "", tail: parts.slice(2).join(" · "), Icon: s.Icon };
+  });
+
+  const slugFor = (name: string) => name.toLowerCase().replace(/\s+/g, "-");
+  const host = `arko.app / ${slugFor(tabs[active].name)}`;
+  const current = screens[active];
+
   return (
-    <div style={{ display: "flex", gap: 16, alignItems: "flex-start" }}>
-      <div style={{ display: "flex", flexDirection: "column", gap: 8, flexShrink: 0, width: 140 }}>
-        {screens.map((s, i) => (
-          <button key={i} onClick={() => setActive(i)}
-            style={{
-              padding: 0, background: "none", cursor: "pointer", overflow: "hidden",
-              border: i === active ? `2px solid ${arko.primary}` : "1px solid var(--border)",
-              borderRadius: 4,
-              opacity: i === active ? 1 : 0.55,
-              transitionProperty: "opacity, border-color", transitionDuration: "200ms",
-            }}
-            onMouseEnter={(e) => { if (i !== active) (e.currentTarget as HTMLElement).style.opacity = "0.85"; }}
-            onMouseLeave={(e) => { if (i !== active) (e.currentTarget as HTMLElement).style.opacity = "0.55"; }}
-            onFocus={(e) => { (e.currentTarget as HTMLElement).style.outline = `2px solid ${arko.primary}`; (e.currentTarget as HTMLElement).style.outlineOffset = "2px"; }}
-            onBlur={(e) => { (e.currentTarget as HTMLElement).style.outline = "none"; }}>
-            <img src={s.src} alt={s.label} style={{ width: "100%", display: "block" }} />
-          </button>
-        ))}
-      </div>
-      <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ position: "relative", marginBottom: 12 }}>
-          <AnimatePresence mode="wait">
-            <motion.div key={active}
-              initial={{ opacity: 0, clipPath: "inset(0 100% 0 0)", WebkitClipPath: "inset(0 100% 0 0)" }}
-              animate={{ opacity: 1, clipPath: "inset(0 0 0 0)", WebkitClipPath: "inset(0 0 0 0)" }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <BrowserMockup src={screens[active].src} alt={screens[active].label} />
-            </motion.div>
-          </AnimatePresence>
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={`pill-${active}`}
-              initial={{ opacity: 0, y: -4 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -4 }}
-              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+    <div style={{ width: "100%" }}>
+      {/* Editorial tab row — UserTabs pattern */}
+      <div
+        style={{
+          position: "relative",
+          marginBottom: 32,
+        }}
+      >
+        {/* Faded white surface — softens into the page at the edges */}
+        <div
+          aria-hidden
+          style={{
+            position: "absolute",
+            inset: "-4px -2% 0",
+            background: "var(--bg-elevated)",
+            maskImage:
+              "linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)",
+            WebkitMaskImage:
+              "linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)",
+            pointerEvents: "none",
+          }}
+        />
+      <div
+        role="tablist"
+        aria-label="Workspace screens"
+        style={{
+          position: "relative",
+          display: "grid",
+          gridTemplateColumns: `repeat(${tabs.length}, minmax(0, 1fr))`,
+        }}
+      >
+        {tabs.map((tab, i) => {
+          const isActive = active === i;
+          const TabIcon = tab.Icon;
+          return (
+            <button
+              key={i}
+              role="tab"
+              aria-selected={isActive}
+              onClick={() => setActive(i)}
+              onFocus={(e) => {
+                (e.currentTarget as HTMLElement).style.outline = `2px solid ${arko.primary}`;
+                (e.currentTarget as HTMLElement).style.outlineOffset = "-2px";
+              }}
+              onBlur={(e) => { (e.currentTarget as HTMLElement).style.outline = "none"; }}
               style={{
-                position: "absolute", top: 14, right: 14,
-                padding: "6px 10px",
-                background: "rgba(26,26,26,0.82)",
-                backdropFilter: "blur(6px)", WebkitBackdropFilter: "blur(6px)",
-                border: `1px solid ${arko.muted}`,
-                display: "flex", alignItems: "center", gap: 8,
-                pointerEvents: "none",
+                position: "relative",
+                padding: "26px 26px",
+                background: "transparent",
+                border: "none",
+                cursor: "pointer",
+                textAlign: "left",
+                display: "flex",
+                flexDirection: "column",
+                gap: 14,
+                transitionProperty: "color",
+                transitionDuration: "220ms",
+                minWidth: 0,
               }}
             >
-              <span aria-hidden style={{ width: 6, height: 6, borderRadius: "50%", backgroundColor: arko.light }} />
-              <span style={{ ...mono, fontSize: 10, color: "#FAFAFA", letterSpacing: "0.16em" }}>
-                {screens[active].label.split(" · ")[0]}
+              {isActive && (
+                <motion.span
+                  layoutId="webgallery-rail"
+                  aria-hidden
+                  style={{
+                    position: "absolute",
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    height: 2,
+                    background: arko.primary,
+                  }}
+                  transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                />
+              )}
+              <span
+                style={{
+                  ...mono,
+                  fontSize: 14,
+                  color: isActive ? arko.primary : "var(--text-muted)",
+                  letterSpacing: "0.2em",
+                  fontWeight: 600,
+                }}
+              >
+                {tab.fig}
               </span>
-            </motion.div>
+              <span style={{ display: "inline-flex", alignItems: "center", gap: 14, minWidth: 0 }}>
+                {TabIcon && (
+                  <TabIcon
+                    size={24}
+                    color={isActive ? arko.primary : "var(--text-secondary)"}
+                    weight={isActive ? "duotone" : "regular"}
+                    style={{ flexShrink: 0 }}
+                  />
+                )}
+                <span
+                  style={{
+                    fontFamily: serif,
+                    fontWeight: 700,
+                    fontSize: 22,
+                    lineHeight: 1.2,
+                    letterSpacing: "-0.015em",
+                    color: isActive ? "var(--text-primary)" : "var(--text-secondary)",
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    transitionProperty: "color",
+                    transitionDuration: "220ms",
+                  }}
+                >
+                  {tab.name}
+                </span>
+              </span>
+            </button>
+          );
+        })}
+      </div>
+      </div>
+
+      {/* Browser-chrome frame */}
+      <div
+        style={{
+          width: "100%",
+          background: "var(--bg-elevated)",
+          border: "1px solid var(--border)",
+          borderRadius: "10px 10px 6px 6px",
+          overflow: "hidden",
+          boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 28px 60px -28px rgba(26,26,26,0.22)",
+        }}
+      >
+        {/* Chrome bar */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 14,
+            padding: "11px 16px",
+            borderBottom: "1px solid var(--border)",
+            background: "var(--bg-secondary)",
+          }}
+        >
+          {/* Traffic lights */}
+          <span aria-hidden style={{ display: "flex", gap: 6, flexShrink: 0 }}>
+            <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#E86B63" }} />
+            <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#E4B04A" }} />
+            <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#4DB06A" }} />
+          </span>
+          {/* URL pill */}
+          <div
+            style={{
+              flex: 1,
+              maxWidth: 420,
+              padding: "6px 12px",
+              background: "var(--bg-primary)",
+              border: "0.75px solid var(--border)",
+              borderRadius: 5,
+              display: "flex",
+              alignItems: "center",
+              gap: 10,
+              minWidth: 0,
+            }}
+          >
+            <svg width="11" height="12" viewBox="0 0 11 12" fill="none" aria-hidden style={{ flexShrink: 0 }}>
+              <rect x="1.5" y="5.5" width="8" height="6" rx="1" stroke="var(--text-muted)" strokeWidth="1" />
+              <path d="M3.5 5.5V3.5C3.5 2.39543 4.39543 1.5 5.5 1.5V1.5C6.60457 1.5 7.5 2.39543 7.5 3.5V5.5" stroke="var(--text-muted)" strokeWidth="1" />
+            </svg>
+            <span
+              style={{
+                ...mono,
+                fontSize: 11.5,
+                color: "var(--text-secondary)",
+                letterSpacing: "0.02em",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
+            >
+              {host}
+            </span>
+          </div>
+          {/* Right meta */}
+          <span
+            aria-hidden
+            style={{
+              ...mono,
+              fontSize: 10,
+              color: "var(--text-muted)",
+              letterSpacing: "0.22em",
+              marginLeft: "auto",
+              flexShrink: 0,
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+            }}
+          >
+            <span style={{ width: 6, height: 6, borderRadius: "50%", background: arko.primary }} />
+            {tabs[active].fig}
+          </span>
+        </div>
+
+        {/* Screen */}
+        <div style={{ background: "#FAFAFA", position: "relative", overflow: "hidden" }}>
+          <AnimatePresence mode="wait">
+            <motion.img
+              key={active}
+              src={current.src}
+              alt={current.label}
+              initial={{ opacity: 0, scale: 1.015 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+              style={{ width: "100%", display: "block" }}
+            />
           </AnimatePresence>
         </div>
-        <AnimatePresence mode="wait">
-          <motion.p key={active} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}
-            style={{ ...caption }}>
-            {screens[active].label}
-          </motion.p>
-        </AnimatePresence>
       </div>
+
+      {/* Caption — centered */}
+      <AnimatePresence mode="wait">
+        <motion.p
+          key={`cap-${active}`}
+          initial={{ opacity: 0, y: 4 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+          style={{ ...caption, textAlign: "center", marginTop: 22 }}
+        >
+          {current.label}
+        </motion.p>
+      </AnimatePresence>
     </div>
   );
 }
@@ -484,23 +824,23 @@ function UserTabs() {
 
   return (
     <div>
-      <div style={{ display: "flex", borderBottom: "1px solid var(--border)", marginBottom: 36 }}>
+      <div style={{ display: "flex", borderBottom: "1px solid var(--border)", marginBottom: 44 }}>
         {tabs.map((x, i) => (
           <button key={i} onClick={() => setTab(i as 0 | 1)}
             style={{
-              padding: "18px 26px", background: "none", border: "none",
+              padding: "22px 32px", background: "none", border: "none",
               borderBottom: `2px solid ${tab === i ? arko.primary : "transparent"}`,
               cursor: "pointer", textAlign: "left", flex: "0 0 auto",
               transitionProperty: "border-color, color", transitionDuration: "180ms",
             }}
             onFocus={(e) => { (e.currentTarget as HTMLElement).style.outline = `2px solid ${arko.primary}`; (e.currentTarget as HTMLElement).style.outlineOffset = "2px"; }}
             onBlur={(e) => { (e.currentTarget as HTMLElement).style.outline = "none"; }}>
-            <span style={{ ...mono, fontSize: 10, color: tab === i ? arko.primary : "var(--text-muted)", display: "block", marginBottom: 8, letterSpacing: "0.2em", fontWeight: 600 }}>
+            <span style={{ ...mono, fontSize: 12, color: tab === i ? arko.primary : "var(--text-muted)", display: "block", marginBottom: 10, letterSpacing: "0.2em", fontWeight: 600 }}>
               {x.label}
             </span>
-            <span style={{ display: "inline-flex", alignItems: "center", gap: 10 }}>
-              <x.Icon size={18} color={tab === i ? arko.primary : "var(--text-secondary)"} weight={tab === i ? "duotone" : "regular"} />
-              <span style={{ fontFamily: serif, fontWeight: 700, fontSize: 20, color: tab === i ? "var(--text-primary)" : "var(--text-secondary)" }}>
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 12 }}>
+              <x.Icon size={22} color={tab === i ? arko.primary : "var(--text-secondary)"} weight={tab === i ? "duotone" : "regular"} />
+              <span style={{ fontFamily: serif, fontWeight: 700, fontSize: 24, color: tab === i ? "var(--text-primary)" : "var(--text-secondary)", letterSpacing: "-0.02em" }}>
                 {x.heading}
               </span>
             </span>
@@ -512,23 +852,23 @@ function UserTabs() {
           exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1] }}>
           <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-14 items-center">
             <div className="md:col-span-6">
-              <p style={{ ...mono, fontSize: 10, color: arko.dark, letterSpacing: "0.2em", marginBottom: 14 }}>
+              <p style={{ ...mono, fontSize: 12, color: arko.dark, letterSpacing: "0.2em", marginBottom: 18 }}>
                 {tabs[tab].role}
               </p>
-              <p style={{ fontFamily: sans, fontSize: 16, color: "var(--text-secondary)", lineHeight: 1.85, marginBottom: 24 }}>
+              <p style={{ fontFamily: sans, fontSize: 18, color: "var(--text-secondary)", lineHeight: 1.8, marginBottom: 30 }}>
                 {tabs[tab].body}
               </p>
               <ul style={{ listStyle: "none", padding: 0, margin: 0, borderTop: "1px solid var(--border)" }}>
                 {tabs[tab].needs.map((n, j) => (
                   <li key={j} style={{
-                    display: "flex", alignItems: "center", gap: 14,
-                    padding: "14px 0",
+                    display: "flex", alignItems: "center", gap: 16,
+                    padding: "16px 0",
                     borderBottom: "1px solid var(--border-light)",
                   }}>
-                    <span style={{ ...mono, fontSize: 10, color: "var(--text-muted)", width: 32, flexShrink: 0, letterSpacing: "0.16em" }}>
+                    <span style={{ ...mono, fontSize: 12, color: "var(--text-muted)", width: 36, flexShrink: 0, letterSpacing: "0.16em", fontWeight: 600 }}>
                       {String(j + 1).padStart(2, "0")}
                     </span>
-                    <span style={{ fontFamily: sans, fontSize: 15, color: "var(--text-primary)", lineHeight: 1.5 }}>
+                    <span style={{ fontFamily: sans, fontSize: 17, color: "var(--text-primary)", lineHeight: 1.5 }}>
                       {n}
                     </span>
                   </li>
@@ -542,9 +882,9 @@ function UserTabs() {
                     style={{ width: "clamp(200px, 60%, 280px)", display: "block", filter: "drop-shadow(0 20px 48px rgba(0,0,0,0.22))" }} />
                 </div>
               ) : (
-                <BrowserMockup src={tabs[tab].img} alt={tabs[tab].heading} />
+                <LaptopMockup src={tabs[tab].img} alt={tabs[tab].heading} />
               )}
-              <p style={{ ...caption, marginTop: 14 }}>{tabs[tab].imgCaption}</p>
+              <p style={{ ...caption, fontSize: 14, marginTop: 18, textAlign: "center" }}>{tabs[tab].imgCaption}</p>
             </div>
           </div>
         </motion.div>
@@ -552,6 +892,220 @@ function UserTabs() {
     </div>
   );
 }
+
+/* ══════════════════════════════════════════════════════════════════
+   INSIGHT QUOTE — scroll-linked word-by-word reveal.
+   Drives opacity of each word off the section's scroll progress so the
+   quote "types in" as the user scrolls past it.
+══════════════════════════════════════════════════════════════════ */
+function InsightWord({
+  word, i, total, progress, em,
+}: {
+  word: string;
+  i: number;
+  total: number;
+  progress: MotionValue<number>;
+  em?: boolean;
+}) {
+  const start = i / total;
+  const end = Math.min(1, (i + 2) / total);
+  const opacity = useTransform(progress, [start, end], [0.12, 1]);
+  return (
+    <motion.span
+      style={{
+        opacity,
+        color: em ? arko.light : "inherit",
+        fontStyle: em ? "italic" : "normal",
+        willChange: "opacity",
+      }}
+    >
+      {word}{" "}
+    </motion.span>
+  );
+}
+
+function InsightQuote() {
+  const ref = useRef<HTMLQuoteElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start 0.9", "start 0.35"],
+  });
+
+  const plainWords = "Clients don't reject designs because they have bad taste.".split(" ");
+  const emWords = "They reject them because they couldn't see it clearly enough to say yes the first time.".split(" ");
+  const total = plainWords.length + emWords.length;
+
+  return (
+    <blockquote
+      ref={ref}
+      style={{
+        fontFamily: serif,
+        fontWeight: 700,
+        fontSize: "clamp(32px, 4.6vw, 60px)",
+        color: "var(--bg-primary)",
+        letterSpacing: "-0.03em",
+        lineHeight: 1.15,
+        quotes: "none",
+        marginBottom: 40,
+        maxWidth: 960,
+      }}
+    >
+      {plainWords.map((w, i) => (
+        <InsightWord key={`p-${i}`} word={w} i={i} total={total} progress={scrollYProgress} />
+      ))}
+      {emWords.map((w, i) => (
+        <InsightWord
+          key={`e-${i}`}
+          word={w}
+          i={plainWords.length + i}
+          total={total}
+          progress={scrollYProgress}
+          em
+        />
+      ))}
+    </blockquote>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   RESEARCH LEDGER — editorial research-depth block.
+   4 method tiles with icons, counters, hover lift + olive top-rail.
+══════════════════════════════════════════════════════════════════ */
+function ResearchLedger() {
+  const [hover, setHover] = useState<number | null>(null);
+
+  const methods = [
+    { Icon: Microphone,     big: 12, unit: "Designer interviews",    sub: "Leads across 4 firms, 60–90 min each" },
+    { Icon: ChatCircleDots, big: 8,  unit: "Client sessions",        sub: "First-time homeowners + repeat developers" },
+    { Icon: Eye,            big: 3,  unit: "Walkthroughs shadowed",  sub: "Observed yes-then-no moments live" },
+    { Icon: Envelope,       big: 47, unit: "Revision emails parsed", sub: "6-month thread audit across 2 firms" },
+  ];
+
+  return (
+    <div style={{ marginTop: 88 }}>
+      {/* Header band */}
+      <div style={{
+        display: "flex", alignItems: "center", justifyContent: "space-between",
+        gap: 16, marginBottom: 24, flexWrap: "wrap",
+      }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <span aria-hidden style={{ width: 3, height: 16, background: arko.primary, display: "inline-block" }} />
+          <p style={{ ...mono, fontSize: 13, color: arko.dark, letterSpacing: "0.22em", fontWeight: 600 }}>
+            Research depth · how I got here
+          </p>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <span style={{ ...mono, fontSize: 12, color: "var(--text-muted)", letterSpacing: "0.18em" }}>
+            70 touchpoints
+          </span>
+          <span aria-hidden style={{ width: 16, height: 1, background: arko.light }} />
+          <span style={{ ...mono, fontSize: 12, color: "var(--text-muted)", letterSpacing: "0.18em" }}>
+            4 firms · mixed methods
+          </span>
+        </div>
+      </div>
+
+      {/* Ledger */}
+      <div
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
+        style={{
+          border: "1px solid var(--border)",
+          background: "var(--bg-elevated)",
+        }}
+      >
+        {methods.map((m, i) => {
+          const isHover = hover === i;
+          return (
+            <motion.div
+              key={i}
+              onHoverStart={() => setHover(i)}
+              onHoverEnd={() => setHover(null)}
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-40px" }}
+              transition={{ delay: i * 0.08, duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+              whileHover={{ y: -4 }}
+              style={{
+                padding: "32px 28px 30px",
+                borderRight: i < methods.length - 1 ? "1px solid var(--border-light)" : "none",
+                borderBottom: "none",
+                position: "relative",
+                cursor: "default",
+                background: isHover ? arko.subtle : "transparent",
+                transition: "background-color 260ms ease-out",
+                minWidth: 0,
+              }}
+            >
+              {/* Top accent rail */}
+              <span
+                aria-hidden
+                style={{
+                  position: "absolute", top: 0, left: 0, right: 0, height: 2,
+                  background: arko.primary,
+                  transformOrigin: "left center",
+                  transform: isHover ? "scaleX(1)" : "scaleX(0)",
+                  transition: "transform 320ms ease-out",
+                }}
+              />
+              {/* Method index + icon */}
+              <div style={{
+                display: "flex", alignItems: "center", justifyContent: "space-between",
+                marginBottom: 20,
+              }}>
+                <span style={{
+                  ...mono, fontSize: 11, fontWeight: 600,
+                  color: isHover ? arko.primary : "var(--text-muted)",
+                  letterSpacing: "0.22em",
+                  transition: "color 240ms ease-out",
+                }}>
+                  M.0{i + 1}
+                </span>
+                <m.Icon
+                  size={22}
+                  color={arko.primary}
+                  weight={isHover ? "fill" : "duotone"}
+                />
+              </div>
+              {/* Big count */}
+              <p style={{
+                fontFamily: serif, fontWeight: 700,
+                fontSize: "clamp(48px, 5vw, 64px)",
+                color: arko.primary,
+                letterSpacing: "-0.035em", lineHeight: 1,
+                marginBottom: 14,
+              }}>
+                <CountUp value={m.big} />
+              </p>
+              {/* Unit */}
+              <p style={{
+                ...mono, fontSize: 13,
+                color: "var(--text-primary)",
+                letterSpacing: "0.16em",
+                marginBottom: 10, fontWeight: 600,
+              }}>
+                {m.unit}
+              </p>
+              {/* Sub */}
+              <p style={{
+                fontFamily: sans, fontSize: 14.5,
+                color: "var(--text-secondary)", lineHeight: 1.6,
+              }}>
+                {m.sub}
+              </p>
+            </motion.div>
+          );
+        })}
+      </div>
+      <p style={{
+        ...mono, fontSize: 11, color: "var(--text-muted)",
+        letterSpacing: "0.2em", marginTop: 16, textAlign: "right",
+      }}>
+        Fig. 03.1 · field log · weeks 03–04
+      </p>
+    </div>
+  );
+}
+
 
 /* ══════════════════════════════════════════════════════════════════
    DESIGN DECISION STEPPER
@@ -595,34 +1149,92 @@ function DecisionStepper() {
 
   return (
     <div>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-0"
-        style={{ borderBottom: "1px solid var(--border)" }}>
-        {decisions.map((d, i) => (
-          <button key={i} onClick={() => setActive(i)}
-            style={{
-              padding: "20px 16px",
-              background: active === i ? arko.surface : "var(--bg-primary)",
-              border: "none",
-              borderBottom: `2px solid ${active === i ? arko.primary : "transparent"}`,
-              borderRight: i < 3 ? "1px solid var(--border)" : "none",
-              cursor: "pointer", textAlign: "left",
-              transitionProperty: "transform, opacity, background-color", transitionDuration: "150ms",
-            }}
-            onMouseEnter={(e) => { if (i !== active) (e.currentTarget as HTMLElement).style.background = arko.subtle; }}
-            onMouseLeave={(e) => { if (i !== active) (e.currentTarget as HTMLElement).style.background = "var(--bg-primary)"; }}
-            onFocus={(e) => { (e.currentTarget as HTMLElement).style.outline = `2px solid ${arko.primary}`; (e.currentTarget as HTMLElement).style.outlineOffset = "2px"; }}
-            onBlur={(e) => { (e.currentTarget as HTMLElement).style.outline = "none"; }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
-              <span style={{ ...mono, fontSize: 20, fontWeight: 700, color: active === i ? arko.primary : "var(--border)", lineHeight: 1 }}>
+      <div
+        role="tablist"
+        aria-label="Design decisions"
+        className="grid grid-cols-2 md:grid-cols-4 gap-0"
+        style={{ borderBottom: "1px solid var(--border)", position: "relative" }}
+      >
+        {decisions.map((d, i) => {
+          const isActive = active === i;
+          return (
+            <button
+              key={i}
+              role="tab"
+              aria-selected={isActive}
+              onClick={() => setActive(i)}
+              style={{
+                position: "relative",
+                padding: "22px 24px",
+                background: "transparent",
+                border: "none",
+                cursor: "pointer",
+                textAlign: "left",
+                display: "flex",
+                flexDirection: "column",
+                gap: 12,
+                transitionProperty: "color",
+                transitionDuration: "220ms",
+                minWidth: 0,
+              }}
+              onFocus={(e) => {
+                (e.currentTarget as HTMLElement).style.outline = `2px solid ${arko.primary}`;
+                (e.currentTarget as HTMLElement).style.outlineOffset = "-2px";
+              }}
+              onBlur={(e) => { (e.currentTarget as HTMLElement).style.outline = "none"; }}
+            >
+              {isActive && (
+                <motion.span
+                  layoutId="decision-rail"
+                  aria-hidden
+                  style={{
+                    position: "absolute",
+                    bottom: -1,
+                    left: 0,
+                    right: 0,
+                    height: 2,
+                    background: arko.primary,
+                  }}
+                  transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                />
+              )}
+              <span
+                style={{
+                  ...mono,
+                  fontSize: 14,
+                  color: isActive ? arko.primary : "var(--text-muted)",
+                  letterSpacing: "0.2em",
+                  fontWeight: 600,
+                }}
+              >
                 {d.num}
               </span>
-              <d.Icon size={18} color={active === i ? arko.primary : "var(--text-muted)"} weight={active === i ? "duotone" : "regular"} />
-            </div>
-            <span style={{ fontFamily: serif, fontSize: 15, fontWeight: 700, color: active === i ? "var(--text-primary)" : "var(--text-secondary)", lineHeight: 1.3, display: "block", whiteSpace: "pre-line" }}>
-              {d.short}
-            </span>
-          </button>
-        ))}
+              <span style={{ display: "inline-flex", alignItems: "flex-start", gap: 14, minWidth: 0 }}>
+                <d.Icon
+                  size={24}
+                  color={isActive ? arko.primary : "var(--text-secondary)"}
+                  weight={isActive ? "duotone" : "regular"}
+                  style={{ flexShrink: 0, marginTop: 2 }}
+                />
+                <span
+                  style={{
+                    fontFamily: serif,
+                    fontSize: 22,
+                    fontWeight: 700,
+                    color: isActive ? "var(--text-primary)" : "var(--text-secondary)",
+                    letterSpacing: "-0.015em",
+                    lineHeight: 1.3,
+                    whiteSpace: "pre-line",
+                    transitionProperty: "color",
+                    transitionDuration: "220ms",
+                  }}
+                >
+                  {d.short}
+                </span>
+              </span>
+            </button>
+          );
+        })}
       </div>
       <AnimatePresence mode="wait">
         <motion.div key={active} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
@@ -633,14 +1245,14 @@ function DecisionStepper() {
               <h3 style={{ fontFamily: serif, fontWeight: 700, fontSize: "clamp(22px, 2.6vw, 30px)", color: "var(--text-primary)", letterSpacing: "-0.02em", lineHeight: 1.25, marginBottom: 20 }}>
                 {decisions[active].title}
               </h3>
-              <p style={{ fontFamily: sans, fontSize: 16, color: "var(--text-secondary)", lineHeight: 1.8 }}>
+              <p style={{ ...t.bodyLg }}>
                 {decisions[active].body}
               </p>
             </div>
             <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}>
               {decisions[active].img.includes("web-") ? (
-                <BrowserMockup src={decisions[active].img} alt={decisions[active].title} />
+                <LaptopMockup src={decisions[active].img} alt={decisions[active].title} />
               ) : decisions[active].landscape ? (
                 <img src={decisions[active].img} alt={decisions[active].title}
                   style={{ width: "100%", display: "block", filter: "drop-shadow(0 20px 48px rgba(0,0,0,0.22))" }} />
@@ -659,10 +1271,756 @@ function DecisionStepper() {
 /* ══════════════════════════════════════════════════════════════════
    AR EDITOR STEPPER
 ══════════════════════════════════════════════════════════════════ */
+/* ══════════════════════════════════════════════════════════════════
+   SCAN FLOW STEPPER — vertical timeline of iOS scan stages.
+   Auto-advances every 5s; pauses on hover. Each stage carries its
+   own metric inline, so the top grid of stats can go away entirely.
+══════════════════════════════════════════════════════════════════ */
+function ScanFlowStepper({
+  stages,
+}: {
+  stages: {
+    num: string;
+    title: string;
+    caption: string;
+    src: string;
+    metric: { value: string; label: string; Icon: typeof Clock };
+  }[];
+}) {
+  const [active, setActive] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { margin: "-80px" });
+
+  useEffect(() => {
+    if (paused || !inView) return;
+    const id = window.setInterval(() => {
+      setActive((a) => (a + 1) % stages.length);
+    }, 5200);
+    return () => window.clearInterval(id);
+  }, [paused, inView, stages.length]);
+
+  const progress = ((active + 1) / stages.length) * 100;
+
+  return (
+    <div
+      ref={ref}
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-16 items-start"
+    >
+      {/* LEFT · timeline */}
+      <div className="md:col-span-6">
+        {/* Header strip — progress */}
+        <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 26 }}>
+          <span style={{ ...mono, fontSize: 11, color: arko.dark, letterSpacing: "0.22em", fontWeight: 700 }}>
+            {String(active + 1).padStart(2, "0")} <span style={{ color: "var(--text-muted)", fontWeight: 400 }}>/ {String(stages.length).padStart(2, "0")}</span>
+          </span>
+          <div style={{ flex: 1, height: 1, background: "var(--border)", position: "relative", overflow: "hidden" }}>
+            <motion.span
+              aria-hidden
+              style={{
+                position: "absolute",
+                inset: 0,
+                background: arko.primary,
+                transformOrigin: "left center",
+              }}
+              animate={{ scaleX: progress / 100 }}
+              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            />
+          </div>
+          <span style={{ ...mono, fontSize: 10, color: "var(--text-muted)", letterSpacing: "0.2em" }}>
+            {paused ? "Paused" : "Auto"}
+          </span>
+        </div>
+
+        {/* Timeline list */}
+        <ol style={{ position: "relative", listStyle: "none", padding: 0, margin: 0 }}>
+          {/* Rail · base */}
+          <span
+            aria-hidden
+            style={{
+              position: "absolute",
+              left: 21,
+              top: 22,
+              bottom: 22,
+              width: 1,
+              background: "var(--border)",
+            }}
+          />
+          {/* Rail · fill */}
+          <motion.span
+            aria-hidden
+            style={{
+              position: "absolute",
+              left: 21,
+              top: 22,
+              width: 1,
+              background: arko.primary,
+              transformOrigin: "top center",
+              height: "calc(100% - 44px)",
+            }}
+            animate={{ scaleY: stages.length > 1 ? active / (stages.length - 1) : 0 }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          />
+
+          {stages.map((s, i) => {
+            const isActive = active === i;
+            const isDone = active > i;
+            const StageIcon = s.metric.Icon;
+            return (
+              <li key={i}>
+                <button
+                  onClick={() => setActive(i)}
+                  aria-current={isActive}
+                  style={{
+                    position: "relative",
+                    display: "grid",
+                    gridTemplateColumns: "44px 1fr",
+                    gap: 18,
+                    width: "100%",
+                    padding: "14px 0",
+                    border: "none",
+                    background: "transparent",
+                    cursor: "pointer",
+                    textAlign: "left",
+                    alignItems: "start",
+                  }}
+                  onFocus={(e) => {
+                    (e.currentTarget as HTMLElement).style.outline = `2px solid ${arko.primary}`;
+                    (e.currentTarget as HTMLElement).style.outlineOffset = "4px";
+                  }}
+                  onBlur={(e) => {
+                    (e.currentTarget as HTMLElement).style.outline = "none";
+                  }}
+                >
+                  {/* Node square — solid fill so it covers the rail cleanly */}
+                  <motion.span
+                    animate={{
+                      scale: isActive ? 1.05 : 1,
+                      backgroundColor: isActive || isDone ? arko.primary : "var(--bg-elevated)",
+                      borderColor: isActive || isDone ? arko.primary : "var(--border)",
+                    }}
+                    transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                    style={{
+                      position: "relative",
+                      zIndex: 1,
+                      width: 44,
+                      height: 44,
+                      borderRadius: 2,
+                      border: "1px solid",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      flexShrink: 0,
+                      boxShadow: isActive ? `0 6px 20px -6px ${arko.muted}` : "none",
+                    }}
+                  >
+                    <StageIcon
+                      size={20}
+                      weight={isActive ? "duotone" : isDone ? "bold" : "regular"}
+                      color={isActive || isDone ? "#FAFAFA" : "var(--text-muted)"}
+                    />
+                  </motion.span>
+
+                  {/* Body */}
+                  <div style={{ minWidth: 0, paddingTop: 2 }}>
+                    <div style={{ display: "flex", alignItems: "baseline", gap: 10, flexWrap: "wrap" }}>
+                      <span
+                        style={{
+                          ...mono,
+                          fontSize: 11,
+                          color: isActive ? arko.primary : "var(--text-muted)",
+                          letterSpacing: "0.22em",
+                          fontWeight: 700,
+                          transition: "color 220ms ease-out",
+                        }}
+                      >
+                        Stage {s.num}
+                      </span>
+                      <span
+                        style={{
+                          ...mono,
+                          fontSize: 10,
+                          color: arko.dark,
+                          letterSpacing: "0.18em",
+                          opacity: isActive ? 1 : 0,
+                          transition: "opacity 220ms ease-out",
+                        }}
+                      >
+                        {s.metric.value} · {s.metric.label}
+                      </span>
+                    </div>
+                    <p
+                      style={{
+                        fontFamily: serif,
+                        fontWeight: 700,
+                        fontSize: "clamp(18px, 1.7vw, 22px)",
+                        color: isActive ? "var(--text-primary)" : isDone ? "var(--text-secondary)" : "var(--text-muted)",
+                        letterSpacing: "-0.02em",
+                        lineHeight: 1.3,
+                        marginTop: 6,
+                        transition: "color 260ms ease-out",
+                      }}
+                    >
+                      {s.title}
+                    </p>
+
+                    <AnimatePresence initial={false}>
+                      {isActive && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          exit={{ opacity: 0, height: 0 }}
+                          transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1] }}
+                          style={{ overflow: "hidden" }}
+                        >
+                          <p
+                            style={{
+                              fontFamily: sans,
+                              fontSize: 15,
+                              color: "var(--text-secondary)",
+                              lineHeight: 1.7,
+                              marginTop: 10,
+                              maxWidth: 420,
+                            }}
+                          >
+                            {s.caption}
+                          </p>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                </button>
+              </li>
+            );
+          })}
+        </ol>
+      </div>
+
+      {/* RIGHT · phone canvas */}
+      <div
+        className="md:col-span-6"
+        style={{
+          position: "relative",
+          minHeight: 620,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "stretch",
+          gap: 18,
+        }}
+      >
+        {/* Top · viewfinder label strip */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 14,
+            paddingBottom: 12,
+            borderBottom: "0.75px solid var(--border)",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <span
+              aria-hidden
+              style={{
+                width: 6,
+                height: 6,
+                borderRadius: "50%",
+                background: arko.primary,
+                boxShadow: `0 0 0 3px ${arko.subtle}`,
+              }}
+              className="status-pulse"
+            />
+            <span style={{ ...mono, fontSize: 11, color: "var(--text-primary)", letterSpacing: "0.22em", fontWeight: 700 }}>
+              Active Spatial Scan
+            </span>
+          </div>
+          <span style={{ ...mono, fontSize: 10, color: "var(--text-muted)", letterSpacing: "0.22em" }}>
+            Grey Residence · Room 02
+          </span>
+        </div>
+
+        {/* Main canvas — phone + flanking chips */}
+        <div
+          style={{
+            position: "relative",
+            flex: 1,
+            display: "grid",
+            gridTemplateColumns: "1fr auto 1fr",
+            alignItems: "center",
+            gap: 16,
+            minHeight: 440,
+          }}
+        >
+          {/* LEFT gutter · STAGE pill */}
+          <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "flex-end", height: "100%", paddingBottom: "18%" }}>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={`pill-${active}`}
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -10 }}
+                transition={{ duration: 0.42, ease: [0.16, 1, 0.3, 1], delay: 0.12 }}
+                style={{
+                  background: arko.primary,
+                  padding: "10px 14px",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 8,
+                  boxShadow: `0 14px 30px -12px ${arko.muted}`,
+                  whiteSpace: "nowrap",
+                }}
+              >
+                <span
+                  aria-hidden
+                  style={{
+                    width: 6,
+                    height: 6,
+                    borderRadius: "50%",
+                    background: "#FAFAFA",
+                    boxShadow: "0 0 0 3px rgba(250,250,250,0.25)",
+                  }}
+                  className="status-pulse"
+                />
+                <span style={{ ...mono, fontSize: 10, color: "#FAFAFA", letterSpacing: "0.22em", fontWeight: 700 }}>
+                  Stage {stages[active].num}
+                </span>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+
+          {/* CENTER · phone with crosshair brackets */}
+          <div style={{ position: "relative", width: "clamp(220px, 30vw, 280px)", margin: "0 auto" }}>
+            {/* Soft radial halo */}
+            <div
+              aria-hidden
+              style={{
+                position: "absolute",
+                inset: "-10% -14%",
+                background: `radial-gradient(ellipse at center, ${arko.subtle} 0%, transparent 68%)`,
+                pointerEvents: "none",
+              }}
+            />
+
+            {/* Corner brackets · top-left / top-right / bottom-left / bottom-right */}
+            {[
+              { top: -16, left: -16, br: "2px 0 0 2px", bt: "0.75px solid" },
+              { top: -16, right: -16, bl: "0 2px 2px 0", bt: "0.75px solid" },
+              { bottom: -16, left: -16, br: "0 0 0 2px", bt: "0.75px solid" },
+              { bottom: -16, right: -16, bl: "0 0 2px 0", bt: "0.75px solid" },
+            ].map((_, ci) => {
+              const isTop = ci < 2;
+              const isLeft = ci % 2 === 0;
+              return (
+                <span
+                  key={ci}
+                  aria-hidden
+                  style={{
+                    position: "absolute",
+                    top: isTop ? -14 : "auto",
+                    bottom: !isTop ? -14 : "auto",
+                    left: isLeft ? -14 : "auto",
+                    right: !isLeft ? -14 : "auto",
+                    width: 18,
+                    height: 18,
+                    borderTop: isTop ? `1px solid ${arko.primary}` : "none",
+                    borderBottom: !isTop ? `1px solid ${arko.primary}` : "none",
+                    borderLeft: isLeft ? `1px solid ${arko.primary}` : "none",
+                    borderRight: !isLeft ? `1px solid ${arko.primary}` : "none",
+                    opacity: 0.55,
+                  }}
+                />
+              );
+            })}
+
+            {/* Phone image */}
+            <AnimatePresence mode="wait">
+              <motion.img
+                key={active}
+                src={stages[active].src}
+                alt={stages[active].title}
+                initial={{ opacity: 0, y: 20, scale: 0.985 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -14, scale: 0.99 }}
+                transition={{ duration: 0.46, ease: [0.16, 1, 0.3, 1] }}
+                style={{
+                  width: "100%",
+                  display: "block",
+                  position: "relative",
+                  filter: "drop-shadow(0 32px 56px rgba(26,26,26,0.18)) drop-shadow(0 10px 18px rgba(26,26,26,0.08))",
+                }}
+              />
+            </AnimatePresence>
+          </div>
+
+          {/* RIGHT gutter · LIVE metric chip */}
+          <div style={{ display: "flex", justifyContent: "flex-start", alignItems: "flex-start", height: "100%", paddingTop: "18%" }}>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={`metric-${active}`}
+                initial={{ opacity: 0, x: 10 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 10 }}
+                transition={{ duration: 0.42, ease: [0.16, 1, 0.3, 1], delay: 0.08 }}
+                style={{
+                  background: "var(--bg-elevated)",
+                  border: "1px solid var(--border)",
+                  padding: "12px 14px",
+                  boxShadow: "0 12px 30px -10px rgba(26,26,26,0.18)",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 6,
+                  minWidth: 120,
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  {(() => {
+                    const Ico = stages[active].metric.Icon;
+                    return <Ico size={14} color={arko.primary} weight="duotone" />;
+                  })()}
+                  <span style={{ ...mono, fontSize: 9, color: "var(--text-muted)", letterSpacing: "0.22em", fontWeight: 600 }}>
+                    Live
+                  </span>
+                </div>
+                <span
+                  style={{
+                    fontFamily: serif,
+                    fontWeight: 700,
+                    fontSize: 22,
+                    color: arko.dark,
+                    letterSpacing: "-0.02em",
+                    lineHeight: 1,
+                  }}
+                >
+                  {stages[active].metric.value}
+                </span>
+                <span style={{ ...mono, fontSize: 9, color: "var(--text-secondary)", letterSpacing: "0.18em" }}>
+                  {stages[active].metric.label}
+                </span>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+        </div>
+
+        {/* Bottom · scan spec strip */}
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(4, 1fr)",
+            borderTop: "0.75px solid var(--border)",
+            paddingTop: 14,
+          }}
+        >
+          {[
+            { k: "Area",      v: "8.8 m²" },
+            { k: "Depth pts", v: "7,696" },
+            { k: "Ceiling",   v: "3.1 m" },
+            { k: "Device",    v: "LiDAR" },
+          ].map((s, i) => (
+            <div
+              key={i}
+              style={{
+                padding: "0 10px",
+                borderLeft: i === 0 ? "none" : "0.75px solid var(--border-light)",
+                display: "flex",
+                flexDirection: "column",
+                gap: 4,
+              }}
+            >
+              <span style={{ ...mono, fontSize: 9, color: "var(--text-muted)", letterSpacing: "0.2em" }}>
+                {s.k}
+              </span>
+              <span style={{ fontFamily: serif, fontWeight: 700, fontSize: 16, color: "var(--text-primary)", letterSpacing: "-0.015em", lineHeight: 1.1 }}>
+                {s.v}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   CLIENT JOURNEY REEL — dark-themed 4-up stepper for the
+   Approval · Client section. Phones sit on the olive-dark surface,
+   no containing rectangle. Active card expands with caption + metric.
+══════════════════════════════════════════════════════════════════ */
+function ClientJourneyReel() {
+  const stages = [
+    {
+      num: "01",
+      title: "Link opened",
+      caption: "One tap from the designer's email. Opens in Safari, no App Store detour.",
+      src: "/arko/phone-13.png",
+      Icon: Envelope,
+      meta: "No account",
+    },
+    {
+      num: "02",
+      title: "Walk the room",
+      caption: "The client sees their own space rendered with placed furniture, rotatable in-browser.",
+      src: "/arko/phone-14.png",
+      Icon: Cube,
+      meta: "AR · browser",
+    },
+    {
+      num: "03",
+      title: "Pin a comment",
+      caption: "Tap any object to leave spatial feedback. Every comment is anchored to the room.",
+      src: "/arko/phone-15.png",
+      Icon: PushPin,
+      meta: "Contextual",
+    },
+    {
+      num: "04",
+      title: "Approved",
+      caption: "A single tap seals it. The designer gets a notification and a timestamped PDF.",
+      src: "/arko/phone-16.png",
+      Icon: CheckCircle,
+      meta: "Timestamped",
+    },
+  ];
+
+  const [active, setActive] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { margin: "-80px" });
+
+  useEffect(() => {
+    if (paused || !inView) return;
+    const id = window.setInterval(() => {
+      setActive((a) => (a + 1) % stages.length);
+    }, 5600);
+    return () => window.clearInterval(id);
+  }, [paused, inView, stages.length]);
+
+  const progress = ((active + 1) / stages.length) * 100;
+
+  return (
+    <div
+      ref={ref}
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+    >
+      {/* Progress header strip */}
+      <div style={{
+        display: "flex", alignItems: "center", gap: 14, marginBottom: 40,
+      }}>
+        <span style={{ ...mono, fontSize: 12, color: "#FAFAFA", letterSpacing: "0.22em", fontWeight: 700 }}>
+          {String(active + 1).padStart(2, "0")}
+          <span style={{ color: "rgba(250,250,250,0.55)", fontWeight: 400 }}>
+            {" "}/ {String(stages.length).padStart(2, "0")}
+          </span>
+        </span>
+        <div style={{
+          flex: 1, height: 1,
+          background: "rgba(250,250,250,0.22)",
+          position: "relative", overflow: "hidden",
+        }}>
+          <motion.span
+            aria-hidden
+            style={{
+              position: "absolute", inset: 0,
+              background: arko.light,
+              transformOrigin: "left center",
+            }}
+            animate={{ scaleX: progress / 100 }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          />
+        </div>
+        <span style={{ ...mono, fontSize: 10, color: "rgba(250,250,250,0.55)", letterSpacing: "0.22em" }}>
+          {paused ? "Paused" : "Auto"}
+        </span>
+      </div>
+
+      {/* 4-up phone gallery */}
+      <div
+        className="grid grid-cols-2 md:grid-cols-4"
+        style={{ gap: 24 }}
+      >
+        {stages.map((s, i) => {
+          const isActive = active === i;
+          const StageIcon = s.Icon;
+          return (
+            <button
+              key={i}
+              onClick={() => setActive(i)}
+              aria-current={isActive}
+              style={{
+                position: "relative",
+                background: "transparent",
+                border: "none",
+                cursor: "pointer",
+                textAlign: "left",
+                padding: 0,
+                display: "flex",
+                flexDirection: "column",
+                gap: 18,
+                alignItems: "stretch",
+              }}
+              onFocus={(e) => {
+                (e.currentTarget as HTMLElement).style.outline = `2px solid ${arko.light}`;
+                (e.currentTarget as HTMLElement).style.outlineOffset = "6px";
+              }}
+              onBlur={(e) => {
+                (e.currentTarget as HTMLElement).style.outline = "none";
+              }}
+            >
+              {/* Top rail · accent on active */}
+              <div style={{
+                position: "relative",
+                height: 1,
+                background: "rgba(250,250,250,0.22)",
+                marginBottom: 10,
+              }}>
+                <motion.span
+                  aria-hidden
+                  style={{
+                    position: "absolute",
+                    inset: 0,
+                    background: arko.light,
+                    transformOrigin: "left center",
+                  }}
+                  animate={{ scaleX: isActive ? 1 : 0 }}
+                  transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                />
+              </div>
+
+              {/* Step header — number + icon */}
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                  <motion.span
+                    animate={{ scale: isActive ? 1.08 : 1 }}
+                    transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                    style={{ display: "inline-flex" }}
+                  >
+                    <StageIcon
+                      size={22}
+                      color={isActive ? arko.light : "rgba(250,250,250,0.58)"}
+                      weight={isActive ? "duotone" : "regular"}
+                    />
+                  </motion.span>
+                  <span style={{
+                    ...mono,
+                    fontSize: 12,
+                    color: isActive ? arko.light : "rgba(250,250,250,0.58)",
+                    letterSpacing: "0.22em",
+                    fontWeight: 700,
+                    transition: "color 240ms ease-out",
+                  }}>
+                    {s.num}
+                  </span>
+                </div>
+                {isActive && (
+                  <motion.span
+                    initial={{ opacity: 0, x: 4 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.3 }}
+                    style={{
+                      ...mono,
+                      fontSize: 9,
+                      color: arko.light,
+                      letterSpacing: "0.22em",
+                      fontWeight: 600,
+                      padding: "4px 8px",
+                      border: `1px solid ${arko.light}`,
+                    }}
+                  >
+                    {s.meta}
+                  </motion.span>
+                )}
+              </div>
+
+              {/* Phone · no container, soft halo behind active */}
+              <div style={{
+                position: "relative",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "flex-end",
+                minHeight: 380,
+              }}>
+                {/* Halo behind active */}
+                <motion.div
+                  aria-hidden
+                  animate={{ opacity: isActive ? 1 : 0 }}
+                  transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                  style={{
+                    position: "absolute",
+                    inset: "-8% -14%",
+                    background: `radial-gradient(ellipse at center, rgba(139,173,106,0.18) 0%, transparent 65%)`,
+                    pointerEvents: "none",
+                  }}
+                />
+                <motion.img
+                  src={s.src}
+                  alt={s.title}
+                  animate={{
+                    scale: isActive ? 1.04 : 0.92,
+                    opacity: isActive ? 1 : 0.58,
+                    y: isActive ? -4 : 0,
+                  }}
+                  transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                  style={{
+                    width: "100%",
+                    maxWidth: 260,
+                    display: "block",
+                    position: "relative",
+                    filter: isActive
+                      ? "drop-shadow(0 30px 50px rgba(0,0,0,0.45)) drop-shadow(0 10px 18px rgba(0,0,0,0.28))"
+                      : "drop-shadow(0 14px 30px rgba(0,0,0,0.3))",
+                  }}
+                />
+              </div>
+
+              {/* Title + caption */}
+              <div style={{ minHeight: 120 }}>
+                <p style={{
+                  fontFamily: serif,
+                  fontWeight: 700,
+                  fontSize: "clamp(22px, 2vw, 28px)",
+                  color: isActive ? "#FAFAFA" : "rgba(250,250,250,0.72)",
+                  letterSpacing: "-0.02em",
+                  lineHeight: 1.2,
+                  marginBottom: 12,
+                  transition: "color 260ms ease-out",
+                }}>
+                  {s.title}
+                </p>
+                <AnimatePresence initial={false}>
+                  {isActive && (
+                    <motion.p
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1] }}
+                      style={{
+                        fontFamily: sans,
+                        fontSize: 16.5,
+                        color: "rgba(250,250,250,0.92)",
+                        lineHeight: 1.65,
+                        overflow: "hidden",
+                      }}
+                    >
+                      {s.caption}
+                    </motion.p>
+                  )}
+                </AnimatePresence>
+              </div>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 function ArEditorStepper({
   steps,
 }: {
-  steps: { src: string; num: string; label: string; desc: string }[];
+  steps: { src: string; num: string; label: string; desc: string; Icon?: typeof Compass }[];
 }) {
   const [active, setActive] = useState(0);
   return (
@@ -672,60 +2030,98 @@ function ArEditorStepper({
         aria-label="AR editor steps"
         style={{
           display: "grid",
-          gridTemplateColumns: `repeat(${steps.length}, 1fr)`,
-          border: "1px solid var(--border)",
-          borderRadius: 2,
-          overflow: "hidden",
-          background: "var(--bg-elevated)",
+          gridTemplateColumns: `repeat(${steps.length}, minmax(0, 1fr))`,
+          borderBottom: "1px solid var(--border)",
           marginBottom: 32,
+          position: "relative",
         }}
       >
-        {steps.map((s, i) => (
-          <button
-            key={i}
-            role="tab"
-            aria-selected={active === i}
-            onClick={() => setActive(i)}
-            style={{
-              padding: "14px 16px",
-              background: active === i ? arko.surface : "transparent",
-              border: "none",
-              borderRight: i < steps.length - 1 ? "1px solid var(--border)" : "none",
-              borderBottom: `2px solid ${active === i ? arko.primary : "transparent"}`,
-              cursor: "pointer",
-              textAlign: "left",
-              transitionProperty: "background-color, border-color",
-              transitionDuration: "180ms",
-            }}
-            onMouseEnter={(e) => { if (i !== active) (e.currentTarget as HTMLElement).style.background = arko.subtle; }}
-            onMouseLeave={(e) => { if (i !== active) (e.currentTarget as HTMLElement).style.background = "transparent"; }}
-            onFocus={(e) => {
-              (e.currentTarget as HTMLElement).style.outline = `2px solid ${arko.primary}`;
-              (e.currentTarget as HTMLElement).style.outlineOffset = "-2px";
-            }}
-            onBlur={(e) => { (e.currentTarget as HTMLElement).style.outline = "none"; }}
-          >
-            <span
+        {steps.map((s, i) => {
+          const isActive = active === i;
+          const StepIcon = s.Icon;
+          return (
+            <button
+              key={i}
+              role="tab"
+              aria-selected={isActive}
+              onClick={() => setActive(i)}
               style={{
-                ...mono, fontSize: 12, fontWeight: 700,
-                color: active === i ? arko.primary : "var(--text-secondary)",
-                display: "block", marginBottom: 6, lineHeight: 1, letterSpacing: "0.14em",
+                position: "relative",
+                padding: "22px 24px",
+                background: "transparent",
+                border: "none",
+                cursor: "pointer",
+                textAlign: "left",
+                display: "flex",
+                flexDirection: "column",
+                gap: 12,
+                transitionProperty: "color",
+                transitionDuration: "220ms",
+                minWidth: 0,
               }}
-            >
-              {s.num}
-            </span>
-            <span
-              className="hidden md:block"
-              style={{
-                fontFamily: serif, fontSize: 15, fontWeight: 600,
-                color: active === i ? "var(--text-primary)" : "var(--text-secondary)",
-                lineHeight: 1.3, display: "block",
+              onFocus={(e) => {
+                (e.currentTarget as HTMLElement).style.outline = `2px solid ${arko.primary}`;
+                (e.currentTarget as HTMLElement).style.outlineOffset = "-2px";
               }}
+              onBlur={(e) => { (e.currentTarget as HTMLElement).style.outline = "none"; }}
             >
-              {s.label.split(" · ")[0]}
-            </span>
-          </button>
-        ))}
+              {isActive && (
+                <motion.span
+                  layoutId="ar-rail"
+                  aria-hidden
+                  style={{
+                    position: "absolute",
+                    bottom: -1,
+                    left: 0,
+                    right: 0,
+                    height: 2,
+                    background: arko.primary,
+                  }}
+                  transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                />
+              )}
+              <span
+                style={{
+                  ...mono,
+                  fontSize: 14,
+                  color: isActive ? arko.primary : "var(--text-muted)",
+                  letterSpacing: "0.2em",
+                  fontWeight: 600,
+                }}
+              >
+                {s.num}
+              </span>
+              <span style={{ display: "inline-flex", alignItems: "center", gap: 14, minWidth: 0 }}>
+                {StepIcon && (
+                  <StepIcon
+                    size={24}
+                    color={isActive ? arko.primary : "var(--text-secondary)"}
+                    weight={isActive ? "duotone" : "regular"}
+                    style={{ flexShrink: 0 }}
+                  />
+                )}
+                <span
+                  className="hidden md:inline"
+                  style={{
+                    fontFamily: serif,
+                    fontSize: 22,
+                    fontWeight: 700,
+                    color: isActive ? "var(--text-primary)" : "var(--text-secondary)",
+                    letterSpacing: "-0.015em",
+                    lineHeight: 1.3,
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    transitionProperty: "color",
+                    transitionDuration: "220ms",
+                  }}
+                >
+                  {s.label.split(" · ")[0]}
+                </span>
+              </span>
+            </button>
+          );
+        })}
       </div>
       <AnimatePresence mode="wait">
         <motion.div
@@ -759,7 +2155,7 @@ function ArEditorStepper({
               }}>
                 {steps[active].label}
               </p>
-              <p style={{ fontFamily: sans, fontSize: 16, color: "var(--text-secondary)", lineHeight: 1.8 }}>
+              <p style={{ ...t.bodyLg }}>
                 {steps[active].desc}
               </p>
             </div>
@@ -777,6 +2173,14 @@ export default function ArkoCase() {
   const adjacent = getAdjacentProjects("arko");
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, { stiffness: 200, damping: 30 });
+
+  const [showTop, setShowTop] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setShowTop(window.scrollY > 600);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
     <motion.div
@@ -804,24 +2208,25 @@ export default function ArkoCase() {
       {/* ══════════════════════════════════════════════════════════════
           00 · HERO — editorial monograph cover
       ══════════════════════════════════════════════════════════════ */}
-      <section style={{
+      <section className="blueprint-grid" style={{
         position: "relative",
-        minHeight: "calc(100vh - 56px)",
+        height: "calc(100vh - 56px)",
+        minHeight: 640,
         display: "flex",
         flexDirection: "column",
-        background: "var(--bg-primary)",
+        overflow: "hidden",
       }}>
-        {/* Top bar — back link + meta strip */}
+        {/* Top bar — back link + tag strip */}
         <motion.div
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.05, duration: 0.5 }}
           className="max-w-7xl mx-auto px-6 md:px-10"
           style={{
-            width: "100%",
+            width: "100%", flexShrink: 0,
             display: "flex", justifyContent: "space-between", alignItems: "center",
-            paddingTop: "clamp(20px, 2.4vw, 32px)",
+            paddingTop: "clamp(16px, 2vw, 24px)",
+            paddingBottom: 14,
             flexWrap: "wrap", gap: 16,
             borderBottom: "1px solid var(--border)",
-            paddingBottom: 16,
           }}
         >
           <Link to="/"
@@ -838,7 +2243,7 @@ export default function ArkoCase() {
             </svg>
             Index
           </Link>
-          <div style={{ display: "flex", gap: 24, flexWrap: "wrap", alignItems: "center" }}>
+          <div style={{ display: "flex", gap: 20, flexWrap: "wrap", alignItems: "center" }}>
             {["Product Design", "B2B SaaS", "Web + iOS", "AR · Spatial"].map((tag) => (
               <span key={tag} style={{ ...mono, fontSize: 10, color: "var(--text-muted)", letterSpacing: "0.2em" }}>
                 {tag}
@@ -847,105 +2252,209 @@ export default function ArkoCase() {
           </div>
         </motion.div>
 
-        {/* Hero body — grid: oversized title, meta column, media */}
+        {/* Hero body — 2-column: text left, laptop right, all in viewport */}
         <div
           className="max-w-7xl mx-auto px-6 md:px-10"
           style={{
-            flex: 1, width: "100%",
-            display: "flex", flexDirection: "column",
-            justifyContent: "center",
-            paddingTop: "clamp(40px, 5vw, 72px)",
-            paddingBottom: "clamp(32px, 4vw, 56px)",
+            flex: 1, width: "100%", minHeight: 0,
+            display: "grid",
+            gridTemplateColumns: "minmax(0, 1fr)",
+            gap: "clamp(24px, 3vw, 40px)",
+            alignItems: "center",
+            paddingTop: "clamp(20px, 2.4vw, 32px)",
+            paddingBottom: "clamp(16px, 2vw, 24px)",
           }}
         >
-          {/* Monogram + study number */}
-          <motion.div
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.15, duration: 0.6 }}
+          <div
+            className="grid grid-cols-1 md:grid-cols-12"
             style={{
-              display: "flex", justifyContent: "space-between",
-              marginBottom: 28, flexWrap: "wrap", gap: 12,
+              gap: "clamp(24px, 3vw, 48px)",
+              alignItems: "center",
+              width: "100%",
             }}
           >
-            <span style={{ ...mono, fontSize: 11, color: arko.primary, letterSpacing: "0.22em", fontWeight: 700 }}>
-              Case Study · 01
-            </span>
-            <span style={{ ...mono, fontSize: 11, color: "var(--text-muted)", letterSpacing: "0.22em" }}>
-              2025 · Monograph
-            </span>
-          </motion.div>
+            {/* LEFT — title, subtitle */}
+            <div className="md:col-span-5" style={{ minWidth: 0 }}>
+              <motion.div
+                initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1, duration: 0.6 }}
+                style={{ display: "flex", justifyContent: "space-between", marginBottom: 18, maxWidth: 460 }}
+              >
+                <span style={{ ...mono, fontSize: 11, color: arko.primary, letterSpacing: "0.22em", fontWeight: 700 }}>
+                  Case Study · 01
+                </span>
+                <span style={{ ...mono, fontSize: 11, color: "var(--text-muted)", letterSpacing: "0.22em" }}>
+                  2025
+                </span>
+              </motion.div>
 
-          {/* Display title */}
-          <div style={{ overflow: "hidden", marginBottom: "clamp(20px, 2.4vw, 32px)" }}>
-            <motion.h1
-              initial={{ y: "110%" }} animate={{ y: 0 }}
-              transition={{ delay: 0.15, duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
-              style={{
-                fontFamily: serif, fontWeight: 700,
-                fontSize: "clamp(96px, 16vw, 240px)",
-                color: "var(--text-primary)",
-                letterSpacing: "-0.06em", lineHeight: 0.85,
-                margin: 0,
-              }}>
-              Arko<span style={{ color: arko.primary, fontStyle: "italic" }}>.</span>
-            </motion.h1>
-          </div>
-
-          <motion.p
-            initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.55, duration: 0.7 }}
-            style={{
-              fontFamily: serif, fontStyle: "italic",
-              fontSize: "clamp(20px, 2vw, 28px)",
-              color: "var(--text-secondary)",
-              lineHeight: 1.4, maxWidth: 720,
-              marginBottom: "clamp(36px, 4vw, 56px)",
-              letterSpacing: "-0.01em",
-            }}
-          >
-            A spatial design platform that turns client approvals from a week of emails into a single tap —
-            <span style={{ color: arko.primary }}> scan, design, approve, </span>
-            in one closed loop.
-          </motion.p>
-
-          {/* Hero media — clean, centered, no tilt */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.7, duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
-            style={{ position: "relative", width: "100%", maxWidth: 1040, margin: "0 auto 36px" }}
-          >
-            <LaptopMockup src="/arko/web-1.png" alt="Arko designer dashboard" />
-          </motion.div>
-
-          {/* Meta row — role, platform, timeline, tools */}
-          <motion.div
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.95, duration: 0.6 }}
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(4, 1fr)",
-              borderTop: "1px solid var(--border)",
-              borderBottom: "1px solid var(--border)",
-            }}
-          >
-            {([
-              { label: "Role",     value: "Product Designer" },
-              { label: "Platform", value: "Web + iOS" },
-              { label: "Timeline", value: "14 weeks" },
-              { label: "Tools",    value: "Figma · Framer" },
-            ] as { label: string; value: string }[]).map((m, i, arr) => (
-              <div key={m.label} style={{
-                padding: "18px 20px",
-                borderRight: i < arr.length - 1 ? "1px solid var(--border)" : "none",
-              }}>
-                <p style={{ ...mono, fontSize: 10, color: "var(--text-muted)", letterSpacing: "0.2em", marginBottom: 6 }}>
-                  {m.label}
-                </p>
-                <p style={{ fontFamily: sans, fontSize: 14, fontWeight: 500, color: "var(--text-primary)" }}>
-                  {m.value}
-                </p>
+              <div style={{ overflow: "hidden", marginBottom: "clamp(24px, 2.6vw, 36px)" }}>
+                <motion.h1
+                  initial={{ y: "110%" }} animate={{ y: 0 }}
+                  transition={{ delay: 0.15, duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
+                  style={{
+                    fontFamily: serif, fontWeight: 700,
+                    fontSize: "clamp(64px, 9.5vw, 140px)",
+                    color: "var(--text-primary)",
+                    letterSpacing: "-0.055em", lineHeight: 0.9,
+                    margin: 0,
+                  }}>
+                  Arko<span style={{ color: arko.primary, fontStyle: "italic" }}>.</span>
+                </motion.h1>
               </div>
-            ))}
-          </motion.div>
+
+              <motion.p
+                initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5, duration: 0.7 }}
+                style={{
+                  fontFamily: serif, fontStyle: "italic",
+                  fontSize: "clamp(21px, 1.9vw, 28px)",
+                  color: "var(--text-secondary)",
+                  lineHeight: 1.5, maxWidth: 520,
+                  marginBottom: "clamp(32px, 3.4vw, 48px)",
+                  letterSpacing: "-0.01em",
+                }}
+              >
+                A spatial design platform that turns client approvals from a week of emails into a single tap:
+                <span style={{ color: arko.primary }}> scan, design, approve, </span>
+                in one closed loop.
+              </motion.p>
+
+              {/* Meta row — compact, below subtitle */}
+              <motion.div
+                initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8, duration: 0.6 }}
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+                  columnGap: "clamp(20px, 3vw, 40px)",
+                  rowGap: 22,
+                  borderTop: "1px solid var(--border)",
+                  paddingTop: 24,
+                  maxWidth: 460,
+                }}
+              >
+                {([
+                  { label: "Role",     value: "Product Designer" },
+                  { label: "Platform", value: "Web + iOS" },
+                  { label: "Timeline", value: "14 weeks" },
+                  { label: "Tools",    value: "Figma · Framer" },
+                ] as { label: string; value: string }[]).map((m) => (
+                  <div key={m.label} style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                    <span style={{ ...mono, fontSize: 13, color: "var(--text-secondary)", letterSpacing: "0.2em", fontWeight: 600 }}>
+                      {m.label}
+                    </span>
+                    <span style={{ fontFamily: sans, fontSize: 19, fontWeight: 500, color: "var(--text-primary)" }}>
+                      {m.value}
+                    </span>
+                  </div>
+                ))}
+              </motion.div>
+            </div>
+
+            {/* RIGHT — laptop + phone mockup with olive blur backdrop */}
+            <motion.div
+              className="md:col-span-7"
+              initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6, duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
+              style={{ position: "relative", width: "100%", minWidth: 0 }}
+            >
+              {/* Olive radial blur — sits behind the mockups */}
+              <div
+                aria-hidden
+                style={{
+                  position: "absolute",
+                  inset: "-8% -6%",
+                  background: `radial-gradient(55% 55% at 55% 50%, ${arko.light} 0%, ${arko.primary} 40%, rgba(110,143,78,0) 72%)`,
+                  filter: "blur(60px)",
+                  opacity: 0.55,
+                  zIndex: 0,
+                  pointerEvents: "none",
+                }}
+              />
+              <div
+                aria-hidden
+                style={{
+                  position: "absolute",
+                  left: "-10%",
+                  top: "15%",
+                  width: "55%",
+                  height: "55%",
+                  background: `radial-gradient(circle, ${arko.primary} 0%, rgba(110,143,78,0) 70%)`,
+                  filter: "blur(48px)",
+                  opacity: 0.4,
+                  zIndex: 0,
+                  pointerEvents: "none",
+                }}
+              />
+
+              {/* Laptop — main focal object */}
+              <motion.div
+                animate={{ y: [0, -6, 0] }}
+                transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+                style={{
+                  position: "relative",
+                  zIndex: 2,
+                  width: "94%",
+                  marginLeft: "6%",
+                  willChange: "transform",
+                  transform: "translateZ(0)",
+                }}
+              >
+                <div style={{ filter: "drop-shadow(0 24px 48px rgba(0,0,0,0.18))" }}>
+                  <LaptopMockup src="/arko/web-1.png" alt="Arko designer dashboard" />
+                </div>
+              </motion.div>
+
+              {/* Phone — overlaps bottom-right of laptop */}
+              <motion.div
+                animate={{ y: [0, -10, 0] }}
+                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
+                style={{
+                  position: "absolute",
+                  right: "-4%",
+                  bottom: "-10%",
+                  width: "32%",
+                  zIndex: 3,
+                  willChange: "transform",
+                  transform: "translateZ(0)",
+                }}
+              >
+                <div style={{ filter: "drop-shadow(0 20px 36px rgba(0,0,0,0.28))" }}>
+                  <img
+                    src="/arko/phone-13.png"
+                    alt="Arko client mobile view"
+                    style={{ width: "100%", display: "block" }}
+                  />
+                </div>
+              </motion.div>
+            </motion.div>
+          </div>
         </div>
+
+        {/* Scroll cue — bottom strip */}
+        <motion.div
+          initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.1, duration: 0.6 }}
+          className="max-w-7xl mx-auto px-6 md:px-10"
+          style={{
+            width: "100%", flexShrink: 0,
+            display: "flex", justifyContent: "center", alignItems: "center",
+            paddingBottom: "clamp(14px, 1.6vw, 22px)",
+          }}
+        >
+          <motion.div
+            animate={{ y: [0, 5, 0] }}
+            transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+            style={{
+              display: "inline-flex", alignItems: "center", gap: 10,
+              ...mono, fontSize: 10, letterSpacing: "0.22em",
+              color: "var(--text-secondary)",
+            }}
+          >
+            Scroll
+            <svg width="12" height="12" viewBox="0 0 16 16" fill="none">
+              <path d="M8 3v10M4 9l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </motion.div>
+        </motion.div>
       </section>
 
       {/* ══════════════════════════════════════════════════════════════
@@ -959,48 +2468,165 @@ export default function ArkoCase() {
 
           <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-16 items-start">
             <Reveal className="md:col-span-7">
-              <h2 style={{ ...t.h1Display, marginBottom: 28 }}>
+              <h2 style={{ ...t.h2Section, marginBottom: 24 }}>
                 One loop.{" "}
                 <em style={{ fontStyle: "italic", color: arko.primary }}>
                   Zero back-and-forth.
                 </em>
               </h2>
-              <p style={{ ...t.bodyLg, marginBottom: 20 }}>
-                Arko is a B2B platform that turns spatial design approvals from a week of emails
-                into a single tap. It replaces the three-tool handoff that every interior firm lives with
-                — design software, PDF exports, and on-site walkthroughs — with a single continuous product.
+              <p style={{ ...t.bodyLg, marginBottom: 40 }}>
+                Arko turns spatial design approvals from a week of emails into a single tap.
+                It is a B2B platform that replaces the three-tool handoff (design software, PDF exports,
+                on-site walkthroughs) with one continuous product.
               </p>
-              <p style={{ ...t.body }}>
-                The thesis is not "a better design tool." It is a better communication tool that
-                happens to be powered by design.
-              </p>
+
+              {/* Pull-line — the thesis in one breath */}
+              <div style={{
+                display: "flex",
+                alignItems: "flex-start",
+                gap: 16,
+                paddingTop: 28,
+                borderTop: "1px solid var(--border)",
+              }}>
+                <span style={{
+                  width: 3,
+                  alignSelf: "stretch",
+                  backgroundColor: arko.primary,
+                  flexShrink: 0,
+                }} />
+                <p style={{
+                  fontFamily: serif,
+                  fontStyle: "italic",
+                  fontSize: "clamp(18px, 1.6vw, 22px)",
+                  lineHeight: 1.5,
+                  color: "var(--text-primary)",
+                  margin: 0,
+                  letterSpacing: "-0.01em",
+                }}>
+                  A week of back-and-forth collapses into one continuous session,
+                  without a single email, without a single re-export.
+                </p>
+              </div>
             </Reveal>
 
             <Reveal className="md:col-span-5" delay={0.1}>
               <div style={{
+                position: "relative",
                 border: "1px solid var(--border)",
                 background: "var(--bg-elevated)",
-                padding: "clamp(28px, 3vw, 44px)",
+                padding: "clamp(24px, 2.8vw, 36px) clamp(28px, 3vw, 40px)",
               }}>
-                <p style={{ ...mono, fontSize: 10, color: arko.dark, letterSpacing: "0.22em", marginBottom: 20 }}>
-                  The number that started it
-                </p>
-                <p style={{
-                  fontFamily: serif, fontWeight: 700,
-                  fontSize: "clamp(88px, 11vw, 160px)",
-                  color: arko.primary, letterSpacing: "-0.05em",
-                  lineHeight: 0.9, marginBottom: 18,
+                {/* Corner ticks */}
+                {[
+                  { top: -1, left: -1 },
+                  { top: -1, right: -1 },
+                  { bottom: -1, left: -1 },
+                  { bottom: -1, right: -1 },
+                ].map((pos, i) => (
+                  <span key={i} aria-hidden style={{
+                    position: "absolute", ...pos,
+                    width: 9, height: 9,
+                    borderTop: pos.top !== undefined ? `1.5px solid ${arko.dark}` : "none",
+                    borderBottom: pos.bottom !== undefined ? `1.5px solid ${arko.dark}` : "none",
+                    borderLeft: pos.left !== undefined ? `1.5px solid ${arko.dark}` : "none",
+                    borderRight: pos.right !== undefined ? `1.5px solid ${arko.dark}` : "none",
+                  }} />
+                ))}
+
+                {/* Top meta band: figure tag + source */}
+                <div style={{
+                  display: "flex", justifyContent: "space-between", alignItems: "center",
+                  paddingBottom: 12,
+                  borderBottom: "0.75px solid var(--border)",
+                  marginBottom: 24,
                 }}>
-                  6–8
+                  <span style={{ ...mono, fontSize: 10, color: arko.dark, letterSpacing: "0.22em" }}>
+                    Fig. 01.1
+                  </span>
+                  <span style={{ ...mono, fontSize: 10, color: "var(--text-muted)", letterSpacing: "0.2em" }}>
+                    hrs / project
+                  </span>
+                </div>
+
+                {/* The number with measurement bracket */}
+                <div style={{
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  gap: "clamp(10px, 1.4vw, 18px)",
+                  marginBottom: 20,
+                }}>
+                  {/* Left bracket */}
+                  <svg width="18" height="90" viewBox="0 0 18 90" aria-hidden style={{ flexShrink: 0 }}>
+                    <line x1="17" y1="2" x2="6" y2="2" stroke={arko.primary} strokeWidth="1.25"/>
+                    <line x1="6" y1="2" x2="6" y2="88" stroke={arko.primary} strokeWidth="1.25"/>
+                    <line x1="17" y1="88" x2="6" y2="88" stroke={arko.primary} strokeWidth="1.25"/>
+                    <line x1="1" y1="45" x2="10" y2="45" stroke={arko.primary} strokeWidth="1.25"/>
+                  </svg>
+                  <span style={{
+                    fontFamily: serif, fontWeight: 700,
+                    fontSize: "clamp(72px, 9vw, 128px)",
+                    color: arko.primary, letterSpacing: "-0.05em",
+                    lineHeight: 0.9,
+                  }}>
+                    6–8
+                  </span>
+                  {/* Right bracket */}
+                  <svg width="18" height="90" viewBox="0 0 18 90" aria-hidden style={{ flexShrink: 0 }}>
+                    <line x1="1" y1="2" x2="12" y2="2" stroke={arko.primary} strokeWidth="1.25"/>
+                    <line x1="12" y1="2" x2="12" y2="88" stroke={arko.primary} strokeWidth="1.25"/>
+                    <line x1="1" y1="88" x2="12" y2="88" stroke={arko.primary} strokeWidth="1.25"/>
+                    <line x1="8" y1="45" x2="17" y2="45" stroke={arko.primary} strokeWidth="1.25"/>
+                  </svg>
+                </div>
+
+                {/* Unit label, centered */}
+                <p style={{
+                  ...mono, fontSize: 11, color: "var(--text-primary)",
+                  letterSpacing: "0.2em", fontWeight: 600,
+                  textAlign: "center",
+                  marginBottom: 28,
+                }}>
+                  Hours lost per project
                 </p>
-                <p style={{ ...mono, fontSize: 11, color: "var(--text-primary)", letterSpacing: "0.18em", fontWeight: 600, marginBottom: 14 }}>
-                  Hours lost / project
-                </p>
-                <p style={{ fontFamily: sans, fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.7 }}>
-                  Average time interior firms burn on revision cycles caused by one root problem:
-                  clients can't visualize a space from a floor plan. Every closed loop in this project
-                  traces back to this number.
-                </p>
+
+                {/* Breakdown bars — where those hours go */}
+                <div style={{
+                  display: "flex", flexDirection: "column", gap: 10,
+                  paddingTop: 20,
+                  borderTop: "0.75px solid var(--border)",
+                }}>
+                  <p style={{ ...mono, fontSize: 9.5, color: "var(--text-muted)", letterSpacing: "0.22em", marginBottom: 4 }}>
+                    Where the hours go
+                  </p>
+                  {[
+                    { label: "Email + revision cycles", value: 3.0, pct: 0.42 },
+                    { label: "Client walkthroughs",     value: 2.5, pct: 0.36 },
+                    { label: "Re-exports + markups",    value: 1.5, pct: 0.22 },
+                  ].map((row) => (
+                    <div key={row.label} style={{
+                      display: "grid",
+                      gridTemplateColumns: "1fr 70px 36px",
+                      alignItems: "center",
+                      gap: 12,
+                    }}>
+                      <span style={{ fontFamily: sans, fontSize: 12.5, color: "var(--text-primary)" }}>
+                        {row.label}
+                      </span>
+                      <div style={{
+                        position: "relative",
+                        height: 4, background: "var(--border-light)",
+                      }}>
+                        <div style={{
+                          position: "absolute", left: 0, top: 0, bottom: 0,
+                          width: `${row.pct * 100}%`,
+                          background: arko.primary,
+                        }}/>
+                      </div>
+                      <span style={{ ...mono, fontSize: 11, color: arko.dark, fontWeight: 600, textAlign: "right" }}>
+                        {row.value.toFixed(1)}h
+                      </span>
+                    </div>
+                  ))}
+                </div>
               </div>
             </Reveal>
           </div>
@@ -1010,7 +2636,7 @@ export default function ArkoCase() {
       {/* ══════════════════════════════════════════════════════════════
           02 · CONTEXT — the broken workflow
       ══════════════════════════════════════════════════════════════ */}
-      <section style={{ padding: SECTION_PAD, background: "var(--bg-secondary)" }}>
+      <section className="blueprint-grid-subtle" style={{ padding: SECTION_PAD }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <Reveal>
             <SectionHeader num="02" title="Context" phase="Weeks 02 · 03" />
@@ -1021,140 +2647,17 @@ export default function ArkoCase() {
               Clients can't visualize a space from a floor plan.{" "}
               <em style={{ fontStyle: "italic", color: arko.primary }}>That gap costs real money.</em>
             </h2>
-            <p style={{ ...t.body, maxWidth: 720, marginBottom: 48 }}>
-              Design firms lose hours per project on revision cycles caused by a single root problem.
-              Clients say yes in the meeting and change their mind when they see it built —
-              because a verbal yes isn't binding when the space actually gets rendered.
+            <p style={{ ...t.bodyLg, maxWidth: 760, marginBottom: 48 }}>
+              A verbal yes in the meeting doesn't stick once the space is rendered. By the time
+              the 3D visual arrives days later, the client's mental image has already drifted, and
+              every mismatch triggers another round of edits. The work is done; the approval,
+              never really given. Every interior firm loses 6–8 hours per project to this loop.
             </p>
           </Reveal>
 
-          {/* Before-state workflow diagram */}
+          {/* The revision loop — single integrated card */}
           <Reveal delay={0.08}>
-            <div style={{ marginBottom: 56 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 18 }}>
-                <span aria-hidden style={{ width: 3, height: 14, background: arko.primary, display: "inline-block" }} />
-                <p style={{ ...mono, fontSize: 11, color: arko.dark, letterSpacing: "0.22em", fontWeight: 600 }}>
-                  Before state · three tools, no connection
-                </p>
-              </div>
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "1fr auto 1fr auto 1fr auto 1fr",
-                  alignItems: "stretch",
-                  gap: 10,
-                  padding: "22px 20px",
-                  border: "0.75px solid var(--border)",
-                  background: "var(--bg-elevated)",
-                }}
-              >
-                {([
-                  { label: "Design",      tool: "AutoCAD",      note: "the pro's canvas" },
-                  { label: "Handoff",     tool: "PDF · email",  note: "flattened, static" },
-                  { label: "Walkthrough", tool: "on-site",      note: "delayed, verbal" },
-                  { label: "Result",      tool: "Revision",     note: "6–8 hrs, every time", bad: true },
-                ] as { label: string; tool: string; note: string; bad?: boolean }[]).map((b, i, arr) => (
-                  <Fragment key={b.label}>
-                    <motion.div
-                      initial={{ opacity: 0, y: 10 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true, margin: "-40px" }}
-                      transition={{ delay: 0.12 + i * 0.08, duration: 0.5 }}
-                      style={{
-                        display: "flex", flexDirection: "column", justifyContent: "space-between",
-                        gap: 10, padding: "16px 14px",
-                        border: "0.75px dashed var(--border)",
-                        background: b.bad ? arko.subtle : "transparent",
-                        minWidth: 0,
-                      }}
-                    >
-                      <span style={{ ...mono, fontSize: 10, color: "var(--text-muted)", letterSpacing: "0.2em" }}>
-                        {b.label}
-                      </span>
-                      <p style={{ fontFamily: serif, fontWeight: 700, fontSize: "clamp(18px, 1.6vw, 22px)", color: b.bad ? arko.dark : "var(--text-primary)", letterSpacing: "-0.015em", lineHeight: 1.1 }}>
-                        {b.tool}
-                      </p>
-                      <span style={{ fontFamily: sans, fontSize: 12, color: "var(--text-secondary)", lineHeight: 1.5 }}>
-                        {b.note}
-                      </span>
-                    </motion.div>
-                    {i < arr.length - 1 && (
-                      <motion.svg
-                        aria-hidden
-                        width="28" height="16" viewBox="0 0 28 16" fill="none"
-                        initial={{ opacity: 0 }}
-                        whileInView={{ opacity: 1 }}
-                        viewport={{ once: true, margin: "-40px" }}
-                        transition={{ delay: 0.2 + i * 0.08, duration: 0.5 }}
-                        style={{ alignSelf: "center", flexShrink: 0 }}
-                      >
-                        <path
-                          d="M1 8h20M18 3l5 5-5 5"
-                          stroke={i === arr.length - 2 ? arko.primary : "var(--text-muted)"}
-                          strokeWidth="1.3"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeDasharray={i === arr.length - 2 ? "0" : "3 3"}
-                          opacity={i === arr.length - 2 ? 0.85 : 0.55}
-                        />
-                      </motion.svg>
-                    )}
-                  </Fragment>
-                ))}
-              </div>
-              <p style={{ ...mono, fontSize: 10, color: "var(--text-muted)", letterSpacing: "0.2em", marginTop: 12, textAlign: "right" }}>
-                Fig. 02.1 · the broken loop — dashed lines mark every missing handoff
-              </p>
-            </div>
-          </Reveal>
-
-          {/* Anatomy of a revision — inline editorial list */}
-          <Reveal delay={0.12}>
-            <div style={{
-              border: "1px solid var(--border)",
-              background: "var(--bg-elevated)",
-            }}>
-              <div style={{
-                padding: "22px 28px",
-                borderBottom: "1px solid var(--border)",
-                display: "flex", justifyContent: "space-between", alignItems: "center",
-              }}>
-                <p style={{ ...mono, fontSize: 11, color: arko.dark, letterSpacing: "0.22em", fontWeight: 600 }}>
-                  Anatomy of a revision
-                </p>
-                <Clock size={18} color={arko.primary} weight="duotone" />
-              </div>
-              <div>
-                {([
-                  { step: "01", label: "Initial meeting — designer presents floor plan + mood boards", time: "~60 min" },
-                  { step: "02", label: "Verbal 'yes' — client signs off without seeing it built", time: "0 min" },
-                  { step: "03", label: "Build / render — designer produces final visual", time: "2–3 days" },
-                  { step: "04", label: "Client sees it — gap between expected and actual surfaces", time: "critical" },
-                  { step: "05", label: "Revision cycle — back and forth until approved", time: "6–8 hrs lost", loss: true },
-                ] as { step: string; label: string; time: string; loss?: boolean }[]).map((r, i, arr) => (
-                  <div key={i} style={{
-                    display: "flex", alignItems: "center", gap: 24,
-                    padding: "18px 28px",
-                    borderBottom: i < arr.length - 1 ? "1px solid var(--border-light)" : "none",
-                    background: r.loss ? arko.subtle : "transparent",
-                  }}>
-                    <span style={{
-                      ...mono, fontSize: 11, color: r.loss ? arko.primary : "var(--text-muted)",
-                      letterSpacing: "0.16em", fontWeight: r.loss ? 700 : 500, flexShrink: 0, width: 32,
-                    }}>{r.step}</span>
-                    <span style={{
-                      flex: 1, fontFamily: sans, fontSize: 15,
-                      color: r.loss ? "var(--text-primary)" : "var(--text-secondary)",
-                      fontWeight: r.loss ? 600 : 400, lineHeight: 1.5,
-                    }}>{r.label}</span>
-                    <span style={{
-                      ...mono, fontSize: 11, color: r.loss ? arko.primary : "var(--text-muted)",
-                      fontWeight: r.loss ? 700 : 400, letterSpacing: "0.14em", flexShrink: 0,
-                    }}>{r.time}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
+            <LoopCard />
           </Reveal>
         </div>
       </section>
@@ -1180,55 +2683,9 @@ export default function ArkoCase() {
             <UserTabs />
           </Reveal>
 
-          {/* Research depth */}
+          {/* Research depth — ledger-style card with icons + hover interactions */}
           <Reveal delay={0.15}>
-            <div style={{ marginTop: 72 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 24 }}>
-                <span aria-hidden style={{ width: 3, height: 14, background: arko.primary, display: "inline-block" }} />
-                <p style={{ ...mono, fontSize: 11, color: arko.dark, letterSpacing: "0.22em", fontWeight: 600 }}>
-                  Research depth · how we got here
-                </p>
-              </div>
-              <div
-                className="grid grid-cols-2 md:grid-cols-4"
-                style={{ borderTop: "1px solid var(--border)", borderLeft: "1px solid var(--border)" }}
-              >
-                {([
-                  { big: 12, unit: "Designer interviews",    sub: "Leads across 4 firms, 60–90 min each" },
-                  { big: 8,  unit: "Client sessions",        sub: "First-time homeowners + repeat developers" },
-                  { big: 3,  unit: "Walkthroughs shadowed",  sub: "Observed yes-then-no moments live" },
-                  { big: 47, unit: "Revision emails parsed", sub: "6-month thread audit across 2 firms" },
-                ] as { big: number; unit: string; sub: string }[]).map((s, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, y: 10 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: "-40px" }}
-                    transition={{ delay: i * 0.07, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                    style={{
-                      padding: "32px 24px",
-                      borderRight: "1px solid var(--border)",
-                      borderBottom: "1px solid var(--border)",
-                    }}
-                  >
-                    <p style={{
-                      fontFamily: serif, fontWeight: 700,
-                      fontSize: "clamp(44px, 4.4vw, 56px)",
-                      color: arko.primary,
-                      letterSpacing: "-0.035em", lineHeight: 1, marginBottom: 14,
-                    }}>
-                      <CountUp value={s.big} />
-                    </p>
-                    <p style={{ ...mono, fontSize: 11, color: "var(--text-primary)", letterSpacing: "0.16em", marginBottom: 8, fontWeight: 600 }}>
-                      {s.unit}
-                    </p>
-                    <p style={{ fontFamily: sans, fontSize: 13, color: "var(--text-secondary)", lineHeight: 1.6 }}>
-                      {s.sub}
-                    </p>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
+            <ResearchLedger />
           </Reveal>
         </div>
       </section>
@@ -1236,139 +2693,52 @@ export default function ArkoCase() {
       {/* ══════════════════════════════════════════════════════════════
           04 · INSIGHT — full bleed dark
       ══════════════════════════════════════════════════════════════ */}
-      <section style={{ backgroundColor: "var(--text-primary)", padding: "clamp(88px, 12vw, 140px) 0", position: "relative", overflow: "hidden" }}>
-        <Reveal y={16}>
-          <div className="max-w-7xl mx-auto px-6 md:px-10" style={{ position: "relative", zIndex: 2 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 36 }}>
-              <Quotes size={26} color={arko.light} opacity={0.6} />
-              <p style={{ ...mono, fontSize: 11, color: arko.light, letterSpacing: "0.22em", fontWeight: 600 }}>
-                04 / 10 · Key insight
-              </p>
-            </div>
-            <blockquote style={{
-              fontFamily: serif, fontWeight: 700,
-              fontSize: "clamp(32px, 4.6vw, 60px)",
-              color: "var(--bg-primary)", letterSpacing: "-0.03em",
-              lineHeight: 1.15, quotes: "none", marginBottom: 40, maxWidth: 960,
-            }}>
-              Clients don't reject designs because they have bad taste.{" "}
-              <em style={{ fontStyle: "italic", color: arko.light }}>
-                They reject them because they couldn't see it clearly enough to say yes the first time.
-              </em>
-            </blockquote>
-            <p style={{ fontFamily: sans, fontSize: 17, color: "rgba(250,250,250,0.72)", lineHeight: 1.75, maxWidth: 620 }}>
-              This reframed the entire design direction. The goal was never to build a better
-              design tool — it was to build a better <em>communication</em> tool that
-              happened to be powered by design.
-            </p>
-          </div>
-        </Reveal>
-      </section>
-
-      {/* ══════════════════════════════════════════════════════════════
-          05 · THE LOOP — full-bleed olive transition slide
-      ══════════════════════════════════════════════════════════════ */}
       <section style={{
-        padding: "clamp(72px, 9vw, 120px) 0",
-        backgroundColor: arko.primary,
-        position: "relative",
-        overflow: "hidden",
+        backgroundColor: "var(--text-primary)",
+        backgroundImage: `
+          repeating-linear-gradient(0deg, rgba(255,255,255,0.035) 0, rgba(255,255,255,0.035) 0.5px, transparent 0.5px, transparent 20px),
+          repeating-linear-gradient(90deg, rgba(255,255,255,0.035) 0, rgba(255,255,255,0.035) 0.5px, transparent 0.5px, transparent 20px),
+          repeating-linear-gradient(0deg, rgba(255,255,255,0.07) 0, rgba(255,255,255,0.07) 0.5px, transparent 0.5px, transparent 80px),
+          repeating-linear-gradient(90deg, rgba(255,255,255,0.07) 0, rgba(255,255,255,0.07) 0.5px, transparent 0.5px, transparent 80px)
+        `,
+        padding: "clamp(88px, 12vw, 140px) 0",
+        position: "relative", overflow: "hidden",
       }}>
-        <div className="max-w-7xl mx-auto px-6 md:px-10">
-          <Reveal>
-            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 32 }}>
-              <span aria-hidden style={{ width: 20, height: 1, background: "rgba(250,250,250,0.7)", display: "inline-block" }} />
-              <p style={{ ...mono, fontSize: 11, color: "rgba(250,250,250,0.85)", letterSpacing: "0.22em", fontWeight: 600 }}>
-                05 / 10 · The product
-              </p>
-            </div>
-            <h2 style={{
-              fontFamily: serif, fontWeight: 700,
-              fontSize: "clamp(40px, 6.2vw, 84px)",
-              color: "#FAFAFA", letterSpacing: "-0.04em",
-              lineHeight: 1.05, marginBottom: 20, maxWidth: 980,
-            }}>
-              Three products.{" "}
-              <em style={{ fontStyle: "italic", color: "rgba(250,250,250,0.8)" }}>One loop.</em>
-            </h2>
-            <p style={{
-              fontFamily: sans, fontSize: "clamp(16px, 1.3vw, 19px)",
-              color: "rgba(250,250,250,0.82)", lineHeight: 1.7, maxWidth: 640, marginBottom: 56,
-            }}>
-              A web workspace for the pro, an iPhone scanner for the space,
-              a client view for the approval. Each is a product in its own right —
-              together they close the loop that every other tool leaves open.
+        <div className="max-w-7xl mx-auto px-6 md:px-10" style={{ position: "relative", zIndex: 2 }}>
+          <motion.div
+            initial={{ opacity: 0, y: 14 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 40 }}
+          >
+            <Quotes size={30} color={arko.light} opacity={0.7} weight="duotone" />
+            <p style={{ ...mono, fontSize: 15, color: arko.light, letterSpacing: "0.22em", fontWeight: 600 }}>
+              04 / 09 · Key insight
             </p>
-          </Reveal>
-
-          {/* The three moves */}
-          <Reveal delay={0.1}>
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1fr auto 1fr auto 1fr",
-                alignItems: "stretch",
-                gap: 20,
-              }}
-            >
-              {([
-                { Icon: Aperture,    step: "01", title: "Scan",    sub: "AR spatial capture on iPhone. Floor planes detected in under 3 min." },
-                { Icon: Cube,        step: "02", title: "Design",  sub: "Drop furniture into the live scan. Swap finishes, adjust scale, place pins." },
-                { Icon: CheckCircle, step: "03", title: "Approve", sub: "Share a link. Client sees the room, taps a comment or approves." },
-              ] as { Icon: typeof Aperture; step: string; title: string; sub: string }[]).map((n, i) => (
-                <Fragment key={n.title}>
-                  <motion.div
-                    initial={{ opacity: 0, y: 14 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: "-40px" }}
-                    transition={{ delay: 0.15 + i * 0.1, duration: 0.55 }}
-                    style={{
-                      display: "flex", flexDirection: "column", gap: 16, minWidth: 0,
-                      padding: "28px 26px",
-                      background: "rgba(250,250,250,0.10)",
-                      border: "1px solid rgba(250,250,250,0.18)",
-                      backdropFilter: "blur(4px)",
-                      WebkitBackdropFilter: "blur(4px)",
-                    }}
-                  >
-                    <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                      <n.Icon size={26} color="#FAFAFA" weight="duotone" />
-                      <span style={{ ...mono, fontSize: 10, color: "rgba(250,250,250,0.7)", letterSpacing: "0.22em" }}>
-                        {n.step}
-                      </span>
-                    </div>
-                    <p style={{ fontFamily: serif, fontWeight: 700, fontSize: "clamp(28px, 2.6vw, 34px)", color: "#FAFAFA", letterSpacing: "-0.025em", lineHeight: 1 }}>
-                      {n.title}
-                    </p>
-                    <p style={{ fontFamily: sans, fontSize: 14, color: "rgba(250,250,250,0.82)", lineHeight: 1.65 }}>
-                      {n.sub}
-                    </p>
-                  </motion.div>
-                  {i < 2 && (
-                    <motion.div
-                      initial={{ opacity: 0, x: -8 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true, margin: "-40px" }}
-                      transition={{ delay: 0.25 + i * 0.1, duration: 0.5 }}
-                      style={{ alignSelf: "center", flexShrink: 0 }}
-                    >
-                      <ArrowRight size={24} color="rgba(250,250,250,0.85)" weight="regular" />
-                    </motion.div>
-                  )}
-                </Fragment>
-              ))}
-            </div>
-          </Reveal>
+          </motion.div>
+          <InsightQuote />
+          <motion.p
+            initial={{ opacity: 0, y: 14 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.5, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+            style={{ fontFamily: sans, fontSize: 17, color: "rgba(250,250,250,0.72)", lineHeight: 1.75, maxWidth: 620 }}
+          >
+            This reframed the entire design direction. The goal was never to build a better
+            design tool. It was to build a better <em>communication</em> tool that
+            happened to be powered by design.
+          </motion.p>
         </div>
       </section>
 
       {/* ══════════════════════════════════════════════════════════════
-          06 · WORKSPACE — web platform
+          05 · WORKSPACE · WEB — desk-side platform for the designer
       ══════════════════════════════════════════════════════════════ */}
-      <section style={{ padding: SECTION_PAD, background: "var(--bg-primary)" }}>
+      <section className="blueprint-grid" style={{ padding: SECTION_PAD }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <Reveal>
-            <SectionHeader num="06" title="Workspace · Web" phase="Weeks 05 · 08" />
+            <SectionHeader num="05" title="Workspace · Web" phase="Weeks 05 · 08" />
           </Reveal>
 
           <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-16 items-start" style={{ marginBottom: 56 }}>
@@ -1377,9 +2747,9 @@ export default function ArkoCase() {
                 A professional workspace.{" "}
                 <em style={{ fontStyle: "italic", color: arko.primary }}>Dense, powerful, built for daily use.</em>
               </h2>
-              <p style={{ ...t.body }}>
+              <p style={{ ...t.bodyLg }}>
                 The designer interface doesn't compromise. Sidebar navigation, project management,
-                team activity, and AR editing tools — all accessible from a single workspace a design
+                team activity, and AR editing tools, all accessible from a single workspace a design
                 lead would open on day one and never want to leave.
               </p>
             </Reveal>
@@ -1393,12 +2763,12 @@ export default function ArkoCase() {
                   "One-click handoff to mobile AR editor",
                 ].map((f, j) => (
                   <li key={j} style={{
-                    display: "flex", alignItems: "center", gap: 14,
-                    padding: "14px 0",
+                    display: "flex", alignItems: "center", gap: 16,
+                    padding: "18px 0",
                     borderBottom: "1px solid var(--border-light)",
                   }}>
-                    <CheckCircle size={16} color={arko.primary} weight="regular" />
-                    <span style={{ fontFamily: sans, fontSize: 14, color: "var(--text-primary)", lineHeight: 1.5 }}>
+                    <CheckCircle size={18} color={arko.primary} weight="regular" />
+                    <span style={{ fontFamily: sans, fontSize: 17, color: "var(--text-primary)", lineHeight: 1.55 }}>
                       {f}
                     </span>
                   </li>
@@ -1409,84 +2779,73 @@ export default function ArkoCase() {
 
           <Reveal delay={0.1}>
             <WebGallery screens={[
-              { src: "/arko/web-3.png", label: "Fig. 06.1 · Dashboard · active projects, team stats, pending approvals" },
-              { src: "/arko/web-4.png", label: "Fig. 06.2 · All Projects · filter by status, search, quick access" },
-              { src: "/arko/web-5.png", label: "Fig. 06.3 · Project Detail · rooms, progress bars, live activity log" },
-              { src: "/arko/web-6.png", label: "Fig. 06.4 · Comments view · client feedback pinned in context" },
+              { src: "/arko/web-3.png", label: "Fig. 06.1 · Dashboard · active projects, team stats, pending approvals", Icon: SquaresFour },
+              { src: "/arko/web-4.png", label: "Fig. 06.2 · All Projects · filter by status, search, quick access", Icon: FolderOpen },
+              { src: "/arko/web-5.png", label: "Fig. 06.3 · Project Detail · rooms, progress bars, live activity log", Icon: ClipboardText },
+              { src: "/arko/web-6.png", label: "Fig. 06.4 · Comments view · client feedback pinned in context", Icon: ChatCircleDots },
             ]} />
           </Reveal>
         </div>
       </section>
 
       {/* ══════════════════════════════════════════════════════════════
-          07 · CAPTURE — scan flow + AR editor
+          06 · CAPTURE · iOS — scan flow + AR editor
       ══════════════════════════════════════════════════════════════ */}
       <section style={{ padding: SECTION_PAD, background: "var(--bg-secondary)" }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <Reveal>
-            <SectionHeader num="07" title="Capture · iOS" phase="Weeks 06 · 09" />
+            <SectionHeader num="06" title="Capture · iOS" phase="Weeks 06 · 09" />
           </Reveal>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 items-start" style={{ marginBottom: 72 }}>
-            <Reveal>
+          <Reveal>
+            <div style={{ maxWidth: 760, marginBottom: 64 }}>
               <h2 style={{ ...t.h2Section, marginBottom: 22 }}>
                 From empty room to{" "}
                 <em style={{ fontStyle: "italic", color: arko.primary }}>furnished space</em>{" "}
                 in minutes.
               </h2>
-              <p style={{ ...t.body, marginBottom: 36 }}>
-                A pre-scan checklist ensures quality spatial capture. The scanner detects
-                floor planes, measures spatial accuracy, and confirms the data before the
-                AR editor opens.
+              <p style={{ ...t.bodyLg }}>
+                A guided four-stage scan confirms spatial data before the AR editor opens.
               </p>
+            </div>
+          </Reveal>
 
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(3, 1fr)",
-                  borderTop: "1px solid var(--border)",
-                  borderLeft: "1px solid var(--border)",
-                }}
-              >
-                {([
-                  { pre: "<", num: 3,  suf: " min",   unit: "Avg scan time",      Icon: Clock },
-                  { pre: "",  num: 92, suf: "%",      unit: "Spatial accuracy",   Icon: Aperture },
-                  { pre: "",  num: 4,  suf: " steps", unit: "Pre-scan checklist", Icon: CheckCircle },
-                ] as { pre: string; num: number; suf: string; unit: string; Icon: typeof Clock }[]).map((s, i) => (
-                  <div
-                    key={i}
-                    style={{
-                      padding: "22px 18px",
-                      borderRight: "1px solid var(--border)",
-                      borderBottom: "1px solid var(--border)",
-                      background: "var(--bg-elevated)",
-                    }}
-                  >
-                    <s.Icon size={16} color={arko.primary} weight="duotone" />
-                    <p style={{ fontFamily: serif, fontWeight: 700, fontSize: "clamp(26px, 2.4vw, 30px)", color: "var(--text-primary)", letterSpacing: "-0.025em", lineHeight: 1, marginTop: 12, marginBottom: 10 }}>
-                      <CountUp value={s.num} prefix={s.pre} suffix={s.suf} />
-                    </p>
-                    <p style={{ ...mono, fontSize: 10, color: "var(--text-secondary)", letterSpacing: "0.16em" }}>{s.unit}</p>
-                  </div>
-                ))}
-              </div>
-            </Reveal>
-
-            <Reveal delay={0.1}>
-              <div style={{
-                padding: "28px 20px",
-                background: "var(--bg-elevated)",
-                border: "1px solid var(--border)",
-              }}>
-                <PhoneCarousel slides={[
-                  { src: "/arko/phone-3.png", label: "01 / 04 · Pre-Scan Checklist" },
-                  { src: "/arko/phone-4.png", label: "02 / 04 · Detecting Floor" },
-                  { src: "/arko/phone-5.png", label: "03 / 04 · Floor Confirmed" },
-                  { src: "/arko/phone-6.png", label: "04 / 04 · 92% Spatial Accuracy" },
-                ]} />
-              </div>
-            </Reveal>
-          </div>
+          <Reveal delay={0.08}>
+            <div style={{ marginBottom: 96 }}>
+              <ScanFlowStepper
+                stages={[
+                  {
+                    num: "01",
+                    title: "Pre-scan checklist",
+                    caption: "Four lighting and surface checks ensure every capture meets the quality threshold.",
+                    src: "/arko/phone-3.png",
+                    metric: { value: "4 steps", label: "Checklist", Icon: CheckCircle },
+                  },
+                  {
+                    num: "02",
+                    title: "Detecting floor planes",
+                    caption: "ARKit locks onto horizontal surfaces. The camera anchors a live scan mesh in place.",
+                    src: "/arko/phone-4.png",
+                    metric: { value: "< 3 min", label: "Avg scan", Icon: Clock },
+                  },
+                  {
+                    num: "03",
+                    title: "Floor confirmed",
+                    caption: "The room's footprint is captured. A single tap promotes it into the editable canvas.",
+                    src: "/arko/phone-5.png",
+                    metric: { value: "Locked", label: "Floor plane", Icon: PushPin },
+                  },
+                  {
+                    num: "04",
+                    title: "Spatial accuracy",
+                    caption: "Measurements reconcile against the original plan. Anything below 90% prompts a re-scan.",
+                    src: "/arko/phone-6.png",
+                    metric: { value: "92%", label: "Accuracy", Icon: Aperture },
+                  },
+                ]}
+              />
+            </div>
+          </Reveal>
 
           {/* AR Editor */}
           <Reveal>
@@ -1495,7 +2854,7 @@ export default function ArkoCase() {
                 AR room editor
               </p>
               <h3 style={{ ...t.h3Lede }}>
-                Canvas first, tools at the edges — place, scale, swap, no modals.
+                Canvas first, tools at the edges: place, scale, swap, no modals.
               </h3>
             </div>
           </Reveal>
@@ -1506,21 +2865,25 @@ export default function ArkoCase() {
                 src: "/arko/phone-7.png", num: "01",
                 label: "Room type breadcrumb navigation",
                 desc: "Navigate between room types without losing context. The full path stays visible at all times; every step in the hierarchy is one tap to reverse.",
+                Icon: Compass,
               },
               {
                 src: "/arko/phone-8.png", num: "02",
                 label: "Furniture library · collapsible sidebar",
                 desc: "The library collapses when you need the canvas. One tap to open, one tap to confirm. The space stays the focus, not the tool.",
+                Icon: Cube,
               },
               {
                 src: "/arko/phone-10.png", num: "03",
                 label: "Item selected · Properties panel",
                 desc: "Tap any object to reveal its controls inline. Scale, rotate, swap materials; no modal interrupts the flow.",
+                Icon: PushPin,
               },
               {
                 src: "/arko/phone-12.png", num: "04",
                 label: "Preview mode · Send to Client",
                 desc: "Strip away every tool and see exactly what the client will see. One tap to share. The revision loop, closed.",
+                Icon: Eye,
               },
             ]} />
           </Reveal>
@@ -1528,11 +2891,17 @@ export default function ArkoCase() {
       </section>
 
       {/* ══════════════════════════════════════════════════════════════
-          08 · APPROVAL — full-bleed olive client surface
+          07 · APPROVAL — full-bleed olive client surface
       ══════════════════════════════════════════════════════════════ */}
       <section style={{
         padding: SECTION_PAD,
         backgroundColor: arko.dark,
+        backgroundImage: `
+          repeating-linear-gradient(0deg, rgba(255,255,255,0.045) 0, rgba(255,255,255,0.045) 0.5px, transparent 0.5px, transparent 20px),
+          repeating-linear-gradient(90deg, rgba(255,255,255,0.045) 0, rgba(255,255,255,0.045) 0.5px, transparent 0.5px, transparent 20px),
+          repeating-linear-gradient(0deg, rgba(255,255,255,0.09) 0, rgba(255,255,255,0.09) 0.5px, transparent 0.5px, transparent 80px),
+          repeating-linear-gradient(90deg, rgba(255,255,255,0.09) 0, rgba(255,255,255,0.09) 0.5px, transparent 0.5px, transparent 80px)
+        `,
         position: "relative",
         overflow: "hidden",
       }}>
@@ -1543,13 +2912,13 @@ export default function ArkoCase() {
                 display: "flex", alignItems: "baseline", gap: 18, flexWrap: "wrap",
                 paddingBottom: 14,
               }}>
-                <span style={{ ...mono, fontSize: 12, color: "#FAFAFA", letterSpacing: "0.22em", fontWeight: 700 }}>
-                  08 <span style={{ color: "rgba(250,250,250,0.55)", fontWeight: 400 }}>/ 10</span>
+                <span style={{ ...mono, fontSize: 14, color: "#FAFAFA", letterSpacing: "0.22em", fontWeight: 700 }}>
+                  07 <span style={{ color: "rgba(250,250,250,0.55)", fontWeight: 400 }}>/ 09</span>
                 </span>
-                <span style={{ ...mono, fontSize: 12, color: "#FAFAFA", letterSpacing: "0.22em", fontWeight: 600 }}>
+                <span style={{ ...mono, fontSize: 14, color: "#FAFAFA", letterSpacing: "0.22em", fontWeight: 600 }}>
                   Approval · Client
                 </span>
-                <span style={{ ...mono, fontSize: 11, color: "rgba(250,250,250,0.65)", letterSpacing: "0.2em", marginLeft: "auto" }}>
+                <span style={{ ...mono, fontSize: 13, color: "rgba(250,250,250,0.65)", letterSpacing: "0.2em", marginLeft: "auto" }}>
                   Weeks 09 · 11
                 </span>
               </div>
@@ -1557,84 +2926,130 @@ export default function ArkoCase() {
             </div>
           </Reveal>
 
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-16 items-center">
-            <Reveal className="md:col-span-7">
+          {/* Hero block — statement + lede */}
+          <Reveal>
+            <div style={{ maxWidth: 860, marginBottom: 56 }}>
               <h2 style={{
                 fontFamily: serif, fontWeight: 700,
-                fontSize: "clamp(30px, 4.2vw, 54px)",
+                fontSize: "clamp(32px, 4.6vw, 58px)",
                 color: "#FAFAFA", letterSpacing: "-0.035em",
-                lineHeight: 1.1, marginBottom: 28,
+                lineHeight: 1.08, marginBottom: 28,
               }}>
                 No login. No jargon.{" "}
-                <em style={{ fontStyle: "italic", color: arko.light }}>
+                <em style={{ fontStyle: "italic", color: "#D4E4B8" }}>
                   Just the room, a comment, and an approve.
                 </em>
               </h2>
               <p style={{
-                fontFamily: sans, fontSize: 17,
-                color: "rgba(250,250,250,0.82)", lineHeight: 1.8, marginBottom: 36, maxWidth: 580,
+                fontFamily: sans,
+                fontSize: "clamp(18px, 1.4vw, 21px)",
+                color: "rgba(250,250,250,0.82)",
+                lineHeight: 1.75,
+                maxWidth: 680,
               }}>
-                The client opens a link, sees their space in AR, leaves pinned
-                spatial feedback, and approves — without downloading an app or creating
-                an account. When they approve, the designer gets a notification and a
-                timestamped PDF that closes the loop.
+                The client opens a link, sees their space in AR, pins spatial feedback, and approves.
+                No download, no account. The designer gets a notification and a timestamped PDF.
               </p>
+            </div>
+          </Reveal>
 
-              <div style={{
-                display: "grid", gridTemplateColumns: "repeat(2, 1fr)",
-                borderTop: "1px solid rgba(250,250,250,0.25)",
-                borderLeft: "1px solid rgba(250,250,250,0.25)",
-                maxWidth: 520,
-              }}>
-                {[
-                  { k: "01", v: "Opens link · no account" },
-                  { k: "02", v: "Walks through space in AR" },
-                  { k: "03", v: "Pins spatial comments" },
-                  { k: "04", v: "One-tap approval" },
-                ].map((item) => (
-                  <div key={item.k} style={{
-                    padding: "18px 18px",
-                    borderRight: "1px solid rgba(250,250,250,0.25)",
-                    borderBottom: "1px solid rgba(250,250,250,0.25)",
+          {/* Inline feature pills */}
+          <Reveal delay={0.05}>
+            <div style={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: 12,
+              marginBottom: 72,
+            }}>
+              {[
+                { Icon: Envelope,     label: "Link-based access" },
+                { Icon: PushPin,      label: "Spatial comments" },
+                { Icon: CheckCircle,  label: "One-tap approval" },
+                { Icon: ClipboardText, label: "Timestamped PDF" },
+              ].map((f, i) => (
+                <div key={i} style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 10,
+                  padding: "10px 16px",
+                  border: "1px solid rgba(250,250,250,0.22)",
+                  background: "rgba(250,250,250,0.04)",
+                  borderRadius: 999,
+                }}>
+                  <f.Icon size={16} color={arko.light} weight="duotone" />
+                  <span style={{
+                    ...mono,
+                    fontSize: 11,
+                    color: "#FAFAFA",
+                    letterSpacing: "0.22em",
+                    fontWeight: 600,
                   }}>
-                    <span style={{ ...mono, fontSize: 11, color: arko.light, letterSpacing: "0.22em", display: "block", marginBottom: 6, fontWeight: 700 }}>
-                      {item.k}
-                    </span>
-                    <span style={{ fontFamily: sans, fontSize: 14, color: "#FAFAFA", lineHeight: 1.5 }}>
-                      {item.v}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </Reveal>
+                    {f.label}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </Reveal>
 
-            <Reveal className="md:col-span-5" delay={0.1}>
-              <div style={{
-                padding: "28px 20px",
-                background: "rgba(250,250,250,0.06)",
-                border: "1px solid rgba(250,250,250,0.18)",
-                backdropFilter: "blur(4px)",
-                WebkitBackdropFilter: "blur(4px)",
-              }}>
-                <PhoneCarousel slides={[
-                  { src: "/arko/phone-13.png", label: "01 / 04 · Client landing" },
-                  { src: "/arko/phone-14.png", label: "02 / 04 · Room view + comments" },
-                  { src: "/arko/phone-15.png", label: "03 / 04 · Pin a comment" },
-                  { src: "/arko/phone-16.png", label: "04 / 04 · Design approved" },
-                ]} />
+          {/* Client Journey Reel — 4-up dark stepper */}
+          <Reveal delay={0.08}>
+            <ClientJourneyReel />
+          </Reveal>
+
+          {/* Closing signature strip */}
+          <Reveal delay={0.12}>
+            <div style={{
+              marginTop: 64,
+              paddingTop: 24,
+              borderTop: "0.75px solid rgba(250,250,250,0.22)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              flexWrap: "wrap",
+              gap: 16,
+            }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                <span
+                  aria-hidden
+                  style={{
+                    width: 7, height: 7, borderRadius: "50%",
+                    background: arko.light,
+                    boxShadow: "0 0 0 3px rgba(139,173,106,0.25)",
+                  }}
+                  className="status-pulse"
+                />
+                <span style={{
+                  ...mono,
+                  fontSize: 12,
+                  color: "#FAFAFA",
+                  letterSpacing: "0.22em",
+                  fontWeight: 700,
+                }}>
+                  Loop closed · designer notified
+                </span>
               </div>
-            </Reveal>
-          </div>
+              <span style={{
+                fontFamily: serif,
+                fontStyle: "italic",
+                fontWeight: 400,
+                fontSize: "clamp(18px, 1.6vw, 22px)",
+                color: "rgba(250,250,250,0.78)",
+                letterSpacing: "-0.015em",
+              }}>
+                Approved in minutes, not weeks.
+              </span>
+            </div>
+          </Reveal>
         </div>
       </section>
 
       {/* ══════════════════════════════════════════════════════════════
-          09 · DECISIONS
+          08 · DECISIONS
       ══════════════════════════════════════════════════════════════ */}
       <section style={{ padding: SECTION_PAD, background: "var(--bg-primary)" }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <Reveal>
-            <SectionHeader num="09" title="Design Decisions" phase="Weeks 10 · 12" />
+            <SectionHeader num="08" title="Design Decisions" phase="Weeks 10 · 12" />
           </Reveal>
 
           <Reveal>
@@ -1653,146 +3068,128 @@ export default function ArkoCase() {
       </section>
 
       {/* ══════════════════════════════════════════════════════════════
-          10 · OUTCOMES
+          09 · OUTCOMES
       ══════════════════════════════════════════════════════════════ */}
-      <section style={{ padding: SECTION_PAD, background: "var(--bg-secondary)" }}>
+      <section className="blueprint-grid-subtle" style={{ padding: SECTION_PAD }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <Reveal>
-            <SectionHeader num="10" title="Outcomes & Reflection" phase="Weeks 13 · 14" />
+            <SectionHeader num="09" title="Outcomes & Reflection" phase="Weeks 13 · 14" />
           </Reveal>
 
           <Reveal>
-            <h2 style={{ ...t.h2Section, marginBottom: 22, maxWidth: 820 }}>
+            <h2 style={{ ...t.h2Section, marginBottom: 22, maxWidth: 860 }}>
               Three workflows. One platform.{" "}
               <em style={{ fontStyle: "italic", color: arko.primary }}>No compromise</em>{" "}
               on either user.
             </h2>
-            <p style={{ ...t.body, maxWidth: 720, marginBottom: 56 }}>
+            <p style={{ ...t.bodyLg, maxWidth: 760, marginBottom: 72 }}>
               Arko consolidates space scanning, interior design, and client approval into one
-              platform. The result is a product that serves two very different users without
-              compromising either experience.
+              platform. A single product that serves two very different users without compromising
+              either experience.
             </p>
           </Reveal>
 
-          {/* Headline stats */}
+          {/* Editorial impact banner — one strip, no card borders */}
           <Reveal delay={0.08}>
-            <div
-              className="grid grid-cols-2 lg:grid-cols-4"
-              style={{
-                borderTop: "1px solid var(--border)",
-                borderLeft: "1px solid var(--border)",
-                marginBottom: 56,
-              }}
-            >
-              {([
-                { label: "Approval time",    num: 45,   decimals: 0, prefix: "",  unit: "min", delta: "−92%",    status: "down" as const },
-                { label: "Revision cycles",  num: 1.2,  decimals: 1, prefix: "",  unit: "avg", delta: "−72%",    status: "down" as const },
-                { label: "Spatial accuracy", num: 92,   decimals: 0, prefix: "",  unit: "%",   delta: "target met", status: "flat" as const },
-                { label: "Client NPS",       num: 38,   decimals: 0, prefix: "+", unit: "pts", delta: "+24 pts", status: "up"   as const },
-              ] as { label: string; num: number; decimals: number; prefix: string; unit: string; delta: string; status: "up" | "down" | "flat" }[]).map((k, i) => (
-                <motion.div
-                  key={k.label}
-                  initial={{ opacity: 0, y: 12 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-40px" }}
-                  transition={{ delay: i * 0.07, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                  style={{
-                    padding: "32px 24px",
-                    borderRight: "1px solid var(--border)",
-                    borderBottom: "1px solid var(--border)",
-                    background: "var(--bg-elevated)",
-                  }}
-                >
-                  <p style={{ ...mono, fontSize: 11, color: arko.dark, letterSpacing: "0.18em", marginBottom: 14, fontWeight: 600 }}>
-                    {k.label}
+            <div style={{ marginBottom: 96 }}>
+              {/* Eyebrow */}
+              <div style={{
+                display: "flex",
+                alignItems: "baseline",
+                justifyContent: "space-between",
+                gap: 16,
+                flexWrap: "wrap",
+                marginBottom: 36,
+              }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                  <span aria-hidden style={{ width: 3, height: 14, background: arko.primary }} />
+                  <p style={{ ...mono, fontSize: 12, color: arko.dark, letterSpacing: "0.22em", fontWeight: 700 }}>
+                    Impact
                   </p>
-                  <p style={{
-                    fontFamily: serif, fontWeight: 700,
-                    fontSize: "clamp(44px, 4.8vw, 58px)",
-                    color: "var(--text-primary)",
-                    letterSpacing: "-0.035em", lineHeight: 1, marginBottom: 10,
-                  }}>
-                    <CountUp value={k.num} decimals={k.decimals} prefix={k.prefix} />
-                    <span style={{
-                      fontFamily: sans, fontSize: 16, fontWeight: 500,
-                      color: "var(--text-secondary)", marginLeft: 6, letterSpacing: 0,
-                    }}>{k.unit}</span>
-                  </p>
-                  <span style={{
-                    fontFamily: sans, fontSize: 13, fontWeight: 500,
-                    color: arko.primary, letterSpacing: "0.02em",
-                  }}>
-                    {k.status === "down" && "↓ "}
-                    {k.status === "up" && "↑ "}
-                    {k.status === "flat" && "→ "}
-                    {k.delta}
-                  </span>
-                </motion.div>
-              ))}
-            </div>
-          </Reveal>
-
-          {/* Before → after comparison */}
-          <Reveal delay={0.1}>
-            <div style={{ marginBottom: 72 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 24 }}>
-                <span aria-hidden style={{ width: 3, height: 14, background: arko.primary, display: "inline-block" }} />
-                <p style={{ ...mono, fontSize: 11, color: arko.dark, letterSpacing: "0.22em", fontWeight: 600 }}>
-                  Before → after · workflow modeling
+                </div>
+                <p style={{ ...mono, fontSize: 11, color: "var(--text-muted)", letterSpacing: "0.22em" }}>
+                  Pilot study · 30 days · 4 teams · 12 projects
                 </p>
               </div>
+
+              {/* Metrics row */}
               <div
-                className="grid grid-cols-2 lg:grid-cols-4"
-                style={{ borderTop: "1px solid var(--border)", borderLeft: "1px solid var(--border)" }}
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+                  borderTop: `1px solid ${arko.primary}`,
+                  borderBottom: `1px solid ${arko.primary}`,
+                }}
               >
                 {([
-                  { before: "6–8 hrs",   after: "~45 min",     unit: "Per-project revisions",   Icon: Clock },
-                  { before: "3 tools",   after: "1 platform",  unit: "Scan → design → approve", Icon: ArrowsHorizontal },
-                  { before: "4+ rounds", after: "1.6 rounds",  unit: "Avg. approval cycles",    Icon: CheckCircle },
-                  { before: "verbal",    after: "timestamped", unit: "Client sign-off, logged", Icon: PushPin },
-                ] as { before: string; after: string; unit: string; Icon: typeof Clock }[]).map((s, i) => (
+                  { label: "Approval time",    num: 45,   decimals: 0, prefix: "",  unit: "min", delta: "↓ 92%",      tone: "down" as const, note: "from 6–8 hrs" },
+                  { label: "Revision cycles",  num: 1.2,  decimals: 1, prefix: "",  unit: "avg", delta: "↓ 72%",      tone: "down" as const, note: "from 4+ rounds" },
+                  { label: "Spatial accuracy", num: 92,   decimals: 0, prefix: "",  unit: "%",   delta: "→ target",   tone: "flat" as const, note: "90% threshold" },
+                  { label: "Client NPS",       num: 38,   decimals: 0, prefix: "+", unit: "pts", delta: "↑ 24 pts",   tone: "up"   as const, note: "baseline +14" },
+                ] as { label: string; num: number; decimals: number; prefix: string; unit: string; delta: string; tone: "up" | "down" | "flat"; note: string }[]).map((k, i) => (
                   <motion.div
-                    key={i}
+                    key={k.label}
                     initial={{ opacity: 0, y: 14 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, margin: "-40px" }}
-                    transition={{ delay: i * 0.06, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                    transition={{ delay: i * 0.08, duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
                     style={{
-                      padding: "28px 24px",
-                      borderRight: "1px solid var(--border)",
-                      borderBottom: "1px solid var(--border)",
-                      background: "var(--bg-elevated)",
+                      padding: "40px 28px 36px",
+                      borderLeft: i === 0 ? "none" : "1px solid var(--border-light)",
+                      position: "relative",
                     }}
                   >
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
-                      <span style={{ ...mono, fontSize: 11, color: "var(--text-muted)", letterSpacing: "0.18em", textDecoration: "line-through", textDecorationColor: "var(--text-muted)" }}>
-                        {s.before}
+                    <p style={{ ...mono, fontSize: 11, color: arko.dark, letterSpacing: "0.22em", marginBottom: 22, fontWeight: 700 }}>
+                      {k.label}
+                    </p>
+                    <p style={{
+                      fontFamily: serif, fontWeight: 700,
+                      fontSize: "clamp(56px, 6vw, 84px)",
+                      color: "var(--text-primary)",
+                      letterSpacing: "-0.04em", lineHeight: 0.95, marginBottom: 14,
+                    }}>
+                      <CountUp value={k.num} decimals={k.decimals} prefix={k.prefix} />
+                      <span style={{
+                        fontFamily: sans, fontSize: "clamp(14px, 1.1vw, 17px)", fontWeight: 500,
+                        color: "var(--text-secondary)", marginLeft: 8, letterSpacing: 0,
+                      }}>{k.unit}</span>
+                    </p>
+                    <div style={{ display: "flex", alignItems: "baseline", gap: 10, flexWrap: "wrap" }}>
+                      <span style={{
+                        ...mono,
+                        fontSize: 12,
+                        color: arko.primary,
+                        letterSpacing: "0.16em",
+                        fontWeight: 700,
+                      }}>
+                        {k.delta}
                       </span>
-                      <s.Icon size={18} color={arko.dark} weight="regular" />
+                      <span style={{
+                        ...mono, fontSize: 10, color: "var(--text-muted)", letterSpacing: "0.18em",
+                      }}>
+                        {k.note}
+                      </span>
                     </div>
-                    <p style={{ fontFamily: serif, fontWeight: 700, fontSize: "clamp(28px, 2.8vw, 38px)", color: "var(--text-primary)", letterSpacing: "-0.025em", lineHeight: 1, marginBottom: 12 }}>
-                      {s.after}
-                    </p>
-                    <p style={{ ...mono, fontSize: 11, color: arko.dark, letterSpacing: "0.16em", fontWeight: 500 }}>
-                      {s.unit}
-                    </p>
                   </motion.div>
                 ))}
               </div>
             </div>
           </Reveal>
 
-          {/* Reflection */}
-          <div className="grid grid-cols-1 md:grid-cols-2" style={{ gap: 0, marginBottom: 64, borderTop: "1px solid var(--border)", borderLeft: "1px solid var(--border)" }}>
+          {/* Reflection — two pull-quote editorial cards */}
+          <div
+            className="grid grid-cols-1 md:grid-cols-2"
+            style={{ gap: 32, marginBottom: 88 }}
+          >
             {([
               {
                 label: "What I'd build next",
-                body: "An analytics layer for designers — showing which rooms clients spend the most time reviewing, which furniture items get swapped most often, and where comments cluster spatially. Turning client behavior into actionable design intelligence.",
+                body: "An analytics layer for designers. Which rooms clients spend the most time reviewing, which furniture items get swapped most often, where comments cluster spatially. Turning client behavior into actionable design intelligence.",
                 Icon: LightbulbFilament,
               },
               {
                 label: "What this reinforced",
-                body: "The best B2B products are the ones that make the professional look good in front of their client. Every design decision in Arko was made with that in mind.",
+                body: "The best B2B products make the professional look good in front of their client. Every design decision in Arko was made with that in mind.",
                 Icon: Sparkle,
               },
             ] as { label: string; body: string; Icon: typeof LightbulbFilament }[]).map((c, i) => (
@@ -1803,39 +3200,103 @@ export default function ArkoCase() {
                   viewport={{ once: true, margin: "-40px" }}
                   transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
                   style={{
-                    padding: "40px 32px",
-                    borderRight: "1px solid var(--border)",
-                    borderBottom: "1px solid var(--border)",
+                    position: "relative",
+                    padding: "44px 36px 40px",
                     background: "var(--bg-elevated)",
+                    border: "1px solid var(--border)",
                     height: "100%",
+                    overflow: "hidden",
                   }}
                 >
-                  <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
-                    <c.Icon size={22} color={arko.primary} weight="regular" />
-                    <p style={{ ...mono, fontSize: 11, color: arko.dark, letterSpacing: "0.22em", fontWeight: 600 }}>
+                  {/* Accent top bar */}
+                  <span
+                    aria-hidden
+                    style={{
+                      position: "absolute",
+                      top: 0, left: 0,
+                      width: 64, height: 3,
+                      background: arko.primary,
+                    }}
+                  />
+                  {/* Oversized background quote mark */}
+                  <span
+                    aria-hidden
+                    style={{
+                      position: "absolute",
+                      top: 18, right: 20,
+                      fontFamily: serif,
+                      fontSize: 140,
+                      fontWeight: 700,
+                      color: arko.subtle,
+                      lineHeight: 0.7,
+                      pointerEvents: "none",
+                      userSelect: "none",
+                    }}
+                  >
+                    “
+                  </span>
+
+                  <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 24 }}>
+                    <c.Icon size={22} color={arko.primary} weight="duotone" />
+                    <p style={{ ...mono, fontSize: 12, color: arko.dark, letterSpacing: "0.22em", fontWeight: 700 }}>
                       {c.label}
                     </p>
                   </div>
-                  <p style={{ fontFamily: sans, fontSize: 16, color: "var(--text-secondary)", lineHeight: 1.8 }}>{c.body}</p>
+                  <p style={{
+                    ...t.bodyLg,
+                    color: "var(--text-primary)",
+                    position: "relative",
+                    zIndex: 1,
+                  }}>
+                    {c.body}
+                  </p>
                 </motion.div>
               </Reveal>
             ))}
           </div>
 
-          {/* Closing line */}
+          {/* Closing line — cinematic */}
           <Reveal>
-            <div style={{ paddingTop: 40, borderTop: "1px solid var(--border)", textAlign: "center" }}>
-              <p style={{ ...mono, fontSize: 11, color: "var(--text-muted)", letterSpacing: "0.22em", marginBottom: 22 }}>
-                End · Arko case study
-              </p>
-              <p style={{
-                fontFamily: serif, fontStyle: "italic",
-                fontSize: "clamp(24px, 2.6vw, 32px)",
-                color: "var(--text-primary)", letterSpacing: "-0.01em",
-                lineHeight: 1.35, maxWidth: 720, margin: "0 auto",
-              }}>
-                From architecture to digital product — the loop, finally closed.
-              </p>
+            <div style={{
+              paddingTop: 56,
+              borderTop: "1px solid var(--border)",
+              position: "relative",
+            }}>
+              {/* Corner brackets */}
+              {[
+                { top: 40, left: 0 },
+                { top: 40, right: 0 },
+              ].map((pos, i) => (
+                <span
+                  key={i}
+                  aria-hidden
+                  style={{
+                    position: "absolute",
+                    top: pos.top,
+                    left: pos.left,
+                    right: pos.right,
+                    width: 18, height: 18,
+                    borderTop: `1px solid ${arko.primary}`,
+                    borderLeft: pos.left !== undefined ? `1px solid ${arko.primary}` : "none",
+                    borderRight: pos.right !== undefined ? `1px solid ${arko.primary}` : "none",
+                    opacity: 0.6,
+                  }}
+                />
+              ))}
+              <div style={{ textAlign: "center", maxWidth: 760, margin: "0 auto" }}>
+                <p style={{ ...mono, fontSize: 11, color: arko.dark, letterSpacing: "0.24em", marginBottom: 26, fontWeight: 700 }}>
+                  Fin · Arko case study
+                </p>
+                <p style={{
+                  fontFamily: serif, fontStyle: "italic",
+                  fontSize: "clamp(28px, 3.4vw, 42px)",
+                  color: "var(--text-primary)", letterSpacing: "-0.02em",
+                  lineHeight: 1.22,
+                }}>
+                  From architecture to digital product:{" "}
+                  <span style={{ color: arko.primary }}>the loop, finally closed.</span>
+                </p>
+              </div>
             </div>
           </Reveal>
         </div>
@@ -1882,6 +3343,55 @@ export default function ArkoCase() {
           ) : <div />}
         </div>
       </div>
+
+      {/* ══════════════════════════════════════════════════════════════
+          Back to top — floating action, bottom-right
+      ══════════════════════════════════════════════════════════════ */}
+      <AnimatePresence>
+        {showTop && (
+          <motion.button
+            key="back-to-top"
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            aria-label="Back to top"
+            initial={{ opacity: 0, y: 12, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 12, scale: 0.9 }}
+            transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+            whileHover={{ y: -3 }}
+            whileTap={{ scale: 0.94 }}
+            style={{
+              position: "fixed",
+              right: "clamp(20px, 2.4vw, 32px)",
+              bottom: "clamp(20px, 2.4vw, 32px)",
+              zIndex: 60,
+              width: 52,
+              height: 52,
+              borderRadius: 999,
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 0,
+              border: `1px solid ${arko.primary}`,
+              background: "var(--bg-elevated)",
+              color: arko.primary,
+              cursor: "pointer",
+              boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 12px 28px rgba(110,143,78,0.18)",
+              transitionProperty: "background-color, color, border-color",
+              transitionDuration: "180ms",
+            }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLElement).style.backgroundColor = arko.primary;
+              (e.currentTarget as HTMLElement).style.color = "#fff";
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLElement).style.backgroundColor = "var(--bg-elevated)";
+              (e.currentTarget as HTMLElement).style.color = arko.primary;
+            }}
+          >
+            <ArrowUp size={20} weight="bold" color="currentColor" />
+          </motion.button>
+        )}
+      </AnimatePresence>
 
     </motion.div>
   );
