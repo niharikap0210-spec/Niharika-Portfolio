@@ -1,6 +1,6 @@
 import { motion, AnimatePresence, useScroll, useSpring, useInView, useMotionValue, animate } from "framer-motion";
 import { Link } from "react-router-dom";
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { ClockIcon as Clock, ArrowsHorizontalIcon as ArrowsHorizontal, WarningCircleIcon as WarningCircle, QuotesIcon as Quotes, DeviceMobileCameraIcon as DeviceMobileCamera, ApertureIcon as Aperture, LightbulbFilamentIcon as LightbulbFilament, CheckCircleIcon as CheckCircle, UsersThreeIcon as UsersThree, SparkleIcon as Sparkle, PushPinIcon as PushPin, CubeIcon as Cube, CompassIcon as Compass } from "@phosphor-icons/react";
 import HandDrawnSketch from "../components/HandDrawnSketch";
 import { getAdjacentProjects } from "../data/projects";
@@ -96,7 +96,7 @@ const t = {
 };
 
 /* Section vertical rhythm (matched across the page) */
-const SECTION_PAD = "clamp(72px, 9vw, 112px) 0";
+const SECTION_PAD = "clamp(56px, 7vw, 84px) 0";
 
 /* ── Scroll-triggered fade ──────────────────────────────────────── */
 function Reveal({
@@ -859,92 +859,160 @@ function ArEditorStepper({
 /* ══════════════════════════════════════════════════════════════════
    CHAPTER MARK — big handwritten chapter number + label
 ══════════════════════════════════════════════════════════════════ */
+function SheetTitleBlock({
+  sheet,
+  section,
+  phase,
+}: {
+  sheet: string;
+  section: string;
+  phase: string;
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 8 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-40px" }}
+      transition={{ delay: 0.25, duration: 0.55 }}
+      aria-hidden
+      style={{
+        display: "grid",
+        gridTemplateColumns: "max-content 1fr",
+        columnGap: 18,
+        rowGap: 6,
+        padding: "14px 16px",
+        border: "0.75px solid var(--border)",
+        background: "rgba(255,255,255,0.55)",
+        minWidth: 220,
+        alignSelf: "flex-start",
+      }}
+    >
+      {/* corner ticks */}
+      <span aria-hidden style={{
+        position: "absolute", pointerEvents: "none",
+      }} />
+      <span style={{ ...mono, fontSize: 10, color: "var(--text-muted)", letterSpacing: "0.2em", textTransform: "uppercase" }}>Sheet</span>
+      <span style={{ ...mono, fontSize: 11, color: "var(--text-primary)", letterSpacing: "0.14em", fontWeight: 600 }}>
+        {sheet} <span style={{ color: "var(--text-muted)", fontWeight: 400 }}>/ 08</span>
+      </span>
+      <span style={{ ...mono, fontSize: 10, color: "var(--text-muted)", letterSpacing: "0.2em", textTransform: "uppercase" }}>Section</span>
+      <span style={{ ...mono, fontSize: 11, color: arko.dark, letterSpacing: "0.14em", fontWeight: 600, textTransform: "uppercase" }}>
+        {section}
+      </span>
+      <span style={{ ...mono, fontSize: 10, color: "var(--text-muted)", letterSpacing: "0.2em", textTransform: "uppercase" }}>Phase</span>
+      <span style={{ ...mono, fontSize: 11, color: "var(--text-secondary)", letterSpacing: "0.14em" }}>
+        {phase}
+      </span>
+    </motion.div>
+  );
+}
+
 function ChapterMark({
   number,
   label,
   note,
+  sheet,
+  section,
+  phase,
   className = "",
 }: {
   number: string;
   label: string;
   note?: string;
+  sheet?: string;
+  section?: string;
+  phase?: string;
   className?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-40px" });
+  const hasBlock = sheet && section && phase;
   return (
-    <div ref={ref} className={className} style={{ marginBottom: 32, position: "relative" }}>
-      <div style={{ display: "flex", alignItems: "baseline", gap: 18, flexWrap: "wrap" }}>
-        <motion.span
-          initial={{ opacity: 0, y: 14, rotate: -6 }}
-          animate={inView ? { opacity: 1, y: 0, rotate: -4 } : {}}
-          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          style={{
-            fontFamily: "'Caveat', cursive",
-            fontWeight: 500,
-            fontSize: "clamp(56px, 7vw, 84px)",
-            color: arko.primary,
-            lineHeight: 0.9,
-            display: "inline-block",
-            transformOrigin: "center",
-          }}
-        >
-          ch. {number}
-        </motion.span>
-        <motion.span
-          initial={{ opacity: 0, x: -8 }}
-          animate={inView ? { opacity: 1, x: 0 } : {}}
-          transition={{ delay: 0.2, duration: 0.5 }}
-          style={{
-            fontFamily: "'Playfair Display', Georgia, serif",
-            fontStyle: "italic",
-            fontWeight: 700,
-            fontSize: "clamp(22px, 2.2vw, 26px)",
-            color: "var(--text-primary)",
-            letterSpacing: "-0.01em",
-          }}
-        >
-          {label}
-        </motion.span>
+    <div ref={ref} className={className} style={{ marginBottom: 28, position: "relative" }}>
+      <div style={{
+        display: "flex",
+        alignItems: "flex-start",
+        justifyContent: "space-between",
+        gap: 32,
+        flexWrap: "wrap",
+      }}>
+        <div style={{ flex: "1 1 auto", minWidth: 0 }}>
+          <div style={{ display: "flex", alignItems: "baseline", gap: 18, flexWrap: "wrap" }}>
+            <motion.span
+              initial={{ opacity: 0, y: 14, rotate: -6 }}
+              animate={inView ? { opacity: 1, y: 0, rotate: -4 } : {}}
+              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+              style={{
+                fontFamily: "'Caveat', cursive",
+                fontWeight: 500,
+                fontSize: "clamp(48px, 6vw, 72px)",
+                color: arko.primary,
+                lineHeight: 0.9,
+                display: "inline-block",
+                transformOrigin: "center",
+              }}
+            >
+              ch. {number}
+            </motion.span>
+            <motion.span
+              initial={{ opacity: 0, x: -8 }}
+              animate={inView ? { opacity: 1, x: 0 } : {}}
+              transition={{ delay: 0.2, duration: 0.5 }}
+              style={{
+                fontFamily: "'Playfair Display', Georgia, serif",
+                fontStyle: "italic",
+                fontWeight: 700,
+                fontSize: "clamp(22px, 2.2vw, 26px)",
+                color: "var(--text-primary)",
+                letterSpacing: "-0.01em",
+              }}
+            >
+              {label}
+            </motion.span>
+          </div>
+          {note && (
+            <motion.span
+              initial={{ opacity: 0 }}
+              animate={inView ? { opacity: 0.85 } : {}}
+              transition={{ delay: 0.4, duration: 0.5 }}
+              style={{
+                display: "inline-block",
+                marginTop: 8,
+                fontFamily: "'Caveat', cursive",
+                fontSize: 22,
+                color: arko.dark,
+                transform: "rotate(-2deg)",
+                transformOrigin: "left center",
+              }}
+            >
+              {note}
+            </motion.span>
+          )}
+          <motion.svg
+            aria-hidden
+            width="100%"
+            height="18"
+            viewBox="0 0 600 18"
+            preserveAspectRatio="none"
+            style={{ display: "block", marginTop: 12, overflow: "visible", maxWidth: 520 }}
+          >
+            <motion.path
+              d="M 2 10 C 60 4, 140 14, 220 9 C 300 4, 380 14, 460 9 C 520 6, 580 12, 598 9"
+              stroke={arko.primary}
+              strokeWidth="1.8"
+              strokeLinecap="round"
+              fill="none"
+              opacity={0.55}
+              initial={{ pathLength: 0 }}
+              animate={inView ? { pathLength: 1 } : {}}
+              transition={{ duration: 1.1, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            />
+          </motion.svg>
+        </div>
+        {hasBlock && (
+          <SheetTitleBlock sheet={sheet!} section={section!} phase={phase!} />
+        )}
       </div>
-      {note && (
-        <motion.span
-          initial={{ opacity: 0 }}
-          animate={inView ? { opacity: 0.85 } : {}}
-          transition={{ delay: 0.4, duration: 0.5 }}
-          style={{
-            display: "inline-block",
-            marginTop: 10,
-            fontFamily: "'Caveat', cursive",
-            fontSize: 22,
-            color: arko.dark,
-            transform: "rotate(-2deg)",
-            transformOrigin: "left center",
-          }}
-        >
-          {note}
-        </motion.span>
-      )}
-      <motion.svg
-        aria-hidden
-        width="100%"
-        height="18"
-        viewBox="0 0 600 18"
-        preserveAspectRatio="none"
-        style={{ display: "block", marginTop: 14, overflow: "visible", maxWidth: 560 }}
-      >
-        <motion.path
-          d="M 2 10 C 60 4, 140 14, 220 9 C 300 4, 380 14, 460 9 C 520 6, 580 12, 598 9"
-          stroke={arko.primary}
-          strokeWidth="1.8"
-          strokeLinecap="round"
-          fill="none"
-          opacity={0.55}
-          initial={{ pathLength: 0 }}
-          animate={inView ? { pathLength: 1 } : {}}
-          transition={{ duration: 1.1, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-        />
-      </motion.svg>
     </div>
   );
 }
@@ -1581,10 +1649,10 @@ export default function ArkoCase() {
         <div className="max-w-7xl mx-auto px-6 md:px-10">
 
           <Reveal>
-            <ChapterMark number="01" label="the whole thing, in one breath" note="a.k.a. overview" />
+            <ChapterMark number="01" label="the whole thing, in one breath" note="a.k.a. overview" sheet="01" section="Overview" phase="Weeks 01–02" />
 
             {/* Title + description */}
-            <div style={{ maxWidth: 760, marginBottom: 72, position: "relative" }}>
+            <div style={{ maxWidth: 760, marginBottom: 40, position: "relative" }}>
               <h2 style={{ ...t.h1Display, marginBottom: 24 }}>
                 One loop.{" "}
                 <ScribbleCircle color={arko.primary} rotate={-2} padX={14} padY={10} delay={0.4}>
@@ -1602,6 +1670,74 @@ export default function ArkoCase() {
                   the whole thesis
                 </HandLabel>
               </div>
+            </div>
+          </Reveal>
+
+          {/* Product loop — scan → design → approve */}
+          <Reveal delay={0.08}>
+            <div style={{ marginBottom: 40 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 18 }}>
+                <span aria-hidden style={{ width: 3, height: 14, background: arko.primary, display: "inline-block" }} />
+                <p style={{ ...mono, fontSize: 11, color: arko.dark, letterSpacing: "0.22em", textTransform: "uppercase", fontWeight: 600 }}>
+                  The loop · the whole product in three moves
+                </p>
+              </div>
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr auto 1fr auto 1fr",
+                  alignItems: "center",
+                  gap: 14,
+                  padding: "26px 22px",
+                  border: "0.75px solid var(--border)",
+                  background: "var(--bg-elevated)",
+                }}
+              >
+                {([
+                  { icon: <Aperture size={22} color={arko.dark} weight="regular" />, step: "01", title: "Scan", sub: "AR spatial capture on iPhone. Floor planes detected in under 3 min." },
+                  { icon: <Cube size={22} color={arko.dark} weight="regular" />,      step: "02", title: "Design", sub: "Drop furniture into the live scan. Swap finishes, adjust scale, place pins." },
+                  { icon: <CheckCircle size={22} color={arko.dark} weight="regular" />, step: "03", title: "Approve", sub: "Share a link. Client sees the room, taps a comment or approves." },
+                ] as { icon: React.ReactNode; step: string; title: string; sub: string }[]).map((n, i) => (
+                  <Fragment key={n.title}>
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true, margin: "-40px" }}
+                      transition={{ delay: 0.15 + i * 0.1, duration: 0.5 }}
+                      style={{ display: "flex", flexDirection: "column", gap: 10, minWidth: 0 }}
+                    >
+                      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                        {n.icon}
+                        <span style={{ ...mono, fontSize: 10, color: "var(--text-muted)", letterSpacing: "0.2em" }}>
+                          {n.step}
+                        </span>
+                      </div>
+                      <p style={{ fontFamily: serif, fontWeight: 700, fontSize: "clamp(22px, 2vw, 26px)", color: "var(--text-primary)", letterSpacing: "-0.02em", lineHeight: 1, marginTop: 2 }}>
+                        {n.title}
+                      </p>
+                      <p style={{ fontFamily: sans, fontSize: 13, color: "var(--text-secondary)", lineHeight: 1.6 }}>
+                        {n.sub}
+                      </p>
+                    </motion.div>
+                    {i < 2 && (
+                      <motion.svg
+                        aria-hidden
+                        width="46" height="14" viewBox="0 0 46 14" fill="none"
+                        initial={{ opacity: 0, x: -6 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true, margin: "-40px" }}
+                        transition={{ delay: 0.25 + i * 0.1, duration: 0.5 }}
+                        style={{ flexShrink: 0, alignSelf: "center" }}
+                      >
+                        <path d="M1 7h40M36 2l6 5-6 5" stroke={arko.primary} strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" opacity="0.7" />
+                      </motion.svg>
+                    )}
+                  </Fragment>
+                ))}
+              </div>
+              <p style={{ ...mono, fontSize: 10, color: "var(--text-muted)", letterSpacing: "0.2em", textTransform: "uppercase", marginTop: 12, textAlign: "right" }}>
+                Fig. 01 · product loop diagram
+              </p>
             </div>
           </Reveal>
 
@@ -1676,7 +1812,87 @@ export default function ArkoCase() {
 
         {/* ── THE PROBLEM ─────────────────────────────────────────────── */}
         <Reveal>
-          <ChapterMark number="02" label="where it hurts" note="the problem, in plain words" />
+          <ChapterMark number="02" label="where it hurts" note="the problem, in plain words" sheet="02" section="Problem" phase="Weeks 02–03" />
+        </Reveal>
+
+        {/* Broken workflow diagram — the before-state */}
+        <Reveal delay={0.05}>
+          <div style={{ marginBottom: 48 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 18 }}>
+              <span aria-hidden style={{ width: 3, height: 14, background: arko.primary, display: "inline-block" }} />
+              <p style={{ ...mono, fontSize: 11, color: arko.dark, letterSpacing: "0.22em", textTransform: "uppercase", fontWeight: 600 }}>
+                Before state · three tools, no connection
+              </p>
+            </div>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr auto 1fr auto 1fr auto 1fr",
+                alignItems: "stretch",
+                gap: 10,
+                padding: "22px 20px",
+                border: "0.75px solid var(--border)",
+                background: "var(--bg-elevated)",
+              }}
+            >
+              {([
+                { label: "Design",      tool: "AutoCAD",      note: "the pro's canvas" },
+                { label: "Handoff",     tool: "PDF · email",  note: "flattened, static" },
+                { label: "Walkthrough", tool: "on-site",      note: "delayed, verbal" },
+                { label: "Result",      tool: "Revision",     note: "6–8 hrs, every time", bad: true },
+              ] as { label: string; tool: string; note: string; bad?: boolean }[]).map((b, i, arr) => (
+                <Fragment key={b.label}>
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-40px" }}
+                    transition={{ delay: 0.12 + i * 0.08, duration: 0.5 }}
+                    style={{
+                      display: "flex", flexDirection: "column", justifyContent: "space-between",
+                      gap: 10, padding: "14px 14px",
+                      border: "0.75px dashed var(--border)",
+                      background: b.bad ? "rgba(181, 146, 76, 0.06)" : "transparent",
+                      minWidth: 0,
+                    }}
+                  >
+                    <span style={{ ...mono, fontSize: 10, color: "var(--text-muted)", letterSpacing: "0.2em", textTransform: "uppercase" }}>
+                      {b.label}
+                    </span>
+                    <p style={{ fontFamily: serif, fontWeight: 700, fontSize: "clamp(18px, 1.6vw, 22px)", color: b.bad ? arko.dark : "var(--text-primary)", letterSpacing: "-0.015em", lineHeight: 1.1 }}>
+                      {b.tool}
+                    </p>
+                    <span style={{ fontFamily: sans, fontSize: 12, color: "var(--text-secondary)", lineHeight: 1.5 }}>
+                      {b.note}
+                    </span>
+                  </motion.div>
+                  {i < arr.length - 1 && (
+                    <motion.svg
+                      aria-hidden
+                      width="28" height="16" viewBox="0 0 28 16" fill="none"
+                      initial={{ opacity: 0 }}
+                      whileInView={{ opacity: 1 }}
+                      viewport={{ once: true, margin: "-40px" }}
+                      transition={{ delay: 0.2 + i * 0.08, duration: 0.5 }}
+                      style={{ alignSelf: "center", flexShrink: 0 }}
+                    >
+                      <path
+                        d="M1 8h20M18 3l5 5-5 5"
+                        stroke={i === arr.length - 2 ? arko.primary : "var(--text-muted)"}
+                        strokeWidth="1.3"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeDasharray={i === arr.length - 2 ? "0" : "3 3"}
+                        opacity={i === arr.length - 2 ? 0.85 : 0.55}
+                      />
+                    </motion.svg>
+                  )}
+                </Fragment>
+              ))}
+            </div>
+            <p style={{ ...mono, fontSize: 10, color: "var(--text-muted)", letterSpacing: "0.2em", textTransform: "uppercase", marginTop: 12, textAlign: "right" }}>
+              Fig. 02 · the broken loop — dashed lines mark every missing handoff
+            </p>
+          </div>
         </Reveal>
 
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-16 items-start">
@@ -1773,7 +1989,7 @@ export default function ArkoCase() {
       <div id="sec-users" className="max-w-7xl mx-auto px-6 md:px-10" style={{ padding: SECTION_PAD }}>
 
         <Reveal>
-          <ChapterMark number="03" label="two humans, two very different days" note="who I actually designed for" />
+          <ChapterMark number="03" label="two humans, two very different days" note="who I actually designed for" sheet="03" section="Users & research" phase="Weeks 03–04" />
           <div style={{ marginBottom: 40, maxWidth: 680 }}>
             <h2 style={{ ...t.h2Section }}>
               One platform.{" "}
@@ -1885,7 +2101,7 @@ export default function ArkoCase() {
 
         {/* ── WEB PLATFORM ────────────────────────────────────────────── */}
         <Reveal>
-          <ChapterMark number="04" label="a workspace for the pro" note="the designer's daily canvas" />
+          <ChapterMark number="04" label="a workspace for the pro" note="the designer's daily canvas" sheet="04" section="Web platform" phase="Weeks 05–08" />
           <div style={{ maxWidth: 760, marginBottom: 44 }}>
             <h2 style={{ ...t.h2Section, marginBottom: 20 }}>
               A{" "}
@@ -1920,7 +2136,7 @@ export default function ArkoCase() {
         {/* ── SCAN FLOW ───────────────────────────────────────────────── */}
 
         <Reveal>
-          <ChapterMark number="05" label="scan the room, then start playing" note="from empty → furnished" />
+          <ChapterMark number="05" label="scan the room, then start playing" note="from empty → furnished" sheet="05" section="Scan flow" phase="Weeks 06–09" />
         </Reveal>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-start">
@@ -2043,7 +2259,7 @@ export default function ArkoCase() {
 
         {/* ── CLIENT EXPERIENCE ───────────────────────────────────────── */}
         <Reveal>
-          <ChapterMark number="06" label="the client opens a link. that's the whole onboarding." note="no login, no jargon, no app" />
+          <ChapterMark number="06" label="the client opens a link. that's the whole onboarding." note="no login, no jargon, no app" sheet="06" section="Client experience" phase="Weeks 09–11" />
         </Reveal>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-start">
@@ -2089,7 +2305,7 @@ export default function ArkoCase() {
         {/* ── DESIGN DECISIONS ────────────────────────────────────────── */}
 
         <Reveal>
-          <ChapterMark number="07" label="the calls I had to make" note="four decisions that shaped the product" />
+          <ChapterMark number="07" label="the calls I had to make" note="four decisions that shaped the product" sheet="07" section="Design decisions" phase="Weeks 10–12" />
           <div style={{ maxWidth: 680, marginBottom: 44 }}>
             <h2 style={{ ...t.h2Section }}>
               <ScribbleUnderline color={arko.primary} strokeWidth={2.4} delay={0.5}>
@@ -2111,7 +2327,7 @@ export default function ArkoCase() {
       <section id="sec-reflection" className="blueprint-grid" style={{ padding: SECTION_PAD }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <Reveal>
-            <ChapterMark number="08" label="what I learned, what I'd do next" note="the closing notes" />
+            <ChapterMark number="08" label="what I learned, what I'd do next" note="the closing notes" sheet="08" section="Outcomes & reflection" phase="Weeks 13–14" />
             <h2 style={{ ...t.h2Section, marginBottom: 20 }}>
               Three workflows. One platform.{" "}
               <ScribbleUnderline color={arko.primary} strokeWidth={2.4} delay={0.5} offset={-2}>
@@ -2128,7 +2344,7 @@ export default function ArkoCase() {
 
           {/* Projected outcomes — editorial bordered grid */}
           <Reveal delay={0.1}>
-            <div style={{ marginBottom: 72 }}>
+            <div style={{ marginBottom: 48 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 24 }}>
                 <span style={{ width: 3, height: 16, background: arko.primary, display: "inline-block" }} aria-hidden />
                 <p style={{ ...mono, fontSize: 11, color: arko.dark, letterSpacing: "0.22em", textTransform: "uppercase", fontWeight: 600 }}>
@@ -2178,7 +2394,7 @@ export default function ArkoCase() {
           </Reveal>
 
           {/* Reflection — clean editorial cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2" style={{ gap: 0, marginBottom: 72, borderTop: "1px solid var(--border)", borderLeft: "1px solid var(--border)" }}>
+          <div className="grid grid-cols-1 md:grid-cols-2" style={{ gap: 0, marginBottom: 56, borderTop: "1px solid var(--border)", borderLeft: "1px solid var(--border)" }}>
             {([
               {
                 label: "What I'd build next",
