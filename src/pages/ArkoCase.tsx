@@ -1358,10 +1358,9 @@ export default function ArkoCase() {
       {/* ══════════════════════════════════════════════════════════════
           HERO — single-viewport scrapbook cover
       ══════════════════════════════════════════════════════════════ */}
-      <section style={{
+      <section className="blueprint-grid" style={{
         position: "relative",
         overflow: "hidden",
-        background: "var(--bg-primary)",
         minHeight: "calc(100vh - 56px)",
         display: "flex",
         flexDirection: "column",
@@ -1672,7 +1671,7 @@ export default function ArkoCase() {
         </div>
       </section>
 
-      <section id="sec-problem" style={{ padding: SECTION_PAD, background: "var(--bg-secondary)" }}>
+      <section id="sec-problem" className="blueprint-grid-subtle" style={{ padding: SECTION_PAD }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
 
         {/* ── THE PROBLEM ─────────────────────────────────────────────── */}
@@ -1872,7 +1871,16 @@ export default function ArkoCase() {
         </Reveal>
       </section>
 
-      <section id="sec-web" style={{ padding: SECTION_PAD, background: arko.surface }}>
+      <section id="sec-web" style={{
+        padding: SECTION_PAD,
+        backgroundColor: arko.surface,
+        backgroundImage: `
+          repeating-linear-gradient(0deg, rgba(110,143,78,0.10) 0, rgba(110,143,78,0.10) 0.5px, transparent 0.5px, transparent 20px),
+          repeating-linear-gradient(90deg, rgba(110,143,78,0.10) 0, rgba(110,143,78,0.10) 0.5px, transparent 0.5px, transparent 20px),
+          repeating-linear-gradient(0deg, rgba(110,143,78,0.22) 0, rgba(110,143,78,0.22) 0.5px, transparent 0.5px, transparent 80px),
+          repeating-linear-gradient(90deg, rgba(110,143,78,0.22) 0, rgba(110,143,78,0.22) 0.5px, transparent 0.5px, transparent 80px)
+        `,
+      }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
 
         {/* ── WEB PLATFORM ────────────────────────────────────────────── */}
@@ -2021,7 +2029,16 @@ export default function ArkoCase() {
         </div>
       </section>
 
-      <section id="sec-client" style={{ padding: SECTION_PAD, background: arko.surface }}>
+      <section id="sec-client" style={{
+        padding: SECTION_PAD,
+        backgroundColor: arko.surface,
+        backgroundImage: `
+          repeating-linear-gradient(0deg, rgba(110,143,78,0.10) 0, rgba(110,143,78,0.10) 0.5px, transparent 0.5px, transparent 20px),
+          repeating-linear-gradient(90deg, rgba(110,143,78,0.10) 0, rgba(110,143,78,0.10) 0.5px, transparent 0.5px, transparent 20px),
+          repeating-linear-gradient(0deg, rgba(110,143,78,0.22) 0, rgba(110,143,78,0.22) 0.5px, transparent 0.5px, transparent 80px),
+          repeating-linear-gradient(90deg, rgba(110,143,78,0.22) 0, rgba(110,143,78,0.22) 0.5px, transparent 0.5px, transparent 80px)
+        `,
+      }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
 
         {/* ── CLIENT EXPERIENCE ───────────────────────────────────────── */}
@@ -2090,8 +2107,8 @@ export default function ArkoCase() {
         </div>
       </section>
 
-      {/* ── OUTCOMES — blueprint grid-subtle background ──────────────── */}
-      <section id="sec-reflection" style={{ padding: SECTION_PAD }}>
+      {/* ── OUTCOMES — blueprint grid background ─────────────────────── */}
+      <section id="sec-reflection" className="blueprint-grid" style={{ padding: SECTION_PAD }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <Reveal>
             <ChapterMark number="08" label="what I learned, what I'd do next" note="the closing notes" />
