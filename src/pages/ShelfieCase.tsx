@@ -3,20 +3,13 @@ import { Link } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import {
   ArrowUpIcon as ArrowUp,
-  ArrowRightIcon as ArrowRight,
   ArrowLeftIcon as ArrowLeft,
   QuotesIcon as Quotes,
   EyeIcon as Eye,
   TimerIcon as Timer,
-  ClipboardTextIcon as ClipboardText,
   BrainIcon as Brain,
   StackIcon as Stack,
   HandTapIcon as HandTap,
-  MagnifyingGlassIcon as Magnifier,
-  WarningIcon as Warning,
-  ForkKnifeIcon as ForkKnife,
-  CalendarBlankIcon as CalendarBlank,
-  QrCodeIcon as QrCode,
   ThermometerIcon as Thermometer,
   DeviceMobileIcon as DeviceMobile,
   CheckCircleIcon as CheckCircle,
@@ -548,7 +541,7 @@ export default function ShelfieCase() {
               </span>
               <span style={{ height: 1, width: 28, background: sh.primary, opacity: 0.5 }} />
               <span style={{ ...mono, fontSize: 11, color: "var(--text-muted)", letterSpacing: "0.18em" }}>
-                Human Factors · Field Research
+                Consumer · Packaging · 2023
               </span>
             </div>
           </Reveal>
@@ -567,9 +560,9 @@ export default function ShelfieCase() {
 
           <Reveal delay={0.2}>
             <p style={{ ...t.bodyLg, maxWidth: 720, marginBottom: 48 }}>
-              A graduate human factors study into why expiration dates — arguably the most-read
-              line of text in a grocery aisle — get misread by nearly two-thirds of shoppers, and
-              what better labels and tools could look like.
+              A field study into why expiration dates — arguably the most-read line of text in a
+              grocery aisle — get misread by nearly two-thirds of shoppers, and what better labels
+              and tools could look like.
             </p>
           </Reveal>
 
@@ -584,10 +577,9 @@ export default function ShelfieCase() {
             }}>
               {[
                 { label: "Role", value: "UX Researcher" },
-                { label: "Team", value: "5 · IE 577" },
-                { label: "Duration", value: "12 weeks" },
-                { label: "Year", value: "2023" },
                 { label: "Methods", value: "Field · Experiment · Survey" },
+                { label: "Timeline", value: "12 weeks" },
+                { label: "Year", value: "2023" },
               ].map((m) => (
                 <div key={m.label}>
                   <p style={{ ...mono, fontSize: 10, color: "var(--text-muted)", letterSpacing: "0.2em", marginBottom: 6 }}>
@@ -688,9 +680,9 @@ export default function ShelfieCase() {
               <Reveal delay={0.1}>
                 <p style={{ ...t.body }}>
                   Before we ran the field study, we needed to see the failure modes clearly. We
-                  pulled four representative products off the Walmart shelves and studied each
-                  one as an object — where the date lived, how the text rendered, and how the
-                  user was expected to find it.
+                  pulled four representative products off the shelves of a major grocery chain
+                  and studied each one as an object — where the date lived, how the text rendered,
+                  and how the user was expected to find it.
                 </p>
               </Reveal>
             </div>
@@ -787,7 +779,7 @@ export default function ShelfieCase() {
                 glyph: <ObservationGlyph />,
                 tag: "METHOD · 01",
                 title: "Observation",
-                body: "Naturalistic study of 25 Walmart shoppers across shifts and aisles — noting hesitation, tilting, comparison behaviour, and where lighting helped or hurt.",
+                body: "Naturalistic study of 25 grocery shoppers across shifts and aisles — noting hesitation, tilting, comparison behaviour, and where lighting helped or hurt.",
               },
               {
                 glyph: <ExperimentGlyph />,
@@ -1183,93 +1175,52 @@ export default function ShelfieCase() {
         </div>
       </section>
 
-      {/* ─── 08 CREDITS + NEXT ────────────────────────────────────── */}
-      <section style={{
-        padding: "clamp(56px, 7vw, 96px) 0",
-        background: sh.dark,
-        color: "#fff",
-      }}>
+      {/* ─── NEXT CASE ─────────────────────────────────────────────── */}
+      <section style={{ padding: "clamp(64px, 8vw, 96px) 0", borderTop: "1px solid var(--border)" }}>
         <div className="max-w-5xl mx-auto px-6 md:px-10">
           <div style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "flex-start",
-            flexWrap: "wrap",
-            gap: 40,
-            marginBottom: 56,
+            display: "grid", gap: "clamp(16px, 3vw, 40px)",
+            gridTemplateColumns: adjacent.prev && adjacent.next ? "1fr 1fr" : "1fr",
           }}>
-            <div>
-              <p style={{ ...mono, fontSize: 11, color: sh.light, letterSpacing: "0.2em", marginBottom: 14 }}>
-                Course
-              </p>
-              <p style={{ fontFamily: serif, fontSize: 22, fontWeight: 700, color: "#fff", marginBottom: 6 }}>
-                IE 577 · Human Factors
-              </p>
-              <p style={{ fontFamily: sans, fontSize: 14, color: "rgba(255,255,255,0.7)" }}>
-                Dr. Richard Stone · Iowa State University · 2023
-              </p>
-            </div>
-            <div>
-              <p style={{ ...mono, fontSize: 11, color: sh.light, letterSpacing: "0.2em", marginBottom: 14 }}>
-                Team
-              </p>
-              <p style={{ fontFamily: sans, fontSize: 14, color: "rgba(255,255,255,0.85)", lineHeight: 1.8 }}>
-                Karishma Bhatankar · Yogesh Bobde · <span style={{ color: "#fff", fontWeight: 600 }}>Niharika Pundlik</span>
-                <br />
-                Manohar Noti · Rhea Solomon
-              </p>
-            </div>
-          </div>
-
-          {/* Prev / Next */}
-          <div style={{
-            borderTop: "1px solid rgba(255,255,255,0.15)",
-            paddingTop: 32,
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: 24,
-          }}>
-            {adjacent.prev ? (
-              <Link
-                to={`/work/${adjacent.prev.slug}`}
+            {adjacent.prev && (
+              <Link to={`/work/${adjacent.prev.slug}`}
                 style={{
-                  textDecoration: "none", color: "#fff",
-                  display: "flex", flexDirection: "column", gap: 8,
+                  padding: "clamp(24px, 3vw, 36px)",
+                  background: "var(--bg-elevated)",
+                  border: `1px solid ${sh.subtle}`,
+                  textDecoration: "none", display: "block",
+                  transition: "border-color 240ms, transform 240ms",
                 }}
-                className="group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                onMouseEnter={(e) => { e.currentTarget.style.borderColor = sh.primary; e.currentTarget.style.transform = "translateY(-2px)"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.borderColor = sh.subtle; e.currentTarget.style.transform = "translateY(0)"; }}
               >
-                <span style={{ ...mono, fontSize: 10, color: sh.light, letterSpacing: "0.2em", display: "flex", alignItems: "center", gap: 8 }}>
-                  <ArrowLeft size={14} weight="regular" /> Previous
-                </span>
-                <span style={{ fontFamily: serif, fontSize: 24, fontWeight: 700, color: "#fff" }}>
-                  {adjacent.prev.title}
-                </span>
-                <span style={{ fontFamily: sans, fontSize: 13, color: "rgba(255,255,255,0.65)" }}>
-                  {adjacent.prev.subtitle}
-                </span>
+                <div style={{ ...mono, fontSize: 11, color: sh.muted, letterSpacing: "0.2em", marginBottom: 12 }}>
+                  ← PREVIOUS CASE
+                </div>
+                <div style={{ ...t.h3Lede }}>{adjacent.prev.title}</div>
+                <div style={{ ...t.bodySm, marginTop: 6 }}>{adjacent.prev.subtitle}</div>
               </Link>
-            ) : <div />}
-            {adjacent.next ? (
-              <Link
-                to={`/work/${adjacent.next.slug}`}
+            )}
+            {adjacent.next && (
+              <Link to={`/work/${adjacent.next.slug}`}
                 style={{
-                  textDecoration: "none", color: "#fff",
-                  display: "flex", flexDirection: "column", gap: 8,
-                  textAlign: "right",
+                  padding: "clamp(24px, 3vw, 36px)",
+                  background: "var(--bg-elevated)",
+                  border: `1px solid ${sh.subtle}`,
+                  textDecoration: "none", display: "block",
+                  transition: "border-color 240ms, transform 240ms",
+                  textAlign: adjacent.prev ? "right" : "left",
                 }}
-                className="group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                onMouseEnter={(e) => { e.currentTarget.style.borderColor = sh.primary; e.currentTarget.style.transform = "translateY(-2px)"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.borderColor = sh.subtle; e.currentTarget.style.transform = "translateY(0)"; }}
               >
-                <span style={{ ...mono, fontSize: 10, color: sh.light, letterSpacing: "0.2em", display: "flex", alignItems: "center", gap: 8, justifyContent: "flex-end" }}>
-                  Next <ArrowRight size={14} weight="regular" />
-                </span>
-                <span style={{ fontFamily: serif, fontSize: 24, fontWeight: 700, color: "#fff" }}>
-                  {adjacent.next.title}
-                </span>
-                <span style={{ fontFamily: sans, fontSize: 13, color: "rgba(255,255,255,0.65)" }}>
-                  {adjacent.next.subtitle}
-                </span>
+                <div style={{ ...mono, fontSize: 11, color: sh.muted, letterSpacing: "0.2em", marginBottom: 12 }}>
+                  NEXT CASE →
+                </div>
+                <div style={{ ...t.h3Lede }}>{adjacent.next.title}</div>
+                <div style={{ ...t.bodySm, marginTop: 6 }}>{adjacent.next.subtitle}</div>
               </Link>
-            ) : <div />}
+            )}
           </div>
         </div>
       </section>
