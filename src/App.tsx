@@ -8,6 +8,7 @@ import Home from "./pages/Home";
 import About from "./pages/About";
 import CaseStudy from "./pages/CaseStudy";
 import ArkoCase from "./pages/ArkoCase";
+import VeriflowCase from "./pages/VeriflowCase";
 import Resume from "./pages/Resume";
 import NotFound from "./pages/NotFound";
 
@@ -19,6 +20,7 @@ function AnimatedRoutes() {
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/work/arko" element={<ArkoCase />} />
+        <Route path="/work/veriflow" element={<VeriflowCase />} />
         <Route path="/work/:slug" element={<CaseStudy />} />
         <Route path="/resume" element={<Resume />} />
         <Route path="*" element={<NotFound />} />
