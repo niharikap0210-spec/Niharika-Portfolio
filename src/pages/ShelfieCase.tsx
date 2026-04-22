@@ -1,4 +1,4 @@
-import { motion, useInView, useMotionValue, animate } from "framer-motion";
+import { motion, useInView, useMotionValue, useScroll, useSpring, animate } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -491,14 +491,177 @@ function ShelfieAppIllustration() {
 }
 
 /* ══════════════════════════════════════════════════════════════════
+   HERO VISUAL — editorial specimen composition
+   Three product silhouettes on a shelf line, each with a dotted
+   callout to its failure mode. Sits behind a soft terracotta blur,
+   matching the Arko / Veriflow hero-mockup language.
+══════════════════════════════════════════════════════════════════ */
+function HeroVisual() {
+  return (
+    <motion.div
+      className="md:col-span-7"
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.6, duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
+      style={{ position: "relative", width: "100%", minWidth: 0 }}
+    >
+      {/* Soft terracotta radial blur — sits behind the specimen plate */}
+      <div aria-hidden style={{
+        position: "absolute", inset: "-8% -6%",
+        background: `radial-gradient(55% 55% at 55% 50%, ${sh.light} 0%, ${sh.primary} 40%, rgba(196,69,54,0) 72%)`,
+        filter: "blur(60px)", opacity: 0.45, zIndex: 0, pointerEvents: "none",
+      }} />
+      <div aria-hidden style={{
+        position: "absolute", left: "-10%", top: "15%",
+        width: "55%", height: "55%",
+        background: `radial-gradient(circle, ${sh.primary} 0%, rgba(196,69,54,0) 70%)`,
+        filter: "blur(48px)", opacity: 0.32, zIndex: 0, pointerEvents: "none",
+      }} />
+
+      {/* Specimen plate */}
+      <motion.div
+        animate={{ y: [0, -6, 0] }}
+        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+        style={{
+          position: "relative", zIndex: 2,
+          width: "94%", marginLeft: "6%",
+          background: "var(--bg-elevated)",
+          border: `1px solid ${sh.subtle}`,
+          padding: "clamp(28px, 3vw, 40px) clamp(24px, 2.6vw, 36px) clamp(20px, 2.4vw, 32px)",
+          boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 24px 60px rgba(196,69,54,0.16), 0 4px 14px rgba(0,0,0,0.06)",
+        }}
+      >
+        {/* Plate header */}
+        <div style={{
+          display: "flex", alignItems: "center", gap: 10,
+          marginBottom: 22,
+        }}>
+          <span aria-hidden style={{ width: 3, height: 14, background: sh.primary }} />
+          <span style={{ ...mono, fontSize: 11, color: sh.primary, letterSpacing: "0.22em", fontWeight: 700 }}>
+            FIG. 01 · THREE FAILURES, ONE AISLE
+          </span>
+        </div>
+
+        {/* SVG specimen — three products on a shelf with annotation callouts */}
+        <svg viewBox="0 0 600 320" preserveAspectRatio="xMidYMid meet" style={{
+          width: "100%", height: "auto", display: "block",
+        }} aria-hidden>
+          <defs>
+            <pattern id="sh-grid" width="24" height="24" patternUnits="userSpaceOnUse">
+              <path d="M 24 0 L 0 0 0 24" fill="none" stroke={sh.primary} strokeWidth="0.4" opacity="0.12" />
+            </pattern>
+          </defs>
+          <rect x="0" y="0" width="600" height="320" fill="url(#sh-grid)" />
+
+          {/* Shelf line */}
+          <line x1="40" y1="248" x2="560" y2="248" stroke={sh.dark} strokeWidth="1.2" />
+          <line x1="40" y1="252" x2="560" y2="252" stroke={sh.muted} strokeWidth="0.5" />
+
+          {/* ── Product 1: Oil bottle (CONTRAST) ─────────────────────── */}
+          <g transform="translate(110, 90)">
+            <rect x="-14" y="-78" width="28" height="14" fill={sh.dark} />
+            <rect x="-10" y="-64" width="20" height="10" fill={sh.caution} />
+            <path d="M -22 -54 Q -22 -42 -26 -32 L -26 158 L 26 158 L 26 -32 Q 22 -42 22 -54 Z"
+              fill={sh.caution} opacity="0.85" />
+            <path d="M -18 -32 L -18 152 L -10 152 L -10 -32 Z" fill="#fff" opacity="0.18" />
+            {/* Same-color date stamp */}
+            <text x="0" y="36" textAnchor="middle"
+              fontFamily="'Space Mono', monospace" fontSize="7"
+              fill={sh.caution} opacity="0.7" letterSpacing="0.1em">USE BY 05/24</text>
+            <ellipse cx="0" cy="34" rx="26" ry="7" fill="none" stroke={sh.primary} strokeWidth="1" strokeDasharray="2 2" />
+          </g>
+
+          {/* ── Product 2: Bread bag (PLACEMENT) ─────────────────────── */}
+          <g transform="translate(300, 110)">
+            <rect x="-8" y="-100" width="16" height="8" fill={sh.dark} />
+            <path d="M -52 -90 Q 0 -100 52 -90 L 54 138 Q 0 148 -54 138 Z"
+              fill={sh.surface} stroke={sh.dark} strokeWidth="0.9" />
+            <rect x="-32" y="-58" width="64" height="22" fill={sh.primary} opacity="0.9" />
+            <text x="0" y="-43" textAnchor="middle" fontFamily={serif} fontSize="12" fontWeight="700" fill="#fff">BREAD</text>
+            {/* Wandering date stamps */}
+            <text x="-44" y="-12" fontFamily="'Space Mono', monospace" fontSize="6" fill={sh.dark} opacity="0.55">BB 04/15</text>
+            <text x="14" y="38" fontFamily="'Space Mono', monospace" fontSize="6" fill={sh.dark} opacity="0.55">04/15</text>
+            <text x="-30" y="62" fontFamily="'Space Mono', monospace" fontSize="5" fill={sh.dark} opacity="0.5">LOT 22A</text>
+            {/* Search arrow */}
+            <path d="M -44 -8 Q -10 30 14 36" fill="none" stroke={sh.primary} strokeWidth="1" strokeDasharray="2 2" />
+            <path d="M 12 34 L 17 38 L 14 40 Z" fill={sh.primary} />
+          </g>
+
+          {/* ── Product 3: Can (LEGIBILITY) ──────────────────────────── */}
+          <g transform="translate(490, 130)">
+            <ellipse cx="0" cy="-58" rx="44" ry="8" fill="#D4D4D4" stroke={sh.dark} strokeWidth="0.8" />
+            <rect x="-44" y="-58" width="88" height="160" fill="#E8E8E8" stroke={sh.dark} strokeWidth="0.8" />
+            <ellipse cx="0" cy="102" rx="44" ry="8" fill="#C8C8C8" stroke={sh.dark} strokeWidth="0.8" />
+            {/* Label band */}
+            <rect x="-44" y="-30" width="88" height="80" fill={sh.primary} opacity="0.92" />
+            <text x="0" y="10" textAnchor="middle" fontFamily={serif} fontSize="13" fontWeight="700" fill="#fff">SOUP</text>
+            <text x="0" y="26" textAnchor="middle" fontFamily="'Space Mono', monospace" fontSize="6" fill="#fff" opacity="0.85" letterSpacing="0.15em">CLASSIC</text>
+            {/* Embossed date on lid */}
+            <text x="0" y="-54" textAnchor="middle" fontFamily="'Space Mono', monospace" fontSize="6" fill="#A0A0A0" letterSpacing="0.18em">23262 · LOT 109</text>
+            <ellipse cx="0" cy="-56" rx="34" ry="5" fill="none" stroke={sh.primary} strokeWidth="0.9" strokeDasharray="2 2" />
+          </g>
+
+          {/* ── Annotation callouts ──────────────────────────────────── */}
+          {/* Oil → CONTRAST */}
+          <line x1="136" y1="124" x2="180" y2="46" stroke={sh.primary} strokeWidth="0.8" strokeDasharray="2 3" />
+          <circle cx="180" cy="46" r="2.5" fill={sh.primary} />
+          <line x1="180" y1="46" x2="220" y2="46" stroke={sh.primary} strokeWidth="0.8" />
+          <text x="226" y="42" fontFamily="'Space Mono', monospace" fontSize="9" fill={sh.primary} letterSpacing="0.18em" fontWeight="700">CONTRAST</text>
+          <text x="226" y="56" fontFamily="'Inter', system-ui, sans-serif" fontSize="9" fill={sh.dark} opacity="0.75">Same colour as the product</text>
+
+          {/* Bread → PLACEMENT */}
+          <line x1="324" y1="146" x2="380" y2="200" stroke={sh.primary} strokeWidth="0.8" strokeDasharray="2 3" />
+          <circle cx="380" cy="200" r="2.5" fill={sh.primary} />
+          <line x1="380" y1="200" x2="430" y2="200" stroke={sh.primary} strokeWidth="0.8" />
+          <text x="436" y="196" fontFamily="'Space Mono', monospace" fontSize="9" fill={sh.primary} letterSpacing="0.18em" fontWeight="700">PLACEMENT</text>
+          <text x="436" y="210" fontFamily="'Inter', system-ui, sans-serif" fontSize="9" fill={sh.dark} opacity="0.75">No fixed location</text>
+
+          {/* Can → LEGIBILITY */}
+          <line x1="468" y1="74" x2="430" y2="36" stroke={sh.primary} strokeWidth="0.8" strokeDasharray="2 3" />
+          <circle cx="430" cy="36" r="2.5" fill={sh.primary} />
+          <line x1="430" y1="36" x2="384" y2="36" stroke={sh.primary} strokeWidth="0.8" />
+          <text x="378" y="32" textAnchor="end" fontFamily="'Space Mono', monospace" fontSize="9" fill={sh.primary} letterSpacing="0.18em" fontWeight="700">LEGIBILITY</text>
+          <text x="378" y="46" textAnchor="end" fontFamily="'Inter', system-ui, sans-serif" fontSize="9" fill={sh.dark} opacity="0.75">Embossed, not printed</text>
+
+          {/* Shelf caption */}
+          <text x="300" y="282" textAnchor="middle"
+            fontFamily="'Space Mono', monospace" fontSize="9"
+            fill={sh.dark} opacity="0.55" letterSpacing="0.22em">
+            STUDY SPECIMENS · n=4 · GROCERY AISLE
+          </text>
+        </svg>
+
+        {/* Plate footer */}
+        <div style={{
+          marginTop: 18, paddingTop: 16,
+          borderTop: `1px solid ${sh.subtle}`,
+          display: "flex", justifyContent: "space-between",
+          alignItems: "center", flexWrap: "wrap", gap: 12,
+        }}>
+          <span style={{ ...mono, fontSize: 10, color: "var(--text-muted)", letterSpacing: "0.2em" }}>
+            Plate · 01 / 04
+          </span>
+          <span style={{ ...mono, fontSize: 10, color: sh.primary, letterSpacing: "0.2em", fontWeight: 600 }}>
+            Annotated specimen
+          </span>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════════════
    PAGE
 ══════════════════════════════════════════════════════════════════ */
 export default function ShelfieCase() {
   const adjacent = getAdjacentProjects("shelfie");
-
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, { stiffness: 200, damping: 30, restDelta: 0.001 });
   const [showTop, setShowTop] = useState(false);
+
   useEffect(() => {
-    const onScroll = () => setShowTop(window.scrollY > 600);
+    window.scrollTo(0, 0);
+    const onScroll = () => setShowTop(window.scrollY > 800);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
@@ -508,91 +671,199 @@ export default function ShelfieCase() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.3 }}
+      transition={{ duration: 0.4 }}
       className="pt-14"
     >
-      {/* ─── HERO ─────────────────────────────────────────────────── */}
-      <section style={{ padding: "clamp(56px, 8vw, 104px) 0 clamp(48px, 6vw, 80px)" }}>
-        <div className="max-w-5xl mx-auto px-6 md:px-10">
-          {/* back */}
-          <Link
-            to="/"
-            className="inline-flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded"
+      {/* Top mask for fixed nav */}
+      <div style={{
+        position: "fixed", top: 0, left: 0, right: 0, height: 59,
+        background: "var(--bg-primary)", zIndex: 45, pointerEvents: "none",
+      }} />
+
+      {/* Scroll progress */}
+      <div style={{
+        position: "fixed", top: 56, left: 0, right: 0, height: 2,
+        background: "var(--bg-primary)", zIndex: 49,
+      }}>
+        <motion.div style={{
+          height: "100%", background: sh.primary,
+          scaleX, transformOrigin: "left", opacity: 0.85,
+        }} />
+      </div>
+
+      {/* ══════════════════════════════════════════════════════════════
+          00 · HERO — editorial monograph cover
+      ══════════════════════════════════════════════════════════════ */}
+      <section style={{
+        position: "relative",
+        height: "calc(100vh - 56px)",
+        minHeight: 640,
+        display: "flex",
+        flexDirection: "column",
+        overflow: "hidden",
+      }}>
+        {/* Top bar — back link + tag strip */}
+        <motion.div
+          initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.05, duration: 0.5 }}
+          className="max-w-7xl mx-auto px-6 md:px-10"
+          style={{
+            width: "100%", flexShrink: 0,
+            display: "flex", justifyContent: "space-between", alignItems: "center",
+            paddingTop: "clamp(16px, 2vw, 24px)",
+            paddingBottom: 14,
+            flexWrap: "wrap", gap: 16,
+            borderBottom: "1px solid var(--border)",
+          }}
+        >
+          <Link to="/"
             style={{
-              ...mono, fontSize: 10, color: "var(--text-muted)",
-              textDecoration: "none", marginBottom: 48,
-              transitionProperty: "color", transitionDuration: "150ms",
+              display: "inline-flex", alignItems: "center", gap: 10,
+              ...mono, fontSize: 11, letterSpacing: "0.22em",
+              color: "var(--text-secondary)", textDecoration: "none",
+              transitionProperty: "color", transitionDuration: "200ms",
             }}
             onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = sh.primary)}
-            onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = "var(--text-muted)")}
-          >
+            onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = "var(--text-secondary)")}>
             <ArrowLeft size={14} weight="regular" />
-            Back to index
+            Index
           </Link>
+          <div style={{ display: "flex", gap: 20, flexWrap: "wrap", alignItems: "center" }}>
+            {["UX Research", "Field Study", "Packaging", "Consumer"].map((tag) => (
+              <span key={tag} style={{ ...mono, fontSize: 10, color: "var(--text-muted)", letterSpacing: "0.2em" }}>
+                {tag}
+              </span>
+            ))}
+          </div>
+        </motion.div>
 
-          {/* eyebrow */}
-          <Reveal delay={0}>
-            <div style={{
-              display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap",
-              marginBottom: 32,
-            }}>
-              <span style={{ ...mono, fontSize: 11, color: sh.primary, letterSpacing: "0.22em", fontWeight: 700 }}>
-                CASE STUDY · 03
-              </span>
-              <span style={{ height: 1, width: 28, background: sh.primary, opacity: 0.5 }} />
-              <span style={{ ...mono, fontSize: 11, color: "var(--text-muted)", letterSpacing: "0.18em" }}>
-                Consumer · Packaging · 2023
-              </span>
+        {/* Hero body — 2-column: text left, specimen right, all in viewport */}
+        <div
+          className="max-w-7xl mx-auto px-6 md:px-10"
+          style={{
+            flex: 1, width: "100%", minHeight: 0,
+            display: "grid",
+            gridTemplateColumns: "minmax(0, 1fr)",
+            gap: "clamp(24px, 3vw, 40px)",
+            alignItems: "center",
+            paddingTop: "clamp(20px, 2.4vw, 32px)",
+            paddingBottom: "clamp(16px, 2vw, 24px)",
+          }}
+        >
+          <div
+            className="grid grid-cols-1 md:grid-cols-12"
+            style={{
+              gap: "clamp(24px, 3vw, 48px)",
+              alignItems: "center",
+              width: "100%",
+            }}
+          >
+            {/* LEFT — title, subtitle, meta */}
+            <div className="md:col-span-5" style={{ minWidth: 0 }}>
+              <motion.div
+                initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1, duration: 0.6 }}
+                style={{ display: "flex", justifyContent: "space-between", marginBottom: 18, maxWidth: 460 }}
+              >
+                <span style={{ ...mono, fontSize: 11, color: sh.primary, letterSpacing: "0.22em", fontWeight: 700 }}>
+                  Case Study · 03
+                </span>
+                <span style={{ ...mono, fontSize: 11, color: "var(--text-muted)", letterSpacing: "0.22em" }}>
+                  Consumer · 2023
+                </span>
+              </motion.div>
+
+              <div style={{ overflow: "hidden", marginBottom: "clamp(24px, 2.6vw, 36px)" }}>
+                <motion.h1
+                  initial={{ y: "110%" }} animate={{ y: 0 }}
+                  transition={{ delay: 0.15, duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
+                  style={{
+                    fontFamily: serif, fontWeight: 700,
+                    fontSize: "clamp(64px, 9.5vw, 140px)",
+                    color: "var(--text-primary)",
+                    letterSpacing: "-0.055em", lineHeight: 0.9,
+                    margin: 0,
+                  }}>
+                  Shelfie<span style={{ color: sh.primary, fontStyle: "italic" }}>.</span>
+                </motion.h1>
+              </div>
+
+              <motion.p
+                initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5, duration: 0.7 }}
+                style={{
+                  fontFamily: serif, fontStyle: "italic",
+                  fontSize: "clamp(20px, 1.8vw, 26px)",
+                  color: "var(--text-secondary)",
+                  lineHeight: 1.5, maxWidth: 520,
+                  marginBottom: "clamp(28px, 3vw, 42px)",
+                  letterSpacing: "-0.01em",
+                }}
+              >
+                A field study into why expiration dates —
+                <span style={{ color: sh.primary }}> the quiet safety signal </span>
+                nobody can read — get misread by nearly two-thirds of shoppers.
+              </motion.p>
+
+              {/* Meta row — 2x2, compact, below subtitle */}
+              <motion.div
+                initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8, duration: 0.6 }}
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+                  columnGap: "clamp(20px, 3vw, 40px)",
+                  rowGap: 22,
+                  borderTop: "1px solid var(--border)",
+                  paddingTop: 24,
+                  maxWidth: 460,
+                }}
+              >
+                {([
+                  { label: "Role",     value: "UX Researcher" },
+                  { label: "Methods",  value: "Field · Experiment · Survey" },
+                  { label: "Timeline", value: "12 weeks" },
+                  { label: "Sample",   value: "25 shoppers" },
+                ] as { label: string; value: string }[]).map((m) => (
+                  <div key={m.label} style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                    <span style={{ ...mono, fontSize: 13, color: "var(--text-secondary)", letterSpacing: "0.2em", fontWeight: 600 }}>
+                      {m.label}
+                    </span>
+                    <span style={{ fontFamily: sans, fontSize: 19, fontWeight: 500, color: "var(--text-primary)" }}>
+                      {m.value}
+                    </span>
+                  </div>
+                ))}
+              </motion.div>
             </div>
-          </Reveal>
 
-          <Reveal delay={0.1}>
-            <h1 style={{ ...t.h1Display, marginBottom: 24 }}>
-              Shelfie.
-              <br />
-              <span style={{ fontStyle: "italic", color: sh.primary, fontWeight: 500 }}>
-                The quiet safety signal
-              </span>
-              <br />
-              nobody can read.
-            </h1>
-          </Reveal>
-
-          <Reveal delay={0.2}>
-            <p style={{ ...t.bodyLg, maxWidth: 720, marginBottom: 48 }}>
-              A field study into why expiration dates — arguably the most-read line of text in a
-              grocery aisle — get misread by nearly two-thirds of shoppers, and what better labels
-              and tools could look like.
-            </p>
-          </Reveal>
-
-          {/* meta row */}
-          <Reveal delay={0.3}>
-            <div style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))",
-              gap: 32,
-              borderTop: "1px solid var(--border)",
-              paddingTop: 28,
-            }}>
-              {[
-                { label: "Role", value: "UX Researcher" },
-                { label: "Methods", value: "Field · Experiment · Survey" },
-                { label: "Timeline", value: "12 weeks" },
-                { label: "Year", value: "2023" },
-              ].map((m) => (
-                <div key={m.label}>
-                  <p style={{ ...mono, fontSize: 10, color: "var(--text-muted)", letterSpacing: "0.2em", marginBottom: 6 }}>
-                    {m.label}
-                  </p>
-                  <p style={{ fontFamily: sans, fontSize: 14, color: "var(--text-primary)" }}>
-                    {m.value}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </Reveal>
+            {/* RIGHT — annotated specimen plate */}
+            <HeroVisual />
+          </div>
         </div>
+
+        {/* Scroll cue — bottom strip */}
+        <motion.div
+          initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.1, duration: 0.6 }}
+          className="max-w-7xl mx-auto px-6 md:px-10"
+          style={{
+            width: "100%", flexShrink: 0,
+            display: "flex", justifyContent: "center", alignItems: "center",
+            paddingBottom: "clamp(14px, 1.6vw, 22px)",
+          }}
+        >
+          <motion.div
+            animate={{ y: [0, 5, 0] }}
+            transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+            style={{
+              display: "inline-flex", alignItems: "center", gap: 10,
+              ...mono, fontSize: 10, letterSpacing: "0.22em",
+              color: "var(--text-secondary)",
+            }}
+          >
+            Scroll
+            <svg width="12" height="12" viewBox="0 0 16 16" fill="none">
+              <path d="M8 3v10M4 9l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </motion.div>
+        </motion.div>
       </section>
 
       {/* ─── 01 PREMISE ───────────────────────────────────────────── */}
@@ -602,7 +873,7 @@ export default function ShelfieCase() {
         borderTop: "1px solid var(--border)",
         borderBottom: "1px solid var(--border)",
       }}>
-        <div className="max-w-5xl mx-auto px-6 md:px-10">
+        <div className="max-w-7xl mx-auto px-6 md:px-10">
           <SectionHeader num="01" title="Premise" phase="The stakes" />
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
@@ -663,7 +934,7 @@ export default function ShelfieCase() {
 
       {/* ─── 02 THE PROBLEM ON THE SHELF ──────────────────────────── */}
       <section style={{ padding: SECTION_PAD }}>
-        <div className="max-w-5xl mx-auto px-6 md:px-10">
+        <div className="max-w-7xl mx-auto px-6 md:px-10">
           <SectionHeader num="02" title="What fails on the shelf" phase="Failure cases" />
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mb-16">
@@ -748,7 +1019,7 @@ export default function ShelfieCase() {
         borderTop: "1px solid var(--border)",
         borderBottom: "1px solid var(--border)",
       }}>
-        <div className="max-w-5xl mx-auto px-6 md:px-10">
+        <div className="max-w-7xl mx-auto px-6 md:px-10">
           <SectionHeader num="03" title="How we studied it" phase="Method" />
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mb-12">
@@ -856,7 +1127,7 @@ export default function ShelfieCase() {
 
       {/* ─── 04 VOICES FROM THE AISLE ─────────────────────────────── */}
       <section style={{ padding: SECTION_PAD, background: sh.surface }}>
-        <div className="max-w-5xl mx-auto px-6 md:px-10">
+        <div className="max-w-7xl mx-auto px-6 md:px-10">
           <SectionHeader num="04" title="Voices from the aisle" phase="Research highlights" />
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -913,7 +1184,7 @@ export default function ShelfieCase() {
 
       {/* ─── 05 PRINCIPLES APPLIED ────────────────────────────────── */}
       <section style={{ padding: SECTION_PAD }}>
-        <div className="max-w-5xl mx-auto px-6 md:px-10">
+        <div className="max-w-7xl mx-auto px-6 md:px-10">
           <SectionHeader num="05" title="Principles we pressed against" phase="Synthesis" />
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mb-14">
@@ -990,7 +1261,7 @@ export default function ShelfieCase() {
         borderTop: "1px solid var(--border)",
         borderBottom: "1px solid var(--border)",
       }}>
-        <div className="max-w-5xl mx-auto px-6 md:px-10">
+        <div className="max-w-7xl mx-auto px-6 md:px-10">
           <SectionHeader num="06" title="Design proposals" phase="Concepts" />
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mb-12">
@@ -1119,7 +1390,7 @@ export default function ShelfieCase() {
 
       {/* ─── 07 OUTCOMES + TAKEAWAYS ──────────────────────────────── */}
       <section style={{ padding: SECTION_PAD }}>
-        <div className="max-w-5xl mx-auto px-6 md:px-10">
+        <div className="max-w-7xl mx-auto px-6 md:px-10">
           <SectionHeader num="07" title="What the work left us with" phase="Reflection" />
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
@@ -1177,7 +1448,7 @@ export default function ShelfieCase() {
 
       {/* ─── NEXT CASE ─────────────────────────────────────────────── */}
       <section style={{ padding: "clamp(64px, 8vw, 96px) 0", borderTop: "1px solid var(--border)" }}>
-        <div className="max-w-5xl mx-auto px-6 md:px-10">
+        <div className="max-w-7xl mx-auto px-6 md:px-10">
           <div style={{
             display: "grid", gap: "clamp(16px, 3vw, 40px)",
             gridTemplateColumns: adjacent.prev && adjacent.next ? "1fr 1fr" : "1fr",
