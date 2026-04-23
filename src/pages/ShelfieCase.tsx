@@ -537,11 +537,10 @@ function ShelfieAppIllustration() {
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   HERO VISUAL — anatomically dissected date stamp
-   A close-up specimen of a single date label, with multi-axis
-   annotations exposing the cognitive failure points: terminology,
-   legibility, contrast, placement. Sits behind a soft teal blur,
-   matching the Arko / Veriflow hero-mockup language.
+   HERO VISUAL — single milk-carton specimen
+   A clean, calm illustration: one gable-top carton with a clearly
+   printed best-by date. No white card, no annotations, no clutter.
+   Just the object, floating on a soft teal glow.
 ══════════════════════════════════════════════════════════════════ */
 function HeroVisual() {
   return (
@@ -550,179 +549,78 @@ function HeroVisual() {
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.6, duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
-      style={{ position: "relative", width: "100%", minWidth: 0 }}
+      style={{
+        position: "relative", width: "100%", minWidth: 0,
+        display: "flex", alignItems: "center", justifyContent: "center",
+        padding: "clamp(20px, 3vw, 48px) 0",
+      }}
     >
-      {/* Soft teal radial blur — sits behind the specimen plate */}
+      {/* Soft teal radial glow — sits behind the carton */}
       <div aria-hidden style={{
-        position: "absolute", inset: "-8% -6%",
-        background: `radial-gradient(55% 55% at 55% 50%, ${sh.light} 0%, ${sh.primary} 40%, rgba(31,95,92,0) 72%)`,
-        filter: "blur(60px)", opacity: 0.42, zIndex: 0, pointerEvents: "none",
-      }} />
-      <div aria-hidden style={{
-        position: "absolute", left: "-10%", top: "15%",
-        width: "55%", height: "55%",
-        background: `radial-gradient(circle, ${sh.primary} 0%, rgba(31,95,92,0) 70%)`,
-        filter: "blur(48px)", opacity: 0.3, zIndex: 0, pointerEvents: "none",
+        position: "absolute", inset: "-12%",
+        background: `radial-gradient(50% 50% at 50% 50%, ${sh.light} 0%, ${sh.primary} 38%, rgba(31,95,92,0) 72%)`,
+        filter: "blur(80px)", opacity: 0.36, zIndex: 0, pointerEvents: "none",
       }} />
 
-      {/* Specimen plate */}
-      <motion.div
-        animate={{ y: [0, -6, 0] }}
+      {/* Carton specimen — gentle float */}
+      <motion.svg
+        viewBox="0 0 360 460"
+        preserveAspectRatio="xMidYMid meet"
+        animate={{ y: [0, -8, 0] }}
         transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
         style={{
-          position: "relative", zIndex: 2,
-          width: "94%", marginLeft: "6%",
-          background: "var(--bg-elevated)",
-          border: `1px solid ${sh.subtle}`,
-          padding: "clamp(28px, 3vw, 40px) clamp(24px, 2.6vw, 36px) clamp(20px, 2.4vw, 32px)",
-          boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 24px 60px rgba(31,95,92,0.18), 0 4px 14px rgba(0,0,0,0.06)",
+          position: "relative", zIndex: 1,
+          width: "min(100%, 440px)", height: "auto", display: "block",
+          filter: "drop-shadow(0 24px 48px rgba(31,95,92,0.22))",
         }}
+        aria-hidden
       >
-        {/* Plate header */}
-        <div style={{
-          display: "flex", alignItems: "center", justifyContent: "space-between",
-          gap: 12, flexWrap: "wrap", marginBottom: 22,
-        }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <span aria-hidden style={{ width: 3, height: 14, background: sh.primary }} />
-            <span style={{ ...mono, fontSize: 11, color: sh.primary, letterSpacing: "0.22em", fontWeight: 700 }}>
-              FIG. 01 · ANATOMY OF A FAILURE
-            </span>
-          </div>
-          <span style={{ ...mono, fontSize: 10, color: "var(--text-muted)", letterSpacing: "0.2em" }}>
-            ×8 magnification
-          </span>
-        </div>
+        {/* Top gable — folded panels */}
+        <path d="M 80 90 L 180 38 L 280 90 L 280 110 L 180 58 L 80 110 Z"
+              fill={sh.dark} />
+        <path d="M 180 38 L 180 92"
+              stroke="#000" strokeOpacity="0.18" strokeWidth="1" />
 
-        {/* SVG — single magnified date stamp, dissected */}
-        <svg viewBox="0 0 600 360" preserveAspectRatio="xMidYMid meet" style={{
-          width: "100%", height: "auto", display: "block",
-        }} aria-hidden>
-          <defs>
-            <pattern id="sh-anat-grid" width="20" height="20" patternUnits="userSpaceOnUse">
-              <path d="M 20 0 L 0 0 0 20" fill="none" stroke={sh.primary} strokeWidth="0.4" opacity="0.12" />
-            </pattern>
-            <pattern id="sh-anat-grid-lg" width="100" height="100" patternUnits="userSpaceOnUse">
-              <path d="M 100 0 L 0 0 0 100" fill="none" stroke={sh.primary} strokeWidth="0.5" opacity="0.18" />
-            </pattern>
-          </defs>
-          <rect x="0" y="0" width="600" height="360" fill="url(#sh-anat-grid)" />
-          <rect x="0" y="0" width="600" height="360" fill="url(#sh-anat-grid-lg)" />
+        {/* Carton body */}
+        <rect x="80" y="110" width="200" height="290" fill={sh.primary} />
 
-          {/* Crosshair / registration marks */}
-          <g stroke={sh.muted} strokeWidth="0.8" opacity="0.6">
-            <line x1="20" y1="20" x2="36" y2="20" />
-            <line x1="20" y1="20" x2="20" y2="36" />
-            <line x1="580" y1="20" x2="564" y2="20" />
-            <line x1="580" y1="20" x2="580" y2="36" />
-            <line x1="20" y1="340" x2="36" y2="340" />
-            <line x1="20" y1="340" x2="20" y2="324" />
-            <line x1="580" y1="340" x2="564" y2="340" />
-            <line x1="580" y1="340" x2="580" y2="324" />
-          </g>
+        {/* Left highlight strip */}
+        <rect x="80" y="110" width="6" height="290" fill="#fff" opacity="0.09" />
+        {/* Right shadow strip */}
+        <rect x="268" y="110" width="12" height="290" fill="#000" opacity="0.14" />
 
-          {/* Subject: a magnified milk-carton date panel */}
-          <g transform="translate(180, 90)">
-            {/* Panel background — printed paperboard */}
-            <rect x="0" y="0" width="240" height="180" fill="#F2EDE3" stroke={sh.dark} strokeWidth="1.1" />
+        {/* Cream label — the readable face */}
+        <rect x="100" y="160" width="160" height="200" fill="#F2EDE3" />
 
-            {/* Subtle paperboard texture lines */}
-            <line x1="0" y1="40" x2="240" y2="40" stroke={sh.dark} strokeWidth="0.3" opacity="0.18" />
-            <line x1="0" y1="120" x2="240" y2="120" stroke={sh.dark} strokeWidth="0.3" opacity="0.18" />
+        {/* Brand wordmark */}
+        <text x="180" y="208" textAnchor="middle"
+              fontFamily={serif} fontWeight="700" fontSize="22"
+              fill={sh.dark} letterSpacing="-0.01em">
+          freshfields
+        </text>
 
-            {/* Brand band */}
-            <rect x="0" y="0" width="240" height="32" fill={sh.primary} />
-            <text x="14" y="21" fontFamily={serif} fontSize="14" fontWeight="700" fill="#fff" letterSpacing="-0.01em">FRESHFIELDS</text>
-            <text x="226" y="21" textAnchor="end" fontFamily="'Space Mono', monospace" fontSize="7" fill="#fff" opacity="0.8" letterSpacing="0.18em">WHOLE · 2 QT</text>
+        {/* Hairline divider */}
+        <line x1="130" y1="232" x2="230" y2="232"
+              stroke={sh.dark} strokeWidth="0.5" opacity="0.25" />
 
-            {/* Nutrition table (flat dominant) */}
-            <g transform="translate(14, 50)">
-              <text fontFamily={serif} fontSize="9" fontWeight="700" fill={sh.dark}>Nutrition Facts</text>
-              {[0,1,2,3,4,5].map((i) => (
-                <line key={i} x1="0" y1={14 + i*9} x2="100" y2={14 + i*9} stroke={sh.dark} strokeWidth="0.4" opacity="0.5" />
-              ))}
-              {[0,1,2,3,4,5].map((i) => (
-                <line key={`v${i}`} x1="0" y1={14 + i*9 - 3} x2="36" y2={14 + i*9 - 3} stroke={sh.dark} strokeWidth="0.5" opacity="0.7" />
-              ))}
-              {[0,1,2,3,4].map((i) => (
-                <line key={`v2${i}`} x1="60" y1={14 + i*9 - 3} x2="92" y2={14 + i*9 - 3} stroke={sh.dark} strokeWidth="0.5" opacity="0.6" />
-              ))}
-            </g>
+        {/* "BEST BY" label */}
+        <text x="180" y="276" textAnchor="middle"
+              fontFamily="'Space Mono', monospace" fontSize="10"
+              fill={sh.dark} opacity="0.6" letterSpacing="0.28em">
+          BEST BY
+        </text>
 
-            {/* Date stamp — small, off-axis, low contrast (the actual safety signal) */}
-            <g transform="translate(140, 142)">
-              <text fontFamily="'Space Mono', monospace" fontSize="7" fill="#A89A7E" letterSpacing="0.1em">SELL BY</text>
-              <text y="9" fontFamily="'Space Mono', monospace" fontSize="9" fill="#9A8E72" letterSpacing="0.18em" fontWeight="700">04 OCT 25</text>
-              <text y="20" fontFamily="'Space Mono', monospace" fontSize="5" fill="#A89A7E" letterSpacing="0.15em">LOT 22A · 09:14</text>
-            </g>
+        {/* Date — the clear, prominent signal */}
+        <text x="180" y="312" textAnchor="middle"
+              fontFamily="'Space Mono', monospace" fontWeight="700" fontSize="22"
+              fill={sh.primary} letterSpacing="0.14em">
+          04 · 10 · 25
+        </text>
 
-            {/* Highlight ring on the date — the subject of the dissection */}
-            <rect x="134" y="132" width="86" height="34" fill="none" stroke={sh.primary} strokeWidth="1.1" strokeDasharray="3 3" />
-          </g>
-
-          {/* ── Annotation 01 — VOCABULARY (top-left) ────────────────── */}
-          <g>
-            <line x1="318" y1="232" x2="200" y2="58" stroke={sh.primary} strokeWidth="0.9" strokeDasharray="2 3" />
-            <circle cx="200" cy="58" r="3" fill={sh.primary} />
-            <line x1="200" y1="58" x2="60" y2="58" stroke={sh.primary} strokeWidth="0.9" />
-            <text x="60" y="48" fontFamily="'Space Mono', monospace" fontSize="10" fill={sh.primary} letterSpacing="0.2em" fontWeight="700">A · VOCABULARY</text>
-            <text x="60" y="64" fontFamily="'Inter', system-ui, sans-serif" fontSize="10" fill={sh.dark} opacity="0.78">"Sell by" — one of four competing terms</text>
-            <text x="60" y="78" fontFamily="'Inter', system-ui, sans-serif" fontSize="10" fill={sh.dark} opacity="0.78">on the same shelf.</text>
-          </g>
-
-          {/* ── Annotation 02 — CONTRAST (left-middle) ───────────────── */}
-          <g>
-            <line x1="324" y1="244" x2="160" y2="178" stroke={sh.primary} strokeWidth="0.9" strokeDasharray="2 3" />
-            <circle cx="160" cy="178" r="3" fill={sh.primary} />
-            <line x1="160" y1="178" x2="60" y2="178" stroke={sh.primary} strokeWidth="0.9" />
-            <text x="60" y="168" fontFamily="'Space Mono', monospace" fontSize="10" fill={sh.primary} letterSpacing="0.2em" fontWeight="700">B · CONTRAST</text>
-            <text x="60" y="184" fontFamily="'Inter', system-ui, sans-serif" fontSize="10" fill={sh.dark} opacity="0.78">Date prints 1.4× luminance of the</text>
-            <text x="60" y="198" fontFamily="'Inter', system-ui, sans-serif" fontSize="10" fill={sh.dark} opacity="0.78">paperboard. Below WCAG threshold.</text>
-          </g>
-
-          {/* ── Annotation 03 — TYPE SIZE (right-top) ────────────────── */}
-          <g>
-            <line x1="360" y1="244" x2="490" y2="100" stroke={sh.primary} strokeWidth="0.9" strokeDasharray="2 3" />
-            <circle cx="490" cy="100" r="3" fill={sh.primary} />
-            <line x1="490" y1="100" x2="560" y2="100" stroke={sh.primary} strokeWidth="0.9" />
-            <text x="560" y="90" textAnchor="end" fontFamily="'Space Mono', monospace" fontSize="10" fill={sh.primary} letterSpacing="0.2em" fontWeight="700">C · TYPE SIZE</text>
-            <text x="560" y="106" textAnchor="end" fontFamily="'Inter', system-ui, sans-serif" fontSize="10" fill={sh.dark} opacity="0.78">3.4 pt — the safety signal is</text>
-            <text x="560" y="120" textAnchor="end" fontFamily="'Inter', system-ui, sans-serif" fontSize="10" fill={sh.dark} opacity="0.78">half the size of the lot code.</text>
-          </g>
-
-          {/* ── Annotation 04 — PLACEMENT (right-bottom) ─────────────── */}
-          <g>
-            <line x1="360" y1="252" x2="490" y2="280" stroke={sh.primary} strokeWidth="0.9" strokeDasharray="2 3" />
-            <circle cx="490" cy="280" r="3" fill={sh.primary} />
-            <line x1="490" y1="280" x2="560" y2="280" stroke={sh.primary} strokeWidth="0.9" />
-            <text x="560" y="270" textAnchor="end" fontFamily="'Space Mono', monospace" fontSize="10" fill={sh.primary} letterSpacing="0.2em" fontWeight="700">D · PLACEMENT</text>
-            <text x="560" y="286" textAnchor="end" fontFamily="'Inter', system-ui, sans-serif" fontSize="10" fill={sh.dark} opacity="0.78">Lower-right quadrant —</text>
-            <text x="560" y="300" textAnchor="end" fontFamily="'Inter', system-ui, sans-serif" fontSize="10" fill={sh.dark} opacity="0.78">below the eye's natural F-pattern.</text>
-          </g>
-
-          {/* Caption */}
-          <text x="300" y="332" textAnchor="middle"
-            fontFamily="'Space Mono', monospace" fontSize="9"
-            fill={sh.dark} opacity="0.55" letterSpacing="0.22em">
-            ONE STAMP · FOUR FAILURE MODES · BEFORE A SINGLE INTERVIEW
-          </text>
-        </svg>
-
-        {/* Plate footer */}
-        <div style={{
-          marginTop: 18, paddingTop: 16,
-          borderTop: `1px solid ${sh.subtle}`,
-          display: "flex", justifyContent: "space-between",
-          alignItems: "center", flexWrap: "wrap", gap: 12,
-        }}>
-          <span style={{ ...mono, fontSize: 10, color: "var(--text-muted)", letterSpacing: "0.2em" }}>
-            Plate · 01 / 04
-          </span>
-          <span style={{ ...mono, fontSize: 10, color: sh.primary, letterSpacing: "0.2em", fontWeight: 600 }}>
-            Date-stamp dissection
-          </span>
-        </div>
-      </motion.div>
+        {/* Soft contact shadow under the carton */}
+        <ellipse cx="180" cy="420" rx="115" ry="9"
+                 fill={sh.dark} opacity="0.16" />
+      </motion.svg>
     </motion.div>
   );
 }
