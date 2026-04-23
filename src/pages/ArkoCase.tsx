@@ -2,8 +2,8 @@ import { motion, AnimatePresence, useScroll, useSpring, useInView, useMotionValu
 import type { MotionValue } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
-import { ClockIcon as Clock, QuotesIcon as Quotes, DeviceMobileCameraIcon as DeviceMobileCamera, ApertureIcon as Aperture, LightbulbFilamentIcon as LightbulbFilament, CheckCircleIcon as CheckCircle, UsersThreeIcon as UsersThree, SparkleIcon as Sparkle, PushPinIcon as PushPin, CubeIcon as Cube, CompassIcon as Compass, ArrowUpIcon as ArrowUp, ArrowLeftIcon as ArrowLeft, ArrowRightIcon as ArrowRight, MicrophoneIcon as Microphone, ChatCircleDotsIcon as ChatCircleDots, EyeIcon as Eye, EnvelopeSimpleIcon as Envelope, SquaresFourIcon as SquaresFour, FolderOpenIcon as FolderOpen, ClipboardTextIcon as ClipboardText } from "@phosphor-icons/react";
-import { getAdjacentProjects, type Project } from "../data/projects";
+import { ClockIcon as Clock, QuotesIcon as Quotes, DeviceMobileCameraIcon as DeviceMobileCamera, ApertureIcon as Aperture, LightbulbFilamentIcon as LightbulbFilament, CheckCircleIcon as CheckCircle, UsersThreeIcon as UsersThree, SparkleIcon as Sparkle, PushPinIcon as PushPin, CubeIcon as Cube, CompassIcon as Compass, ArrowUpIcon as ArrowUp, ArrowRightIcon as ArrowRight, MicrophoneIcon as Microphone, ChatCircleDotsIcon as ChatCircleDots, EyeIcon as Eye, EnvelopeSimpleIcon as Envelope, SquaresFourIcon as SquaresFour, FolderOpenIcon as FolderOpen, ClipboardTextIcon as ClipboardText } from "@phosphor-icons/react";
+import { projects, type Project } from "../data/projects";
 
 /* ── Arko brand palette (scoped to this page only) ─────────────── */
 const arko = {
@@ -2009,12 +2009,10 @@ function ArEditorStepper({
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   NAV CARD — editorial prev/next panel
+   NAV CARD — minimal "more case studies" tile
 ══════════════════════════════════════════════════════════════════ */
-function NavCard({ project, direction }: { project: Project; direction: "prev" | "next" }) {
+function NavCard({ project }: { project: Project }) {
   const [hover, setHover] = useState(false);
-  const isPrev = direction === "prev";
-  const Arrow = isPrev ? ArrowLeft : ArrowRight;
   const accent = `hsl(${project.accentHue}, 38%, 48%)`;
 
   return (
@@ -2027,115 +2025,48 @@ function NavCard({ project, direction }: { project: Project; direction: "prev" |
         position: "relative",
         textDecoration: "none",
         display: "block",
-        padding: "clamp(32px, 3.6vw, 52px) clamp(28px, 3vw, 44px)",
+        padding: "clamp(36px, 3.6vw, 56px) clamp(28px, 3vw, 44px)",
         background: "var(--bg-primary)",
-        overflow: "hidden",
-        textAlign: isPrev ? "left" : "right",
-        transition: "background-color 320ms ease-out",
       }}
     >
-      {/* Accent sweep — colored tint appears from the inbound edge on hover */}
-      <span
-        aria-hidden
-        style={{
-          position: "absolute",
-          inset: 0,
-          background: `linear-gradient(${isPrev ? "90deg" : "270deg"}, ${accent}14 0%, transparent 65%)`,
-          opacity: hover ? 1 : 0,
-          transition: "opacity 380ms ease-out",
-          pointerEvents: "none",
-        }}
-      />
-      {/* Top rail that slides in from the direction edge */}
-      <span
-        aria-hidden
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          height: 2,
-          background: accent,
-          transformOrigin: isPrev ? "left center" : "right center",
-          transform: hover ? "scaleX(1)" : "scaleX(0)",
-          transition: "transform 420ms cubic-bezier(0.16, 1, 0.3, 1)",
-        }}
-      />
+      <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+        {/* Year */}
+        <span style={{ ...mono, fontSize: 11, color: "var(--text-muted)", letterSpacing: "0.24em", fontWeight: 600 }}>
+          {project.year}
+        </span>
 
-      <div style={{ position: "relative", display: "flex", flexDirection: "column", gap: 20 }}>
-        {/* Direction label + arrow */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 12,
-            justifyContent: isPrev ? "flex-start" : "flex-end",
-          }}
-        >
-          {isPrev && (
-            <motion.span
-              animate={{ x: hover ? -4 : 0 }}
-              transition={{ type: "spring", stiffness: 260, damping: 20 }}
-              style={{ display: "inline-flex", color: hover ? accent : "var(--text-muted)", transition: "color 260ms ease-out" }}
-            >
-              <Arrow size={18} weight="regular" />
-            </motion.span>
-          )}
-          <span style={{ ...mono, fontSize: 12, color: "var(--text-muted)", letterSpacing: "0.22em", fontWeight: 600 }}>
-            {isPrev ? "Previous case" : "Next case"}
-          </span>
-          {!isPrev && (
-            <motion.span
-              animate={{ x: hover ? 4 : 0 }}
-              transition={{ type: "spring", stiffness: 260, damping: 20 }}
-              style={{ display: "inline-flex", color: hover ? accent : "var(--text-muted)", transition: "color 260ms ease-out" }}
-            >
-              <Arrow size={18} weight="regular" />
-            </motion.span>
-          )}
-        </div>
-
-        {/* Project title */}
+        {/* Title */}
         <p
           style={{
             fontFamily: serif,
             fontWeight: 700,
-            fontSize: "clamp(34px, 3.6vw, 52px)",
+            fontSize: "clamp(30px, 3vw, 44px)",
             letterSpacing: "-0.03em",
-            lineHeight: 1.02,
+            lineHeight: 1.04,
             color: hover ? accent : "var(--text-primary)",
-            transition: "color 280ms ease-out",
+            transition: "color 260ms ease-out",
             margin: 0,
           }}
         >
           {project.title}
         </p>
 
-        {/* Tagline */}
+        {/* Subtitle */}
         <p
           style={{
             fontFamily: sans,
-            fontSize: "clamp(15px, 1.1vw, 17px)",
+            fontSize: "clamp(15px, 1.05vw, 17px)",
             lineHeight: 1.55,
             color: "var(--text-secondary)",
-            maxWidth: 460,
+            maxWidth: 440,
             margin: 0,
-            marginLeft: isPrev ? 0 : "auto",
           }}
         >
           {project.subtitle}
         </p>
 
         {/* CTA */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 10,
-            marginTop: 8,
-            justifyContent: isPrev ? "flex-start" : "flex-end",
-          }}
-        >
+        <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 10 }}>
           <span
             style={{
               ...mono,
@@ -2148,16 +2079,13 @@ function NavCard({ project, direction }: { project: Project; direction: "prev" |
           >
             View case study
           </span>
-          <span
-            aria-hidden
-            style={{
-              display: "inline-block",
-              width: hover ? 36 : 20,
-              height: 1,
-              background: hover ? accent : "var(--text-muted)",
-              transition: "width 320ms cubic-bezier(0.16, 1, 0.3, 1), background-color 260ms ease-out",
-            }}
-          />
+          <motion.span
+            animate={{ x: hover ? 6 : 0 }}
+            transition={{ type: "spring", stiffness: 260, damping: 22 }}
+            style={{ display: "inline-flex", color: hover ? accent : "var(--text-primary)", transition: "color 260ms ease-out" }}
+          >
+            <ArrowRight size={16} weight="regular" />
+          </motion.span>
         </div>
       </div>
     </Link>
@@ -2168,7 +2096,7 @@ function NavCard({ project, direction }: { project: Project; direction: "prev" |
    PAGE
 ══════════════════════════════════════════════════════════════════ */
 export default function ArkoCase() {
-  const adjacent = getAdjacentProjects("arko");
+  const otherProjects = projects.filter((p) => p.slug !== "arko").slice(-2);
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, { stiffness: 200, damping: 30 });
 
@@ -3297,18 +3225,15 @@ export default function ArkoCase() {
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: adjacent.prev && adjacent.next ? "1fr 1fr" : "1fr",
+              gridTemplateColumns: otherProjects.length > 1 ? "1fr 1fr" : "1fr",
               gap: 1,
               background: "var(--border)",
               border: "1px solid var(--border)",
             }}
           >
-            {adjacent.prev && (
-              <NavCard project={adjacent.prev} direction="prev" />
-            )}
-            {adjacent.next && (
-              <NavCard project={adjacent.next} direction="next" />
-            )}
+            {otherProjects.map((p) => (
+              <NavCard key={p.slug} project={p} />
+            ))}
           </div>
         </div>
       </section>
