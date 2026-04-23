@@ -1293,12 +1293,12 @@ function JourneyIllustration() {
             delay: 1.6,
           }}
         >
-          <rect x={nodes[0].x - 18} y="152" width="36" height="30" rx="3"
+          <rect x={nodes[0].x - 18} y="155" width="36" height="30" rx="3"
             fill={vf.primary} opacity="0.95" />
-          <rect x={nodes[0].x - 11} y="147" width="22" height="5" rx="1" fill={vf.primary} />
-          <line x1={nodes[0].x - 7} y1="164" x2={nodes[0].x + 7} y2="164"
+          <rect x={nodes[0].x - 11} y="150" width="22" height="5" rx="1" fill={vf.primary} />
+          <line x1={nodes[0].x - 7} y1="167" x2={nodes[0].x + 7} y2="167"
             stroke="#fff" strokeWidth="1.3" strokeLinecap="round" />
-          <line x1={nodes[0].x - 7} y1="172" x2={nodes[0].x + 7} y2="172"
+          <line x1={nodes[0].x - 7} y1="175" x2={nodes[0].x + 7} y2="175"
             stroke="#fff" strokeWidth="1.3" strokeLinecap="round" />
         </motion.g>
       </svg>
