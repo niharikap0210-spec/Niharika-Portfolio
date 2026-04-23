@@ -477,27 +477,7 @@ function WebGallery({
 
   return (
     <div style={{ width: "100%" }}>
-      {/* Editorial tab row — UserTabs pattern */}
-      <div
-        style={{
-          position: "relative",
-          marginBottom: 32,
-        }}
-      >
-        {/* Faded white surface — softens into the page at the edges */}
-        <div
-          aria-hidden
-          style={{
-            position: "absolute",
-            inset: "-4px -2% 0",
-            background: "var(--bg-elevated)",
-            maskImage:
-              "linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)",
-            WebkitMaskImage:
-              "linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)",
-            pointerEvents: "none",
-          }}
-        />
+      {/* Editorial tab row — flush on page, single baseline rail */}
       <div
         role="tablist"
         aria-label="Workspace screens"
@@ -505,6 +485,8 @@ function WebGallery({
           position: "relative",
           display: "grid",
           gridTemplateColumns: `repeat(${tabs.length}, minmax(0, 1fr))`,
+          borderBottom: "1px solid var(--border)",
+          marginBottom: 32,
         }}
       >
         {tabs.map((tab, i) => {
@@ -523,14 +505,14 @@ function WebGallery({
               onBlur={(e) => { (e.currentTarget as HTMLElement).style.outline = "none"; }}
               style={{
                 position: "relative",
-                padding: "26px 26px",
+                padding: "18px 20px",
                 background: "transparent",
                 border: "none",
                 cursor: "pointer",
                 textAlign: "left",
                 display: "flex",
                 flexDirection: "column",
-                gap: 14,
+                gap: 10,
                 transitionProperty: "color",
                 transitionDuration: "220ms",
                 minWidth: 0,
@@ -542,7 +524,7 @@ function WebGallery({
                   aria-hidden
                   style={{
                     position: "absolute",
-                    bottom: 0,
+                    bottom: -1,
                     left: 0,
                     right: 0,
                     height: 2,
@@ -554,7 +536,7 @@ function WebGallery({
               <span
                 style={{
                   ...mono,
-                  fontSize: 14,
+                  fontSize: 12,
                   color: isActive ? arko.primary : "var(--text-muted)",
                   letterSpacing: "0.2em",
                   fontWeight: 600,
@@ -562,11 +544,11 @@ function WebGallery({
               >
                 {tab.fig}
               </span>
-              <span style={{ display: "inline-flex", alignItems: "center", gap: 14, minWidth: 0 }}>
+              <span style={{ display: "inline-flex", alignItems: "center", gap: 10, minWidth: 0 }}>
                 {TabIcon && (
                   <TabIcon
-                    size={24}
-                    color={isActive ? arko.primary : "var(--text-secondary)"}
+                    size={18}
+                    color={isActive ? arko.primary : "var(--text-muted)"}
                     weight={isActive ? "duotone" : "regular"}
                     style={{ flexShrink: 0 }}
                   />
@@ -575,7 +557,7 @@ function WebGallery({
                   style={{
                     fontFamily: serif,
                     fontWeight: 700,
-                    fontSize: 22,
+                    fontSize: 18,
                     lineHeight: 1.2,
                     letterSpacing: "-0.015em",
                     color: isActive ? "var(--text-primary)" : "var(--text-secondary)",
@@ -592,7 +574,6 @@ function WebGallery({
             </button>
           );
         })}
-      </div>
       </div>
 
       {/* Browser-chrome frame */}
