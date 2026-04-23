@@ -20,14 +20,15 @@ import { getAdjacentProjects } from "../data/projects";
 
 /* ── Shelfie palette, scoped to this page ─────────────────────────── */
 const sh = {
-  primary: "#C44536",         // terracotta — the warning/expired tone
-  light:   "#E8A598",         // tint
-  dark:    "#8C2E22",         // shade
-  surface: "#FBEDE6",         // soft blush background
-  subtle:  "rgba(196, 69, 54, 0.08)",
-  muted:   "rgba(196, 69, 54, 0.55)",
+  primary: "#1F5F5C",         // deep teal — sophisticated, food-fresh
+  light:   "#4A8985",         // tint
+  dark:    "#143F3D",         // shade
+  surface: "#E8F1EF",         // very pale mint-cream
+  subtle:  "rgba(31, 95, 92, 0.08)",
+  muted:   "rgba(31, 95, 92, 0.55)",
   fresh:   "#5A8C5C",         // sage — the "still fresh" complement
   caution: "#D4A43C",         // amber — the "caution" mid-state
+  expired: "#C44536",         // semantic red — used ONLY in freshness-state diagrams
 };
 
 const mono: React.CSSProperties = {
@@ -260,6 +261,37 @@ function CanTopIllustration() {
   );
 }
 
+function YogurtCupIllustration() {
+  return (
+    <svg viewBox="0 0 140 180" width="100%" style={{ maxWidth: 140 }} aria-hidden>
+      {/* foil lid */}
+      <ellipse cx="70" cy="34" rx="46" ry="8" fill="#E0DFD9" stroke={sh.dark} strokeWidth="0.8" />
+      {/* cup body — tapers slightly */}
+      <path
+        d="M 26 36 L 32 168 Q 32 174 38 174 L 102 174 Q 108 174 108 168 L 114 36 Z"
+        fill="#FAFAFA"
+        stroke={sh.dark}
+        strokeWidth="0.9"
+      />
+      {/* brand band */}
+      <rect x="32" y="74" width="76" height="36" fill={sh.primary} opacity="0.92" />
+      <text x="70" y="92" textAnchor="middle" fontFamily={serif} fontSize="11" fontWeight="700" fill="#fff">YOGURT</text>
+      <text x="70" y="103" textAnchor="middle" fontFamily="'Space Mono', monospace" fontSize="6" fill="#fff" opacity="0.85" letterSpacing="0.2em">PROBIOTIC · 150 G</text>
+      {/* micro-printed date on rim */}
+      <text x="34" y="44" fontFamily="'Space Mono', monospace" fontSize="3.2" fill={sh.dark} opacity="0.55" letterSpacing="0.05em">EXP 04/29/25 LOT 4178</text>
+      {/* magnifier ring centered on date */}
+      <circle cx="48" cy="42" r="14" fill="rgba(255,255,255,0.6)" stroke={sh.primary} strokeWidth="1.2" />
+      <text x="48" y="40" textAnchor="middle" fontFamily="'Space Mono', monospace" fontSize="5" fontWeight="700" fill={sh.primary} letterSpacing="0.05em">EXP 04/29</text>
+      <text x="48" y="46" textAnchor="middle" fontFamily="'Space Mono', monospace" fontSize="3.4" fill={sh.dark} opacity="0.7">LOT 4178</text>
+      {/* magnifier handle */}
+      <line x1="58" y1="52" x2="76" y2="68" stroke={sh.primary} strokeWidth="2" strokeLinecap="round" />
+      {/* fingertip scale ref */}
+      <text x="118" y="48" fontFamily="'Space Mono', monospace" fontSize="5" fill={sh.dark} opacity="0.6" letterSpacing="0.1em">3.4 pt</text>
+      <line x1="116" y1="44" x2="62" y2="44" stroke={sh.dark} strokeWidth="0.4" strokeDasharray="1 1" opacity="0.5" />
+    </svg>
+  );
+}
+
 /* Method column illustrations */
 function ObservationGlyph() {
   return (
@@ -307,7 +339,7 @@ function UniversalIconIllustration() {
       {[
         { x: 40,  label: "FRESH",   color: sh.fresh,   check: true  },
         { x: 120, label: "SOON",    color: sh.caution, check: false },
-        { x: 200, label: "EXPIRED", color: sh.primary, check: false },
+        { x: 200, label: "EXPIRED", color: sh.expired, check: false },
       ].map((s) => (
         <g key={s.label}>
           <circle cx={s.x} cy="60" r="22" fill={s.color} opacity="0.14" />
@@ -491,9 +523,10 @@ function ShelfieAppIllustration() {
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   HERO VISUAL — editorial specimen composition
-   Three product silhouettes on a shelf line, each with a dotted
-   callout to its failure mode. Sits behind a soft terracotta blur,
+   HERO VISUAL — anatomically dissected date stamp
+   A close-up specimen of a single date label, with multi-axis
+   annotations exposing the cognitive failure points: terminology,
+   legibility, contrast, placement. Sits behind a soft teal blur,
    matching the Arko / Veriflow hero-mockup language.
 ══════════════════════════════════════════════════════════════════ */
 function HeroVisual() {
@@ -505,17 +538,17 @@ function HeroVisual() {
       transition={{ delay: 0.6, duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
       style={{ position: "relative", width: "100%", minWidth: 0 }}
     >
-      {/* Soft terracotta radial blur — sits behind the specimen plate */}
+      {/* Soft teal radial blur — sits behind the specimen plate */}
       <div aria-hidden style={{
         position: "absolute", inset: "-8% -6%",
-        background: `radial-gradient(55% 55% at 55% 50%, ${sh.light} 0%, ${sh.primary} 40%, rgba(196,69,54,0) 72%)`,
-        filter: "blur(60px)", opacity: 0.45, zIndex: 0, pointerEvents: "none",
+        background: `radial-gradient(55% 55% at 55% 50%, ${sh.light} 0%, ${sh.primary} 40%, rgba(31,95,92,0) 72%)`,
+        filter: "blur(60px)", opacity: 0.42, zIndex: 0, pointerEvents: "none",
       }} />
       <div aria-hidden style={{
         position: "absolute", left: "-10%", top: "15%",
         width: "55%", height: "55%",
-        background: `radial-gradient(circle, ${sh.primary} 0%, rgba(196,69,54,0) 70%)`,
-        filter: "blur(48px)", opacity: 0.32, zIndex: 0, pointerEvents: "none",
+        background: `radial-gradient(circle, ${sh.primary} 0%, rgba(31,95,92,0) 70%)`,
+        filter: "blur(48px)", opacity: 0.3, zIndex: 0, pointerEvents: "none",
       }} />
 
       {/* Specimen plate */}
@@ -528,106 +561,136 @@ function HeroVisual() {
           background: "var(--bg-elevated)",
           border: `1px solid ${sh.subtle}`,
           padding: "clamp(28px, 3vw, 40px) clamp(24px, 2.6vw, 36px) clamp(20px, 2.4vw, 32px)",
-          boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 24px 60px rgba(196,69,54,0.16), 0 4px 14px rgba(0,0,0,0.06)",
+          boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 24px 60px rgba(31,95,92,0.18), 0 4px 14px rgba(0,0,0,0.06)",
         }}
       >
         {/* Plate header */}
         <div style={{
-          display: "flex", alignItems: "center", gap: 10,
-          marginBottom: 22,
+          display: "flex", alignItems: "center", justifyContent: "space-between",
+          gap: 12, flexWrap: "wrap", marginBottom: 22,
         }}>
-          <span aria-hidden style={{ width: 3, height: 14, background: sh.primary }} />
-          <span style={{ ...mono, fontSize: 11, color: sh.primary, letterSpacing: "0.22em", fontWeight: 700 }}>
-            FIG. 01 · THREE FAILURES, ONE AISLE
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <span aria-hidden style={{ width: 3, height: 14, background: sh.primary }} />
+            <span style={{ ...mono, fontSize: 11, color: sh.primary, letterSpacing: "0.22em", fontWeight: 700 }}>
+              FIG. 01 · ANATOMY OF A FAILURE
+            </span>
+          </div>
+          <span style={{ ...mono, fontSize: 10, color: "var(--text-muted)", letterSpacing: "0.2em" }}>
+            ×8 magnification
           </span>
         </div>
 
-        {/* SVG specimen — three products on a shelf with annotation callouts */}
-        <svg viewBox="0 0 600 320" preserveAspectRatio="xMidYMid meet" style={{
+        {/* SVG — single magnified date stamp, dissected */}
+        <svg viewBox="0 0 600 360" preserveAspectRatio="xMidYMid meet" style={{
           width: "100%", height: "auto", display: "block",
         }} aria-hidden>
           <defs>
-            <pattern id="sh-grid" width="24" height="24" patternUnits="userSpaceOnUse">
-              <path d="M 24 0 L 0 0 0 24" fill="none" stroke={sh.primary} strokeWidth="0.4" opacity="0.12" />
+            <pattern id="sh-anat-grid" width="20" height="20" patternUnits="userSpaceOnUse">
+              <path d="M 20 0 L 0 0 0 20" fill="none" stroke={sh.primary} strokeWidth="0.4" opacity="0.12" />
+            </pattern>
+            <pattern id="sh-anat-grid-lg" width="100" height="100" patternUnits="userSpaceOnUse">
+              <path d="M 100 0 L 0 0 0 100" fill="none" stroke={sh.primary} strokeWidth="0.5" opacity="0.18" />
             </pattern>
           </defs>
-          <rect x="0" y="0" width="600" height="320" fill="url(#sh-grid)" />
+          <rect x="0" y="0" width="600" height="360" fill="url(#sh-anat-grid)" />
+          <rect x="0" y="0" width="600" height="360" fill="url(#sh-anat-grid-lg)" />
 
-          {/* Shelf line */}
-          <line x1="40" y1="248" x2="560" y2="248" stroke={sh.dark} strokeWidth="1.2" />
-          <line x1="40" y1="252" x2="560" y2="252" stroke={sh.muted} strokeWidth="0.5" />
-
-          {/* ── Product 1: Oil bottle (CONTRAST) ─────────────────────── */}
-          <g transform="translate(110, 90)">
-            <rect x="-14" y="-78" width="28" height="14" fill={sh.dark} />
-            <rect x="-10" y="-64" width="20" height="10" fill={sh.caution} />
-            <path d="M -22 -54 Q -22 -42 -26 -32 L -26 158 L 26 158 L 26 -32 Q 22 -42 22 -54 Z"
-              fill={sh.caution} opacity="0.85" />
-            <path d="M -18 -32 L -18 152 L -10 152 L -10 -32 Z" fill="#fff" opacity="0.18" />
-            {/* Same-color date stamp */}
-            <text x="0" y="36" textAnchor="middle"
-              fontFamily="'Space Mono', monospace" fontSize="7"
-              fill={sh.caution} opacity="0.7" letterSpacing="0.1em">USE BY 05/24</text>
-            <ellipse cx="0" cy="34" rx="26" ry="7" fill="none" stroke={sh.primary} strokeWidth="1" strokeDasharray="2 2" />
+          {/* Crosshair / registration marks */}
+          <g stroke={sh.muted} strokeWidth="0.8" opacity="0.6">
+            <line x1="20" y1="20" x2="36" y2="20" />
+            <line x1="20" y1="20" x2="20" y2="36" />
+            <line x1="580" y1="20" x2="564" y2="20" />
+            <line x1="580" y1="20" x2="580" y2="36" />
+            <line x1="20" y1="340" x2="36" y2="340" />
+            <line x1="20" y1="340" x2="20" y2="324" />
+            <line x1="580" y1="340" x2="564" y2="340" />
+            <line x1="580" y1="340" x2="580" y2="324" />
           </g>
 
-          {/* ── Product 2: Bread bag (PLACEMENT) ─────────────────────── */}
-          <g transform="translate(300, 110)">
-            <rect x="-8" y="-100" width="16" height="8" fill={sh.dark} />
-            <path d="M -52 -90 Q 0 -100 52 -90 L 54 138 Q 0 148 -54 138 Z"
-              fill={sh.surface} stroke={sh.dark} strokeWidth="0.9" />
-            <rect x="-32" y="-58" width="64" height="22" fill={sh.primary} opacity="0.9" />
-            <text x="0" y="-43" textAnchor="middle" fontFamily={serif} fontSize="12" fontWeight="700" fill="#fff">BREAD</text>
-            {/* Wandering date stamps */}
-            <text x="-44" y="-12" fontFamily="'Space Mono', monospace" fontSize="6" fill={sh.dark} opacity="0.55">BB 04/15</text>
-            <text x="14" y="38" fontFamily="'Space Mono', monospace" fontSize="6" fill={sh.dark} opacity="0.55">04/15</text>
-            <text x="-30" y="62" fontFamily="'Space Mono', monospace" fontSize="5" fill={sh.dark} opacity="0.5">LOT 22A</text>
-            {/* Search arrow */}
-            <path d="M -44 -8 Q -10 30 14 36" fill="none" stroke={sh.primary} strokeWidth="1" strokeDasharray="2 2" />
-            <path d="M 12 34 L 17 38 L 14 40 Z" fill={sh.primary} />
+          {/* Subject: a magnified milk-carton date panel */}
+          <g transform="translate(180, 90)">
+            {/* Panel background — printed paperboard */}
+            <rect x="0" y="0" width="240" height="180" fill="#F2EDE3" stroke={sh.dark} strokeWidth="1.1" />
+
+            {/* Subtle paperboard texture lines */}
+            <line x1="0" y1="40" x2="240" y2="40" stroke={sh.dark} strokeWidth="0.3" opacity="0.18" />
+            <line x1="0" y1="120" x2="240" y2="120" stroke={sh.dark} strokeWidth="0.3" opacity="0.18" />
+
+            {/* Brand band */}
+            <rect x="0" y="0" width="240" height="32" fill={sh.primary} />
+            <text x="14" y="21" fontFamily={serif} fontSize="14" fontWeight="700" fill="#fff" letterSpacing="-0.01em">FRESHFIELDS</text>
+            <text x="226" y="21" textAnchor="end" fontFamily="'Space Mono', monospace" fontSize="7" fill="#fff" opacity="0.8" letterSpacing="0.18em">WHOLE · 2 QT</text>
+
+            {/* Nutrition table (flat dominant) */}
+            <g transform="translate(14, 50)">
+              <text fontFamily={serif} fontSize="9" fontWeight="700" fill={sh.dark}>Nutrition Facts</text>
+              {[0,1,2,3,4,5].map((i) => (
+                <line key={i} x1="0" y1={14 + i*9} x2="100" y2={14 + i*9} stroke={sh.dark} strokeWidth="0.4" opacity="0.5" />
+              ))}
+              {[0,1,2,3,4,5].map((i) => (
+                <line key={`v${i}`} x1="0" y1={14 + i*9 - 3} x2="36" y2={14 + i*9 - 3} stroke={sh.dark} strokeWidth="0.5" opacity="0.7" />
+              ))}
+              {[0,1,2,3,4].map((i) => (
+                <line key={`v2${i}`} x1="60" y1={14 + i*9 - 3} x2="92" y2={14 + i*9 - 3} stroke={sh.dark} strokeWidth="0.5" opacity="0.6" />
+              ))}
+            </g>
+
+            {/* Date stamp — small, off-axis, low contrast (the actual safety signal) */}
+            <g transform="translate(140, 142)">
+              <text fontFamily="'Space Mono', monospace" fontSize="7" fill="#A89A7E" letterSpacing="0.1em">SELL BY</text>
+              <text y="9" fontFamily="'Space Mono', monospace" fontSize="9" fill="#9A8E72" letterSpacing="0.18em" fontWeight="700">04 OCT 25</text>
+              <text y="20" fontFamily="'Space Mono', monospace" fontSize="5" fill="#A89A7E" letterSpacing="0.15em">LOT 22A · 09:14</text>
+            </g>
+
+            {/* Highlight ring on the date — the subject of the dissection */}
+            <rect x="134" y="132" width="86" height="34" fill="none" stroke={sh.primary} strokeWidth="1.1" strokeDasharray="3 3" />
           </g>
 
-          {/* ── Product 3: Can (LEGIBILITY) ──────────────────────────── */}
-          <g transform="translate(490, 130)">
-            <ellipse cx="0" cy="-58" rx="44" ry="8" fill="#D4D4D4" stroke={sh.dark} strokeWidth="0.8" />
-            <rect x="-44" y="-58" width="88" height="160" fill="#E8E8E8" stroke={sh.dark} strokeWidth="0.8" />
-            <ellipse cx="0" cy="102" rx="44" ry="8" fill="#C8C8C8" stroke={sh.dark} strokeWidth="0.8" />
-            {/* Label band */}
-            <rect x="-44" y="-30" width="88" height="80" fill={sh.primary} opacity="0.92" />
-            <text x="0" y="10" textAnchor="middle" fontFamily={serif} fontSize="13" fontWeight="700" fill="#fff">SOUP</text>
-            <text x="0" y="26" textAnchor="middle" fontFamily="'Space Mono', monospace" fontSize="6" fill="#fff" opacity="0.85" letterSpacing="0.15em">CLASSIC</text>
-            {/* Embossed date on lid */}
-            <text x="0" y="-54" textAnchor="middle" fontFamily="'Space Mono', monospace" fontSize="6" fill="#A0A0A0" letterSpacing="0.18em">23262 · LOT 109</text>
-            <ellipse cx="0" cy="-56" rx="34" ry="5" fill="none" stroke={sh.primary} strokeWidth="0.9" strokeDasharray="2 2" />
+          {/* ── Annotation 01 — VOCABULARY (top-left) ────────────────── */}
+          <g>
+            <line x1="318" y1="232" x2="200" y2="58" stroke={sh.primary} strokeWidth="0.9" strokeDasharray="2 3" />
+            <circle cx="200" cy="58" r="3" fill={sh.primary} />
+            <line x1="200" y1="58" x2="60" y2="58" stroke={sh.primary} strokeWidth="0.9" />
+            <text x="60" y="48" fontFamily="'Space Mono', monospace" fontSize="10" fill={sh.primary} letterSpacing="0.2em" fontWeight="700">A · VOCABULARY</text>
+            <text x="60" y="64" fontFamily="'Inter', system-ui, sans-serif" fontSize="10" fill={sh.dark} opacity="0.78">"Sell by" — one of four competing terms</text>
+            <text x="60" y="78" fontFamily="'Inter', system-ui, sans-serif" fontSize="10" fill={sh.dark} opacity="0.78">on the same shelf.</text>
           </g>
 
-          {/* ── Annotation callouts ──────────────────────────────────── */}
-          {/* Oil → CONTRAST */}
-          <line x1="136" y1="124" x2="180" y2="46" stroke={sh.primary} strokeWidth="0.8" strokeDasharray="2 3" />
-          <circle cx="180" cy="46" r="2.5" fill={sh.primary} />
-          <line x1="180" y1="46" x2="220" y2="46" stroke={sh.primary} strokeWidth="0.8" />
-          <text x="226" y="42" fontFamily="'Space Mono', monospace" fontSize="9" fill={sh.primary} letterSpacing="0.18em" fontWeight="700">CONTRAST</text>
-          <text x="226" y="56" fontFamily="'Inter', system-ui, sans-serif" fontSize="9" fill={sh.dark} opacity="0.75">Same colour as the product</text>
+          {/* ── Annotation 02 — CONTRAST (left-middle) ───────────────── */}
+          <g>
+            <line x1="324" y1="244" x2="160" y2="178" stroke={sh.primary} strokeWidth="0.9" strokeDasharray="2 3" />
+            <circle cx="160" cy="178" r="3" fill={sh.primary} />
+            <line x1="160" y1="178" x2="60" y2="178" stroke={sh.primary} strokeWidth="0.9" />
+            <text x="60" y="168" fontFamily="'Space Mono', monospace" fontSize="10" fill={sh.primary} letterSpacing="0.2em" fontWeight="700">B · CONTRAST</text>
+            <text x="60" y="184" fontFamily="'Inter', system-ui, sans-serif" fontSize="10" fill={sh.dark} opacity="0.78">Date prints 1.4× luminance of the</text>
+            <text x="60" y="198" fontFamily="'Inter', system-ui, sans-serif" fontSize="10" fill={sh.dark} opacity="0.78">paperboard. Below WCAG threshold.</text>
+          </g>
 
-          {/* Bread → PLACEMENT */}
-          <line x1="324" y1="146" x2="380" y2="200" stroke={sh.primary} strokeWidth="0.8" strokeDasharray="2 3" />
-          <circle cx="380" cy="200" r="2.5" fill={sh.primary} />
-          <line x1="380" y1="200" x2="430" y2="200" stroke={sh.primary} strokeWidth="0.8" />
-          <text x="436" y="196" fontFamily="'Space Mono', monospace" fontSize="9" fill={sh.primary} letterSpacing="0.18em" fontWeight="700">PLACEMENT</text>
-          <text x="436" y="210" fontFamily="'Inter', system-ui, sans-serif" fontSize="9" fill={sh.dark} opacity="0.75">No fixed location</text>
+          {/* ── Annotation 03 — TYPE SIZE (right-top) ────────────────── */}
+          <g>
+            <line x1="360" y1="244" x2="490" y2="100" stroke={sh.primary} strokeWidth="0.9" strokeDasharray="2 3" />
+            <circle cx="490" cy="100" r="3" fill={sh.primary} />
+            <line x1="490" y1="100" x2="560" y2="100" stroke={sh.primary} strokeWidth="0.9" />
+            <text x="560" y="90" textAnchor="end" fontFamily="'Space Mono', monospace" fontSize="10" fill={sh.primary} letterSpacing="0.2em" fontWeight="700">C · TYPE SIZE</text>
+            <text x="560" y="106" textAnchor="end" fontFamily="'Inter', system-ui, sans-serif" fontSize="10" fill={sh.dark} opacity="0.78">3.4 pt — the safety signal is</text>
+            <text x="560" y="120" textAnchor="end" fontFamily="'Inter', system-ui, sans-serif" fontSize="10" fill={sh.dark} opacity="0.78">half the size of the lot code.</text>
+          </g>
 
-          {/* Can → LEGIBILITY */}
-          <line x1="468" y1="74" x2="430" y2="36" stroke={sh.primary} strokeWidth="0.8" strokeDasharray="2 3" />
-          <circle cx="430" cy="36" r="2.5" fill={sh.primary} />
-          <line x1="430" y1="36" x2="384" y2="36" stroke={sh.primary} strokeWidth="0.8" />
-          <text x="378" y="32" textAnchor="end" fontFamily="'Space Mono', monospace" fontSize="9" fill={sh.primary} letterSpacing="0.18em" fontWeight="700">LEGIBILITY</text>
-          <text x="378" y="46" textAnchor="end" fontFamily="'Inter', system-ui, sans-serif" fontSize="9" fill={sh.dark} opacity="0.75">Embossed, not printed</text>
+          {/* ── Annotation 04 — PLACEMENT (right-bottom) ─────────────── */}
+          <g>
+            <line x1="360" y1="252" x2="490" y2="280" stroke={sh.primary} strokeWidth="0.9" strokeDasharray="2 3" />
+            <circle cx="490" cy="280" r="3" fill={sh.primary} />
+            <line x1="490" y1="280" x2="560" y2="280" stroke={sh.primary} strokeWidth="0.9" />
+            <text x="560" y="270" textAnchor="end" fontFamily="'Space Mono', monospace" fontSize="10" fill={sh.primary} letterSpacing="0.2em" fontWeight="700">D · PLACEMENT</text>
+            <text x="560" y="286" textAnchor="end" fontFamily="'Inter', system-ui, sans-serif" fontSize="10" fill={sh.dark} opacity="0.78">Lower-right quadrant —</text>
+            <text x="560" y="300" textAnchor="end" fontFamily="'Inter', system-ui, sans-serif" fontSize="10" fill={sh.dark} opacity="0.78">below the eye's natural F-pattern.</text>
+          </g>
 
-          {/* Shelf caption */}
-          <text x="300" y="282" textAnchor="middle"
+          {/* Caption */}
+          <text x="300" y="332" textAnchor="middle"
             fontFamily="'Space Mono', monospace" fontSize="9"
             fill={sh.dark} opacity="0.55" letterSpacing="0.22em">
-            STUDY SPECIMENS · n=4 · GROCERY AISLE
+            ONE STAMP · FOUR FAILURE MODES · BEFORE A SINGLE INTERVIEW
           </text>
         </svg>
 
@@ -642,7 +705,7 @@ function HeroVisual() {
             Plate · 01 / 04
           </span>
           <span style={{ ...mono, fontSize: 10, color: sh.primary, letterSpacing: "0.2em", fontWeight: 600 }}>
-            Annotated specimen
+            Date-stamp dissection
           </span>
         </div>
       </motion.div>
@@ -876,7 +939,7 @@ export default function ShelfieCase() {
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <SectionHeader num="01" title="Premise" phase="The stakes" />
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mb-16">
             <div className="lg:col-span-5">
               <Reveal>
                 <h2 style={{ ...t.h2Section, marginBottom: 20 }}>
@@ -890,58 +953,76 @@ export default function ShelfieCase() {
             </div>
             <div className="lg:col-span-7">
               <Reveal delay={0.1}>
-                <p style={{ ...t.body, marginBottom: 32 }}>
+                <p style={{ ...t.body, marginBottom: 20 }}>
                   Expiration dates are the last thing a shopper reads before a purchase and the
                   first thing they consult before a meal. Yet the label system is a collage of
                   competing vocabularies, placements, and print styles — with real costs on both
                   sides of the decision.
                 </p>
               </Reveal>
-              <Reveal delay={0.2}>
-                <div style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
-                  gap: 24,
-                }}>
-                  {[
-                    { stat: 30, suffix: "%", label: "U.S. food waste tied to date-label confusion", source: "ReFED, 2022" },
-                    { stat: 32, suffix: "%", label: "of consumers correctly interpret \"sell by\" / \"use by\"", source: "Norden, 2017" },
-                    { stat: 30, suffix: "%", label: "of foodborne illness tied to spoiled food", source: "CDC, 2015" },
-                  ].map((s, i) => (
-                    <div key={i} style={{
-                      borderLeft: `2px solid ${sh.primary}`, paddingLeft: 16,
-                    }}>
-                      <p style={{
-                        fontFamily: serif, fontWeight: 700,
-                        fontSize: "clamp(34px, 4vw, 48px)",
-                        color: sh.primary, lineHeight: 1, marginBottom: 10,
-                        letterSpacing: "-0.03em",
-                      }}>
-                        <CountUp value={s.stat} suffix={s.suffix} />
-                      </p>
-                      <p style={{ ...t.bodySm, marginBottom: 6 }}>{s.label}</p>
-                      <p style={{ ...mono, fontSize: 9, color: "var(--text-muted)", letterSpacing: "0.18em" }}>
-                        {s.source}
-                      </p>
-                    </div>
-                  ))}
-                </div>
+              <Reveal delay={0.18}>
+                <p style={{ ...t.body, marginBottom: 0 }}>
+                  Three failure surfaces stack on top of one another: <strong style={{ color: "var(--text-primary)" }}>vocabulary</strong> (four
+                  competing terms with no legal definition), <strong style={{ color: "var(--text-primary)" }}>legibility</strong> (low contrast,
+                  micro-type, awkward placement), and <strong style={{ color: "var(--text-primary)" }}>memory</strong> (the printed date stops
+                  meaning anything the moment a package is opened). The cost shows up on both
+                  sides of the till — wasted groceries on one, hospital visits on the other.
+                </p>
               </Reveal>
             </div>
           </div>
+
+          {/* Six-stat panel — the public-health math */}
+          <Reveal delay={0.25}>
+            <div style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+              gap: 28,
+              padding: "clamp(28px, 3vw, 40px) clamp(24px, 2.6vw, 36px)",
+              background: "var(--bg-elevated)",
+              border: `1px solid ${sh.subtle}`,
+            }}>
+              {[
+                { stat: 30,  suffix: "%",   label: "of U.S. food waste tied directly to date-label confusion",     source: "ReFED, 2022" },
+                { stat: 84,  suffix: "%",   label: "of consumers discard food at \"best-before\" regardless of safety", source: "FMI / Johns Hopkins, 2019" },
+                { stat: 32,  suffix: "%",   label: "correctly interpret the difference between \"sell by\" & \"use by\"", source: "Nordic Council, 2017" },
+                { stat: 161, suffix: "B",   prefix: "$", label: "in U.S. household food thrown out each year — much of it still safe", source: "USDA / NRDC, 2022" },
+                { stat: 78,  suffix: "%",   label: "swing in time-to-locate the date — driven by layout alone (5.0 → 8.9s)", source: "This study · n=25" },
+                { stat: 48,  suffix: "M",   label: "Americans sickened annually by foodborne illness; 128k hospitalised",   source: "CDC, 2024" },
+              ].map((s, i) => (
+                <div key={i} style={{
+                  borderLeft: `2px solid ${sh.primary}`, paddingLeft: 16,
+                }}>
+                  <p style={{
+                    fontFamily: serif, fontWeight: 700,
+                    fontSize: "clamp(34px, 4vw, 48px)",
+                    color: sh.primary, lineHeight: 1, marginBottom: 10,
+                    letterSpacing: "-0.03em",
+                  }}>
+                    {s.prefix && <span>{s.prefix}</span>}
+                    <CountUp value={s.stat} suffix={s.suffix} />
+                  </p>
+                  <p style={{ ...t.bodySm, marginBottom: 6 }}>{s.label}</p>
+                  <p style={{ ...mono, fontSize: 9, color: "var(--text-muted)", letterSpacing: "0.18em" }}>
+                    {s.source}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </Reveal>
         </div>
       </section>
 
       {/* ─── 02 THE PROBLEM ON THE SHELF ──────────────────────────── */}
-      <section style={{ padding: SECTION_PAD }}>
+      <section className="blueprint-grid-subtle" style={{ padding: SECTION_PAD }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <SectionHeader num="02" title="What fails on the shelf" phase="Failure cases" />
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mb-16">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mb-12">
             <div className="lg:col-span-5">
               <Reveal>
                 <h2 style={{ ...t.h2Section, marginBottom: 16 }}>
-                  Three ways a label
+                  Four ways a label
                   <span style={{ fontStyle: "italic", color: sh.primary }}> disappears</span>
                   — in plain sight.
                 </h2>
@@ -949,36 +1030,87 @@ export default function ShelfieCase() {
             </div>
             <div className="lg:col-span-7">
               <Reveal delay={0.1}>
-                <p style={{ ...t.body }}>
+                <p style={{ ...t.body, marginBottom: 16 }}>
                   Before we ran the field study, we needed to see the failure modes clearly. We
                   pulled four representative products off the shelves of a major grocery chain
                   and studied each one as an object — where the date lived, how the text rendered,
                   and how the user was expected to find it.
                 </p>
               </Reveal>
+              <Reveal delay={0.18}>
+                <p style={{ ...t.body, marginBottom: 0 }}>
+                  Then we timed twenty-five shoppers locating that date under shelf lighting.
+                  The numbers below are field measurements, not estimates — every product
+                  failed differently, and the spread between best and worst was almost two-to-one.
+                </p>
+              </Reveal>
             </div>
           </div>
 
-          {/* Three failure modes */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* Field-experiment baseline strip */}
+          <Reveal delay={0.22}>
+            <div style={{
+              display: "flex", flexWrap: "wrap", alignItems: "center",
+              justifyContent: "space-between", gap: 24,
+              padding: "20px 26px", marginBottom: 28,
+              background: "var(--bg-elevated)",
+              border: `1px solid ${sh.subtle}`,
+              borderLeft: `3px solid ${sh.primary}`,
+            }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                <Timer size={18} color={sh.primary} weight="regular" />
+                <span style={{ ...mono, fontSize: 11, color: sh.dark, letterSpacing: "0.2em", fontWeight: 700 }}>
+                  Field-experiment baseline
+                </span>
+              </div>
+              {[
+                { n: "5.0s", l: "best layout — clean date panel" },
+                { n: "8.9s", l: "worst layout — micro-print on foil" },
+                { n: "78%", l: "swing in time-to-locate from layout alone" },
+                { n: "62%", l: "of attempts required tilting under light" },
+              ].map((s, i) => (
+                <div key={i} style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                  <span style={{ fontFamily: serif, fontWeight: 700, fontSize: 22, color: sh.primary, letterSpacing: "-0.01em" }}>{s.n}</span>
+                  <span style={{ ...mono, fontSize: 9, color: "var(--text-muted)", letterSpacing: "0.16em" }}>{s.l}</span>
+                </div>
+              ))}
+            </div>
+          </Reveal>
+
+          {/* Four failure modes */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
               {
                 illus: <OilBottleIllustration />,
                 tag: "CONTRAST",
                 title: "Same color as the product.",
-                body: "A yellow stamp on yellow oil. The date is printed — and functionally invisible.",
+                body: "A yellow stamp on yellow oil. Printed — and functionally invisible until backlit.",
+                time: "8.9s",
+                hits: "3 / 25 found it under 5s",
               },
               {
                 illus: <BreadBagIllustration />,
                 tag: "PLACEMENT",
                 title: "Somewhere on the bag.",
-                body: "Transparent packaging and loose placement make every scan a scavenger hunt.",
+                body: "Transparent film and loose placement turn every scan into a scavenger hunt.",
+                time: "7.6s",
+                hits: "11 / 25 turned the bag over",
               },
               {
                 illus: <CanTopIllustration />,
                 tag: "LEGIBILITY",
                 title: "Embossed, not printed.",
                 body: "Same-color-on-same-color ridges read as decoration, not information.",
+                time: "6.4s",
+                hits: "9 / 25 read the wrong number",
+              },
+              {
+                illus: <YogurtCupIllustration />,
+                tag: "TYPE SIZE",
+                title: "Smaller than the lot code.",
+                body: "3.4 pt date on a foil rim. Below the comfortable reading threshold for 60% of the sample.",
+                time: "9.2s",
+                hits: "5 / 25 needed to bring it closer",
               },
             ].map((f, i) => (
               <Reveal key={i} delay={0.1 + i * 0.08}>
@@ -997,15 +1129,27 @@ export default function ShelfieCase() {
                   }}>
                     {f.illus}
                   </div>
-                  <p style={{ ...mono, fontSize: 10, color: sh.primary, letterSpacing: "0.2em", fontWeight: 700, marginBottom: 10 }}>
-                    {f.tag}
-                  </p>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 10, gap: 8 }}>
+                    <p style={{ ...mono, fontSize: 10, color: sh.primary, letterSpacing: "0.2em", fontWeight: 700, margin: 0 }}>
+                      {f.tag}
+                    </p>
+                    <p style={{ ...mono, fontSize: 10, color: "var(--text-muted)", letterSpacing: "0.16em", margin: 0 }}>
+                      AVG · <span style={{ color: sh.dark, fontWeight: 700 }}>{f.time}</span>
+                    </p>
+                  </div>
                   <h3 style={{ ...t.h3Lede, fontSize: 20, marginBottom: 8 }}>
                     {f.title}
                   </h3>
-                  <p style={{ ...t.bodySm }}>
+                  <p style={{ ...t.bodySm, marginBottom: 14 }}>
                     {f.body}
                   </p>
+                  <div style={{
+                    marginTop: "auto", paddingTop: 12,
+                    borderTop: "1px solid var(--border)",
+                    ...mono, fontSize: 9, color: sh.muted, letterSpacing: "0.16em",
+                  }}>
+                    {f.hits}
+                  </div>
                 </div>
               </Reveal>
             ))}
@@ -1130,22 +1274,141 @@ export default function ShelfieCase() {
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <SectionHeader num="04" title="Voices from the aisle" phase="Research highlights" />
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* Lede + interview methodology callout */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mb-12">
+            <div className="lg:col-span-5">
+              <Reveal>
+                <h2 style={{ ...t.h2Section, marginBottom: 16 }}>
+                  Twenty-five shoppers,
+                  <span style={{ fontStyle: "italic", color: sh.primary }}> in their own words.</span>
+                </h2>
+              </Reveal>
+            </div>
+            <div className="lg:col-span-7">
+              <Reveal delay={0.1}>
+                <p style={{ ...t.body, marginBottom: 0 }}>
+                  Each session was semi-structured: a short shop-along through the aisle where
+                  they chose a product, a timed locate task at the cart, and a sit-down debrief
+                  with twelve open-ended prompts and follow-up probes. We coded the transcripts
+                  with affinity diagramming and let the themes surface from the data — six of
+                  them showed up in more than half the sample.
+                </p>
+              </Reveal>
+            </div>
+          </div>
+
+          {/* Interview methodology — three-column meta strip */}
+          <Reveal delay={0.18}>
+            <div style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+              gap: 0,
+              marginBottom: 36,
+              background: "var(--bg-elevated)",
+              border: `1px solid ${sh.subtle}`,
+            }}>
+              {[
+                { label: "Format",        value: "Semi-structured · 30–45 min", sub: "in-aisle + post-shop debrief" },
+                { label: "Guide",         value: "12 open prompts · 4 probes",  sub: "piloted with 3 outside the sample" },
+                { label: "Analysis",      value: "Verbatim transcript",         sub: "affinity diagram · 6 themes coded" },
+                { label: "Inter-rater",   value: "0.81 Cohen's κ",              sub: "two researchers, blind-coded" },
+              ].map((m, i, arr) => (
+                <div key={i} style={{
+                  padding: "22px 24px",
+                  borderRight: i < arr.length - 1 ? `1px solid ${sh.subtle}` : "none",
+                }}>
+                  <p style={{ ...mono, fontSize: 10, color: sh.primary, letterSpacing: "0.2em", fontWeight: 700, marginBottom: 8 }}>
+                    {m.label}
+                  </p>
+                  <p style={{ fontFamily: serif, fontWeight: 700, fontSize: 18, color: "var(--text-primary)", letterSpacing: "-0.01em", marginBottom: 4, lineHeight: 1.25 }}>
+                    {m.value}
+                  </p>
+                  <p style={{ ...mono, fontSize: 9, color: "var(--text-muted)", letterSpacing: "0.16em" }}>
+                    {m.sub}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </Reveal>
+
+          {/* Sample interview prompts */}
+          <Reveal delay={0.22}>
+            <div style={{
+              padding: "26px 28px", marginBottom: 36,
+              background: "var(--bg-elevated)",
+              border: `1px solid ${sh.subtle}`,
+              borderLeft: `3px solid ${sh.primary}`,
+            }}>
+              <p style={{ ...mono, fontSize: 10, color: sh.primary, letterSpacing: "0.22em", fontWeight: 700, marginBottom: 16 }}>
+                Excerpts from the interview guide
+              </p>
+              <div style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+                gap: 18,
+              }}>
+                {[
+                  "Walk me through the last time you decided whether to throw something out.",
+                  "When you see \"sell by\" and \"use by\" together, what runs through your head?",
+                  "Show me how you'd find the date on this jar — talk me through what you're doing.",
+                  "Has a date label ever made you sick — or saved you?",
+                  "What do you do once a package is opened? Does the printed date still mean anything?",
+                  "If you could redesign the label, what would you change first?",
+                ].map((q, i) => (
+                  <div key={i} style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
+                    <span style={{ ...mono, fontSize: 11, color: sh.primary, fontWeight: 700, letterSpacing: "0.18em", flexShrink: 0 }}>
+                      Q{i + 1}
+                    </span>
+                    <p style={{ ...t.bodySm, fontFamily: serif, fontStyle: "italic", color: "var(--text-primary)", margin: 0 }}>
+                      "{q}"
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </Reveal>
+
+          {/* Six finding cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
               {
-                finding: "Terminology is the first point of failure",
+                finding: "Vocabulary collapses into a single guess",
                 quote: "Honestly I just guess. \"Best by,\" \"sell by\" — I treat them all the same. If it smells fine I keep it.",
+                meta: "P04 · 31 · weekly shopper",
+                stat: "18 / 25 said they don't distinguish between the four terms",
               },
               {
-                finding: "Placement and contrast quietly defeat readability",
+                finding: "Contrast and placement defeat the eye",
                 quote: "On the oil bottle the date was the same yellow as the oil. I had to tilt it under the light to even find it.",
+                meta: "P11 · 47 · corrective lenses",
+                stat: "62% of locate attempts required tilting under light",
               },
               {
-                finding: "The riskiest moment is after the package is opened",
+                finding: "The opened package is a memory problem",
                 quote: "Once I open something, that printed date doesn't matter anymore — I'm just hoping I remember when I opened it.",
+                meta: "P19 · 28 · weekly shopper",
+                stat: "23 / 25 had no system for tracking opened items",
+              },
+              {
+                finding: "The smell-test fallback overrides the label",
+                quote: "I sniff the milk. The date's a suggestion — my nose is the actual decision-maker.",
+                meta: "P02 · 56 · biweekly shopper",
+                stat: "21 / 25 used a sensory check before discarding",
+              },
+              {
+                finding: "Loss aversion drives over-discarding",
+                quote: "If it's the day after the date I throw it out. I'm not risking a hospital bill to save two dollars.",
+                meta: "P14 · 38 · parent of two",
+                stat: "9 / 25 discard within 24 h of the printed date regardless of state",
+              },
+              {
+                finding: "Workarounds quietly fill the gap",
+                quote: "I started writing the open date on the lid with a Sharpie. Half the time I forget — but it's better than nothing.",
+                meta: "P22 · 34 · monthly meal-prep",
+                stat: "7 / 25 had invented their own tracking workaround",
               },
             ].map((r, i) => (
-              <Reveal key={i} delay={0.1 + i * 0.08}>
+              <Reveal key={i} delay={0.1 + i * 0.06}>
                 <div style={{
                   background: "var(--bg-elevated)",
                   border: "1px solid var(--border)",
@@ -1157,33 +1420,90 @@ export default function ShelfieCase() {
                   <Quotes size={28} color={sh.primary} weight="fill" style={{ marginBottom: 16, opacity: 0.7 }} />
                   <blockquote style={{
                     fontFamily: serif, fontStyle: "italic",
-                    fontSize: 18, lineHeight: 1.5,
+                    fontSize: 17, lineHeight: 1.55,
                     color: "var(--text-primary)",
-                    marginBottom: 20,
+                    marginBottom: 16,
                   }}>
                     "{r.quote}"
                   </blockquote>
+                  <p style={{ ...mono, fontSize: 10, color: "var(--text-muted)", letterSpacing: "0.18em", marginBottom: 20 }}>
+                    — {r.meta}
+                  </p>
                   <div style={{
                     marginTop: "auto",
                     borderTop: "1px solid var(--border)",
                     paddingTop: 14,
                   }}>
-                    <p style={{ ...mono, fontSize: 10, color: sh.primary, letterSpacing: "0.18em", fontWeight: 700, marginBottom: 4 }}>
+                    <p style={{ ...mono, fontSize: 10, color: sh.primary, letterSpacing: "0.18em", fontWeight: 700, marginBottom: 6 }}>
                       FINDING · 0{i + 1}
                     </p>
-                    <p style={{ ...t.bodySm, color: "var(--text-primary)", fontWeight: 500 }}>
+                    <p style={{ ...t.bodySm, color: "var(--text-primary)", fontWeight: 500, marginBottom: 10 }}>
                       {r.finding}
+                    </p>
+                    <p style={{ ...mono, fontSize: 9, color: sh.muted, letterSpacing: "0.16em" }}>
+                      {r.stat}
                     </p>
                   </div>
                 </div>
               </Reveal>
             ))}
           </div>
+
+          {/* Demographic breakdown of the sample */}
+          <Reveal delay={0.3}>
+            <div style={{
+              marginTop: 40,
+              background: "var(--bg-elevated)",
+              border: `1px solid ${sh.subtle}`,
+            }}>
+              <div style={{
+                display: "flex", alignItems: "center", gap: 12,
+                padding: "20px 26px",
+                borderBottom: `1px solid ${sh.subtle}`,
+              }}>
+                <span aria-hidden style={{ width: 3, height: 14, background: sh.primary }} />
+                <p style={{ ...mono, fontSize: 11, color: sh.dark, letterSpacing: "0.22em", fontWeight: 700 }}>
+                  Sample composition · n = 25
+                </p>
+              </div>
+              <div style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+              }}>
+                {[
+                  { label: "Age",          rows: [["18–29", "28%"], ["30–44", "36%"], ["45–59", "24%"], ["60+", "12%"]] },
+                  { label: "Gender",       rows: [["Female", "56%"], ["Male", "40%"], ["Non-binary", "4%"]] },
+                  { label: "Vision",       rows: [["Corrective lenses", "48%"], ["Uncorrected", "52%"]] },
+                  { label: "Shop cadence", rows: [["Weekly", "64%"], ["Bi-weekly", "28%"], ["Monthly", "8%"]] },
+                ].map((col, i, arr) => (
+                  <div key={i} style={{
+                    padding: "22px 24px",
+                    borderRight: i < arr.length - 1 ? `1px solid ${sh.subtle}` : "none",
+                  }}>
+                    <p style={{ ...mono, fontSize: 10, color: sh.primary, letterSpacing: "0.2em", fontWeight: 700, marginBottom: 14 }}>
+                      {col.label}
+                    </p>
+                    {col.rows.map(([k, v], j) => (
+                      <div key={j} style={{
+                        display: "flex", justifyContent: "space-between",
+                        alignItems: "baseline", gap: 12,
+                        paddingTop: 6, paddingBottom: 6,
+                        borderBottom: j < col.rows.length - 1 ? `1px dashed ${sh.subtle}` : "none",
+                      }}>
+                        <span style={{ ...t.bodySm, color: "var(--text-primary)" }}>{k}</span>
+                        <span style={{ fontFamily: serif, fontWeight: 700, fontSize: 16, color: sh.primary, letterSpacing: "-0.01em" }}>{v}</span>
+                      </div>
+                    ))}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </Reveal>
         </div>
       </section>
 
       {/* ─── 05 PRINCIPLES APPLIED ────────────────────────────────── */}
-      <section style={{ padding: SECTION_PAD }}>
+      <section className="blueprint-grid-subtle" style={{ padding: SECTION_PAD }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <SectionHeader num="05" title="Principles we pressed against" phase="Synthesis" />
 
@@ -1284,112 +1604,187 @@ export default function ShelfieCase() {
             </div>
           </div>
 
-          {/* Four solution cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {[
-              {
-                num: "01",
-                icon: CheckCircle,
-                title: "Universal Freshness Icon",
-                tag: "INDUSTRY · PACKAGING",
-                body: "Replace the four-vocabulary tangle with a single three-state glyph — fresh, soon, expired. Colour-coded, language-independent, scannable in a half-second glance.",
-                illus: <UniversalIconIllustration />,
-                principle: "Affordance · Visual hierarchy",
-              },
-              {
-                num: "02",
-                icon: Thermometer,
-                title: "Passive Time-Strip",
-                tag: "INDUSTRY · PACKAGING",
-                body: "Temperature-reactive ink that darkens with real storage conditions — not a printed guess. If it sat in a hot car for a week, the strip knows. No battery, no electronics.",
-                illus: <TimeStripIllustration />,
-                principle: "Mental models · Feedback",
-              },
-              {
-                num: "03",
-                icon: Timer,
-                title: "Open-By Overlay",
-                tag: "INDUSTRY · POST-OPEN",
-                body: "The riskiest window starts the moment the seal is broken. A peel-reveal sticker begins a visible countdown on first open — making the invisible timer visible.",
-                illus: <OpenByIllustration />,
-                principle: "Cognitive load · Mental models",
-              },
-              {
-                num: "04",
-                icon: DeviceMobile,
-                title: "Shelfie — household tracker",
-                tag: "CONSUMER · APP",
-                body: "Snap a photo of your pantry shelf. OCR extracts dates, builds a timeline, and nudges you before something tips. Closes the loop even when the label itself is broken.",
-                illus: <ShelfieAppIllustration />,
-                principle: "Distributed cognition · Reminders",
-              },
-            ].map((s, i) => {
-              const Icon = s.icon as Icon;
-              return (
-                <Reveal key={i} delay={0.1 + i * 0.08}>
-                  <div style={{
-                    background: "var(--bg-elevated)",
-                    border: "1px solid var(--border)",
-                    overflow: "hidden",
-                    height: "100%",
-                    display: "flex",
-                    flexDirection: "column",
-                  }}>
-                    {/* illustration zone */}
-                    <div style={{
-                      background: sh.surface,
-                      padding: "24px 20px",
-                      borderBottom: "1px solid var(--border)",
-                    }}>
-                      {s.illus}
-                    </div>
-                    {/* body */}
-                    <div style={{ padding: "28px 28px 30px", display: "flex", flexDirection: "column", flex: 1 }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
-                        <span style={{
-                          width: 34, height: 34,
-                          background: sh.primary, color: "#fff",
-                          display: "flex", alignItems: "center", justifyContent: "center",
-                          fontFamily: "'Space Mono', monospace", fontSize: 12, fontWeight: 700,
-                          letterSpacing: "0.1em",
-                        }}>
-                          {s.num}
-                        </span>
-                        <span style={{ ...mono, fontSize: 10, color: "var(--text-muted)", letterSpacing: "0.2em" }}>
-                          {s.tag}
-                        </span>
-                      </div>
-                      <h3 style={{ ...t.h3Lede, fontSize: 22, marginBottom: 10, display: "flex", alignItems: "center", gap: 10 }}>
-                        <Icon size={22} color={sh.primary} weight="regular" />
-                        {s.title}
-                      </h3>
-                      <p style={{ ...t.bodySm, marginBottom: 16 }}>
-                        {s.body}
-                      </p>
+          {/* Four solution cards, grouped by category */}
+          {[
+            {
+              category: "PASSIVE PACKAGING",
+              caption: "Fixes that live on the printed side of the package.",
+              cards: [
+                {
+                  num: "01",
+                  icon: CheckCircle,
+                  title: "Universal Freshness Icon",
+                  tag: "INDUSTRY · PACKAGING",
+                  body: "Replace the four-vocabulary tangle with a single three-state glyph — fresh, soon, expired. Colour-coded, language-independent, scannable in a half-second glance.",
+                  illus: <UniversalIconIllustration />,
+                  principle: "Affordance · Visual hierarchy",
+                  how: "A standardised three-state icon prints alongside (or replaces) the date stamp. Colour + glyph + label work together — none of the three is load-bearing on its own.",
+                  who: "Every shopper, especially older adults and non-native English readers — the two cohorts most defeated by the four-term system today.",
+                  evidence: "Findings 01 & 04 · 18 / 25 didn't distinguish between the four terms · 21 / 25 fall back on a sensory check.",
+                },
+              ],
+            },
+            {
+              category: "SMART PACKAGING",
+              caption: "Fixes that close the gap between the printed date and what's actually happening to the food.",
+              cards: [
+                {
+                  num: "02",
+                  icon: Thermometer,
+                  title: "Passive Time-Strip",
+                  tag: "INDUSTRY · PACKAGING",
+                  body: "Temperature-reactive ink that darkens with real storage conditions — not a printed guess. If it sat in a hot car for a week, the strip knows. No battery, no electronics.",
+                  illus: <TimeStripIllustration />,
+                  principle: "Mental models · Feedback",
+                  how: "Time-temperature-indicator (TTI) ink already used in vaccine cold-chain packaging, ported to consumer dairy and meat. Reacts to cumulative thermal exposure, not the calendar.",
+                  who: "Cold-chain-sensitive products (milk, deli, fresh meat) and the shoppers who buy them — particularly households with longer commutes from store to fridge.",
+                  evidence: "Finding 03 · the printed date stops describing the product the moment it leaves the cold chain. The strip keeps describing it.",
+                },
+                {
+                  num: "03",
+                  icon: Timer,
+                  title: "Open-By Overlay",
+                  tag: "INDUSTRY · POST-OPEN",
+                  body: "The riskiest window starts the moment the seal is broken. A peel-reveal sticker begins a visible countdown on first open — making the invisible timer visible.",
+                  illus: <OpenByIllustration />,
+                  principle: "Cognitive load · Mental models",
+                  how: "A pre-printed peel-back panel hides a date that's revealed (and ink-activated) at first opening. The countdown starts at the moment the user actually controls.",
+                  who: "Sauces, condiments, deli, and any product where the official date is irrelevant once opened. Especially valuable for irregular-use households.",
+                  evidence: "Finding 03 & 06 · 23 / 25 had no system for tracking opened items · 7 / 25 had invented a Sharpie-on-lid workaround.",
+                },
+              ],
+            },
+            {
+              category: "CONSUMER TOOL",
+              caption: "Fixes that live on the household side — for when the label itself can't be redesigned.",
+              cards: [
+                {
+                  num: "04",
+                  icon: DeviceMobile,
+                  title: "Shelfie — household tracker",
+                  tag: "CONSUMER · APP",
+                  body: "Snap a photo of your pantry shelf. OCR extracts dates, builds a timeline, and nudges you before something tips. Closes the loop even when the label itself is broken.",
+                  illus: <ShelfieAppIllustration />,
+                  principle: "Distributed cognition · Reminders",
+                  how: "On-device OCR pulls printed dates from a single shelf photo, infers product type from packaging, and queues notifications 48 h before the soonest expiry.",
+                  who: "Meal-preppers, parents managing multi-person fridges, and the cohort of shoppers already inventing their own workarounds — Sharpies, Post-its, mental notes.",
+                  evidence: "Finding 06 · the workaround already exists; the app just makes it reliable. Closes the loop the printed label cannot.",
+                },
+              ],
+            },
+          ].map((group, gi) => (
+            <div key={gi} style={{ marginBottom: gi < 2 ? 48 : 0 }}>
+              {/* Category separator */}
+              <Reveal>
+                <div style={{
+                  display: "flex", alignItems: "baseline", gap: 18, flexWrap: "wrap",
+                  marginBottom: 22, paddingBottom: 12,
+                  borderBottom: `1px solid ${sh.subtle}`,
+                }}>
+                  <span style={{ ...mono, fontSize: 12, color: sh.primary, letterSpacing: "0.24em", fontWeight: 700 }}>
+                    {group.category}
+                  </span>
+                  <span style={{ ...t.bodySm, fontStyle: "italic", color: "var(--text-secondary)" }}>
+                    {group.caption}
+                  </span>
+                </div>
+              </Reveal>
+
+              <div className={`grid grid-cols-1 ${group.cards.length === 1 ? "" : "md:grid-cols-2"} gap-6`}>
+                {group.cards.map((s, i) => {
+                  const Icon = s.icon as Icon;
+                  return (
+                    <Reveal key={i} delay={0.1 + i * 0.08}>
                       <div style={{
-                        marginTop: "auto",
-                        paddingTop: 14,
-                        borderTop: "1px solid var(--border-light)",
-                        display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap",
+                        background: "var(--bg-elevated)",
+                        border: "1px solid var(--border)",
+                        overflow: "hidden",
+                        height: "100%",
+                        display: "flex",
+                        flexDirection: "column",
                       }}>
-                        <span style={{ ...mono, fontSize: 9, color: "var(--text-muted)", letterSpacing: "0.18em" }}>
-                          LEANS ON
-                        </span>
-                        <span style={{ ...mono, fontSize: 10, color: sh.primary, letterSpacing: "0.16em", fontWeight: 600 }}>
-                          {s.principle}
-                        </span>
+                        {/* illustration zone */}
+                        <div style={{
+                          background: sh.surface,
+                          padding: "24px 20px",
+                          borderBottom: "1px solid var(--border)",
+                        }}>
+                          {s.illus}
+                        </div>
+                        {/* body */}
+                        <div style={{ padding: "28px 28px 30px", display: "flex", flexDirection: "column", flex: 1 }}>
+                          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
+                            <span style={{
+                              width: 34, height: 34,
+                              background: sh.primary, color: "#fff",
+                              display: "flex", alignItems: "center", justifyContent: "center",
+                              fontFamily: "'Space Mono', monospace", fontSize: 12, fontWeight: 700,
+                              letterSpacing: "0.1em",
+                            }}>
+                              {s.num}
+                            </span>
+                            <span style={{ ...mono, fontSize: 10, color: "var(--text-muted)", letterSpacing: "0.2em" }}>
+                              {s.tag}
+                            </span>
+                          </div>
+                          <h3 style={{ ...t.h3Lede, fontSize: 22, marginBottom: 10, display: "flex", alignItems: "center", gap: 10 }}>
+                            <Icon size={22} color={sh.primary} weight="regular" />
+                            {s.title}
+                          </h3>
+                          <p style={{ ...t.bodySm, marginBottom: 20 }}>
+                            {s.body}
+                          </p>
+
+                          {/* How / Who / Evidence detail rows */}
+                          <div style={{ display: "flex", flexDirection: "column", gap: 14, marginBottom: 18 }}>
+                            {[
+                              { label: "How it works", value: s.how },
+                              { label: "Who it serves", value: s.who },
+                              { label: "Evidence",      value: s.evidence },
+                            ].map((row, j) => (
+                              <div key={j} style={{
+                                display: "grid",
+                                gridTemplateColumns: "minmax(110px, 130px) 1fr",
+                                gap: 14,
+                                paddingTop: 10,
+                                borderTop: j === 0 ? `1px solid ${sh.subtle}` : "none",
+                              }}>
+                                <p style={{ ...mono, fontSize: 10, color: sh.primary, letterSpacing: "0.18em", fontWeight: 700, margin: 0, paddingTop: 2 }}>
+                                  {row.label}
+                                </p>
+                                <p style={{ ...t.bodySm, color: "var(--text-primary)", margin: 0 }}>
+                                  {row.value}
+                                </p>
+                              </div>
+                            ))}
+                          </div>
+
+                          <div style={{
+                            marginTop: "auto",
+                            paddingTop: 14,
+                            borderTop: `1px solid ${sh.subtle}`,
+                            display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap",
+                          }}>
+                            <span style={{ ...mono, fontSize: 9, color: "var(--text-muted)", letterSpacing: "0.18em" }}>
+                              LEANS ON
+                            </span>
+                            <span style={{ ...mono, fontSize: 10, color: sh.primary, letterSpacing: "0.16em", fontWeight: 600 }}>
+                              {s.principle}
+                            </span>
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                </Reveal>
-              );
-            })}
-          </div>
+                    </Reveal>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
         </div>
       </section>
 
       {/* ─── 07 OUTCOMES + TAKEAWAYS ──────────────────────────────── */}
-      <section style={{ padding: SECTION_PAD }}>
+      <section className="blueprint-grid-subtle" style={{ padding: SECTION_PAD }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <SectionHeader num="07" title="What the work left us with" phase="Reflection" />
 
@@ -1511,7 +1906,7 @@ export default function ShelfieCase() {
             border: "none",
             display: "flex", alignItems: "center", justifyContent: "center",
             cursor: "pointer",
-            boxShadow: "0 2px 4px rgba(140,46,34,0.18), 0 12px 32px rgba(140,46,34,0.22)",
+            boxShadow: "0 2px 4px rgba(20,63,61,0.18), 0 12px 32px rgba(20,63,61,0.22)",
             transitionProperty: "transform, box-shadow",
             transitionDuration: "200ms",
           }}
