@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import {
   ArrowUpIcon as ArrowUp,
   ArrowLeftIcon as ArrowLeft,
+  ArrowRightIcon as ArrowRight,
   QuotesIcon as Quotes,
   EyeIcon as Eye,
   TimerIcon as Timer,
@@ -14,6 +15,19 @@ import {
   DeviceMobileIcon as DeviceMobile,
   CheckCircleIcon as CheckCircle,
   PackageIcon as Package,
+  TrashIcon as Trash,
+  CurrencyDollarIcon as CurrencyDollar,
+  QuestionIcon as Question,
+  ArrowsLeftRightIcon as ArrowsLeftRight,
+  FirstAidKitIcon as FirstAidKit,
+  HandPalmIcon as HandPalm,
+  UsersThreeIcon as UsersThree,
+  LightbulbIcon as Lightbulb,
+  MagnifyingGlassIcon as MagnifyingGlass,
+  FlaskIcon as Flask,
+  ChatCircleTextIcon as ChatCircleText,
+  GearIcon as Gear,
+  TargetIcon as Target,
 } from "@phosphor-icons/react";
 import type { Icon } from "@phosphor-icons/react";
 import { getAdjacentProjects } from "../data/projects";
@@ -765,6 +779,19 @@ export default function ShelfieCase() {
         flexDirection: "column",
         overflow: "hidden",
       }}>
+        {/* Blueprint grid backdrop — fine 20px micro + 80px primary */}
+        <div aria-hidden style={{
+          position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none",
+          backgroundImage: `
+            repeating-linear-gradient(0deg, ${sh.subtle} 0 0.5px, transparent 0.5px 20px),
+            repeating-linear-gradient(90deg, ${sh.subtle} 0 0.5px, transparent 0.5px 20px),
+            repeating-linear-gradient(0deg, ${sh.muted} 0 0.5px, transparent 0.5px 80px),
+            repeating-linear-gradient(90deg, ${sh.muted} 0 0.5px, transparent 0.5px 80px)
+          `,
+          opacity: 0.42,
+          maskImage: "radial-gradient(ellipse 80% 80% at 50% 45%, #000 40%, transparent 100%)",
+          WebkitMaskImage: "radial-gradient(ellipse 80% 80% at 50% 45%, #000 40%, transparent 100%)",
+        }} />
         {/* Top bar — back link + tag strip */}
         <motion.div
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.05, duration: 0.5 }}
@@ -776,6 +803,7 @@ export default function ShelfieCase() {
             paddingBottom: 14,
             flexWrap: "wrap", gap: 16,
             borderBottom: "1px solid var(--border)",
+            position: "relative", zIndex: 1,
           }}
         >
           <Link to="/"
@@ -810,6 +838,7 @@ export default function ShelfieCase() {
             alignItems: "center",
             paddingTop: "clamp(20px, 2.4vw, 32px)",
             paddingBottom: "clamp(16px, 2vw, 24px)",
+            position: "relative", zIndex: 1,
           }}
         >
           <div
@@ -910,6 +939,7 @@ export default function ShelfieCase() {
             width: "100%", flexShrink: 0,
             display: "flex", justifyContent: "center", alignItems: "center",
             paddingBottom: "clamp(14px, 1.6vw, 22px)",
+            position: "relative", zIndex: 1,
           }}
         >
           <motion.div
@@ -939,8 +969,8 @@ export default function ShelfieCase() {
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <SectionHeader num="01" title="Premise" phase="The stakes" />
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mb-16">
-            <div className="lg:col-span-5">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mb-14 items-start">
+            <div className="lg:col-span-6">
               <Reveal>
                 <h2 style={{ ...t.h2Section, marginBottom: 20 }}>
                   A three-word
@@ -950,66 +980,116 @@ export default function ShelfieCase() {
                   problem.
                 </h2>
               </Reveal>
-            </div>
-            <div className="lg:col-span-7">
-              <Reveal delay={0.1}>
-                <p style={{ ...t.body, marginBottom: 20 }}>
-                  Expiration dates are the last thing a shopper reads before a purchase and the
-                  first thing they consult before a meal. Yet the label system is a collage of
-                  competing vocabularies, placements, and print styles — with real costs on both
-                  sides of the decision.
+              <Reveal delay={0.12}>
+                <p style={{ ...t.bodyLg, maxWidth: 480 }}>
+                  The last thing a shopper reads before a purchase. The first thing they
+                  consult before a meal. And nearly nobody reads it the same way twice.
                 </p>
               </Reveal>
+            </div>
+            <div className="lg:col-span-6">
               <Reveal delay={0.18}>
-                <p style={{ ...t.body, marginBottom: 0 }}>
-                  Three failure surfaces stack on top of one another: <strong style={{ color: "var(--text-primary)" }}>vocabulary</strong> (four
-                  competing terms with no legal definition), <strong style={{ color: "var(--text-primary)" }}>legibility</strong> (low contrast,
-                  micro-type, awkward placement), and <strong style={{ color: "var(--text-primary)" }}>memory</strong> (the printed date stops
-                  meaning anything the moment a package is opened). The cost shows up on both
-                  sides of the till — wasted groceries on one, hospital visits on the other.
-                </p>
+                <div style={{
+                  display: "grid", gridTemplateColumns: "auto 1fr", gap: "14px 20px",
+                  padding: "26px 28px",
+                  background: "var(--bg-elevated)",
+                  border: `1px solid ${sh.subtle}`,
+                  borderLeft: `3px solid ${sh.primary}`,
+                }}>
+                  {[
+                    { icon: ChatCircleText, label: "Vocabulary", body: "Four competing terms — no legal definition." },
+                    { icon: Eye,            label: "Legibility", body: "Low contrast, micro-type, hidden placement." },
+                    { icon: Brain,          label: "Memory",     body: "The printed date stops meaning anything once opened." },
+                  ].map((row, i) => {
+                    const I = row.icon as Icon;
+                    return (
+                      <div key={i} style={{ display: "contents" }}>
+                        <div style={{
+                          width: 36, height: 36, flexShrink: 0,
+                          background: sh.subtle,
+                          display: "flex", alignItems: "center", justifyContent: "center",
+                        }}>
+                          <I size={18} color={sh.primary} weight="regular" />
+                        </div>
+                        <div style={{ alignSelf: "center" }}>
+                          <p style={{ ...mono, fontSize: 10, color: sh.primary, letterSpacing: "0.2em", fontWeight: 700, marginBottom: 2 }}>
+                            {row.label}
+                          </p>
+                          <p style={{ ...t.bodySm, color: "var(--text-primary)", margin: 0 }}>{row.body}</p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
               </Reveal>
             </div>
           </div>
 
           {/* Six-stat panel — the public-health math */}
-          <Reveal delay={0.25}>
-            <div style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
-              gap: 28,
-              padding: "clamp(28px, 3vw, 40px) clamp(24px, 2.6vw, 36px)",
-              background: "var(--bg-elevated)",
-              border: `1px solid ${sh.subtle}`,
-            }}>
-              {[
-                { stat: 30,  suffix: "%",   label: "of U.S. food waste tied directly to date-label confusion",     source: "ReFED, 2022" },
-                { stat: 84,  suffix: "%",   label: "of consumers discard food at \"best-before\" regardless of safety", source: "FMI / Johns Hopkins, 2019" },
-                { stat: 32,  suffix: "%",   label: "correctly interpret the difference between \"sell by\" & \"use by\"", source: "Nordic Council, 2017" },
-                { stat: 161, suffix: "B",   prefix: "$", label: "in U.S. household food thrown out each year — much of it still safe", source: "USDA / NRDC, 2022" },
-                { stat: 78,  suffix: "%",   label: "swing in time-to-locate the date — driven by layout alone (5.0 → 8.9s)", source: "This study · n=25" },
-                { stat: 48,  suffix: "M",   label: "Americans sickened annually by foodborne illness; 128k hospitalised",   source: "CDC, 2024" },
-              ].map((s, i) => (
-                <div key={i} style={{
-                  borderLeft: `2px solid ${sh.primary}`, paddingLeft: 16,
-                }}>
-                  <p style={{
-                    fontFamily: serif, fontWeight: 700,
-                    fontSize: "clamp(34px, 4vw, 48px)",
-                    color: sh.primary, lineHeight: 1, marginBottom: 10,
-                    letterSpacing: "-0.03em",
-                  }}>
-                    {s.prefix && <span>{s.prefix}</span>}
-                    <CountUp value={s.stat} suffix={s.suffix} />
-                  </p>
-                  <p style={{ ...t.bodySm, marginBottom: 6 }}>{s.label}</p>
-                  <p style={{ ...mono, fontSize: 9, color: "var(--text-muted)", letterSpacing: "0.18em" }}>
-                    {s.source}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </Reveal>
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+            gap: 1,
+            background: sh.subtle,
+            border: `1px solid ${sh.subtle}`,
+          }}>
+            {[
+              { icon: Trash,           stat: 30,  suffix: "%", label: "of U.S. food waste tied directly to date-label confusion",                source: "ReFED, 2022" },
+              { icon: HandPalm,        stat: 84,  suffix: "%", label: "discard food at \u201Cbest-before\u201D regardless of actual safety",     source: "FMI · Johns Hopkins, 2019" },
+              { icon: Question,        stat: 32,  suffix: "%", label: "correctly interpret the difference between sell-by and use-by",          source: "Nordic Council, 2017" },
+              { icon: CurrencyDollar,  stat: 161, suffix: "B", prefix: "$", label: "in U.S. household food thrown out each year — much still safe", source: "USDA · NRDC, 2022" },
+              { icon: ArrowsLeftRight, stat: 78,  suffix: "%", label: "swing in time-to-locate the date \u2014 layout alone (5.0 \u2192 8.9s)",  source: "This study · n=25" },
+              { icon: FirstAidKit,     stat: 48,  suffix: "M", label: "Americans sickened annually by foodborne illness; 128k hospitalised",     source: "CDC, 2024" },
+            ].map((s, i) => {
+              const I = s.icon as Icon;
+              return (
+                <Reveal key={i} delay={0.05 + i * 0.05}>
+                  <motion.div
+                    whileHover={{ y: -3 }}
+                    transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                    style={{
+                      background: "var(--bg-elevated)",
+                      padding: "26px 24px 24px",
+                      height: "100%",
+                      display: "flex", flexDirection: "column",
+                      cursor: "default",
+                    }}
+                  >
+                    <div style={{
+                      display: "flex", alignItems: "center", justifyContent: "space-between",
+                      marginBottom: 18,
+                    }}>
+                      <div style={{
+                        width: 38, height: 38, background: sh.subtle,
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                      }}>
+                        <I size={20} color={sh.primary} weight="regular" />
+                      </div>
+                      <p style={{ ...mono, fontSize: 9, color: sh.muted, letterSpacing: "0.2em" }}>
+                        FACT · 0{i + 1}
+                      </p>
+                    </div>
+                    <p style={{
+                      fontFamily: serif, fontWeight: 700,
+                      fontSize: "clamp(34px, 4vw, 46px)",
+                      color: sh.primary, lineHeight: 1, marginBottom: 12,
+                      letterSpacing: "-0.03em",
+                    }}>
+                      {s.prefix && <span>{s.prefix}</span>}
+                      <CountUp value={s.stat} suffix={s.suffix} />
+                    </p>
+                    <p style={{ ...t.bodySm, marginBottom: 14, flex: 1 }}>{s.label}</p>
+                    <p style={{
+                      ...mono, fontSize: 9, color: "var(--text-muted)", letterSpacing: "0.18em",
+                      paddingTop: 10, borderTop: `1px solid ${sh.subtle}`,
+                    }}>
+                      {s.source}
+                    </p>
+                  </motion.div>
+                </Reveal>
+              );
+            })}
+          </div>
         </div>
       </section>
 
@@ -1018,8 +1098,8 @@ export default function ShelfieCase() {
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <SectionHeader num="02" title="What fails on the shelf" phase="Failure cases" />
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mb-12">
-            <div className="lg:col-span-5">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mb-12 items-end">
+            <div className="lg:col-span-7">
               <Reveal>
                 <h2 style={{ ...t.h2Section, marginBottom: 16 }}>
                   Four ways a label
@@ -1027,101 +1107,109 @@ export default function ShelfieCase() {
                   — in plain sight.
                 </h2>
               </Reveal>
-            </div>
-            <div className="lg:col-span-7">
               <Reveal delay={0.1}>
-                <p style={{ ...t.body, marginBottom: 16 }}>
-                  Before we ran the field study, we needed to see the failure modes clearly. We
-                  pulled four representative products off the shelves of a major grocery chain
-                  and studied each one as an object — where the date lived, how the text rendered,
-                  and how the user was expected to find it.
+                <p style={{ ...t.bodyLg, maxWidth: 620 }}>
+                  We pulled four representative products off the shelf, then timed
+                  twenty-five shoppers locating each date. Every product failed differently
+                  — and the spread between best and worst was almost two-to-one.
                 </p>
               </Reveal>
+            </div>
+            <div className="lg:col-span-5">
               <Reveal delay={0.18}>
-                <p style={{ ...t.body, marginBottom: 0 }}>
-                  Then we timed twenty-five shoppers locating that date under shelf lighting.
-                  The numbers below are field measurements, not estimates — every product
-                  failed differently, and the spread between best and worst was almost two-to-one.
-                </p>
+                <div style={{
+                  display: "flex", alignItems: "center", gap: 14,
+                  padding: "16px 20px",
+                  background: "var(--bg-elevated)",
+                  border: `1px solid ${sh.subtle}`,
+                  borderLeft: `3px solid ${sh.primary}`,
+                }}>
+                  <Flask size={22} color={sh.primary} weight="regular" />
+                  <div>
+                    <p style={{ ...mono, fontSize: 10, color: sh.primary, letterSpacing: "0.2em", fontWeight: 700, marginBottom: 2 }}>
+                      METHOD
+                    </p>
+                    <p style={{ ...t.bodySm, color: "var(--text-primary)", margin: 0 }}>
+                      Naturalistic locate-task · in-aisle lighting · n = 25
+                    </p>
+                  </div>
+                </div>
               </Reveal>
             </div>
           </div>
 
-          {/* Field-experiment baseline strip */}
-          <Reveal delay={0.22}>
-            <div style={{
-              display: "flex", flexWrap: "wrap", alignItems: "center",
-              justifyContent: "space-between", gap: 24,
-              padding: "20px 26px", marginBottom: 28,
-              background: "var(--bg-elevated)",
-              border: `1px solid ${sh.subtle}`,
-              borderLeft: `3px solid ${sh.primary}`,
-            }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                <Timer size={18} color={sh.primary} weight="regular" />
-                <span style={{ ...mono, fontSize: 11, color: sh.dark, letterSpacing: "0.2em", fontWeight: 700 }}>
-                  Field-experiment baseline
-                </span>
-              </div>
-              {[
-                { n: "5.0s", l: "best layout — clean date panel" },
-                { n: "8.9s", l: "worst layout — micro-print on foil" },
-                { n: "78%", l: "swing in time-to-locate from layout alone" },
-                { n: "62%", l: "of attempts required tilting under light" },
-              ].map((s, i) => (
-                <div key={i} style={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                  <span style={{ fontFamily: serif, fontWeight: 700, fontSize: 22, color: sh.primary, letterSpacing: "-0.01em" }}>{s.n}</span>
-                  <span style={{ ...mono, fontSize: 9, color: "var(--text-muted)", letterSpacing: "0.16em" }}>{s.l}</span>
-                </div>
-              ))}
-            </div>
-          </Reveal>
+          {/* Field-experiment baseline strip — 4 KPI tiles */}
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+            gap: 1,
+            background: sh.subtle,
+            border: `1px solid ${sh.subtle}`,
+            marginBottom: 28,
+          }}>
+            {[
+              { icon: Timer,    n: "5.0s", l: "best layout"           },
+              { icon: Timer,    n: "8.9s", l: "worst layout"          },
+              { icon: ArrowsLeftRight, n: "78%", l: "spread, layout alone" },
+              { icon: Eye,      n: "62%", l: "tilted under light"     },
+            ].map((s, i) => {
+              const I = s.icon as Icon;
+              return (
+                <Reveal key={i} delay={0.04 + i * 0.05}>
+                  <motion.div
+                    whileHover={{ y: -2 }}
+                    transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                    style={{
+                      background: "var(--bg-elevated)",
+                      padding: "20px 22px",
+                      display: "flex", alignItems: "center", gap: 16,
+                    }}
+                  >
+                    <I size={22} color={sh.primary} weight="regular" />
+                    <div style={{ minWidth: 0 }}>
+                      <p style={{ fontFamily: serif, fontWeight: 700, fontSize: 24, color: sh.primary, letterSpacing: "-0.01em", lineHeight: 1, margin: 0 }}>{s.n}</p>
+                      <p style={{ ...mono, fontSize: 9, color: "var(--text-muted)", letterSpacing: "0.16em", marginTop: 4 }}>{s.l}</p>
+                    </div>
+                  </motion.div>
+                </Reveal>
+              );
+            })}
+          </div>
 
           {/* Four failure modes */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
-              {
-                illus: <OilBottleIllustration />,
-                tag: "CONTRAST",
-                title: "Same color as the product.",
-                body: "A yellow stamp on yellow oil. Printed — and functionally invisible until backlit.",
-                time: "8.9s",
-                hits: "3 / 25 found it under 5s",
-              },
-              {
-                illus: <BreadBagIllustration />,
-                tag: "PLACEMENT",
-                title: "Somewhere on the bag.",
-                body: "Transparent film and loose placement turn every scan into a scavenger hunt.",
-                time: "7.6s",
-                hits: "11 / 25 turned the bag over",
-              },
-              {
-                illus: <CanTopIllustration />,
-                tag: "LEGIBILITY",
-                title: "Embossed, not printed.",
-                body: "Same-color-on-same-color ridges read as decoration, not information.",
-                time: "6.4s",
-                hits: "9 / 25 read the wrong number",
-              },
-              {
-                illus: <YogurtCupIllustration />,
-                tag: "TYPE SIZE",
-                title: "Smaller than the lot code.",
-                body: "3.4 pt date on a foil rim. Below the comfortable reading threshold for 60% of the sample.",
-                time: "9.2s",
-                hits: "5 / 25 needed to bring it closer",
-              },
+              { illus: <OilBottleIllustration />,  tag: "CONTRAST",  title: "Same color as the product.",      body: "Yellow stamp on yellow oil — printed, functionally invisible.",       time: "8.9s", hits: "3 / 25 under 5s" },
+              { illus: <BreadBagIllustration />,   tag: "PLACEMENT", title: "Somewhere on the bag.",            body: "Loose placement turns every scan into a scavenger hunt.",            time: "7.6s", hits: "11 / 25 flipped the bag" },
+              { illus: <CanTopIllustration />,     tag: "LEGIBILITY",title: "Embossed, not printed.",           body: "Ridges read as decoration, not information.",                         time: "6.4s", hits: "9 / 25 read the wrong number" },
+              { illus: <YogurtCupIllustration />,  tag: "TYPE SIZE", title: "Smaller than the lot code.",       body: "3.4 pt on a foil rim. Below the comfortable reading threshold.",      time: "9.2s", hits: "5 / 25 needed it closer" },
             ].map((f, i) => (
               <Reveal key={i} delay={0.1 + i * 0.08}>
-                <div style={{
-                  background: "var(--bg-elevated)",
-                  border: "1px solid var(--border)",
-                  padding: "28px 24px 24px",
-                  height: "100%",
-                  display: "flex",
-                  flexDirection: "column",
-                }}>
+                <motion.div
+                  whileHover={{ y: -6 }}
+                  transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
+                  style={{
+                    background: "var(--bg-elevated)",
+                    border: "1px solid var(--border)",
+                    padding: "28px 24px 24px",
+                    height: "100%",
+                    display: "flex",
+                    flexDirection: "column",
+                    cursor: "default",
+                    position: "relative",
+                  }}
+                  onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.borderColor = sh.primary; (e.currentTarget as HTMLElement).style.boxShadow = `0 1px 2px rgba(0,0,0,0.04), 0 12px 32px rgba(31,95,92,0.12)`; }}
+                  onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.borderColor = "var(--border)"; (e.currentTarget as HTMLElement).style.boxShadow = "none"; }}
+                >
+                  {/* magnifier badge — top-right corner */}
+                  <div style={{
+                    position: "absolute", top: 14, right: 14, zIndex: 2,
+                    width: 30, height: 30,
+                    background: sh.subtle,
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                  }}>
+                    <MagnifyingGlass size={14} color={sh.primary} weight="regular" />
+                  </div>
                   <div style={{
                     height: 180, display: "flex", alignItems: "center",
                     justifyContent: "center", marginBottom: 18,
@@ -1137,7 +1225,7 @@ export default function ShelfieCase() {
                       AVG · <span style={{ color: sh.dark, fontWeight: 700 }}>{f.time}</span>
                     </p>
                   </div>
-                  <h3 style={{ ...t.h3Lede, fontSize: 20, marginBottom: 8 }}>
+                  <h3 style={{ ...t.h3Lede, fontSize: 19, marginBottom: 8 }}>
                     {f.title}
                   </h3>
                   <p style={{ ...t.bodySm, marginBottom: 14 }}>
@@ -1145,12 +1233,12 @@ export default function ShelfieCase() {
                   </p>
                   <div style={{
                     marginTop: "auto", paddingTop: 12,
-                    borderTop: "1px solid var(--border)",
+                    borderTop: `1px solid ${sh.subtle}`,
                     ...mono, fontSize: 9, color: sh.muted, letterSpacing: "0.16em",
                   }}>
                     {f.hits}
                   </div>
-                </div>
+                </motion.div>
               </Reveal>
             ))}
           </div>
@@ -1166,22 +1254,18 @@ export default function ShelfieCase() {
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <SectionHeader num="03" title="How we studied it" phase="Method" />
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mb-12">
-            <div className="lg:col-span-5">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mb-12 items-end">
+            <div className="lg:col-span-7">
               <Reveal>
                 <h2 style={{ ...t.h2Section, marginBottom: 16 }}>
                   A mixed-methods study,
                   <span style={{ fontStyle: "italic", color: sh.primary }}> grounded in the aisle.</span>
                 </h2>
               </Reveal>
-            </div>
-            <div className="lg:col-span-7">
               <Reveal delay={0.1}>
-                <p style={{ ...t.body }}>
-                  Twenty-five participants, balanced across age, gender, shopping cadence, and
-                  vision correction. Three complementary lenses: watching shoppers in situ,
-                  timing them on standardized products, and asking them to reflect on their own
-                  habits.
+                <p style={{ ...t.bodyLg, maxWidth: 580 }}>
+                  Three complementary lenses: watch them, time them, ask them.
+                  Twenty-five participants, balanced across age, vision, and cadence.
                 </p>
               </Reveal>
             </div>
@@ -1190,32 +1274,29 @@ export default function ShelfieCase() {
           {/* Three method columns */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
             {[
-              {
-                glyph: <ObservationGlyph />,
-                tag: "METHOD · 01",
-                title: "Observation",
-                body: "Naturalistic study of 25 grocery shoppers across shifts and aisles — noting hesitation, tilting, comparison behaviour, and where lighting helped or hurt.",
-              },
-              {
-                glyph: <ExperimentGlyph />,
-                tag: "METHOD · 02",
-                title: "Controlled experiment",
-                body: "Four standardized products. Each participant timed locating the date. Spread: 5.0s for the best layout, 8.9s for the worst — a 78% swing from design alone.",
-              },
-              {
-                glyph: <SurveyGlyph />,
-                tag: "METHOD · 03",
-                title: "Post-task survey",
-                body: "Self-reported habits, prior illness from expired food, and participant preferences on how to fix the label system.",
-              },
+              { glyph: <ObservationGlyph />, tag: "METHOD · 01", title: "Observation",          body: "Watching 25 shoppers in situ — hesitation, tilting, comparison behaviour, lighting." },
+              { glyph: <ExperimentGlyph />,  tag: "METHOD · 02", title: "Controlled experiment", body: "Four standardised products. Timed locate task. 5.0s → 8.9s spread from design alone." },
+              { glyph: <SurveyGlyph />,      tag: "METHOD · 03", title: "Post-task survey",      body: "Self-reported habits, prior illness, and preferences on how to fix the label system." },
             ].map((m, i) => (
               <Reveal key={i} delay={0.1 + i * 0.08}>
-                <div style={{
-                  borderTop: `2px solid ${sh.primary}`,
-                  padding: "24px 4px 4px",
-                  height: "100%",
-                }}>
-                  <div style={{ marginBottom: 18 }}>{m.glyph}</div>
+                <motion.div
+                  whileHover={{ y: -4 }}
+                  transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                  style={{
+                    borderTop: `2px solid ${sh.primary}`,
+                    padding: "24px 4px 4px",
+                    height: "100%",
+                    cursor: "default",
+                  }}
+                  className="group"
+                >
+                  <motion.div
+                    whileHover={{ scale: 1.05, rotate: -2 }}
+                    transition={{ duration: 0.4, ease: [0.34, 1.56, 0.64, 1] }}
+                    style={{ marginBottom: 18, display: "inline-block", transformOrigin: "left center" }}
+                  >
+                    {m.glyph}
+                  </motion.div>
                   <p style={{ ...mono, fontSize: 10, color: "var(--text-muted)", letterSpacing: "0.2em", marginBottom: 10 }}>
                     {m.tag}
                   </p>
@@ -1225,7 +1306,7 @@ export default function ShelfieCase() {
                   <p style={{ ...t.bodySm }}>
                     {m.body}
                   </p>
-                </div>
+                </motion.div>
               </Reveal>
             ))}
           </div>
@@ -1274,182 +1355,162 @@ export default function ShelfieCase() {
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <SectionHeader num="04" title="Voices from the aisle" phase="Research highlights" />
 
-          {/* Lede + interview methodology callout */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mb-12">
-            <div className="lg:col-span-5">
+          {/* Lede */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mb-12 items-end">
+            <div className="lg:col-span-7">
               <Reveal>
                 <h2 style={{ ...t.h2Section, marginBottom: 16 }}>
                   Twenty-five shoppers,
                   <span style={{ fontStyle: "italic", color: sh.primary }}> in their own words.</span>
                 </h2>
               </Reveal>
-            </div>
-            <div className="lg:col-span-7">
               <Reveal delay={0.1}>
-                <p style={{ ...t.body, marginBottom: 0 }}>
-                  Each session was semi-structured: a short shop-along through the aisle where
-                  they chose a product, a timed locate task at the cart, and a sit-down debrief
-                  with twelve open-ended prompts and follow-up probes. We coded the transcripts
-                  with affinity diagramming and let the themes surface from the data — six of
-                  them showed up in more than half the sample.
+                <p style={{ ...t.bodyLg, maxWidth: 600 }}>
+                  Semi-structured shop-alongs and post-task debriefs. Verbatim transcripts,
+                  affinity-diagrammed, blind-coded.
                 </p>
               </Reveal>
             </div>
           </div>
 
-          {/* Interview methodology — three-column meta strip */}
-          <Reveal delay={0.18}>
-            <div style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-              gap: 0,
-              marginBottom: 36,
-              background: "var(--bg-elevated)",
-              border: `1px solid ${sh.subtle}`,
-            }}>
-              {[
-                { label: "Format",        value: "Semi-structured · 30–45 min", sub: "in-aisle + post-shop debrief" },
-                { label: "Guide",         value: "12 open prompts · 4 probes",  sub: "piloted with 3 outside the sample" },
-                { label: "Analysis",      value: "Verbatim transcript",         sub: "affinity diagram · 6 themes coded" },
-                { label: "Inter-rater",   value: "0.81 Cohen's κ",              sub: "two researchers, blind-coded" },
-              ].map((m, i, arr) => (
-                <div key={i} style={{
-                  padding: "22px 24px",
-                  borderRight: i < arr.length - 1 ? `1px solid ${sh.subtle}` : "none",
-                }}>
-                  <p style={{ ...mono, fontSize: 10, color: sh.primary, letterSpacing: "0.2em", fontWeight: 700, marginBottom: 8 }}>
-                    {m.label}
-                  </p>
-                  <p style={{ fontFamily: serif, fontWeight: 700, fontSize: 18, color: "var(--text-primary)", letterSpacing: "-0.01em", marginBottom: 4, lineHeight: 1.25 }}>
-                    {m.value}
-                  </p>
-                  <p style={{ ...mono, fontSize: 9, color: "var(--text-muted)", letterSpacing: "0.16em" }}>
-                    {m.sub}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </Reveal>
-
-          {/* Sample interview prompts */}
-          <Reveal delay={0.22}>
-            <div style={{
-              padding: "26px 28px", marginBottom: 36,
-              background: "var(--bg-elevated)",
-              border: `1px solid ${sh.subtle}`,
-              borderLeft: `3px solid ${sh.primary}`,
-            }}>
-              <p style={{ ...mono, fontSize: 10, color: sh.primary, letterSpacing: "0.22em", fontWeight: 700, marginBottom: 16 }}>
-                Excerpts from the interview guide
-              </p>
-              <div style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-                gap: 18,
-              }}>
-                {[
-                  "Walk me through the last time you decided whether to throw something out.",
-                  "When you see \"sell by\" and \"use by\" together, what runs through your head?",
-                  "Show me how you'd find the date on this jar — talk me through what you're doing.",
-                  "Has a date label ever made you sick — or saved you?",
-                  "What do you do once a package is opened? Does the printed date still mean anything?",
-                  "If you could redesign the label, what would you change first?",
-                ].map((q, i) => (
-                  <div key={i} style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
-                    <span style={{ ...mono, fontSize: 11, color: sh.primary, fontWeight: 700, letterSpacing: "0.18em", flexShrink: 0 }}>
-                      Q{i + 1}
-                    </span>
-                    <p style={{ ...t.bodySm, fontFamily: serif, fontStyle: "italic", color: "var(--text-primary)", margin: 0 }}>
-                      "{q}"
+          {/* Interview methodology — four icon tiles */}
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+            gap: 1,
+            marginBottom: 36,
+            background: sh.subtle,
+            border: `1px solid ${sh.subtle}`,
+          }}>
+            {[
+              { icon: ChatCircleText, label: "Format",   value: "Semi-structured",      sub: "30–45 min · in-aisle + debrief" },
+              { icon: Question,       label: "Guide",    value: "12 prompts · 4 probes", sub: "piloted with 3 outside sample" },
+              { icon: Stack,          label: "Analysis", value: "Affinity diagram",      sub: "verbatim · 6 themes coded" },
+              { icon: Target,         label: "Reliability", value: "κ = 0.81",            sub: "two researchers, blind-coded" },
+            ].map((m, i) => {
+              const I = m.icon as Icon;
+              return (
+                <Reveal key={i} delay={0.05 + i * 0.05}>
+                  <motion.div
+                    whileHover={{ y: -3 }}
+                    transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                    style={{
+                      background: "var(--bg-elevated)",
+                      padding: "22px 24px",
+                      height: "100%",
+                    }}
+                  >
+                    <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
+                      <I size={20} color={sh.primary} weight="regular" />
+                      <p style={{ ...mono, fontSize: 10, color: sh.primary, letterSpacing: "0.2em", fontWeight: 700, margin: 0 }}>
+                        {m.label}
+                      </p>
+                    </div>
+                    <p style={{ fontFamily: serif, fontWeight: 700, fontSize: 18, color: "var(--text-primary)", letterSpacing: "-0.01em", marginBottom: 4, lineHeight: 1.25 }}>
+                      {m.value}
                     </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </Reveal>
+                    <p style={{ ...mono, fontSize: 9, color: "var(--text-muted)", letterSpacing: "0.16em" }}>
+                      {m.sub}
+                    </p>
+                  </motion.div>
+                </Reveal>
+              );
+            })}
+          </div>
 
-          {/* Six finding cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {/* Four finding cards — strongest themes only */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {[
               {
+                icon: ChatCircleText,
                 finding: "Vocabulary collapses into a single guess",
-                quote: "Honestly I just guess. \"Best by,\" \"sell by\" — I treat them all the same. If it smells fine I keep it.",
+                quote: "Honestly I just guess. \"Best by,\" \"sell by\" — I treat them all the same.",
                 meta: "P04 · 31 · weekly shopper",
-                stat: "18 / 25 said they don't distinguish between the four terms",
+                stat: "18 / 25 don't distinguish between the four terms",
               },
               {
+                icon: Eye,
                 finding: "Contrast and placement defeat the eye",
-                quote: "On the oil bottle the date was the same yellow as the oil. I had to tilt it under the light to even find it.",
+                quote: "The date was the same yellow as the oil. I had to tilt it under the light to even find it.",
                 meta: "P11 · 47 · corrective lenses",
                 stat: "62% of locate attempts required tilting under light",
               },
               {
-                finding: "The opened package is a memory problem",
-                quote: "Once I open something, that printed date doesn't matter anymore — I'm just hoping I remember when I opened it.",
+                icon: Brain,
+                finding: "Once opened, the date stops meaning anything",
+                quote: "I'm just hoping I remember when I opened it. The printed date doesn't matter anymore.",
                 meta: "P19 · 28 · weekly shopper",
                 stat: "23 / 25 had no system for tracking opened items",
               },
               {
-                finding: "The smell-test fallback overrides the label",
-                quote: "I sniff the milk. The date's a suggestion — my nose is the actual decision-maker.",
-                meta: "P02 · 56 · biweekly shopper",
-                stat: "21 / 25 used a sensory check before discarding",
-              },
-              {
+                icon: HandPalm,
                 finding: "Loss aversion drives over-discarding",
-                quote: "If it's the day after the date I throw it out. I'm not risking a hospital bill to save two dollars.",
+                quote: "If it's the day after the date I throw it out. Not risking a hospital bill for two dollars.",
                 meta: "P14 · 38 · parent of two",
-                stat: "9 / 25 discard within 24 h of the printed date regardless of state",
+                stat: "9 / 25 discard within 24 h regardless of state",
               },
-              {
-                finding: "Workarounds quietly fill the gap",
-                quote: "I started writing the open date on the lid with a Sharpie. Half the time I forget — but it's better than nothing.",
-                meta: "P22 · 34 · monthly meal-prep",
-                stat: "7 / 25 had invented their own tracking workaround",
-              },
-            ].map((r, i) => (
-              <Reveal key={i} delay={0.1 + i * 0.06}>
-                <div style={{
-                  background: "var(--bg-elevated)",
-                  border: "1px solid var(--border)",
-                  padding: "28px 26px",
-                  height: "100%",
-                  display: "flex",
-                  flexDirection: "column",
-                }}>
-                  <Quotes size={28} color={sh.primary} weight="fill" style={{ marginBottom: 16, opacity: 0.7 }} />
-                  <blockquote style={{
-                    fontFamily: serif, fontStyle: "italic",
-                    fontSize: 17, lineHeight: 1.55,
-                    color: "var(--text-primary)",
-                    marginBottom: 16,
-                  }}>
-                    "{r.quote}"
-                  </blockquote>
-                  <p style={{ ...mono, fontSize: 10, color: "var(--text-muted)", letterSpacing: "0.18em", marginBottom: 20 }}>
-                    — {r.meta}
-                  </p>
-                  <div style={{
-                    marginTop: "auto",
-                    borderTop: "1px solid var(--border)",
-                    paddingTop: 14,
-                  }}>
-                    <p style={{ ...mono, fontSize: 10, color: sh.primary, letterSpacing: "0.18em", fontWeight: 700, marginBottom: 6 }}>
-                      FINDING · 0{i + 1}
+            ].map((r, i) => {
+              const I = r.icon as Icon;
+              return (
+                <Reveal key={i} delay={0.1 + i * 0.07}>
+                  <motion.div
+                    whileHover={{ y: -6 }}
+                    transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
+                    style={{
+                      background: "var(--bg-elevated)",
+                      border: "1px solid var(--border)",
+                      padding: "30px 30px 28px",
+                      height: "100%",
+                      display: "flex",
+                      flexDirection: "column",
+                      cursor: "default",
+                      position: "relative",
+                    }}
+                    onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.borderColor = sh.primary; (e.currentTarget as HTMLElement).style.boxShadow = `0 1px 2px rgba(0,0,0,0.04), 0 14px 36px rgba(31,95,92,0.13)`; }}
+                    onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.borderColor = "var(--border)"; (e.currentTarget as HTMLElement).style.boxShadow = "none"; }}
+                  >
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 18 }}>
+                      <div style={{
+                        width: 44, height: 44, background: sh.subtle,
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                      }}>
+                        <I size={22} color={sh.primary} weight="regular" />
+                      </div>
+                      <p style={{ ...mono, fontSize: 10, color: sh.primary, letterSpacing: "0.18em", fontWeight: 700, margin: 0 }}>
+                        FINDING · 0{i + 1}
+                      </p>
+                    </div>
+                    <Quotes size={22} color={sh.primary} weight="fill" style={{ marginBottom: 10, opacity: 0.5 }} />
+                    <blockquote style={{
+                      fontFamily: serif, fontStyle: "italic",
+                      fontSize: 19, lineHeight: 1.5,
+                      color: "var(--text-primary)",
+                      marginBottom: 14,
+                    }}>
+                      "{r.quote}"
+                    </blockquote>
+                    <p style={{ ...mono, fontSize: 10, color: "var(--text-muted)", letterSpacing: "0.18em", marginBottom: 18 }}>
+                      — {r.meta}
                     </p>
-                    <p style={{ ...t.bodySm, color: "var(--text-primary)", fontWeight: 500, marginBottom: 10 }}>
-                      {r.finding}
-                    </p>
-                    <p style={{ ...mono, fontSize: 9, color: sh.muted, letterSpacing: "0.16em" }}>
-                      {r.stat}
-                    </p>
-                  </div>
-                </div>
-              </Reveal>
-            ))}
+                    <div style={{
+                      marginTop: "auto",
+                      borderTop: `1px solid ${sh.subtle}`,
+                      paddingTop: 14,
+                    }}>
+                      <p style={{ ...t.bodySm, color: "var(--text-primary)", fontWeight: 500, marginBottom: 8 }}>
+                        {r.finding}
+                      </p>
+                      <p style={{ ...mono, fontSize: 9, color: sh.muted, letterSpacing: "0.16em" }}>
+                        {r.stat}
+                      </p>
+                    </div>
+                  </motion.div>
+                </Reveal>
+              );
+            })}
           </div>
 
-          {/* Demographic breakdown of the sample */}
+          {/* Demographic breakdown — compact icon-led sample bar */}
           <Reveal delay={0.3}>
             <div style={{
               marginTop: 40,
@@ -1461,7 +1522,7 @@ export default function ShelfieCase() {
                 padding: "20px 26px",
                 borderBottom: `1px solid ${sh.subtle}`,
               }}>
-                <span aria-hidden style={{ width: 3, height: 14, background: sh.primary }} />
+                <UsersThree size={20} color={sh.primary} weight="regular" />
                 <p style={{ ...mono, fontSize: 11, color: sh.dark, letterSpacing: "0.22em", fontWeight: 700 }}>
                   Sample composition · n = 25
                 </p>
@@ -1507,21 +1568,19 @@ export default function ShelfieCase() {
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <SectionHeader num="05" title="Principles we pressed against" phase="Synthesis" />
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mb-14">
-            <div className="lg:col-span-5">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mb-12 items-end">
+            <div className="lg:col-span-7">
               <Reveal>
                 <h2 style={{ ...t.h2Section, marginBottom: 16 }}>
                   Every failure traced back to a
                   <span style={{ fontStyle: "italic", color: sh.primary }}> named principle.</span>
                 </h2>
               </Reveal>
-            </div>
-            <div className="lg:col-span-7">
               <Reveal delay={0.1}>
-                <p style={{ ...t.body }}>
-                  The human factors literature gives us a vocabulary for why a label goes wrong.
-                  Mapping each observation to a principle let us move from anecdotes ("people
-                  struggled") to arguments ("this violates Hick's Law, here's how to fix it").
+                <p style={{ ...t.bodyLg, maxWidth: 580 }}>
+                  Anecdotes don't change packaging. Principles do. We mapped each observation
+                  onto a named cognitive constraint — so the design isn't asking to be trusted,
+                  it's showing its work.
                 </p>
               </Reveal>
             </div>
@@ -1529,33 +1588,57 @@ export default function ShelfieCase() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {[
-              { icon: Brain, title: "Hick's Law", rule: "Simplify decisions.", body: "Four competing vocabularies (use-by, sell-by, best-before, freeze-by) inflate decision time. Collapse them." },
-              { icon: Stack, title: "Miller's Law", rule: "Seven, plus or minus two.", body: "Dense ingredient panels push the date out of working memory. Chunk and isolate it." },
-              { icon: Eye, title: "Visual hierarchy", rule: "The critical thing, biggest.", body: "Today the nutrition label dominates. The safety date should be the first thing the eye lands on." },
-              { icon: HandTap, title: "Affordance", rule: "The sign suggests the use.", body: "Universal symbols read faster than typography. A glyph is language-independent." },
+              { icon: Brain,   title: "Hick's Law",       rule: "Simplify decisions.",            body: "Four competing vocabularies inflate decision time. Collapse them." },
+              { icon: Stack,   title: "Miller's Law",     rule: "Seven, plus or minus two.",      body: "Dense panels push the date out of working memory. Chunk and isolate." },
+              { icon: Eye,     title: "Visual hierarchy", rule: "The critical thing, biggest.",   body: "Today nutrition dominates. The safety date should land first." },
+              { icon: HandTap, title: "Affordance",       rule: "The sign suggests the use.",     body: "Universal symbols read faster than typography. Glyphs are language-independent." },
             ].map((p, i) => {
               const Icon = p.icon as Icon;
               return (
                 <Reveal key={i} delay={0.1 + i * 0.06}>
-                  <div style={{
-                    background: "var(--bg-elevated)",
-                    border: "1px solid var(--border)",
-                    padding: "26px 28px",
-                    display: "flex",
-                    gap: 22,
-                    alignItems: "flex-start",
-                    height: "100%",
-                  }}>
-                    <div style={{
-                      width: 44, height: 44, flexShrink: 0,
-                      background: sh.subtle,
-                      display: "flex", alignItems: "center", justifyContent: "center",
+                  <motion.div
+                    whileHover={{ y: -4 }}
+                    transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                    style={{
+                      background: "var(--bg-elevated)",
+                      border: "1px solid var(--border)",
+                      padding: "26px 28px",
+                      display: "flex",
+                      gap: 22,
+                      alignItems: "flex-start",
+                      height: "100%",
+                      cursor: "default",
+                      position: "relative",
+                      overflow: "hidden",
+                    }}
+                    onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.borderColor = sh.primary; }}
+                    onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.borderColor = "var(--border)"; }}
+                  >
+                    {/* big numerical index — subtle background flourish */}
+                    <span aria-hidden style={{
+                      position: "absolute", right: 16, bottom: -12,
+                      fontFamily: serif, fontWeight: 700,
+                      fontSize: 78, color: sh.subtle,
+                      letterSpacing: "-0.03em", lineHeight: 1, pointerEvents: "none",
+                      userSelect: "none",
                     }}>
-                      <Icon size={22} color={sh.primary} weight="regular" />
-                    </div>
-                    <div style={{ flex: 1, minWidth: 0 }}>
+                      0{i + 1}
+                    </span>
+                    <motion.div
+                      whileHover={{ scale: 1.08, rotate: -4 }}
+                      transition={{ duration: 0.4, ease: [0.34, 1.56, 0.64, 1] }}
+                      style={{
+                        width: 48, height: 48, flexShrink: 0,
+                        background: sh.subtle,
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                        position: "relative", zIndex: 1,
+                      }}
+                    >
+                      <Icon size={24} color={sh.primary} weight="regular" />
+                    </motion.div>
+                    <div style={{ flex: 1, minWidth: 0, position: "relative", zIndex: 1 }}>
                       <div style={{ display: "flex", alignItems: "baseline", gap: 12, flexWrap: "wrap", marginBottom: 8 }}>
-                        <h3 style={{ fontFamily: serif, fontWeight: 700, fontSize: 20, color: "var(--text-primary)", letterSpacing: "-0.01em" }}>
+                        <h3 style={{ fontFamily: serif, fontWeight: 700, fontSize: 22, color: "var(--text-primary)", letterSpacing: "-0.01em" }}>
                           {p.title}
                         </h3>
                         <span style={{ ...mono, fontSize: 10, color: sh.primary, letterSpacing: "0.18em" }}>
@@ -1566,7 +1649,7 @@ export default function ShelfieCase() {
                         {p.body}
                       </p>
                     </div>
-                  </div>
+                  </motion.div>
                 </Reveal>
               );
             })}
@@ -1584,21 +1667,18 @@ export default function ShelfieCase() {
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <SectionHeader num="06" title="Design proposals" phase="Concepts" />
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mb-12">
-            <div className="lg:col-span-5">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mb-12 items-end">
+            <div className="lg:col-span-7">
               <Reveal>
                 <h2 style={{ ...t.h2Section, marginBottom: 16 }}>
                   Four concepts,
                   <span style={{ fontStyle: "italic", color: sh.primary }}> two sides of the package.</span>
                 </h2>
               </Reveal>
-            </div>
-            <div className="lg:col-span-7">
               <Reveal delay={0.1}>
-                <p style={{ ...t.body }}>
-                  Better printing helps the aisle. Better tools help the pantry. Each proposal
-                  addresses a specific finding and names the principle it's leaning on — so the
-                  design isn't asking to be trusted, it's showing its work.
+                <p style={{ ...t.bodyLg, maxWidth: 600 }}>
+                  Better printing helps the aisle. Better tools help the pantry.
+                  Each concept points back to a finding and names the principle it leans on.
                 </p>
               </Reveal>
             </div>
@@ -1608,67 +1688,67 @@ export default function ShelfieCase() {
           {[
             {
               category: "PASSIVE PACKAGING",
-              caption: "Fixes that live on the printed side of the package.",
+              caption: "Fixes printed onto the package itself.",
               cards: [
                 {
                   num: "01",
                   icon: CheckCircle,
                   title: "Universal Freshness Icon",
                   tag: "INDUSTRY · PACKAGING",
-                  body: "Replace the four-vocabulary tangle with a single three-state glyph — fresh, soon, expired. Colour-coded, language-independent, scannable in a half-second glance.",
+                  body: "A single three-state glyph replaces the four-vocabulary tangle. Fresh · soon · expired — colour-coded, language-independent, half-second glance.",
                   illus: <UniversalIconIllustration />,
                   principle: "Affordance · Visual hierarchy",
-                  how: "A standardised three-state icon prints alongside (or replaces) the date stamp. Colour + glyph + label work together — none of the three is load-bearing on its own.",
-                  who: "Every shopper, especially older adults and non-native English readers — the two cohorts most defeated by the four-term system today.",
-                  evidence: "Findings 01 & 04 · 18 / 25 didn't distinguish between the four terms · 21 / 25 fall back on a sensory check.",
+                  how: "Standardised three-state icon prints alongside (or replaces) the date stamp.",
+                  who: "Every shopper — especially older adults and non-native readers.",
+                  evidence: "F01 & F04 · 18 / 25 don't distinguish the four terms.",
                 },
               ],
             },
             {
               category: "SMART PACKAGING",
-              caption: "Fixes that close the gap between the printed date and what's actually happening to the food.",
+              caption: "Fixes that respond to what's actually happening to the food.",
               cards: [
                 {
                   num: "02",
                   icon: Thermometer,
                   title: "Passive Time-Strip",
                   tag: "INDUSTRY · PACKAGING",
-                  body: "Temperature-reactive ink that darkens with real storage conditions — not a printed guess. If it sat in a hot car for a week, the strip knows. No battery, no electronics.",
+                  body: "Temperature-reactive ink that darkens with real storage conditions. No battery — and a hot car ride doesn't go uncounted.",
                   illus: <TimeStripIllustration />,
                   principle: "Mental models · Feedback",
-                  how: "Time-temperature-indicator (TTI) ink already used in vaccine cold-chain packaging, ported to consumer dairy and meat. Reacts to cumulative thermal exposure, not the calendar.",
-                  who: "Cold-chain-sensitive products (milk, deli, fresh meat) and the shoppers who buy them — particularly households with longer commutes from store to fridge.",
-                  evidence: "Finding 03 · the printed date stops describing the product the moment it leaves the cold chain. The strip keeps describing it.",
+                  how: "TTI ink (already used in vaccine cold-chain) ported to consumer dairy and meat.",
+                  who: "Cold-chain-sensitive products and longer-commute households.",
+                  evidence: "F03 · the printed date stops describing the product once it leaves the cold chain.",
                 },
                 {
                   num: "03",
                   icon: Timer,
                   title: "Open-By Overlay",
                   tag: "INDUSTRY · POST-OPEN",
-                  body: "The riskiest window starts the moment the seal is broken. A peel-reveal sticker begins a visible countdown on first open — making the invisible timer visible.",
+                  body: "A peel-reveal sticker starts a visible countdown the moment the seal breaks — making the invisible post-open timer visible.",
                   illus: <OpenByIllustration />,
                   principle: "Cognitive load · Mental models",
-                  how: "A pre-printed peel-back panel hides a date that's revealed (and ink-activated) at first opening. The countdown starts at the moment the user actually controls.",
-                  who: "Sauces, condiments, deli, and any product where the official date is irrelevant once opened. Especially valuable for irregular-use households.",
-                  evidence: "Finding 03 & 06 · 23 / 25 had no system for tracking opened items · 7 / 25 had invented a Sharpie-on-lid workaround.",
+                  how: "Pre-printed peel-back panel; ink activates at first opening.",
+                  who: "Sauces, condiments, deli — anything where the official date stops mattering after first use.",
+                  evidence: "F03 & informal · 23 / 25 had no system for tracking opened items.",
                 },
               ],
             },
             {
               category: "CONSUMER TOOL",
-              caption: "Fixes that live on the household side — for when the label itself can't be redesigned.",
+              caption: "Fixes that live on the household side, when the label itself can't be redesigned.",
               cards: [
                 {
                   num: "04",
                   icon: DeviceMobile,
                   title: "Shelfie — household tracker",
                   tag: "CONSUMER · APP",
-                  body: "Snap a photo of your pantry shelf. OCR extracts dates, builds a timeline, and nudges you before something tips. Closes the loop even when the label itself is broken.",
+                  body: "Snap one shelf photo. OCR extracts dates, builds a timeline, and nudges you 48 h before something tips.",
                   illus: <ShelfieAppIllustration />,
                   principle: "Distributed cognition · Reminders",
-                  how: "On-device OCR pulls printed dates from a single shelf photo, infers product type from packaging, and queues notifications 48 h before the soonest expiry.",
-                  who: "Meal-preppers, parents managing multi-person fridges, and the cohort of shoppers already inventing their own workarounds — Sharpies, Post-its, mental notes.",
-                  evidence: "Finding 06 · the workaround already exists; the app just makes it reliable. Closes the loop the printed label cannot.",
+                  how: "On-device OCR + product-type inference + scheduled notifications.",
+                  who: "Meal-preppers, multi-person households, and Sharpie-on-lid workaround inventors.",
+                  evidence: "Informal · the workaround already exists. The app makes it reliable.",
                 },
               ],
             },
@@ -1695,21 +1775,35 @@ export default function ShelfieCase() {
                   const Icon = s.icon as Icon;
                   return (
                     <Reveal key={i} delay={0.1 + i * 0.08}>
-                      <div style={{
-                        background: "var(--bg-elevated)",
-                        border: "1px solid var(--border)",
-                        overflow: "hidden",
-                        height: "100%",
-                        display: "flex",
-                        flexDirection: "column",
-                      }}>
+                      <motion.div
+                        whileHover={{ y: -6 }}
+                        transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
+                        style={{
+                          background: "var(--bg-elevated)",
+                          border: "1px solid var(--border)",
+                          overflow: "hidden",
+                          height: "100%",
+                          display: "flex",
+                          flexDirection: "column",
+                          cursor: "default",
+                        }}
+                        onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.borderColor = sh.primary; (e.currentTarget as HTMLElement).style.boxShadow = `0 1px 2px rgba(0,0,0,0.04), 0 18px 44px rgba(31,95,92,0.14)`; }}
+                        onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.borderColor = "var(--border)"; (e.currentTarget as HTMLElement).style.boxShadow = "none"; }}
+                      >
                         {/* illustration zone */}
                         <div style={{
                           background: sh.surface,
                           padding: "24px 20px",
                           borderBottom: "1px solid var(--border)",
+                          position: "relative",
+                          overflow: "hidden",
                         }}>
-                          {s.illus}
+                          <motion.div
+                            whileHover={{ scale: 1.04 }}
+                            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                          >
+                            {s.illus}
+                          </motion.div>
                         </div>
                         {/* body */}
                         <div style={{ padding: "28px 28px 30px", display: "flex", flexDirection: "column", flex: 1 }}>
@@ -1735,28 +1829,35 @@ export default function ShelfieCase() {
                             {s.body}
                           </p>
 
-                          {/* How / Who / Evidence detail rows */}
-                          <div style={{ display: "flex", flexDirection: "column", gap: 14, marginBottom: 18 }}>
+                          {/* How / Who / Evidence — icon-prefixed compact rows */}
+                          <div style={{
+                            display: "flex", flexDirection: "column", gap: 12,
+                            marginBottom: 16, paddingTop: 14,
+                            borderTop: `1px solid ${sh.subtle}`,
+                          }}>
                             {[
-                              { label: "How it works", value: s.how },
-                              { label: "Who it serves", value: s.who },
-                              { label: "Evidence",      value: s.evidence },
-                            ].map((row, j) => (
-                              <div key={j} style={{
-                                display: "grid",
-                                gridTemplateColumns: "minmax(110px, 130px) 1fr",
-                                gap: 14,
-                                paddingTop: 10,
-                                borderTop: j === 0 ? `1px solid ${sh.subtle}` : "none",
-                              }}>
-                                <p style={{ ...mono, fontSize: 10, color: sh.primary, letterSpacing: "0.18em", fontWeight: 700, margin: 0, paddingTop: 2 }}>
-                                  {row.label}
-                                </p>
-                                <p style={{ ...t.bodySm, color: "var(--text-primary)", margin: 0 }}>
-                                  {row.value}
-                                </p>
-                              </div>
-                            ))}
+                              { rowIcon: Gear,        label: "How",      value: s.how },
+                              { rowIcon: UsersThree,  label: "Who",      value: s.who },
+                              { rowIcon: Flask,       label: "Evidence", value: s.evidence },
+                            ].map((row, j) => {
+                              const RI = row.rowIcon as Icon;
+                              return (
+                                <div key={j} style={{
+                                  display: "grid",
+                                  gridTemplateColumns: "20px 70px 1fr",
+                                  gap: 10,
+                                  alignItems: "start",
+                                }}>
+                                  <RI size={16} color={sh.primary} weight="regular" />
+                                  <span style={{ ...mono, fontSize: 10, color: sh.primary, letterSpacing: "0.18em", fontWeight: 700, paddingTop: 1 }}>
+                                    {row.label}
+                                  </span>
+                                  <span style={{ ...t.bodySm, color: "var(--text-primary)", lineHeight: 1.55 }}>
+                                    {row.value}
+                                  </span>
+                                </div>
+                              );
+                            })}
                           </div>
 
                           <div style={{
@@ -1773,7 +1874,7 @@ export default function ShelfieCase() {
                             </span>
                           </div>
                         </div>
-                      </div>
+                      </motion.div>
                     </Reveal>
                   );
                 })}
@@ -1788,10 +1889,10 @@ export default function ShelfieCase() {
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <SectionHeader num="07" title="What the work left us with" phase="Reflection" />
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
-            <div className="lg:col-span-5">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mb-12 items-end">
+            <div className="lg:col-span-7">
               <Reveal>
-                <h2 style={{ ...t.h2Section, marginBottom: 24 }}>
+                <h2 style={{ ...t.h2Section, marginBottom: 16 }}>
                   Research as a way
                   <span style={{ fontStyle: "italic", color: sh.primary }}> to make the invisible</span>
                   <br />
@@ -1799,44 +1900,106 @@ export default function ShelfieCase() {
                 </h2>
               </Reveal>
               <Reveal delay={0.1}>
-                <p style={{ ...t.body }}>
-                  The strongest thing the field study gave us wasn't a single fix — it was a way
-                  to defend each fix. Every design choice points back to a behavioural observation,
-                  which points back to a named human factors principle.
+                <p style={{ ...t.bodyLg, maxWidth: 600 }}>
+                  The strongest thing this study left us with wasn't a single fix.
+                  It was a way to defend each one — observation by observation, principle by principle.
                 </p>
               </Reveal>
             </div>
-            <div className="lg:col-span-7">
-              <div className="space-y-3">
-                {[
-                  "A label is a system, not a sticker — terminology, placement, contrast, and post-open behaviour all have to be designed together.",
-                  "Field research reveals failures that surveys flatter away. People say they check dates carefully; the timing data disagrees.",
-                  "Vulnerable users set the floor. Designing for tired eyes and bad lighting raises the floor for everyone.",
-                  "Fixes have to live on both sides of the package — better printing helps the aisle, better tools help the pantry.",
-                  "Behind every \"obvious\" interface decision sits a cognitive principle worth naming. Making them explicit makes the case defensible.",
-                ].map((tk, i) => (
-                  <Reveal key={i} delay={0.1 + i * 0.06}>
-                    <div style={{
-                      display: "flex", gap: 20, alignItems: "flex-start",
-                      padding: "20px 22px",
+          </div>
+
+          {/* Takeaway grid — icon-led cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            {[
+              {
+                icon: Stack,
+                head: "A label is a system, not a sticker.",
+                body: "Terminology, placement, contrast, and post-open behaviour all have to be designed together.",
+              },
+              {
+                icon: Eye,
+                head: "Field research reveals what surveys flatter away.",
+                body: "People say they check dates carefully. The timing data disagrees.",
+              },
+              {
+                icon: UsersThree,
+                head: "Vulnerable users set the floor.",
+                body: "Designing for tired eyes and bad lighting raises the floor for everyone.",
+              },
+              {
+                icon: Package,
+                head: "Fixes live on both sides of the package.",
+                body: "Better printing helps the aisle. Better tools help the pantry.",
+              },
+              {
+                icon: Brain,
+                head: "Every \u201Cobvious\u201D decision hides a cognitive principle.",
+                body: "Naming them makes the case defensible — to legal, to ops, to leadership.",
+              },
+              {
+                icon: Lightbulb,
+                head: "Research is the leverage, not the deliverable.",
+                body: "The study didn't ship a label. It made every future label argument shorter.",
+              },
+            ].map((tk, i) => {
+              const I = tk.icon as Icon;
+              return (
+                <Reveal key={i} delay={0.05 + i * 0.06}>
+                  <motion.div
+                    whileHover={{ y: -6 }}
+                    transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
+                    style={{
+                      position: "relative",
+                      padding: "28px 26px 26px",
                       background: "var(--bg-elevated)",
                       border: "1px solid var(--border)",
+                      height: "100%",
+                      display: "flex", flexDirection: "column",
+                      cursor: "default",
+                      overflow: "hidden",
+                    }}
+                    onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.borderColor = sh.primary; (e.currentTarget as HTMLElement).style.boxShadow = `0 1px 2px rgba(0,0,0,0.04), 0 14px 36px rgba(31,95,92,0.12)`; }}
+                    onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.borderColor = "var(--border)"; (e.currentTarget as HTMLElement).style.boxShadow = "none"; }}
+                  >
+                    {/* big background numeral */}
+                    <span aria-hidden style={{
+                      position: "absolute", right: 12, bottom: -18,
+                      fontFamily: serif, fontWeight: 700,
+                      fontSize: 88, color: sh.subtle,
+                      letterSpacing: "-0.03em", lineHeight: 1, pointerEvents: "none",
+                      userSelect: "none",
                     }}>
-                      <span style={{
-                        ...mono, fontSize: 12, fontWeight: 700,
-                        color: sh.primary, letterSpacing: "0.15em",
-                        flexShrink: 0, paddingTop: 2,
-                      }}>
-                        0{i + 1}
+                      0{i + 1}
+                    </span>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 18, position: "relative", zIndex: 1 }}>
+                      <motion.div
+                        whileHover={{ scale: 1.08, rotate: -4 }}
+                        transition={{ duration: 0.4, ease: [0.34, 1.56, 0.64, 1] }}
+                        style={{
+                          width: 44, height: 44, background: sh.subtle,
+                          display: "flex", alignItems: "center", justifyContent: "center",
+                        }}
+                      >
+                        <I size={22} color={sh.primary} weight="regular" />
+                      </motion.div>
+                      <span style={{ ...mono, fontSize: 10, color: sh.muted, letterSpacing: "0.2em", fontWeight: 700 }}>
+                        TAKEAWAY · 0{i + 1}
                       </span>
-                      <p style={{ ...t.bodySm, color: "var(--text-primary)" }}>
-                        {tk}
-                      </p>
                     </div>
-                  </Reveal>
-                ))}
-              </div>
-            </div>
+                    <h3 style={{
+                      fontFamily: serif, fontWeight: 700, fontSize: 19,
+                      color: "var(--text-primary)", letterSpacing: "-0.015em",
+                      lineHeight: 1.3, marginBottom: 10, position: "relative", zIndex: 1,
+                    }}>
+                      {tk.head}
+                    </h3>
+                    <p style={{ ...t.bodySm, position: "relative", zIndex: 1 }}>
+                      {tk.body}
+                    </p>
+                  </motion.div>
+                </Reveal>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -1855,13 +2018,14 @@ export default function ShelfieCase() {
                   background: "var(--bg-elevated)",
                   border: `1px solid ${sh.subtle}`,
                   textDecoration: "none", display: "block",
-                  transition: "border-color 240ms, transform 240ms",
+                  transition: "border-color 240ms, transform 240ms, box-shadow 240ms",
                 }}
-                onMouseEnter={(e) => { e.currentTarget.style.borderColor = sh.primary; e.currentTarget.style.transform = "translateY(-2px)"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.borderColor = sh.subtle; e.currentTarget.style.transform = "translateY(0)"; }}
+                onMouseEnter={(e) => { e.currentTarget.style.borderColor = sh.primary; e.currentTarget.style.transform = "translateY(-3px)"; e.currentTarget.style.boxShadow = `0 1px 2px rgba(0,0,0,0.04), 0 18px 44px rgba(31,95,92,0.13)`; }}
+                onMouseLeave={(e) => { e.currentTarget.style.borderColor = sh.subtle; e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "none"; }}
               >
-                <div style={{ ...mono, fontSize: 11, color: sh.muted, letterSpacing: "0.2em", marginBottom: 12 }}>
-                  ← PREVIOUS CASE
+                <div style={{ ...mono, fontSize: 11, color: sh.muted, letterSpacing: "0.2em", marginBottom: 12, display: "flex", alignItems: "center", gap: 8 }}>
+                  <ArrowLeft size={14} weight="regular" />
+                  PREVIOUS CASE
                 </div>
                 <div style={{ ...t.h3Lede }}>{adjacent.prev.title}</div>
                 <div style={{ ...t.bodySm, marginTop: 6 }}>{adjacent.prev.subtitle}</div>
@@ -1874,14 +2038,15 @@ export default function ShelfieCase() {
                   background: "var(--bg-elevated)",
                   border: `1px solid ${sh.subtle}`,
                   textDecoration: "none", display: "block",
-                  transition: "border-color 240ms, transform 240ms",
+                  transition: "border-color 240ms, transform 240ms, box-shadow 240ms",
                   textAlign: adjacent.prev ? "right" : "left",
                 }}
-                onMouseEnter={(e) => { e.currentTarget.style.borderColor = sh.primary; e.currentTarget.style.transform = "translateY(-2px)"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.borderColor = sh.subtle; e.currentTarget.style.transform = "translateY(0)"; }}
+                onMouseEnter={(e) => { e.currentTarget.style.borderColor = sh.primary; e.currentTarget.style.transform = "translateY(-3px)"; e.currentTarget.style.boxShadow = `0 1px 2px rgba(0,0,0,0.04), 0 18px 44px rgba(31,95,92,0.13)`; }}
+                onMouseLeave={(e) => { e.currentTarget.style.borderColor = sh.subtle; e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "none"; }}
               >
-                <div style={{ ...mono, fontSize: 11, color: sh.muted, letterSpacing: "0.2em", marginBottom: 12 }}>
-                  NEXT CASE →
+                <div style={{ ...mono, fontSize: 11, color: sh.muted, letterSpacing: "0.2em", marginBottom: 12, display: "flex", alignItems: "center", gap: 8, justifyContent: adjacent.prev ? "flex-end" : "flex-start" }}>
+                  NEXT CASE
+                  <ArrowRight size={14} weight="regular" />
                 </div>
                 <div style={{ ...t.h3Lede }}>{adjacent.next.title}</div>
                 <div style={{ ...t.bodySm, marginTop: 6 }}>{adjacent.next.subtitle}</div>
