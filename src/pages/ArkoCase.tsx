@@ -2,8 +2,8 @@ import { motion, AnimatePresence, useScroll, useSpring, useInView, useMotionValu
 import type { MotionValue } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
-import { ClockIcon as Clock, QuotesIcon as Quotes, DeviceMobileCameraIcon as DeviceMobileCamera, ApertureIcon as Aperture, LightbulbFilamentIcon as LightbulbFilament, CheckCircleIcon as CheckCircle, UsersThreeIcon as UsersThree, SparkleIcon as Sparkle, PushPinIcon as PushPin, CubeIcon as Cube, CompassIcon as Compass, ArrowUpIcon as ArrowUp, MicrophoneIcon as Microphone, ChatCircleDotsIcon as ChatCircleDots, EyeIcon as Eye, EnvelopeSimpleIcon as Envelope, SquaresFourIcon as SquaresFour, FolderOpenIcon as FolderOpen, ClipboardTextIcon as ClipboardText } from "@phosphor-icons/react";
-import { getAdjacentProjects } from "../data/projects";
+import { ClockIcon as Clock, QuotesIcon as Quotes, DeviceMobileCameraIcon as DeviceMobileCamera, ApertureIcon as Aperture, LightbulbFilamentIcon as LightbulbFilament, CheckCircleIcon as CheckCircle, UsersThreeIcon as UsersThree, SparkleIcon as Sparkle, PushPinIcon as PushPin, CubeIcon as Cube, CompassIcon as Compass, ArrowUpIcon as ArrowUp, ArrowRightIcon as ArrowRight, MicrophoneIcon as Microphone, ChatCircleDotsIcon as ChatCircleDots, EyeIcon as Eye, EnvelopeSimpleIcon as Envelope, SquaresFourIcon as SquaresFour, FolderOpenIcon as FolderOpen, ClipboardTextIcon as ClipboardText } from "@phosphor-icons/react";
+import { projects, type Project } from "../data/projects";
 
 /* ── Arko brand palette (scoped to this page only) ─────────────── */
 const arko = {
@@ -327,37 +327,7 @@ function LoopCard() {
       background: "var(--bg-elevated)",
       overflow: "hidden",
     }}>
-      {/* Header band */}
-      <div style={{
-        padding: "20px 28px",
-        borderBottom: "1px solid var(--border)",
-        display: "flex", justifyContent: "space-between", alignItems: "center",
-        flexWrap: "wrap", gap: 16,
-      }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <span aria-hidden style={{ width: 3, height: 14, background: arko.primary, display: "inline-block" }} />
-          <p style={{ ...mono, fontSize: 13, color: arko.dark, letterSpacing: "0.22em", fontWeight: 600 }}>
-            The revision loop · before state
-          </p>
-        </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <Clock size={16} color={arko.primary} weight="duotone" />
-          <span style={{ ...mono, fontSize: 13, color: "var(--text-muted)", letterSpacing: "0.14em" }}>
-            Total lost
-          </span>
-          <span style={{
-            fontFamily: serif, fontWeight: 700, fontSize: 22,
-            color: arko.dark, letterSpacing: "-0.015em", lineHeight: 1,
-          }}>
-            6–8 hrs
-          </span>
-          <span style={{ ...mono, fontSize: 12, color: "var(--text-muted)", letterSpacing: "0.18em" }}>
-            / project
-          </span>
-        </div>
-      </div>
-
-      {/* Four-stage flow — minimal */}
+      {/* Four-stage flow — the focal object */}
       <div style={{
         display: "grid",
         gridTemplateColumns: "repeat(4, 1fr)",
@@ -374,7 +344,7 @@ function LoopCard() {
               viewport={{ once: true, margin: "-40px" }}
               transition={{ delay: 0.08 + i * 0.07, duration: 0.5 }}
               style={{
-                padding: "32px 24px 28px",
+                padding: "40px 28px 36px",
                 borderRight: i < stages.length - 1 ? "1px solid var(--border-light)" : "none",
                 background: isActive ? arko.subtle : "transparent",
                 cursor: "default",
@@ -394,145 +364,93 @@ function LoopCard() {
                   transition: "transform 350ms ease-out",
                 }}
               />
-              {/* Marker row */}
-              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 22 }}>
-                <span style={{
-                  ...mono, fontSize: 12, fontWeight: 700,
-                  color: isActive ? arko.primary : "var(--text-muted)",
-                  letterSpacing: "0.22em",
-                  transition: "color 240ms ease-out",
-                }}>
-                  {s.marker}
-                </span>
-                <span
-                  aria-hidden
-                  style={{
-                    flex: 1, height: 1,
-                    background: isActive ? arko.light : "var(--border-light)",
-                    transition: "background-color 260ms ease-out",
-                  }}
-                />
-                {s.bad && (
-                  <span aria-hidden style={{
-                    width: 7, height: 7, borderRadius: "50%",
-                    background: arko.primary,
-                    boxShadow: `0 0 0 3px ${arko.subtle}`,
-                  }} />
-                )}
-              </div>
               {/* Label */}
               <p style={{
                 ...mono, fontSize: 12, color: "var(--text-muted)",
-                letterSpacing: "0.22em", marginBottom: 10,
+                letterSpacing: "0.22em", marginBottom: 14,
               }}>
                 {s.label}
               </p>
               {/* Tool */}
               <p style={{
                 fontFamily: serif, fontWeight: 700,
-                fontSize: "clamp(20px, 1.8vw, 26px)",
+                fontSize: "clamp(22px, 2vw, 30px)",
                 color: isActive || s.bad ? arko.dark : "var(--text-primary)",
                 letterSpacing: "-0.02em", lineHeight: 1.1,
-                marginBottom: 18,
+                marginBottom: 20,
                 transition: "color 250ms ease-out",
               }}>
                 {s.tool}
               </p>
               {/* Time */}
-              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <Clock
-                  size={13}
-                  color={isActive ? arko.primary : "var(--text-muted)"}
-                  weight="regular"
-                />
-                <span style={{
-                  ...mono, fontSize: 13,
-                  color: isActive ? arko.primary : "var(--text-secondary)",
-                  letterSpacing: "0.14em", fontWeight: isActive ? 700 : 500,
-                  transition: "color 240ms ease-out",
-                }}>
-                  {s.time}
-                </span>
-              </div>
+              <span style={{
+                ...mono, fontSize: 13,
+                color: isActive ? arko.primary : "var(--text-secondary)",
+                letterSpacing: "0.14em", fontWeight: isActive ? 700 : 500,
+                transition: "color 240ms ease-out",
+              }}>
+                {s.time}
+              </span>
             </motion.div>
           );
         })}
       </div>
 
-      {/* Dynamic why-this-breaks band — changes with active stage */}
+      {/* Dynamic reason band — updates with active stage */}
       <div style={{
-        padding: "26px 28px 28px",
+        padding: "32px 36px 36px",
         borderTop: "1px solid var(--border)",
         background: arko.subtle,
-        position: "relative",
+        display: "flex", alignItems: "baseline", gap: 28,
+        flexWrap: "wrap",
       }}>
-        <div style={{
-          display: "flex", alignItems: "center", gap: 12, marginBottom: 14,
-        }}>
-          <span aria-hidden style={{ width: 3, height: 14, background: arko.primary }} />
-          <p style={{ ...mono, fontSize: 12, color: arko.dark, letterSpacing: "0.22em", fontWeight: 600 }}>
-            Why this stage breaks
-          </p>
-          <span aria-hidden style={{ flex: 1, height: 1, background: arko.light, opacity: 0.4 }} />
-          {/* Stepper dots */}
-          <div style={{ display: "flex", gap: 6 }}>
-            {stages.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => setActive(i)}
-                onMouseEnter={() => setActive(i)}
-                aria-label={`Show stage ${i + 1}`}
-                style={{
-                  width: active === i ? 18 : 6, height: 6, borderRadius: 3,
-                  background: active === i ? arko.primary : arko.light,
-                  border: "none", padding: 0, cursor: "pointer",
-                  transition: "width 260ms ease-out, background-color 200ms ease-out",
-                }}
-              />
-            ))}
-          </div>
-        </div>
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={active}
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -6 }}
-            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            style={{ display: "flex", alignItems: "baseline", gap: 16, flexWrap: "wrap" }}
-          >
-            <span style={{
-              ...mono, fontSize: 13, color: arko.primary,
-              letterSpacing: "0.2em", fontWeight: 700,
-            }}>
-              {current.marker}
-            </span>
-            <div style={{ flex: 1, minWidth: 240 }}>
+        <div style={{ flex: 1, minWidth: 280, position: "relative" }}>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={active}
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -6 }}
+              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            >
               <p style={{
                 fontFamily: serif, fontWeight: 700,
-                fontSize: "clamp(19px, 1.7vw, 23px)",
+                fontSize: "clamp(22px, 2vw, 28px)",
                 color: "var(--text-primary)",
-                letterSpacing: "-0.015em", lineHeight: 1.3,
-                marginBottom: 6,
+                letterSpacing: "-0.015em", lineHeight: 1.25,
+                marginBottom: 8,
               }}>
                 {current.why.k}
               </p>
               <p style={{
-                fontFamily: sans, fontSize: 16.5,
+                fontFamily: sans, fontSize: "clamp(18px, 1.4vw, 21px)",
                 color: "var(--text-secondary)",
                 lineHeight: 1.6, maxWidth: 720,
               }}>
                 {current.why.t}
               </p>
-            </div>
-          </motion.div>
-        </AnimatePresence>
-        <p style={{
-          ...mono, fontSize: 11.5, color: "var(--text-muted)",
-          letterSpacing: "0.2em", marginTop: 18, textAlign: "right",
+            </motion.div>
+          </AnimatePresence>
+        </div>
+
+        <div style={{
+          display: "flex", flexDirection: "column", alignItems: "flex-end",
+          gap: 6, flexShrink: 0,
         }}>
-          Fig. 02.1 · hover any stage to see where it breaks
-        </p>
+          <span style={{ ...mono, fontSize: 11, color: "var(--text-muted)", letterSpacing: "0.22em" }}>
+            Total lost
+          </span>
+          <span style={{
+            fontFamily: serif, fontWeight: 700,
+            fontSize: "clamp(30px, 2.6vw, 38px)",
+            color: arko.dark, letterSpacing: "-0.02em", lineHeight: 1,
+          }}>
+            6–8 hrs
+          </span>
+          <span style={{ ...mono, fontSize: 11, color: "var(--text-muted)", letterSpacing: "0.18em" }}>
+            per project
+          </span>
+        </div>
       </div>
     </div>
   );
@@ -559,27 +477,7 @@ function WebGallery({
 
   return (
     <div style={{ width: "100%" }}>
-      {/* Editorial tab row — UserTabs pattern */}
-      <div
-        style={{
-          position: "relative",
-          marginBottom: 32,
-        }}
-      >
-        {/* Faded white surface — softens into the page at the edges */}
-        <div
-          aria-hidden
-          style={{
-            position: "absolute",
-            inset: "-4px -2% 0",
-            background: "var(--bg-elevated)",
-            maskImage:
-              "linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)",
-            WebkitMaskImage:
-              "linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)",
-            pointerEvents: "none",
-          }}
-        />
+      {/* Editorial tab row — flush on page, single baseline rail */}
       <div
         role="tablist"
         aria-label="Workspace screens"
@@ -587,6 +485,8 @@ function WebGallery({
           position: "relative",
           display: "grid",
           gridTemplateColumns: `repeat(${tabs.length}, minmax(0, 1fr))`,
+          borderBottom: "1px solid var(--border)",
+          marginBottom: 32,
         }}
       >
         {tabs.map((tab, i) => {
@@ -605,14 +505,14 @@ function WebGallery({
               onBlur={(e) => { (e.currentTarget as HTMLElement).style.outline = "none"; }}
               style={{
                 position: "relative",
-                padding: "26px 26px",
+                padding: "18px 20px",
                 background: "transparent",
                 border: "none",
                 cursor: "pointer",
                 textAlign: "left",
                 display: "flex",
                 flexDirection: "column",
-                gap: 14,
+                gap: 10,
                 transitionProperty: "color",
                 transitionDuration: "220ms",
                 minWidth: 0,
@@ -624,7 +524,7 @@ function WebGallery({
                   aria-hidden
                   style={{
                     position: "absolute",
-                    bottom: 0,
+                    bottom: -1,
                     left: 0,
                     right: 0,
                     height: 2,
@@ -636,7 +536,7 @@ function WebGallery({
               <span
                 style={{
                   ...mono,
-                  fontSize: 14,
+                  fontSize: 13,
                   color: isActive ? arko.primary : "var(--text-muted)",
                   letterSpacing: "0.2em",
                   fontWeight: 600,
@@ -644,11 +544,11 @@ function WebGallery({
               >
                 {tab.fig}
               </span>
-              <span style={{ display: "inline-flex", alignItems: "center", gap: 14, minWidth: 0 }}>
+              <span style={{ display: "inline-flex", alignItems: "center", gap: 12, minWidth: 0 }}>
                 {TabIcon && (
                   <TabIcon
-                    size={24}
-                    color={isActive ? arko.primary : "var(--text-secondary)"}
+                    size={20}
+                    color={isActive ? arko.primary : "var(--text-muted)"}
                     weight={isActive ? "duotone" : "regular"}
                     style={{ flexShrink: 0 }}
                   />
@@ -657,7 +557,7 @@ function WebGallery({
                   style={{
                     fontFamily: serif,
                     fontWeight: 700,
-                    fontSize: 22,
+                    fontSize: 20,
                     lineHeight: 1.2,
                     letterSpacing: "-0.015em",
                     color: isActive ? "var(--text-primary)" : "var(--text-secondary)",
@@ -674,7 +574,6 @@ function WebGallery({
             </button>
           );
         })}
-      </div>
       </div>
 
       {/* Browser-chrome frame */}
@@ -783,7 +682,7 @@ function WebGallery({
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-          style={{ ...caption, textAlign: "center", marginTop: 22 }}
+          style={{ ...caption, fontSize: "clamp(16px, 1.2vw, 19px)", textAlign: "center", marginTop: 22 }}
         >
           {current.label}
         </motion.p>
@@ -801,7 +700,6 @@ function UserTabs() {
     {
       label: "Primary",
       heading: "The Design Firm",
-      role: "Project lead · 4–8 active projects",
       body: "A project lead managing 4–8 active client projects simultaneously. Uses Arko daily to scan spaces, place furniture, adjust finishes, and track project status across the team. Needs speed, precision, and a clear handoff mechanism.",
       needs: ["Speed across parallel projects", "Precise spatial tooling", "Traceable client sign-off"],
       img: "/arko/web-3.png",
@@ -812,7 +710,6 @@ function UserTabs() {
     {
       label: "Secondary",
       heading: "The Client",
-      role: "Homeowner · reviewing remotely",
       body: "A homeowner or property developer reviewing a design remotely. Not design-literate. Needs to understand the space instantly, leave specific feedback, and approve with confidence, without downloading an app or creating an account.",
       needs: ["Zero-friction first view", "Plain-language feedback", "Confident one-tap approval"],
       img: "/arko/phone-13.png",
@@ -852,10 +749,7 @@ function UserTabs() {
           exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1] }}>
           <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-14 items-center">
             <div className="md:col-span-6">
-              <p style={{ ...mono, fontSize: 12, color: arko.dark, letterSpacing: "0.2em", marginBottom: 18 }}>
-                {tabs[tab].role}
-              </p>
-              <p style={{ fontFamily: sans, fontSize: 18, color: "var(--text-secondary)", lineHeight: 1.8, marginBottom: 30 }}>
+              <p style={{ ...t.bodyLg, marginBottom: 30 }}>
                 {tabs[tab].body}
               </p>
               <ul style={{ listStyle: "none", padding: 0, margin: 0, borderTop: "1px solid var(--border)" }}>
@@ -884,7 +778,7 @@ function UserTabs() {
               ) : (
                 <LaptopMockup src={tabs[tab].img} alt={tabs[tab].heading} />
               )}
-              <p style={{ ...caption, fontSize: 14, marginTop: 18, textAlign: "center" }}>{tabs[tab].imgCaption}</p>
+              <p style={{ ...caption, fontSize: "clamp(16px, 1.2vw, 19px)", marginTop: 18, textAlign: "center" }}>{tabs[tab].imgCaption}</p>
             </div>
           </div>
         </motion.div>
@@ -985,24 +879,13 @@ function ResearchLedger() {
     <div style={{ marginTop: 88 }}>
       {/* Header band */}
       <div style={{
-        display: "flex", alignItems: "center", justifyContent: "space-between",
-        gap: 16, marginBottom: 24, flexWrap: "wrap",
+        display: "flex", alignItems: "center",
+        gap: 12, marginBottom: 24,
       }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <span aria-hidden style={{ width: 3, height: 16, background: arko.primary, display: "inline-block" }} />
-          <p style={{ ...mono, fontSize: 13, color: arko.dark, letterSpacing: "0.22em", fontWeight: 600 }}>
-            Research depth · how I got here
-          </p>
-        </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <span style={{ ...mono, fontSize: 12, color: "var(--text-muted)", letterSpacing: "0.18em" }}>
-            70 touchpoints
-          </span>
-          <span aria-hidden style={{ width: 16, height: 1, background: arko.light }} />
-          <span style={{ ...mono, fontSize: 12, color: "var(--text-muted)", letterSpacing: "0.18em" }}>
-            4 firms · mixed methods
-          </span>
-        </div>
+        <span aria-hidden style={{ width: 3, height: 16, background: arko.primary, display: "inline-block" }} />
+        <p style={{ ...mono, fontSize: 13, color: arko.dark, letterSpacing: "0.22em", fontWeight: 600 }}>
+          Research depth · how I got here
+        </p>
       </div>
 
       {/* Ledger */}
@@ -1078,16 +961,16 @@ function ResearchLedger() {
               </p>
               {/* Unit */}
               <p style={{
-                ...mono, fontSize: 13,
+                ...mono, fontSize: "clamp(13px, 1vw, 15px)",
                 color: "var(--text-primary)",
                 letterSpacing: "0.16em",
-                marginBottom: 10, fontWeight: 600,
+                marginBottom: 12, fontWeight: 600,
               }}>
                 {m.unit}
               </p>
               {/* Sub */}
               <p style={{
-                fontFamily: sans, fontSize: 14.5,
+                fontFamily: sans, fontSize: "clamp(15px, 1.15vw, 17px)",
                 color: "var(--text-secondary)", lineHeight: 1.6,
               }}>
                 {m.sub}
@@ -1096,12 +979,6 @@ function ResearchLedger() {
           );
         })}
       </div>
-      <p style={{
-        ...mono, fontSize: 11, color: "var(--text-muted)",
-        letterSpacing: "0.2em", marginTop: 16, textAlign: "right",
-      }}>
-        Fig. 03.1 · field log · weeks 03–04
-      </p>
     </div>
   );
 }
@@ -1342,8 +1219,8 @@ function ScanFlowStepper({
             style={{
               position: "absolute",
               left: 21,
-              top: 22,
-              bottom: 22,
+              top: 32,
+              bottom: 32,
               width: 1,
               background: "var(--border)",
             }}
@@ -1354,11 +1231,11 @@ function ScanFlowStepper({
             style={{
               position: "absolute",
               left: 21,
-              top: 22,
+              top: 32,
               width: 1,
               background: arko.primary,
               transformOrigin: "top center",
-              height: "calc(100% - 44px)",
+              height: "calc(100% - 64px)",
             }}
             animate={{ scaleY: stages.length > 1 ? active / (stages.length - 1) : 0 }}
             transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
@@ -1379,7 +1256,7 @@ function ScanFlowStepper({
                     gridTemplateColumns: "44px 1fr",
                     gap: 18,
                     width: "100%",
-                    padding: "14px 0",
+                    padding: "24px 0",
                     border: "none",
                     background: "transparent",
                     cursor: "pointer",
@@ -1478,11 +1355,11 @@ function ScanFlowStepper({
                           <p
                             style={{
                               fontFamily: sans,
-                              fontSize: 15,
+                              fontSize: "clamp(16px, 1.2vw, 18px)",
                               color: "var(--text-secondary)",
                               lineHeight: 1.7,
-                              marginTop: 10,
-                              maxWidth: 420,
+                              marginTop: 12,
+                              maxWidth: 440,
                             }}
                           >
                             {s.caption}
@@ -1510,38 +1387,6 @@ function ScanFlowStepper({
           gap: 18,
         }}
       >
-        {/* Top · viewfinder label strip */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            gap: 14,
-            paddingBottom: 12,
-            borderBottom: "0.75px solid var(--border)",
-          }}
-        >
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <span
-              aria-hidden
-              style={{
-                width: 6,
-                height: 6,
-                borderRadius: "50%",
-                background: arko.primary,
-                boxShadow: `0 0 0 3px ${arko.subtle}`,
-              }}
-              className="status-pulse"
-            />
-            <span style={{ ...mono, fontSize: 11, color: "var(--text-primary)", letterSpacing: "0.22em", fontWeight: 700 }}>
-              Active Spatial Scan
-            </span>
-          </div>
-          <span style={{ ...mono, fontSize: 10, color: "var(--text-muted)", letterSpacing: "0.22em" }}>
-            Grey Residence · Room 02
-          </span>
-        </div>
-
         {/* Main canvas — phone + flanking chips */}
         <div
           style={{
@@ -1704,39 +1549,36 @@ function ScanFlowStepper({
           </div>
         </div>
 
-        {/* Bottom · scan spec strip */}
+        {/* Bottom · viewfinder label strip */}
         <div
           style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(4, 1fr)",
-            borderTop: "0.75px solid var(--border)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 14,
             paddingTop: 14,
+            borderTop: "0.75px solid var(--border)",
           }}
         >
-          {[
-            { k: "Area",      v: "8.8 m²" },
-            { k: "Depth pts", v: "7,696" },
-            { k: "Ceiling",   v: "3.1 m" },
-            { k: "Device",    v: "LiDAR" },
-          ].map((s, i) => (
-            <div
-              key={i}
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <span
+              aria-hidden
               style={{
-                padding: "0 10px",
-                borderLeft: i === 0 ? "none" : "0.75px solid var(--border-light)",
-                display: "flex",
-                flexDirection: "column",
-                gap: 4,
+                width: 6,
+                height: 6,
+                borderRadius: "50%",
+                background: arko.primary,
+                boxShadow: `0 0 0 3px ${arko.subtle}`,
               }}
-            >
-              <span style={{ ...mono, fontSize: 9, color: "var(--text-muted)", letterSpacing: "0.2em" }}>
-                {s.k}
-              </span>
-              <span style={{ fontFamily: serif, fontWeight: 700, fontSize: 16, color: "var(--text-primary)", letterSpacing: "-0.015em", lineHeight: 1.1 }}>
-                {s.v}
-              </span>
-            </div>
-          ))}
+              className="status-pulse"
+            />
+            <span style={{ ...mono, fontSize: 11, color: "var(--text-primary)", letterSpacing: "0.22em", fontWeight: 700 }}>
+              Active Spatial Scan
+            </span>
+          </div>
+          <span style={{ ...mono, fontSize: 10, color: "var(--text-muted)", letterSpacing: "0.22em" }}>
+            Grey Residence · Room 02
+          </span>
         </div>
       </div>
     </div>
@@ -2167,12 +2009,151 @@ function ArEditorStepper({
 }
 
 /* ══════════════════════════════════════════════════════════════════
+   NAV CARD — visual "more case studies" tile (project gradient hero)
+══════════════════════════════════════════════════════════════════ */
+function NavCard({ project }: { project: Project }) {
+  const [hover, setHover] = useState(false);
+  const accent = `hsl(${project.accentHue}, 38%, 48%)`;
+  const primaryTag = project.tags[0] ?? project.year;
+
+  return (
+    <Link
+      to={`/work/${project.slug}`}
+      onClick={() => window.scrollTo({ top: 0, left: 0, behavior: "auto" })}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      style={{
+        position: "relative",
+        textDecoration: "none",
+        display: "block",
+        overflow: "hidden",
+        aspectRatio: "5 / 4",
+        background: project.gradient,
+      }}
+    >
+      {/* Accent wash that deepens on hover */}
+      <span
+        aria-hidden
+        style={{
+          position: "absolute",
+          inset: 0,
+          background: `linear-gradient(180deg, transparent 35%, ${accent}26 100%)`,
+          opacity: hover ? 1 : 0,
+          transition: "opacity 420ms ease-out",
+          pointerEvents: "none",
+        }}
+      />
+
+      {/* Top meta row — year + tag */}
+      <div
+        style={{
+          position: "absolute",
+          top: "clamp(24px, 2.4vw, 36px)",
+          left: "clamp(24px, 2.4vw, 36px)",
+          right: "clamp(24px, 2.4vw, 36px)",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          gap: 12,
+        }}
+      >
+        <span style={{ ...mono, fontSize: 11, color: "rgba(26,26,26,0.65)", letterSpacing: "0.24em", fontWeight: 600 }}>
+          {project.year}
+        </span>
+        <span
+          style={{
+            ...mono,
+            fontSize: 10,
+            color: "rgba(26,26,26,0.65)",
+            letterSpacing: "0.22em",
+            fontWeight: 600,
+            padding: "6px 10px",
+            border: "1px solid rgba(26,26,26,0.18)",
+            borderRadius: 999,
+          }}
+        >
+          {primaryTag}
+        </span>
+      </div>
+
+      {/* Bottom content — title, subtitle, CTA */}
+      <div
+        style={{
+          position: "absolute",
+          left: "clamp(24px, 2.4vw, 36px)",
+          right: "clamp(24px, 2.4vw, 36px)",
+          bottom: "clamp(24px, 2.4vw, 36px)",
+          display: "flex",
+          flexDirection: "column",
+          gap: 14,
+        }}
+      >
+        <motion.p
+          animate={{ y: hover ? -2 : 0 }}
+          transition={{ type: "spring", stiffness: 240, damping: 22 }}
+          style={{
+            fontFamily: serif,
+            fontWeight: 700,
+            fontSize: "clamp(36px, 4.2vw, 60px)",
+            letterSpacing: "-0.03em",
+            lineHeight: 1.02,
+            color: "#1A1A1A",
+            margin: 0,
+          }}
+        >
+          {project.title}
+        </motion.p>
+
+        <p
+          style={{
+            fontFamily: sans,
+            fontSize: "clamp(15px, 1.05vw, 17px)",
+            lineHeight: 1.55,
+            color: "rgba(26,26,26,0.72)",
+            maxWidth: 460,
+            margin: 0,
+          }}
+        >
+          {project.subtitle}
+        </p>
+
+        <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 6 }}>
+          <span
+            style={{
+              ...mono,
+              fontSize: 11,
+              letterSpacing: "0.24em",
+              fontWeight: 700,
+              color: hover ? accent : "#1A1A1A",
+              transition: "color 260ms ease-out",
+            }}
+          >
+            View case study
+          </span>
+          <motion.span
+            animate={{ x: hover ? 6 : 0 }}
+            transition={{ type: "spring", stiffness: 260, damping: 22 }}
+            style={{ display: "inline-flex", color: hover ? accent : "#1A1A1A", transition: "color 260ms ease-out" }}
+          >
+            <ArrowRight size={16} weight="regular" />
+          </motion.span>
+        </div>
+      </div>
+    </Link>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════════════
    PAGE
 ══════════════════════════════════════════════════════════════════ */
 export default function ArkoCase() {
-  const adjacent = getAdjacentProjects("arko");
+  const otherProjects = projects.filter((p) => p.slug !== "arko").slice(-2);
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, { stiffness: 200, damping: 30 });
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const [showTop, setShowTop] = useState(false);
   useEffect(() => {
@@ -2390,6 +2371,7 @@ export default function ArkoCase() {
               <motion.div
                 animate={{ y: [0, -6, 0] }}
                 transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+                whileHover={{ y: -14, scale: 1.025, transition: { type: "spring", stiffness: 220, damping: 18 } }}
                 style={{
                   position: "relative",
                   zIndex: 2,
@@ -2408,6 +2390,7 @@ export default function ArkoCase() {
               <motion.div
                 animate={{ y: [0, -10, 0] }}
                 transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
+                whileHover={{ y: -18, scale: 1.04, transition: { type: "spring", stiffness: 240, damping: 18 } }}
                 style={{
                   position: "absolute",
                   right: "-4%",
@@ -2723,7 +2706,7 @@ export default function ArkoCase() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.5, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-            style={{ fontFamily: sans, fontSize: 17, color: "rgba(250,250,250,0.72)", lineHeight: 1.75, maxWidth: 620 }}
+            style={{ ...t.bodyLg, color: "rgba(250,250,250,0.72)", maxWidth: 620 }}
           >
             This reframed the entire design direction. The goal was never to build a better
             design tool. It was to build a better <em>communication</em> tool that
@@ -2741,8 +2724,8 @@ export default function ArkoCase() {
             <SectionHeader num="05" title="Workspace · Web" phase="Weeks 05 · 08" />
           </Reveal>
 
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-16 items-start" style={{ marginBottom: 56 }}>
-            <Reveal className="md:col-span-7">
+          <Reveal>
+            <div style={{ maxWidth: 760, marginBottom: 56 }}>
               <h2 style={{ ...t.h2Section, marginBottom: 22 }}>
                 A professional workspace.{" "}
                 <em style={{ fontStyle: "italic", color: arko.primary }}>Dense, powerful, built for daily use.</em>
@@ -2752,30 +2735,8 @@ export default function ArkoCase() {
                 team activity, and AR editing tools, all accessible from a single workspace a design
                 lead would open on day one and never want to leave.
               </p>
-            </Reveal>
-
-            <Reveal className="md:col-span-5" delay={0.08}>
-              <ul style={{ listStyle: "none", padding: 0, margin: 0, borderTop: "1px solid var(--border)" }}>
-                {[
-                  "Dashboard with active projects, team stats, approvals",
-                  "Project detail with rooms, progress, activity log",
-                  "Pinned client comments in spatial context",
-                  "One-click handoff to mobile AR editor",
-                ].map((f, j) => (
-                  <li key={j} style={{
-                    display: "flex", alignItems: "center", gap: 16,
-                    padding: "18px 0",
-                    borderBottom: "1px solid var(--border-light)",
-                  }}>
-                    <CheckCircle size={18} color={arko.primary} weight="regular" />
-                    <span style={{ fontFamily: sans, fontSize: 17, color: "var(--text-primary)", lineHeight: 1.55 }}>
-                      {f}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </Reveal>
-          </div>
+            </div>
+          </Reveal>
 
           <Reveal delay={0.1}>
             <WebGallery screens={[
@@ -2941,10 +2902,8 @@ export default function ArkoCase() {
                 </em>
               </h2>
               <p style={{
-                fontFamily: sans,
-                fontSize: "clamp(18px, 1.4vw, 21px)",
+                ...t.bodyLg,
                 color: "rgba(250,250,250,0.82)",
-                lineHeight: 1.75,
                 maxWidth: 680,
               }}>
                 The client opens a link, sees their space in AR, pins spatial feedback, and approves.
@@ -3303,46 +3262,30 @@ export default function ArkoCase() {
       </section>
 
       {/* ══════════════════════════════════════════════════════════════
-          NAVIGATION — prev / next
+          NAVIGATION — prev / next · editorial cards
       ══════════════════════════════════════════════════════════════ */}
-      <div className="max-w-7xl mx-auto px-6 md:px-10">
-        <div className="flex flex-wrap justify-between items-center gap-6"
-          style={{ paddingTop: 40, paddingBottom: 72, borderTop: "1px solid var(--border)" }}>
-          {adjacent.prev ? (
-            <Link to={`/work/${adjacent.prev.slug}`}
-              style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 12, maxWidth: "45%" }}>
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style={{ flexShrink: 0 }}>
-                <path d="M13 8H3M7 4L3 8l4 4" stroke="var(--text-muted)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-              <div>
-                <p style={{ ...mono, fontSize: 11, color: "var(--text-secondary)", marginBottom: 6, letterSpacing: "0.18em" }}>Previous</p>
-                <p style={{ fontFamily: serif, fontSize: "clamp(18px, 2vw, 22px)", color: "var(--text-secondary)", transitionProperty: "color", transitionDuration: "150ms" }}
-                  onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = "var(--text-primary)")}
-                  onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = "var(--text-secondary)")}>
-                  {adjacent.prev.title}
-                </p>
-              </div>
-            </Link>
-          ) : <div />}
+      <section style={{ padding: "clamp(64px, 8vw, 104px) 0", borderTop: "1px solid var(--border)" }}>
+        <div className="max-w-7xl mx-auto px-6 md:px-10">
+          <div style={{ display: "flex", alignItems: "baseline", gap: 14, marginBottom: 36 }}>
+            <span aria-hidden style={{ width: 3, height: 14, background: arko.primary }} />
+            <p style={{ ...mono, fontSize: 12, color: arko.dark, letterSpacing: "0.22em", fontWeight: 600 }}>
+              More case studies
+            </p>
+          </div>
 
-          {adjacent.next ? (
-            <Link to={`/work/${adjacent.next.slug}`}
-              style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 12, maxWidth: "45%", marginLeft: "auto" }}>
-              <div style={{ textAlign: "right" }}>
-                <p style={{ ...mono, fontSize: 11, color: "var(--text-secondary)", marginBottom: 6, letterSpacing: "0.18em" }}>Next</p>
-                <p style={{ fontFamily: serif, fontSize: "clamp(18px, 2vw, 22px)", color: "var(--text-secondary)", transitionProperty: "color", transitionDuration: "150ms" }}
-                  onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = "var(--text-primary)")}
-                  onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = "var(--text-secondary)")}>
-                  {adjacent.next.title}
-                </p>
-              </div>
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style={{ flexShrink: 0 }}>
-                <path d="M3 8h10M9 4l4 4-4 4" stroke="var(--text-muted)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </Link>
-          ) : <div />}
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: otherProjects.length > 1 ? "1fr 1fr" : "1fr",
+              gap: "clamp(16px, 1.6vw, 24px)",
+            }}
+          >
+            {otherProjects.map((p) => (
+              <NavCard key={p.slug} project={p} />
+            ))}
+          </div>
         </div>
-      </div>
+      </section>
 
       {/* ══════════════════════════════════════════════════════════════
           Back to top — floating action, bottom-right
