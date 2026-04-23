@@ -17,7 +17,7 @@ import {
   EyeSlashIcon as EyeSlash,
 } from "@phosphor-icons/react";
 import type { Icon } from "@phosphor-icons/react";
-import { getAdjacentProjects } from "../data/projects";
+import { projects, type Project } from "../data/projects";
 
 /* ── Veriflow palette, scoped to this page ──────────────────────── */
 const vf = {
@@ -1277,34 +1277,29 @@ function JourneyIllustration() {
           />
         ))}
 
-        {/* Travelling cooler: loops continuously once the illustration is in view */}
+        {/* Travelling cooler: sits at Hand 01 → travels to Hand 03 → Hand 05 → loops */}
         <motion.g
-          initial={{ opacity: 0 }}
-          animate={inView ? { opacity: 1 } : {}}
-          transition={{ delay: 1.6, duration: 0.4 }}
+          initial={{ x: 0, opacity: 0 }}
+          animate={inView ? {
+            x:       [0, 0,    nodes[1].x - nodes[0].x, nodes[1].x - nodes[0].x, nodes[2].x - nodes[0].x, nodes[2].x - nodes[0].x, nodes[2].x - nodes[0].x],
+            opacity: [1, 1,    1,                        1,                        1,                        1,                        0],
+          } : {}}
+          transition={{
+            duration: 6.4,
+            times:   [0, 0.08, 0.38,                     0.5,                      0.82,                     0.92,                     1],
+            ease: [0.16, 1, 0.3, 1],
+            repeat: Infinity,
+            repeatDelay: 0.4,
+            delay: 1.6,
+          }}
         >
-          <motion.g
-            animate={inView ? {
-              x: [0, nodes[1].x - nodes[0].x, nodes[2].x - nodes[0].x, nodes[2].x - nodes[0].x],
-              opacity: [0, 1, 1, 0],
-            } : {}}
-            transition={{
-              duration: 5.4,
-              times: [0, 0.42, 0.88, 1],
-              ease: [0.34, 1.1, 0.64, 1],
-              repeat: Infinity,
-              repeatDelay: 0.6,
-              delay: 1.6,
-            }}
-          >
-            <rect x={nodes[0].x - 18} y="152" width="36" height="30" rx="3"
-              fill={vf.primary} opacity="0.95" />
-            <rect x={nodes[0].x - 11} y="147" width="22" height="5" rx="1" fill={vf.primary} />
-            <line x1={nodes[0].x - 7} y1="164" x2={nodes[0].x + 7} y2="164"
-              stroke="#fff" strokeWidth="1.3" strokeLinecap="round" />
-            <line x1={nodes[0].x - 7} y1="172" x2={nodes[0].x + 7} y2="172"
-              stroke="#fff" strokeWidth="1.3" strokeLinecap="round" />
-          </motion.g>
+          <rect x={nodes[0].x - 18} y="155" width="36" height="30" rx="3"
+            fill={vf.primary} opacity="0.95" />
+          <rect x={nodes[0].x - 11} y="150" width="22" height="5" rx="1" fill={vf.primary} />
+          <line x1={nodes[0].x - 7} y1="167" x2={nodes[0].x + 7} y2="167"
+            stroke="#fff" strokeWidth="1.3" strokeLinecap="round" />
+          <line x1={nodes[0].x - 7} y1="175" x2={nodes[0].x + 7} y2="175"
+            stroke="#fff" strokeWidth="1.3" strokeLinecap="round" />
         </motion.g>
       </svg>
       <div style={{
@@ -1535,11 +1530,143 @@ function CoolerSketch() {
 /* ══════════════════════════════════════════════════════════════════
    PAGE
 ══════════════════════════════════════════════════════════════════ */
+/* ══════════════════════════════════════════════════════════════════
+   NAV CARD — visual "more case studies" tile (project gradient hero)
+══════════════════════════════════════════════════════════════════ */
+function NavCard({ project }: { project: Project }) {
+  const [hover, setHover] = useState(false);
+  const accent = `hsl(${project.accentHue}, 38%, 48%)`;
+  const primaryTag = project.tags[0] ?? project.year;
+
+  return (
+    <Link
+      to={`/work/${project.slug}`}
+      onClick={() => window.scrollTo({ top: 0, left: 0, behavior: "auto" })}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      style={{
+        position: "relative",
+        textDecoration: "none",
+        display: "block",
+        overflow: "hidden",
+        aspectRatio: "5 / 4",
+        background: project.gradient,
+      }}
+    >
+      <span
+        aria-hidden
+        style={{
+          position: "absolute",
+          inset: 0,
+          background: `linear-gradient(180deg, transparent 35%, ${accent}26 100%)`,
+          opacity: hover ? 1 : 0,
+          transition: "opacity 420ms ease-out",
+          pointerEvents: "none",
+        }}
+      />
+
+      <div
+        style={{
+          position: "absolute",
+          top: "clamp(24px, 2.4vw, 36px)",
+          left: "clamp(24px, 2.4vw, 36px)",
+          right: "clamp(24px, 2.4vw, 36px)",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          gap: 12,
+        }}
+      >
+        <span style={{ ...mono, fontSize: 11, color: "rgba(26,26,26,0.65)", letterSpacing: "0.24em", fontWeight: 600 }}>
+          {project.year}
+        </span>
+        <span
+          style={{
+            ...mono,
+            fontSize: 10,
+            color: "rgba(26,26,26,0.65)",
+            letterSpacing: "0.22em",
+            fontWeight: 600,
+            padding: "6px 10px",
+            border: "1px solid rgba(26,26,26,0.18)",
+            borderRadius: 999,
+          }}
+        >
+          {primaryTag}
+        </span>
+      </div>
+
+      <div
+        style={{
+          position: "absolute",
+          left: "clamp(24px, 2.4vw, 36px)",
+          right: "clamp(24px, 2.4vw, 36px)",
+          bottom: "clamp(24px, 2.4vw, 36px)",
+          display: "flex",
+          flexDirection: "column",
+          gap: 14,
+        }}
+      >
+        <motion.p
+          animate={{ y: hover ? -2 : 0 }}
+          transition={{ type: "spring", stiffness: 240, damping: 22 }}
+          style={{
+            fontFamily: serif,
+            fontWeight: 700,
+            fontSize: "clamp(36px, 4.2vw, 60px)",
+            letterSpacing: "-0.03em",
+            lineHeight: 1.02,
+            color: "#1A1A1A",
+            margin: 0,
+          }}
+        >
+          {project.title}
+        </motion.p>
+
+        <p
+          style={{
+            fontFamily: sans,
+            fontSize: "clamp(15px, 1.05vw, 17px)",
+            lineHeight: 1.55,
+            color: "rgba(26,26,26,0.72)",
+            maxWidth: 460,
+            margin: 0,
+          }}
+        >
+          {project.subtitle}
+        </p>
+
+        <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 6 }}>
+          <span
+            style={{
+              ...mono,
+              fontSize: 11,
+              letterSpacing: "0.24em",
+              fontWeight: 700,
+              color: hover ? accent : "#1A1A1A",
+              transition: "color 260ms ease-out",
+            }}
+          >
+            View case study
+          </span>
+          <motion.span
+            animate={{ x: hover ? 6 : 0 }}
+            transition={{ type: "spring", stiffness: 260, damping: 22 }}
+            style={{ display: "inline-flex", color: hover ? accent : "#1A1A1A", transition: "color 260ms ease-out" }}
+          >
+            <ArrowRight size={16} weight="regular" />
+          </motion.span>
+        </div>
+      </div>
+    </Link>
+  );
+}
+
 export default function VeriflowCase() {
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, { stiffness: 200, damping: 30, restDelta: 0.001 });
   const [showTop, setShowTop] = useState(false);
-  const adjacent = getAdjacentProjects("veriflow");
+  const otherProjects = projects.filter((p) => p.slug !== "veriflow").slice(-2);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -1694,7 +1821,7 @@ export default function VeriflowCase() {
                 }}
               >
                 {([
-                  { label: "Role",     value: "Product Design Intern" },
+                  { label: "Role",     value: "Product Designer" },
                   { label: "Surfaces", value: "Web · Tablet · TV" },
                   { label: "Timeline", value: "3 months" },
                   { label: "Tools",    value: "Figma · FigJam" },
@@ -2156,7 +2283,7 @@ export default function VeriflowCase() {
       {/* ══════════════════════════════════════════════════════════════
           08 · ROLE + TAKEAWAYS
       ══════════════════════════════════════════════════════════════ */}
-      <section style={{ padding: SECTION_PAD, background: "var(--bg-primary)" }}>
+      <section className="blueprint-grid-subtle" style={{ padding: SECTION_PAD }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <Reveal><SectionHeader num="08" phase="Role · Takeaways" title="What I owned, and what this project taught me." /></Reveal>
 
@@ -2170,7 +2297,7 @@ export default function VeriflowCase() {
             <Reveal className="md:col-span-6">
               <div style={{ ...mono, fontSize: 13, color: vf.primary, letterSpacing: "0.22em", fontWeight: 700, marginBottom: 20, display: "flex", alignItems: "center", gap: 10 }}>
                 <span aria-hidden style={{ width: 3, height: 14, background: vf.primary, display: "inline-block" }} />
-                ROLE · DESIGN INTERN
+                ROLE · PRODUCT DESIGNER
               </div>
               <h3 style={{
                 fontFamily: serif, fontWeight: 700, fontSize: "clamp(26px, 2.8vw, 34px)",
@@ -2220,54 +2347,34 @@ export default function VeriflowCase() {
       </section>
 
       {/* ══════════════════════════════════════════════════════════════
-          NEXT CASE
+          MORE CASE STUDIES — editorial gradient tiles
       ══════════════════════════════════════════════════════════════ */}
-      <section style={{ padding: "clamp(64px, 8vw, 96px) 0", borderBottom: "1px solid var(--border)" }}>
+      <section style={{ padding: "clamp(64px, 8vw, 104px) 0", borderTop: "1px solid var(--border)" }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
-          <div style={{
-            display: "grid", gap: "clamp(16px, 3vw, 40px)",
-            gridTemplateColumns: adjacent.prev && adjacent.next ? "1fr 1fr" : "1fr",
-          }}>
-            {adjacent.prev && (
-              <Link to={`/work/${adjacent.prev.slug}`}
-                style={{
-                  padding: "clamp(24px, 3vw, 36px)",
-                  background: "var(--bg-elevated)",
-                  border: `1px solid ${vf.subtle}`,
-                  textDecoration: "none", display: "block",
-                  transition: "border-color 240ms, transform 240ms",
-                }}
-                onMouseEnter={(e) => { e.currentTarget.style.borderColor = vf.primary; e.currentTarget.style.transform = "translateY(-2px)"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.borderColor = vf.subtle; e.currentTarget.style.transform = "translateY(0)"; }}
-              >
-                <div style={{ ...mono, fontSize: 11, color: vf.muted, letterSpacing: "0.2em", marginBottom: 12 }}>
-                  ← PREVIOUS CASE
-                </div>
-                <div style={{ ...t.h3Lede }}>{adjacent.prev.title}</div>
-                <div style={{ ...t.bodySm, marginTop: 6 }}>{adjacent.prev.subtitle}</div>
-              </Link>
-            )}
-            {adjacent.next && (
-              <Link to={`/work/${adjacent.next.slug}`}
-                style={{
-                  padding: "clamp(24px, 3vw, 36px)",
-                  background: "var(--bg-elevated)",
-                  border: `1px solid ${vf.subtle}`,
-                  textDecoration: "none", display: "block",
-                  transition: "border-color 240ms, transform 240ms",
-                  textAlign: adjacent.prev ? "right" : "left",
-                }}
-                onMouseEnter={(e) => { e.currentTarget.style.borderColor = vf.primary; e.currentTarget.style.transform = "translateY(-2px)"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.borderColor = vf.subtle; e.currentTarget.style.transform = "translateY(0)"; }}
-              >
-                <div style={{ ...mono, fontSize: 11, color: vf.muted, letterSpacing: "0.2em", marginBottom: 12 }}>
-                  NEXT CASE →
-                </div>
-                <div style={{ ...t.h3Lede }}>{adjacent.next.title}</div>
-                <div style={{ ...t.bodySm, marginTop: 6 }}>{adjacent.next.subtitle}</div>
-              </Link>
-            )}
+          <div style={{ display: "flex", alignItems: "baseline", gap: 14, marginBottom: 36 }}>
+            <span aria-hidden style={{ width: 3, height: 14, background: vf.primary }} />
+            <p style={{ ...mono, fontSize: 12, color: vf.primary, letterSpacing: "0.22em", fontWeight: 600 }}>
+              More case studies
+            </p>
           </div>
+
+          <div
+            className="more-cases-grid"
+            style={{
+              display: "grid",
+              gridTemplateColumns: otherProjects.length > 1 ? "1fr 1fr" : "1fr",
+              gap: "clamp(16px, 1.6vw, 24px)",
+            }}
+          >
+            {otherProjects.map((p) => (
+              <NavCard key={p.slug} project={p} />
+            ))}
+          </div>
+          <style>{`
+            @media (max-width: 720px) {
+              .more-cases-grid { grid-template-columns: minmax(0, 1fr) !important; }
+            }
+          `}</style>
         </div>
       </section>
 
