@@ -2390,6 +2390,7 @@ export default function ArkoCase() {
               <motion.div
                 animate={{ y: [0, -6, 0] }}
                 transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+                whileHover={{ y: -14, scale: 1.025, transition: { type: "spring", stiffness: 220, damping: 18 } }}
                 style={{
                   position: "relative",
                   zIndex: 2,
@@ -2408,6 +2409,7 @@ export default function ArkoCase() {
               <motion.div
                 animate={{ y: [0, -10, 0] }}
                 transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
+                whileHover={{ y: -18, scale: 1.04, transition: { type: "spring", stiffness: 240, damping: 18 } }}
                 style={{
                   position: "absolute",
                   right: "-4%",
