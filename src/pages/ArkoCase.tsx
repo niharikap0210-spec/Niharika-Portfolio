@@ -768,7 +768,7 @@ function UserTabs() {
           exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1] }}>
           <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-14 items-center">
             <div className="md:col-span-6">
-              <p style={{ fontFamily: sans, fontSize: 18, color: "var(--text-secondary)", lineHeight: 1.8, marginBottom: 30 }}>
+              <p style={{ ...t.bodyLg, marginBottom: 30 }}>
                 {tabs[tab].body}
               </p>
               <ul style={{ listStyle: "none", padding: 0, margin: 0, borderTop: "1px solid var(--border)" }}>
@@ -2638,7 +2638,7 @@ export default function ArkoCase() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.5, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-            style={{ fontFamily: sans, fontSize: 17, color: "rgba(250,250,250,0.72)", lineHeight: 1.75, maxWidth: 620 }}
+            style={{ ...t.bodyLg, color: "rgba(250,250,250,0.72)", maxWidth: 620 }}
           >
             This reframed the entire design direction. The goal was never to build a better
             design tool. It was to build a better <em>communication</em> tool that
@@ -2856,10 +2856,8 @@ export default function ArkoCase() {
                 </em>
               </h2>
               <p style={{
-                fontFamily: sans,
-                fontSize: "clamp(18px, 1.4vw, 21px)",
+                ...t.bodyLg,
                 color: "rgba(250,250,250,0.82)",
-                lineHeight: 1.75,
                 maxWidth: 680,
               }}>
                 The client opens a link, sees their space in AR, pins spatial feedback, and approves.
