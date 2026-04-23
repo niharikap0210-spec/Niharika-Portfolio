@@ -719,7 +719,6 @@ function UserTabs() {
     {
       label: "Primary",
       heading: "The Design Firm",
-      role: "Project lead · 4–8 active projects",
       body: "A project lead managing 4–8 active client projects simultaneously. Uses Arko daily to scan spaces, place furniture, adjust finishes, and track project status across the team. Needs speed, precision, and a clear handoff mechanism.",
       needs: ["Speed across parallel projects", "Precise spatial tooling", "Traceable client sign-off"],
       img: "/arko/web-3.png",
@@ -730,7 +729,6 @@ function UserTabs() {
     {
       label: "Secondary",
       heading: "The Client",
-      role: "Homeowner · reviewing remotely",
       body: "A homeowner or property developer reviewing a design remotely. Not design-literate. Needs to understand the space instantly, leave specific feedback, and approve with confidence, without downloading an app or creating an account.",
       needs: ["Zero-friction first view", "Plain-language feedback", "Confident one-tap approval"],
       img: "/arko/phone-13.png",
@@ -770,9 +768,6 @@ function UserTabs() {
           exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1] }}>
           <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-14 items-center">
             <div className="md:col-span-6">
-              <p style={{ ...mono, fontSize: 12, color: arko.dark, letterSpacing: "0.2em", marginBottom: 18 }}>
-                {tabs[tab].role}
-              </p>
               <p style={{ fontFamily: sans, fontSize: 18, color: "var(--text-secondary)", lineHeight: 1.8, marginBottom: 30 }}>
                 {tabs[tab].body}
               </p>
