@@ -537,10 +537,10 @@ function ShelfieAppIllustration() {
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   HERO VISUAL — single milk-carton specimen
-   A clean, calm illustration: one gable-top carton with a clearly
-   printed best-by date. No white card, no annotations, no clutter.
-   Just the object, floating on a soft teal glow.
+   HERO VISUAL — confused shopper photograph
+   Captures the central moment of the project: a person in the aisle,
+   product in hand, label refusing to make sense. Soft teal glow
+   behind, gentle float, no card frame.
 ══════════════════════════════════════════════════════════════════ */
 function HeroVisual() {
   return (
@@ -552,75 +552,28 @@ function HeroVisual() {
       style={{
         position: "relative", width: "100%", minWidth: 0,
         display: "flex", alignItems: "center", justifyContent: "center",
-        padding: "clamp(20px, 3vw, 48px) 0",
+        padding: "clamp(20px, 3vw, 40px) 0",
       }}
     >
-      {/* Soft teal radial glow — sits behind the carton */}
+      {/* Soft teal radial glow — sits behind the figure */}
       <div aria-hidden style={{
-        position: "absolute", inset: "-12%",
+        position: "absolute", inset: "-10%",
         background: `radial-gradient(50% 50% at 50% 50%, ${sh.light} 0%, ${sh.primary} 38%, rgba(31,95,92,0) 72%)`,
-        filter: "blur(80px)", opacity: 0.36, zIndex: 0, pointerEvents: "none",
+        filter: "blur(80px)", opacity: 0.30, zIndex: 0, pointerEvents: "none",
       }} />
 
-      {/* Carton specimen — gentle float */}
-      <motion.svg
-        viewBox="0 0 360 460"
-        preserveAspectRatio="xMidYMid meet"
+      <motion.img
+        src="/shelfie/shopper-confused.webp"
+        alt="A shopper in the aisle puzzling over a product label"
         animate={{ y: [0, -8, 0] }}
         transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
         style={{
           position: "relative", zIndex: 1,
-          width: "min(100%, 440px)", height: "auto", display: "block",
-          filter: "drop-shadow(0 24px 48px rgba(31,95,92,0.22))",
+          width: "min(100%, 460px)", height: "auto", display: "block",
+          mixBlendMode: "multiply",
+          filter: "drop-shadow(0 22px 40px rgba(31,95,92,0.18))",
         }}
-        aria-hidden
-      >
-        {/* Top gable — folded panels */}
-        <path d="M 80 90 L 180 38 L 280 90 L 280 110 L 180 58 L 80 110 Z"
-              fill={sh.dark} />
-        <path d="M 180 38 L 180 92"
-              stroke="#000" strokeOpacity="0.18" strokeWidth="1" />
-
-        {/* Carton body */}
-        <rect x="80" y="110" width="200" height="290" fill={sh.primary} />
-
-        {/* Left highlight strip */}
-        <rect x="80" y="110" width="6" height="290" fill="#fff" opacity="0.09" />
-        {/* Right shadow strip */}
-        <rect x="268" y="110" width="12" height="290" fill="#000" opacity="0.14" />
-
-        {/* Cream label — the readable face */}
-        <rect x="100" y="160" width="160" height="200" fill="#F2EDE3" />
-
-        {/* Brand wordmark */}
-        <text x="180" y="208" textAnchor="middle"
-              fontFamily={serif} fontWeight="700" fontSize="22"
-              fill={sh.dark} letterSpacing="-0.01em">
-          freshfields
-        </text>
-
-        {/* Hairline divider */}
-        <line x1="130" y1="232" x2="230" y2="232"
-              stroke={sh.dark} strokeWidth="0.5" opacity="0.25" />
-
-        {/* "BEST BY" label */}
-        <text x="180" y="276" textAnchor="middle"
-              fontFamily="'Space Mono', monospace" fontSize="10"
-              fill={sh.dark} opacity="0.6" letterSpacing="0.28em">
-          BEST BY
-        </text>
-
-        {/* Date — the clear, prominent signal */}
-        <text x="180" y="312" textAnchor="middle"
-              fontFamily="'Space Mono', monospace" fontWeight="700" fontSize="22"
-              fill={sh.primary} letterSpacing="0.14em">
-          04 · 10 · 25
-        </text>
-
-        {/* Soft contact shadow under the carton */}
-        <ellipse cx="180" cy="420" rx="115" ry="9"
-                 fill={sh.dark} opacity="0.16" />
-      </motion.svg>
+      />
     </motion.div>
   );
 }
@@ -932,12 +885,10 @@ export default function ShelfieCase() {
             border: `1px solid ${sh.subtle}`,
           }}>
             {[
-              { icon: Trash,           stat: 30,  suffix: "%", label: "of U.S. food waste tied directly to date-label confusion",                source: "ReFED, 2022" },
-              { icon: HandPalm,        stat: 84,  suffix: "%", label: "discard food at \u201Cbest-before\u201D regardless of actual safety",     source: "FMI · Johns Hopkins, 2019" },
-              { icon: Question,        stat: 32,  suffix: "%", label: "correctly interpret the difference between sell-by and use-by",          source: "Nordic Council, 2017" },
-              { icon: CurrencyDollar,  stat: 161, suffix: "B", prefix: "$", label: "in U.S. household food thrown out each year — much still safe", source: "USDA · NRDC, 2022" },
-              { icon: ArrowsLeftRight, stat: 78,  suffix: "%", label: "swing in time-to-locate the date \u2014 layout alone (5.0 \u2192 8.9s)",  source: "This study · n=25" },
-              { icon: FirstAidKit,     stat: 48,  suffix: "M", label: "Americans sickened annually by foodborne illness; 128k hospitalised",     source: "CDC, 2024" },
+              { icon: Trash,           stat: 30,  suffix: "%", label: "of U.S. food waste tied directly to date-label confusion",            source: "ReFED, 2022" },
+              { icon: HandPalm,        stat: 84,  suffix: "%", label: "discard food at \u201Cbest-before\u201D regardless of actual safety", source: "FMI · Johns Hopkins" },
+              { icon: Question,        stat: 32,  suffix: "%", label: "correctly interpret the difference between sell-by and use-by",      source: "Nordic Council" },
+              { icon: CurrencyDollar,  stat: 161, suffix: "B", prefix: "$", label: "in U.S. household food thrown out each year",            source: "USDA · NRDC, 2022" },
             ].map((s, i) => {
               const I = s.icon as Icon;
               return (
@@ -1036,50 +987,12 @@ export default function ShelfieCase() {
             </div>
           </div>
 
-          {/* Field-experiment baseline strip — 4 KPI tiles */}
-          <div style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
-            gap: 1,
-            background: sh.subtle,
-            border: `1px solid ${sh.subtle}`,
-            marginBottom: 28,
-          }}>
-            {[
-              { icon: Timer,    n: "5.0s", l: "best layout"           },
-              { icon: Timer,    n: "8.9s", l: "worst layout"          },
-              { icon: ArrowsLeftRight, n: "78%", l: "spread, layout alone" },
-              { icon: Eye,      n: "62%", l: "tilted under light"     },
-            ].map((s, i) => {
-              const I = s.icon as Icon;
-              return (
-                <Reveal key={i} delay={0.04 + i * 0.05}>
-                  <motion.div
-                    whileHover={{ y: -2 }}
-                    transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-                    style={{
-                      background: "var(--bg-elevated)",
-                      padding: "20px 22px",
-                      display: "flex", alignItems: "center", gap: 16,
-                    }}
-                  >
-                    <I size={22} color={sh.primary} weight="regular" />
-                    <div style={{ minWidth: 0 }}>
-                      <p style={{ fontFamily: serif, fontWeight: 700, fontSize: 24, color: sh.primary, letterSpacing: "-0.01em", lineHeight: 1, margin: 0 }}>{s.n}</p>
-                      <p style={{ ...mono, fontSize: 9, color: "var(--text-muted)", letterSpacing: "0.16em", marginTop: 4 }}>{s.l}</p>
-                    </div>
-                  </motion.div>
-                </Reveal>
-              );
-            })}
-          </div>
-
           {/* Four failure modes */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {[
               { illus: <OilBottleIllustration />,  tag: "CONTRAST",  title: "Same color as the product.",      body: "Yellow stamp on yellow oil — printed, functionally invisible.",       time: "8.9s", hits: "3 / 25 under 5s" },
               { illus: <BreadBagIllustration />,   tag: "PLACEMENT", title: "Somewhere on the bag.",            body: "Loose placement turns every scan into a scavenger hunt.",            time: "7.6s", hits: "11 / 25 flipped the bag" },
-              { illus: <CanTopIllustration />,     tag: "LEGIBILITY",title: "Embossed, not printed.",           body: "Ridges read as decoration, not information.",                         time: "6.4s", hits: "9 / 25 read the wrong number" },
+              { image: "/shelfie/decoding-mfg-code.jpg", alt: "A hand pointing at a packaging code reading 'mfg 213' with a callout 'manufactured on August 1'", tag: "LEGIBILITY", title: "Coded, not communicated.",  body: "Manufacture codes (\u201Cmfg 213\u201D) demand a decoder ring — useless at a glance.", time: "6.4s", hits: "9 / 25 read the wrong number" },
               { illus: <YogurtCupIllustration />,  tag: "TYPE SIZE", title: "Smaller than the lot code.",       body: "3.4 pt on a foil rim. Below the comfortable reading threshold.",      time: "9.2s", hits: "5 / 25 needed it closer" },
             ].map((f, i) => (
               <Reveal key={i} delay={0.1 + i * 0.08}>
@@ -1111,9 +1024,21 @@ export default function ShelfieCase() {
                   <div style={{
                     height: 180, display: "flex", alignItems: "center",
                     justifyContent: "center", marginBottom: 18,
-                    background: sh.surface,
+                    background: sh.surface, overflow: "hidden",
                   }}>
-                    {f.illus}
+                    {f.image ? (
+                      <img
+                        src={f.image}
+                        alt={f.alt ?? ""}
+                        style={{
+                          maxWidth: "100%", maxHeight: "100%",
+                          objectFit: "contain",
+                          mixBlendMode: "multiply",
+                        }}
+                      />
+                    ) : (
+                      f.illus
+                    )}
                   </div>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 10, gap: 8 }}>
                     <p style={{ ...mono, fontSize: 10, color: sh.primary, letterSpacing: "0.2em", fontWeight: 700, margin: 0 }}>
@@ -1170,7 +1095,7 @@ export default function ShelfieCase() {
           </div>
 
           {/* Three method columns */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
               { glyph: <ObservationGlyph />, tag: "METHOD · 01", title: "Observation",          body: "Watching 25 shoppers in situ — hesitation, tilting, comparison behaviour, lighting." },
               { glyph: <ExperimentGlyph />,  tag: "METHOD · 02", title: "Controlled experiment", body: "Four standardised products. Timed locate task. 5.0s → 8.9s spread from design alone." },
@@ -1209,42 +1134,6 @@ export default function ShelfieCase() {
             ))}
           </div>
 
-          {/* Participant strip */}
-          <Reveal delay={0.3}>
-            <div style={{
-              background: "var(--bg-elevated)",
-              border: "1px solid var(--border)",
-              padding: "24px 28px",
-              display: "flex",
-              flexWrap: "wrap",
-              alignItems: "center",
-              justifyContent: "space-between",
-              gap: 20,
-            }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                <Package size={20} color={sh.primary} weight="regular" />
-                <p style={{ ...mono, fontSize: 11, color: sh.dark, letterSpacing: "0.2em", fontWeight: 700 }}>
-                  Sample Composition
-                </p>
-              </div>
-              {[
-                { n: 25, l: "participants" },
-                { n: 4,  l: "age cohorts 18–56+" },
-                { n: 12, l: "used corrective lenses" },
-                { n: 4,  l: "products tested" },
-              ].map((s, i) => (
-                <div key={i} style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
-                  <span style={{
-                    fontFamily: serif, fontWeight: 700, fontSize: 28,
-                    color: sh.primary, letterSpacing: "-0.02em",
-                  }}>{s.n}</span>
-                  <span style={{ ...mono, fontSize: 10, color: "var(--text-muted)", letterSpacing: "0.16em" }}>
-                    {s.l}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </Reveal>
         </div>
       </section>
 
@@ -1269,51 +1158,6 @@ export default function ShelfieCase() {
                 </p>
               </Reveal>
             </div>
-          </div>
-
-          {/* Interview methodology — four icon tiles */}
-          <div style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-            gap: 1,
-            marginBottom: 36,
-            background: sh.subtle,
-            border: `1px solid ${sh.subtle}`,
-          }}>
-            {[
-              { icon: ChatCircleText, label: "Format",   value: "Semi-structured",      sub: "30–45 min · in-aisle + debrief" },
-              { icon: Question,       label: "Guide",    value: "12 prompts · 4 probes", sub: "piloted with 3 outside sample" },
-              { icon: Stack,          label: "Analysis", value: "Affinity diagram",      sub: "verbatim · 6 themes coded" },
-              { icon: Target,         label: "Reliability", value: "κ = 0.81",            sub: "two researchers, blind-coded" },
-            ].map((m, i) => {
-              const I = m.icon as Icon;
-              return (
-                <Reveal key={i} delay={0.05 + i * 0.05}>
-                  <motion.div
-                    whileHover={{ y: -3 }}
-                    transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-                    style={{
-                      background: "var(--bg-elevated)",
-                      padding: "22px 24px",
-                      height: "100%",
-                    }}
-                  >
-                    <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
-                      <I size={20} color={sh.primary} weight="regular" />
-                      <p style={{ ...mono, fontSize: 10, color: sh.primary, letterSpacing: "0.2em", fontWeight: 700, margin: 0 }}>
-                        {m.label}
-                      </p>
-                    </div>
-                    <p style={{ fontFamily: serif, fontWeight: 700, fontSize: 18, color: "var(--text-primary)", letterSpacing: "-0.01em", marginBottom: 4, lineHeight: 1.25 }}>
-                      {m.value}
-                    </p>
-                    <p style={{ ...mono, fontSize: 9, color: "var(--text-muted)", letterSpacing: "0.16em" }}>
-                      {m.sub}
-                    </p>
-                  </motion.div>
-                </Reveal>
-              );
-            })}
           </div>
 
           {/* Four finding cards — strongest themes only */}
@@ -1408,56 +1252,6 @@ export default function ShelfieCase() {
             })}
           </div>
 
-          {/* Demographic breakdown — compact icon-led sample bar */}
-          <Reveal delay={0.3}>
-            <div style={{
-              marginTop: 40,
-              background: "var(--bg-elevated)",
-              border: `1px solid ${sh.subtle}`,
-            }}>
-              <div style={{
-                display: "flex", alignItems: "center", gap: 12,
-                padding: "20px 26px",
-                borderBottom: `1px solid ${sh.subtle}`,
-              }}>
-                <UsersThree size={20} color={sh.primary} weight="regular" />
-                <p style={{ ...mono, fontSize: 11, color: sh.dark, letterSpacing: "0.22em", fontWeight: 700 }}>
-                  Sample composition · n = 25
-                </p>
-              </div>
-              <div style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-              }}>
-                {[
-                  { label: "Age",          rows: [["18–29", "28%"], ["30–44", "36%"], ["45–59", "24%"], ["60+", "12%"]] },
-                  { label: "Gender",       rows: [["Female", "56%"], ["Male", "40%"], ["Non-binary", "4%"]] },
-                  { label: "Vision",       rows: [["Corrective lenses", "48%"], ["Uncorrected", "52%"]] },
-                  { label: "Shop cadence", rows: [["Weekly", "64%"], ["Bi-weekly", "28%"], ["Monthly", "8%"]] },
-                ].map((col, i, arr) => (
-                  <div key={i} style={{
-                    padding: "22px 24px",
-                    borderRight: i < arr.length - 1 ? `1px solid ${sh.subtle}` : "none",
-                  }}>
-                    <p style={{ ...mono, fontSize: 10, color: sh.primary, letterSpacing: "0.2em", fontWeight: 700, marginBottom: 14 }}>
-                      {col.label}
-                    </p>
-                    {col.rows.map(([k, v], j) => (
-                      <div key={j} style={{
-                        display: "flex", justifyContent: "space-between",
-                        alignItems: "baseline", gap: 12,
-                        paddingTop: 6, paddingBottom: 6,
-                        borderBottom: j < col.rows.length - 1 ? `1px dashed ${sh.subtle}` : "none",
-                      }}>
-                        <span style={{ ...t.bodySm, color: "var(--text-primary)" }}>{k}</span>
-                        <span style={{ fontFamily: serif, fontWeight: 700, fontSize: 16, color: sh.primary, letterSpacing: "-0.01em" }}>{v}</span>
-                      </div>
-                    ))}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </Reveal>
         </div>
       </section>
 
@@ -1582,203 +1376,112 @@ export default function ShelfieCase() {
             </div>
           </div>
 
-          {/* Four solution cards, grouped by category */}
-          {[
-            {
-              category: "PASSIVE PACKAGING",
-              caption: "Fixes printed onto the package itself.",
-              cards: [
-                {
-                  num: "01",
-                  icon: CheckCircle,
-                  title: "Universal Freshness Icon",
-                  tag: "INDUSTRY · PACKAGING",
-                  body: "A single three-state glyph replaces the four-vocabulary tangle. Fresh · soon · expired — colour-coded, language-independent, half-second glance.",
-                  illus: <UniversalIconIllustration />,
-                  principle: "Affordance · Visual hierarchy",
-                  how: "Standardised three-state icon prints alongside (or replaces) the date stamp.",
-                  who: "Every shopper — especially older adults and non-native readers.",
-                  evidence: "F01 & F04 · 18 / 25 don't distinguish the four terms.",
-                },
-              ],
-            },
-            {
-              category: "SMART PACKAGING",
-              caption: "Fixes that respond to what's actually happening to the food.",
-              cards: [
-                {
-                  num: "02",
-                  icon: Thermometer,
-                  title: "Passive Time-Strip",
-                  tag: "INDUSTRY · PACKAGING",
-                  body: "Temperature-reactive ink that darkens with real storage conditions. No battery — and a hot car ride doesn't go uncounted.",
-                  illus: <TimeStripIllustration />,
-                  principle: "Mental models · Feedback",
-                  how: "TTI ink (already used in vaccine cold-chain) ported to consumer dairy and meat.",
-                  who: "Cold-chain-sensitive products and longer-commute households.",
-                  evidence: "F03 · the printed date stops describing the product once it leaves the cold chain.",
-                },
-                {
-                  num: "03",
-                  icon: Timer,
-                  title: "Open-By Overlay",
-                  tag: "INDUSTRY · POST-OPEN",
-                  body: "A peel-reveal sticker starts a visible countdown the moment the seal breaks — making the invisible post-open timer visible.",
-                  illus: <OpenByIllustration />,
-                  principle: "Cognitive load · Mental models",
-                  how: "Pre-printed peel-back panel; ink activates at first opening.",
-                  who: "Sauces, condiments, deli — anything where the official date stops mattering after first use.",
-                  evidence: "F03 & informal · 23 / 25 had no system for tracking opened items.",
-                },
-              ],
-            },
-            {
-              category: "CONSUMER TOOL",
-              caption: "Fixes that live on the household side, when the label itself can't be redesigned.",
-              cards: [
-                {
-                  num: "04",
-                  icon: DeviceMobile,
-                  title: "Shelfie — household tracker",
-                  tag: "CONSUMER · APP",
-                  body: "Snap one shelf photo. OCR extracts dates, builds a timeline, and nudges you 48 h before something tips.",
-                  illus: <ShelfieAppIllustration />,
-                  principle: "Distributed cognition · Reminders",
-                  how: "On-device OCR + product-type inference + scheduled notifications.",
-                  who: "Meal-preppers, multi-person households, and Sharpie-on-lid workaround inventors.",
-                  evidence: "Informal · the workaround already exists. The app makes it reliable.",
-                },
-              ],
-            },
-          ].map((group, gi) => (
-            <div key={gi} style={{ marginBottom: gi < 2 ? 48 : 0 }}>
-              {/* Category separator */}
-              <Reveal>
-                <div style={{
-                  display: "flex", alignItems: "baseline", gap: 18, flexWrap: "wrap",
-                  marginBottom: 22, paddingBottom: 12,
-                  borderBottom: `1px solid ${sh.subtle}`,
-                }}>
-                  <span style={{ ...mono, fontSize: 12, color: sh.primary, letterSpacing: "0.24em", fontWeight: 700 }}>
-                    {group.category}
-                  </span>
-                  <span style={{ ...t.bodySm, fontStyle: "italic", color: "var(--text-secondary)" }}>
-                    {group.caption}
-                  </span>
-                </div>
-              </Reveal>
-
-              <div className={`grid grid-cols-1 ${group.cards.length === 1 ? "" : "md:grid-cols-2"} gap-6`}>
-                {group.cards.map((s, i) => {
-                  const Icon = s.icon as Icon;
-                  return (
-                    <Reveal key={i} delay={0.1 + i * 0.08}>
+          {/* Four solution cards in a uniform 2x2 grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {[
+              {
+                num: "01", icon: CheckCircle,
+                title: "Universal Freshness Icon",
+                category: "PASSIVE PACKAGING",
+                body: "A single three-state glyph replaces the four-vocabulary tangle. Fresh · soon · expired — colour-coded, language-independent, half-second glance.",
+                illus: <UniversalIconIllustration />,
+                principle: "Affordance · Visual hierarchy",
+              },
+              {
+                num: "02", icon: Thermometer,
+                title: "Passive Time-Strip",
+                category: "SMART PACKAGING",
+                body: "Temperature-reactive ink darkens with real storage conditions. No battery — and a hot car ride doesn't go uncounted.",
+                illus: <TimeStripIllustration />,
+                principle: "Mental models · Feedback",
+              },
+              {
+                num: "03", icon: Timer,
+                title: "Open-By Overlay",
+                category: "POST-OPEN",
+                body: "A peel-reveal sticker starts a visible countdown the moment the seal breaks — making the invisible post-open timer visible.",
+                illus: <OpenByIllustration />,
+                principle: "Cognitive load · Mental models",
+              },
+              {
+                num: "04", icon: DeviceMobile,
+                title: "Shelfie — household tracker",
+                category: "CONSUMER TOOL",
+                body: "Snap one shelf photo. OCR extracts dates, builds a timeline, and nudges you 48 h before something tips.",
+                illus: <ShelfieAppIllustration />,
+                principle: "Distributed cognition · Reminders",
+              },
+            ].map((s, i) => {
+              const Icon = s.icon as Icon;
+              return (
+                <Reveal key={i} delay={0.1 + i * 0.08}>
+                  <motion.div
+                    whileHover={{ y: -6 }}
+                    transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
+                    style={{
+                      background: "var(--bg-elevated)",
+                      border: "1px solid var(--border)",
+                      overflow: "hidden",
+                      height: "100%",
+                      display: "flex", flexDirection: "column",
+                      cursor: "default",
+                    }}
+                    onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.borderColor = sh.primary; (e.currentTarget as HTMLElement).style.boxShadow = `0 1px 2px rgba(0,0,0,0.04), 0 18px 44px rgba(31,95,92,0.14)`; }}
+                    onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.borderColor = "var(--border)"; (e.currentTarget as HTMLElement).style.boxShadow = "none"; }}
+                  >
+                    <div style={{
+                      background: sh.surface,
+                      padding: "24px 20px",
+                      borderBottom: "1px solid var(--border)",
+                      overflow: "hidden",
+                    }}>
                       <motion.div
-                        whileHover={{ y: -6 }}
-                        transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
-                        style={{
-                          background: "var(--bg-elevated)",
-                          border: "1px solid var(--border)",
-                          overflow: "hidden",
-                          height: "100%",
-                          display: "flex",
-                          flexDirection: "column",
-                          cursor: "default",
-                        }}
-                        onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.borderColor = sh.primary; (e.currentTarget as HTMLElement).style.boxShadow = `0 1px 2px rgba(0,0,0,0.04), 0 18px 44px rgba(31,95,92,0.14)`; }}
-                        onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.borderColor = "var(--border)"; (e.currentTarget as HTMLElement).style.boxShadow = "none"; }}
+                        whileHover={{ scale: 1.04 }}
+                        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
                       >
-                        {/* illustration zone */}
-                        <div style={{
-                          background: sh.surface,
-                          padding: "24px 20px",
-                          borderBottom: "1px solid var(--border)",
-                          position: "relative",
-                          overflow: "hidden",
-                        }}>
-                          <motion.div
-                            whileHover={{ scale: 1.04 }}
-                            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                          >
-                            {s.illus}
-                          </motion.div>
-                        </div>
-                        {/* body */}
-                        <div style={{ padding: "28px 28px 30px", display: "flex", flexDirection: "column", flex: 1 }}>
-                          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
-                            <span style={{
-                              width: 34, height: 34,
-                              background: sh.primary, color: "#fff",
-                              display: "flex", alignItems: "center", justifyContent: "center",
-                              fontFamily: "'Space Mono', monospace", fontSize: 12, fontWeight: 700,
-                              letterSpacing: "0.1em",
-                            }}>
-                              {s.num}
-                            </span>
-                            <span style={{ ...mono, fontSize: 10, color: "var(--text-muted)", letterSpacing: "0.2em" }}>
-                              {s.tag}
-                            </span>
-                          </div>
-                          <h3 style={{ ...t.h3Lede, fontSize: 22, marginBottom: 10, display: "flex", alignItems: "center", gap: 10 }}>
-                            <Icon size={22} color={sh.primary} weight="regular" />
-                            {s.title}
-                          </h3>
-                          <p style={{ ...t.bodySm, marginBottom: 20 }}>
-                            {s.body}
-                          </p>
-
-                          {/* How / Who / Evidence — icon-prefixed compact rows */}
-                          <div style={{
-                            display: "flex", flexDirection: "column", gap: 12,
-                            marginBottom: 16, paddingTop: 14,
-                            borderTop: `1px solid ${sh.subtle}`,
-                          }}>
-                            {[
-                              { rowIcon: Gear,        label: "How",      value: s.how },
-                              { rowIcon: UsersThree,  label: "Who",      value: s.who },
-                              { rowIcon: Flask,       label: "Evidence", value: s.evidence },
-                            ].map((row, j) => {
-                              const RI = row.rowIcon as Icon;
-                              return (
-                                <div key={j} style={{
-                                  display: "grid",
-                                  gridTemplateColumns: "20px 70px 1fr",
-                                  gap: 10,
-                                  alignItems: "start",
-                                }}>
-                                  <RI size={16} color={sh.primary} weight="regular" />
-                                  <span style={{ ...mono, fontSize: 10, color: sh.primary, letterSpacing: "0.18em", fontWeight: 700, paddingTop: 1 }}>
-                                    {row.label}
-                                  </span>
-                                  <span style={{ ...t.bodySm, color: "var(--text-primary)", lineHeight: 1.55 }}>
-                                    {row.value}
-                                  </span>
-                                </div>
-                              );
-                            })}
-                          </div>
-
-                          <div style={{
-                            marginTop: "auto",
-                            paddingTop: 14,
-                            borderTop: `1px solid ${sh.subtle}`,
-                            display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap",
-                          }}>
-                            <span style={{ ...mono, fontSize: 9, color: "var(--text-muted)", letterSpacing: "0.18em" }}>
-                              LEANS ON
-                            </span>
-                            <span style={{ ...mono, fontSize: 10, color: sh.primary, letterSpacing: "0.16em", fontWeight: 600 }}>
-                              {s.principle}
-                            </span>
-                          </div>
-                        </div>
+                        {s.illus}
                       </motion.div>
-                    </Reveal>
-                  );
-                })}
-              </div>
-            </div>
-          ))}
+                    </div>
+                    <div style={{ padding: "28px 28px 26px", display: "flex", flexDirection: "column", flex: 1 }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 14 }}>
+                        <span style={{
+                          width: 34, height: 34,
+                          background: sh.primary, color: "#fff",
+                          display: "flex", alignItems: "center", justifyContent: "center",
+                          fontFamily: "'Space Mono', monospace", fontSize: 12, fontWeight: 700,
+                          letterSpacing: "0.1em",
+                        }}>
+                          {s.num}
+                        </span>
+                        <span style={{ ...mono, fontSize: 10, color: "var(--text-muted)", letterSpacing: "0.2em" }}>
+                          {s.category}
+                        </span>
+                      </div>
+                      <h3 style={{ ...t.h3Lede, fontSize: 22, marginBottom: 10, display: "flex", alignItems: "center", gap: 10 }}>
+                        <Icon size={22} color={sh.primary} weight="regular" />
+                        {s.title}
+                      </h3>
+                      <p style={{ ...t.bodySm, marginBottom: 18 }}>
+                        {s.body}
+                      </p>
+                      <div style={{
+                        marginTop: "auto", paddingTop: 14,
+                        borderTop: `1px solid ${sh.subtle}`,
+                        display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap",
+                      }}>
+                        <span style={{ ...mono, fontSize: 9, color: "var(--text-muted)", letterSpacing: "0.18em" }}>
+                          LEANS ON
+                        </span>
+                        <span style={{ ...mono, fontSize: 10, color: sh.primary, letterSpacing: "0.16em", fontWeight: 600 }}>
+                          {s.principle}
+                        </span>
+                      </div>
+                    </div>
+                  </motion.div>
+                </Reveal>
+              );
+            })}
+          </div>
         </div>
       </section>
 
@@ -1807,7 +1510,7 @@ export default function ShelfieCase() {
           </div>
 
           {/* Takeaway grid — icon-led cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {[
               {
                 icon: Stack,
@@ -1823,16 +1526,6 @@ export default function ShelfieCase() {
                 icon: UsersThree,
                 head: "Vulnerable users set the floor.",
                 body: "Designing for tired eyes and bad lighting raises the floor for everyone.",
-              },
-              {
-                icon: Package,
-                head: "Fixes live on both sides of the package.",
-                body: "Better printing helps the aisle. Better tools help the pantry.",
-              },
-              {
-                icon: Brain,
-                head: "Every \u201Cobvious\u201D decision hides a cognitive principle.",
-                body: "Naming them makes the case defensible — to legal, to ops, to leadership.",
               },
               {
                 icon: Lightbulb,
