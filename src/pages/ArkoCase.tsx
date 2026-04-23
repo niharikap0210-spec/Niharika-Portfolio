@@ -423,9 +423,9 @@ function LoopCard() {
                 {current.why.k}
               </p>
               <p style={{
-                fontFamily: sans, fontSize: 17,
+                fontFamily: sans, fontSize: "clamp(18px, 1.4vw, 21px)",
                 color: "var(--text-secondary)",
-                lineHeight: 1.6, maxWidth: 640,
+                lineHeight: 1.6, maxWidth: 720,
               }}>
                 {current.why.t}
               </p>
