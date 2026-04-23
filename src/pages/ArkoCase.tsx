@@ -2009,11 +2009,12 @@ function ArEditorStepper({
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   NAV CARD — minimal "more case studies" tile
+   NAV CARD — visual "more case studies" tile (project gradient hero)
 ══════════════════════════════════════════════════════════════════ */
 function NavCard({ project }: { project: Project }) {
   const [hover, setHover] = useState(false);
   const accent = `hsl(${project.accentHue}, 38%, 48%)`;
+  const primaryTag = project.tags[0] ?? project.year;
 
   return (
     <Link
@@ -2025,55 +2026,105 @@ function NavCard({ project }: { project: Project }) {
         position: "relative",
         textDecoration: "none",
         display: "block",
-        padding: "clamp(36px, 3.6vw, 56px) clamp(28px, 3vw, 44px)",
-        background: "var(--bg-primary)",
+        overflow: "hidden",
+        aspectRatio: "5 / 4",
+        background: project.gradient,
       }}
     >
-      <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
-        {/* Year */}
-        <span style={{ ...mono, fontSize: 11, color: "var(--text-muted)", letterSpacing: "0.24em", fontWeight: 600 }}>
+      {/* Accent wash that deepens on hover */}
+      <span
+        aria-hidden
+        style={{
+          position: "absolute",
+          inset: 0,
+          background: `linear-gradient(180deg, transparent 35%, ${accent}26 100%)`,
+          opacity: hover ? 1 : 0,
+          transition: "opacity 420ms ease-out",
+          pointerEvents: "none",
+        }}
+      />
+
+      {/* Top meta row — year + tag */}
+      <div
+        style={{
+          position: "absolute",
+          top: "clamp(24px, 2.4vw, 36px)",
+          left: "clamp(24px, 2.4vw, 36px)",
+          right: "clamp(24px, 2.4vw, 36px)",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          gap: 12,
+        }}
+      >
+        <span style={{ ...mono, fontSize: 11, color: "rgba(26,26,26,0.65)", letterSpacing: "0.24em", fontWeight: 600 }}>
           {project.year}
         </span>
+        <span
+          style={{
+            ...mono,
+            fontSize: 10,
+            color: "rgba(26,26,26,0.65)",
+            letterSpacing: "0.22em",
+            fontWeight: 600,
+            padding: "6px 10px",
+            border: "1px solid rgba(26,26,26,0.18)",
+            borderRadius: 999,
+          }}
+        >
+          {primaryTag}
+        </span>
+      </div>
 
-        {/* Title */}
-        <p
+      {/* Bottom content — title, subtitle, CTA */}
+      <div
+        style={{
+          position: "absolute",
+          left: "clamp(24px, 2.4vw, 36px)",
+          right: "clamp(24px, 2.4vw, 36px)",
+          bottom: "clamp(24px, 2.4vw, 36px)",
+          display: "flex",
+          flexDirection: "column",
+          gap: 14,
+        }}
+      >
+        <motion.p
+          animate={{ y: hover ? -2 : 0 }}
+          transition={{ type: "spring", stiffness: 240, damping: 22 }}
           style={{
             fontFamily: serif,
             fontWeight: 700,
-            fontSize: "clamp(30px, 3vw, 44px)",
+            fontSize: "clamp(36px, 4.2vw, 60px)",
             letterSpacing: "-0.03em",
-            lineHeight: 1.04,
-            color: hover ? accent : "var(--text-primary)",
-            transition: "color 260ms ease-out",
+            lineHeight: 1.02,
+            color: "#1A1A1A",
             margin: 0,
           }}
         >
           {project.title}
-        </p>
+        </motion.p>
 
-        {/* Subtitle */}
         <p
           style={{
             fontFamily: sans,
             fontSize: "clamp(15px, 1.05vw, 17px)",
             lineHeight: 1.55,
-            color: "var(--text-secondary)",
-            maxWidth: 440,
+            color: "rgba(26,26,26,0.72)",
+            maxWidth: 460,
             margin: 0,
           }}
         >
           {project.subtitle}
         </p>
 
-        {/* CTA */}
-        <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 10 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 6 }}>
           <span
             style={{
               ...mono,
               fontSize: 11,
               letterSpacing: "0.24em",
               fontWeight: 700,
-              color: hover ? accent : "var(--text-primary)",
+              color: hover ? accent : "#1A1A1A",
               transition: "color 260ms ease-out",
             }}
           >
@@ -2082,7 +2133,7 @@ function NavCard({ project }: { project: Project }) {
           <motion.span
             animate={{ x: hover ? 6 : 0 }}
             transition={{ type: "spring", stiffness: 260, damping: 22 }}
-            style={{ display: "inline-flex", color: hover ? accent : "var(--text-primary)", transition: "color 260ms ease-out" }}
+            style={{ display: "inline-flex", color: hover ? accent : "#1A1A1A", transition: "color 260ms ease-out" }}
           >
             <ArrowRight size={16} weight="regular" />
           </motion.span>
@@ -3226,9 +3277,7 @@ export default function ArkoCase() {
             style={{
               display: "grid",
               gridTemplateColumns: otherProjects.length > 1 ? "1fr 1fr" : "1fr",
-              gap: 1,
-              background: "var(--border)",
-              border: "1px solid var(--border)",
+              gap: "clamp(16px, 1.6vw, 24px)",
             }}
           >
             {otherProjects.map((p) => (
