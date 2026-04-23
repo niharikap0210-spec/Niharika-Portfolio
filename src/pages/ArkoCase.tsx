@@ -682,7 +682,7 @@ function WebGallery({
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-          style={{ ...caption, textAlign: "center", marginTop: 22 }}
+          style={{ ...caption, fontSize: "clamp(16px, 1.2vw, 19px)", textAlign: "center", marginTop: 22 }}
         >
           {current.label}
         </motion.p>
