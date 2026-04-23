@@ -2151,7 +2151,7 @@ export default function VeriflowCase() {
       {/* ══════════════════════════════════════════════════════════════
           08 · ROLE + TAKEAWAYS
       ══════════════════════════════════════════════════════════════ */}
-      <section style={{ padding: SECTION_PAD, background: "var(--bg-primary)" }}>
+      <section className="blueprint-grid-subtle" style={{ padding: SECTION_PAD }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <Reveal><SectionHeader num="08" phase="Role · Takeaways" title="What I owned, and what this project taught me." /></Reveal>
 
