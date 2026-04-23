@@ -797,7 +797,7 @@ function UserTabs() {
               ) : (
                 <LaptopMockup src={tabs[tab].img} alt={tabs[tab].heading} />
               )}
-              <p style={{ ...caption, fontSize: 14, marginTop: 18, textAlign: "center" }}>{tabs[tab].imgCaption}</p>
+              <p style={{ ...caption, fontSize: "clamp(16px, 1.2vw, 19px)", marginTop: 18, textAlign: "center" }}>{tabs[tab].imgCaption}</p>
             </div>
           </div>
         </motion.div>
