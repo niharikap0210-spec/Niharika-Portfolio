@@ -898,24 +898,13 @@ function ResearchLedger() {
     <div style={{ marginTop: 88 }}>
       {/* Header band */}
       <div style={{
-        display: "flex", alignItems: "center", justifyContent: "space-between",
-        gap: 16, marginBottom: 24, flexWrap: "wrap",
+        display: "flex", alignItems: "center",
+        gap: 12, marginBottom: 24,
       }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <span aria-hidden style={{ width: 3, height: 16, background: arko.primary, display: "inline-block" }} />
-          <p style={{ ...mono, fontSize: 13, color: arko.dark, letterSpacing: "0.22em", fontWeight: 600 }}>
-            Research depth · how I got here
-          </p>
-        </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <span style={{ ...mono, fontSize: 12, color: "var(--text-muted)", letterSpacing: "0.18em" }}>
-            70 touchpoints
-          </span>
-          <span aria-hidden style={{ width: 16, height: 1, background: arko.light }} />
-          <span style={{ ...mono, fontSize: 12, color: "var(--text-muted)", letterSpacing: "0.18em" }}>
-            4 firms · mixed methods
-          </span>
-        </div>
+        <span aria-hidden style={{ width: 3, height: 16, background: arko.primary, display: "inline-block" }} />
+        <p style={{ ...mono, fontSize: 13, color: arko.dark, letterSpacing: "0.22em", fontWeight: 600 }}>
+          Research depth · how I got here
+        </p>
       </div>
 
       {/* Ledger */}
@@ -991,16 +980,16 @@ function ResearchLedger() {
               </p>
               {/* Unit */}
               <p style={{
-                ...mono, fontSize: 13,
+                ...mono, fontSize: "clamp(13px, 1vw, 15px)",
                 color: "var(--text-primary)",
                 letterSpacing: "0.16em",
-                marginBottom: 10, fontWeight: 600,
+                marginBottom: 12, fontWeight: 600,
               }}>
                 {m.unit}
               </p>
               {/* Sub */}
               <p style={{
-                fontFamily: sans, fontSize: 14.5,
+                fontFamily: sans, fontSize: "clamp(15px, 1.15vw, 17px)",
                 color: "var(--text-secondary)", lineHeight: 1.6,
               }}>
                 {m.sub}
@@ -1009,12 +998,6 @@ function ResearchLedger() {
           );
         })}
       </div>
-      <p style={{
-        ...mono, fontSize: 11, color: "var(--text-muted)",
-        letterSpacing: "0.2em", marginTop: 16, textAlign: "right",
-      }}>
-        Fig. 03.1 · field log · weeks 03–04
-      </p>
     </div>
   );
 }
