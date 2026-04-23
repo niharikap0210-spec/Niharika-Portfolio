@@ -2639,8 +2639,8 @@ export default function ArkoCase() {
             <SectionHeader num="05" title="Workspace · Web" phase="Weeks 05 · 08" />
           </Reveal>
 
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-16 items-start" style={{ marginBottom: 56 }}>
-            <Reveal className="md:col-span-7">
+          <Reveal>
+            <div style={{ maxWidth: 760, marginBottom: 56 }}>
               <h2 style={{ ...t.h2Section, marginBottom: 22 }}>
                 A professional workspace.{" "}
                 <em style={{ fontStyle: "italic", color: arko.primary }}>Dense, powerful, built for daily use.</em>
@@ -2650,30 +2650,8 @@ export default function ArkoCase() {
                 team activity, and AR editing tools, all accessible from a single workspace a design
                 lead would open on day one and never want to leave.
               </p>
-            </Reveal>
-
-            <Reveal className="md:col-span-5" delay={0.08}>
-              <ul style={{ listStyle: "none", padding: 0, margin: 0, borderTop: "1px solid var(--border)" }}>
-                {[
-                  "Dashboard with active projects, team stats, approvals",
-                  "Project detail with rooms, progress, activity log",
-                  "Pinned client comments in spatial context",
-                  "One-click handoff to mobile AR editor",
-                ].map((f, j) => (
-                  <li key={j} style={{
-                    display: "flex", alignItems: "center", gap: 16,
-                    padding: "18px 0",
-                    borderBottom: "1px solid var(--border-light)",
-                  }}>
-                    <CheckCircle size={18} color={arko.primary} weight="regular" />
-                    <span style={{ fontFamily: sans, fontSize: 17, color: "var(--text-primary)", lineHeight: 1.55 }}>
-                      {f}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </Reveal>
-          </div>
+            </div>
+          </Reveal>
 
           <Reveal delay={0.1}>
             <WebGallery screens={[
