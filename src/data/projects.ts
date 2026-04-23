@@ -34,7 +34,7 @@ export const projects: Project[] = [
     description: "An end-to-end specimen tracking platform — a clinic tablet, a pickup flow, a web control tower, and an ambient TV — replacing handwritten logs with verified taps at every handoff.",
     tagline: "Specimen chain-of-custody for hospitals",
     year: "2024",
-    role: "Product Design Intern",
+    role: "Product Designer",
     team: "Design + Engineering (Enterprise Healthcare)",
     duration: "3 months",
     tools: ["Figma", "FigJam", "Jira"],

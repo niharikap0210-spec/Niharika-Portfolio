@@ -1689,7 +1689,7 @@ export default function VeriflowCase() {
                 }}
               >
                 {([
-                  { label: "Role",     value: "Product Design Intern" },
+                  { label: "Role",     value: "Product Designer" },
                   { label: "Surfaces", value: "Web · Tablet · TV" },
                   { label: "Timeline", value: "3 months" },
                   { label: "Tools",    value: "Figma · FigJam" },
@@ -2165,7 +2165,7 @@ export default function VeriflowCase() {
             <Reveal className="md:col-span-6">
               <div style={{ ...mono, fontSize: 13, color: vf.primary, letterSpacing: "0.22em", fontWeight: 700, marginBottom: 20, display: "flex", alignItems: "center", gap: 10 }}>
                 <span aria-hidden style={{ width: 3, height: 14, background: vf.primary, display: "inline-block" }} />
-                ROLE · DESIGN INTERN
+                ROLE · PRODUCT DESIGNER
               </div>
               <h3 style={{
                 fontFamily: serif, fontWeight: 700, fontSize: "clamp(26px, 2.8vw, 34px)",
