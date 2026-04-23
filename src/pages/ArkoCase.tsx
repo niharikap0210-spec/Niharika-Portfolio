@@ -536,7 +536,7 @@ function WebGallery({
               <span
                 style={{
                   ...mono,
-                  fontSize: 12,
+                  fontSize: 13,
                   color: isActive ? arko.primary : "var(--text-muted)",
                   letterSpacing: "0.2em",
                   fontWeight: 600,
@@ -544,10 +544,10 @@ function WebGallery({
               >
                 {tab.fig}
               </span>
-              <span style={{ display: "inline-flex", alignItems: "center", gap: 10, minWidth: 0 }}>
+              <span style={{ display: "inline-flex", alignItems: "center", gap: 12, minWidth: 0 }}>
                 {TabIcon && (
                   <TabIcon
-                    size={18}
+                    size={20}
                     color={isActive ? arko.primary : "var(--text-muted)"}
                     weight={isActive ? "duotone" : "regular"}
                     style={{ flexShrink: 0 }}
@@ -557,7 +557,7 @@ function WebGallery({
                   style={{
                     fontFamily: serif,
                     fontWeight: 700,
-                    fontSize: 18,
+                    fontSize: 20,
                     lineHeight: 1.2,
                     letterSpacing: "-0.015em",
                     color: isActive ? "var(--text-primary)" : "var(--text-secondary)",
