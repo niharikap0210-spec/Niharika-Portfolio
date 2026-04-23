@@ -1219,8 +1219,8 @@ function ScanFlowStepper({
             style={{
               position: "absolute",
               left: 21,
-              top: 22,
-              bottom: 22,
+              top: 32,
+              bottom: 32,
               width: 1,
               background: "var(--border)",
             }}
@@ -1231,11 +1231,11 @@ function ScanFlowStepper({
             style={{
               position: "absolute",
               left: 21,
-              top: 22,
+              top: 32,
               width: 1,
               background: arko.primary,
               transformOrigin: "top center",
-              height: "calc(100% - 44px)",
+              height: "calc(100% - 64px)",
             }}
             animate={{ scaleY: stages.length > 1 ? active / (stages.length - 1) : 0 }}
             transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
@@ -1256,7 +1256,7 @@ function ScanFlowStepper({
                     gridTemplateColumns: "44px 1fr",
                     gap: 18,
                     width: "100%",
-                    padding: "14px 0",
+                    padding: "24px 0",
                     border: "none",
                     background: "transparent",
                     cursor: "pointer",
@@ -1355,11 +1355,11 @@ function ScanFlowStepper({
                           <p
                             style={{
                               fontFamily: sans,
-                              fontSize: 15,
+                              fontSize: "clamp(16px, 1.2vw, 18px)",
                               color: "var(--text-secondary)",
                               lineHeight: 1.7,
-                              marginTop: 10,
-                              maxWidth: 420,
+                              marginTop: 12,
+                              maxWidth: 440,
                             }}
                           >
                             {s.caption}
