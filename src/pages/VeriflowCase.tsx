@@ -1277,34 +1277,29 @@ function JourneyIllustration() {
           />
         ))}
 
-        {/* Travelling cooler: loops continuously once the illustration is in view */}
+        {/* Travelling cooler: sits at Hand 01 → travels to Hand 03 → Hand 05 → loops */}
         <motion.g
-          initial={{ opacity: 0 }}
-          animate={inView ? { opacity: 1 } : {}}
-          transition={{ delay: 1.6, duration: 0.4 }}
+          initial={{ x: 0, opacity: 0 }}
+          animate={inView ? {
+            x:       [0, 0,    nodes[1].x - nodes[0].x, nodes[1].x - nodes[0].x, nodes[2].x - nodes[0].x, nodes[2].x - nodes[0].x, nodes[2].x - nodes[0].x],
+            opacity: [1, 1,    1,                        1,                        1,                        1,                        0],
+          } : {}}
+          transition={{
+            duration: 6.4,
+            times:   [0, 0.08, 0.38,                     0.5,                      0.82,                     0.92,                     1],
+            ease: [0.16, 1, 0.3, 1],
+            repeat: Infinity,
+            repeatDelay: 0.4,
+            delay: 1.6,
+          }}
         >
-          <motion.g
-            animate={inView ? {
-              x: [0, nodes[1].x - nodes[0].x, nodes[2].x - nodes[0].x, nodes[2].x - nodes[0].x],
-              opacity: [0, 1, 1, 0],
-            } : {}}
-            transition={{
-              duration: 5.4,
-              times: [0, 0.42, 0.88, 1],
-              ease: [0.34, 1.1, 0.64, 1],
-              repeat: Infinity,
-              repeatDelay: 0.6,
-              delay: 1.6,
-            }}
-          >
-            <rect x={nodes[0].x - 18} y="152" width="36" height="30" rx="3"
-              fill={vf.primary} opacity="0.95" />
-            <rect x={nodes[0].x - 11} y="147" width="22" height="5" rx="1" fill={vf.primary} />
-            <line x1={nodes[0].x - 7} y1="164" x2={nodes[0].x + 7} y2="164"
-              stroke="#fff" strokeWidth="1.3" strokeLinecap="round" />
-            <line x1={nodes[0].x - 7} y1="172" x2={nodes[0].x + 7} y2="172"
-              stroke="#fff" strokeWidth="1.3" strokeLinecap="round" />
-          </motion.g>
+          <rect x={nodes[0].x - 18} y="152" width="36" height="30" rx="3"
+            fill={vf.primary} opacity="0.95" />
+          <rect x={nodes[0].x - 11} y="147" width="22" height="5" rx="1" fill={vf.primary} />
+          <line x1={nodes[0].x - 7} y1="164" x2={nodes[0].x + 7} y2="164"
+            stroke="#fff" strokeWidth="1.3" strokeLinecap="round" />
+          <line x1={nodes[0].x - 7} y1="172" x2={nodes[0].x + 7} y2="172"
+            stroke="#fff" strokeWidth="1.3" strokeLinecap="round" />
         </motion.g>
       </svg>
       <div style={{
