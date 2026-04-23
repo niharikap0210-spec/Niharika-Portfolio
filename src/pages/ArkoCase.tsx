@@ -327,37 +327,7 @@ function LoopCard() {
       background: "var(--bg-elevated)",
       overflow: "hidden",
     }}>
-      {/* Header band */}
-      <div style={{
-        padding: "20px 28px",
-        borderBottom: "1px solid var(--border)",
-        display: "flex", justifyContent: "space-between", alignItems: "center",
-        flexWrap: "wrap", gap: 16,
-      }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <span aria-hidden style={{ width: 3, height: 14, background: arko.primary, display: "inline-block" }} />
-          <p style={{ ...mono, fontSize: 13, color: arko.dark, letterSpacing: "0.22em", fontWeight: 600 }}>
-            The revision loop · before state
-          </p>
-        </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <Clock size={16} color={arko.primary} weight="duotone" />
-          <span style={{ ...mono, fontSize: 13, color: "var(--text-muted)", letterSpacing: "0.14em" }}>
-            Total lost
-          </span>
-          <span style={{
-            fontFamily: serif, fontWeight: 700, fontSize: 22,
-            color: arko.dark, letterSpacing: "-0.015em", lineHeight: 1,
-          }}>
-            6–8 hrs
-          </span>
-          <span style={{ ...mono, fontSize: 12, color: "var(--text-muted)", letterSpacing: "0.18em" }}>
-            / project
-          </span>
-        </div>
-      </div>
-
-      {/* Four-stage flow — minimal */}
+      {/* Four-stage flow — the focal object */}
       <div style={{
         display: "grid",
         gridTemplateColumns: "repeat(4, 1fr)",
@@ -374,7 +344,7 @@ function LoopCard() {
               viewport={{ once: true, margin: "-40px" }}
               transition={{ delay: 0.08 + i * 0.07, duration: 0.5 }}
               style={{
-                padding: "32px 24px 28px",
+                padding: "40px 28px 36px",
                 borderRight: i < stages.length - 1 ? "1px solid var(--border-light)" : "none",
                 background: isActive ? arko.subtle : "transparent",
                 cursor: "default",
@@ -394,145 +364,93 @@ function LoopCard() {
                   transition: "transform 350ms ease-out",
                 }}
               />
-              {/* Marker row */}
-              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 22 }}>
-                <span style={{
-                  ...mono, fontSize: 12, fontWeight: 700,
-                  color: isActive ? arko.primary : "var(--text-muted)",
-                  letterSpacing: "0.22em",
-                  transition: "color 240ms ease-out",
-                }}>
-                  {s.marker}
-                </span>
-                <span
-                  aria-hidden
-                  style={{
-                    flex: 1, height: 1,
-                    background: isActive ? arko.light : "var(--border-light)",
-                    transition: "background-color 260ms ease-out",
-                  }}
-                />
-                {s.bad && (
-                  <span aria-hidden style={{
-                    width: 7, height: 7, borderRadius: "50%",
-                    background: arko.primary,
-                    boxShadow: `0 0 0 3px ${arko.subtle}`,
-                  }} />
-                )}
-              </div>
               {/* Label */}
               <p style={{
                 ...mono, fontSize: 12, color: "var(--text-muted)",
-                letterSpacing: "0.22em", marginBottom: 10,
+                letterSpacing: "0.22em", marginBottom: 14,
               }}>
                 {s.label}
               </p>
               {/* Tool */}
               <p style={{
                 fontFamily: serif, fontWeight: 700,
-                fontSize: "clamp(20px, 1.8vw, 26px)",
+                fontSize: "clamp(22px, 2vw, 30px)",
                 color: isActive || s.bad ? arko.dark : "var(--text-primary)",
                 letterSpacing: "-0.02em", lineHeight: 1.1,
-                marginBottom: 18,
+                marginBottom: 20,
                 transition: "color 250ms ease-out",
               }}>
                 {s.tool}
               </p>
               {/* Time */}
-              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <Clock
-                  size={13}
-                  color={isActive ? arko.primary : "var(--text-muted)"}
-                  weight="regular"
-                />
-                <span style={{
-                  ...mono, fontSize: 13,
-                  color: isActive ? arko.primary : "var(--text-secondary)",
-                  letterSpacing: "0.14em", fontWeight: isActive ? 700 : 500,
-                  transition: "color 240ms ease-out",
-                }}>
-                  {s.time}
-                </span>
-              </div>
+              <span style={{
+                ...mono, fontSize: 13,
+                color: isActive ? arko.primary : "var(--text-secondary)",
+                letterSpacing: "0.14em", fontWeight: isActive ? 700 : 500,
+                transition: "color 240ms ease-out",
+              }}>
+                {s.time}
+              </span>
             </motion.div>
           );
         })}
       </div>
 
-      {/* Dynamic why-this-breaks band — changes with active stage */}
+      {/* Dynamic reason band — updates with active stage */}
       <div style={{
-        padding: "26px 28px 28px",
+        padding: "32px 36px 36px",
         borderTop: "1px solid var(--border)",
         background: arko.subtle,
-        position: "relative",
+        display: "flex", alignItems: "baseline", gap: 28,
+        flexWrap: "wrap",
       }}>
-        <div style={{
-          display: "flex", alignItems: "center", gap: 12, marginBottom: 14,
-        }}>
-          <span aria-hidden style={{ width: 3, height: 14, background: arko.primary }} />
-          <p style={{ ...mono, fontSize: 12, color: arko.dark, letterSpacing: "0.22em", fontWeight: 600 }}>
-            Why this stage breaks
-          </p>
-          <span aria-hidden style={{ flex: 1, height: 1, background: arko.light, opacity: 0.4 }} />
-          {/* Stepper dots */}
-          <div style={{ display: "flex", gap: 6 }}>
-            {stages.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => setActive(i)}
-                onMouseEnter={() => setActive(i)}
-                aria-label={`Show stage ${i + 1}`}
-                style={{
-                  width: active === i ? 18 : 6, height: 6, borderRadius: 3,
-                  background: active === i ? arko.primary : arko.light,
-                  border: "none", padding: 0, cursor: "pointer",
-                  transition: "width 260ms ease-out, background-color 200ms ease-out",
-                }}
-              />
-            ))}
-          </div>
-        </div>
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={active}
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -6 }}
-            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            style={{ display: "flex", alignItems: "baseline", gap: 16, flexWrap: "wrap" }}
-          >
-            <span style={{
-              ...mono, fontSize: 13, color: arko.primary,
-              letterSpacing: "0.2em", fontWeight: 700,
-            }}>
-              {current.marker}
-            </span>
-            <div style={{ flex: 1, minWidth: 240 }}>
+        <div style={{ flex: 1, minWidth: 280, position: "relative" }}>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={active}
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -6 }}
+              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            >
               <p style={{
                 fontFamily: serif, fontWeight: 700,
-                fontSize: "clamp(19px, 1.7vw, 23px)",
+                fontSize: "clamp(22px, 2vw, 28px)",
                 color: "var(--text-primary)",
-                letterSpacing: "-0.015em", lineHeight: 1.3,
-                marginBottom: 6,
+                letterSpacing: "-0.015em", lineHeight: 1.25,
+                marginBottom: 8,
               }}>
                 {current.why.k}
               </p>
               <p style={{
-                fontFamily: sans, fontSize: 16.5,
+                fontFamily: sans, fontSize: 17,
                 color: "var(--text-secondary)",
-                lineHeight: 1.6, maxWidth: 720,
+                lineHeight: 1.6, maxWidth: 640,
               }}>
                 {current.why.t}
               </p>
-            </div>
-          </motion.div>
-        </AnimatePresence>
-        <p style={{
-          ...mono, fontSize: 11.5, color: "var(--text-muted)",
-          letterSpacing: "0.2em", marginTop: 18, textAlign: "right",
+            </motion.div>
+          </AnimatePresence>
+        </div>
+
+        <div style={{
+          display: "flex", flexDirection: "column", alignItems: "flex-end",
+          gap: 6, flexShrink: 0,
         }}>
-          Fig. 02.1 · hover any stage to see where it breaks
-        </p>
+          <span style={{ ...mono, fontSize: 11, color: "var(--text-muted)", letterSpacing: "0.22em" }}>
+            Total lost
+          </span>
+          <span style={{
+            fontFamily: serif, fontWeight: 700,
+            fontSize: "clamp(30px, 2.6vw, 38px)",
+            color: arko.dark, letterSpacing: "-0.02em", lineHeight: 1,
+          }}>
+            6–8 hrs
+          </span>
+          <span style={{ ...mono, fontSize: 11, color: "var(--text-muted)", letterSpacing: "0.18em" }}>
+            per project
+          </span>
+        </div>
       </div>
     </div>
   );
