@@ -2,8 +2,8 @@ import { motion, AnimatePresence, useScroll, useSpring, useInView, useMotionValu
 import type { MotionValue } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
-import { ClockIcon as Clock, QuotesIcon as Quotes, DeviceMobileCameraIcon as DeviceMobileCamera, ApertureIcon as Aperture, LightbulbFilamentIcon as LightbulbFilament, CheckCircleIcon as CheckCircle, UsersThreeIcon as UsersThree, SparkleIcon as Sparkle, PushPinIcon as PushPin, CubeIcon as Cube, CompassIcon as Compass, ArrowUpIcon as ArrowUp, MicrophoneIcon as Microphone, ChatCircleDotsIcon as ChatCircleDots, EyeIcon as Eye, EnvelopeSimpleIcon as Envelope, SquaresFourIcon as SquaresFour, FolderOpenIcon as FolderOpen, ClipboardTextIcon as ClipboardText } from "@phosphor-icons/react";
-import { getAdjacentProjects } from "../data/projects";
+import { ClockIcon as Clock, QuotesIcon as Quotes, DeviceMobileCameraIcon as DeviceMobileCamera, ApertureIcon as Aperture, LightbulbFilamentIcon as LightbulbFilament, CheckCircleIcon as CheckCircle, UsersThreeIcon as UsersThree, SparkleIcon as Sparkle, PushPinIcon as PushPin, CubeIcon as Cube, CompassIcon as Compass, ArrowUpIcon as ArrowUp, ArrowLeftIcon as ArrowLeft, ArrowRightIcon as ArrowRight, MicrophoneIcon as Microphone, ChatCircleDotsIcon as ChatCircleDots, EyeIcon as Eye, EnvelopeSimpleIcon as Envelope, SquaresFourIcon as SquaresFour, FolderOpenIcon as FolderOpen, ClipboardTextIcon as ClipboardText } from "@phosphor-icons/react";
+import { getAdjacentProjects, type Project } from "../data/projects";
 
 /* ── Arko brand palette (scoped to this page only) ─────────────── */
 const arko = {
@@ -2009,12 +2009,172 @@ function ArEditorStepper({
 }
 
 /* ══════════════════════════════════════════════════════════════════
+   NAV CARD — editorial prev/next panel
+══════════════════════════════════════════════════════════════════ */
+function NavCard({ project, direction }: { project: Project; direction: "prev" | "next" }) {
+  const [hover, setHover] = useState(false);
+  const isPrev = direction === "prev";
+  const Arrow = isPrev ? ArrowLeft : ArrowRight;
+  const accent = `hsl(${project.accentHue}, 38%, 48%)`;
+
+  return (
+    <Link
+      to={`/work/${project.slug}`}
+      onClick={() => window.scrollTo({ top: 0, left: 0, behavior: "auto" })}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      style={{
+        position: "relative",
+        textDecoration: "none",
+        display: "block",
+        padding: "clamp(32px, 3.6vw, 52px) clamp(28px, 3vw, 44px)",
+        background: "var(--bg-primary)",
+        overflow: "hidden",
+        textAlign: isPrev ? "left" : "right",
+        transition: "background-color 320ms ease-out",
+      }}
+    >
+      {/* Accent sweep — colored tint appears from the inbound edge on hover */}
+      <span
+        aria-hidden
+        style={{
+          position: "absolute",
+          inset: 0,
+          background: `linear-gradient(${isPrev ? "90deg" : "270deg"}, ${accent}14 0%, transparent 65%)`,
+          opacity: hover ? 1 : 0,
+          transition: "opacity 380ms ease-out",
+          pointerEvents: "none",
+        }}
+      />
+      {/* Top rail that slides in from the direction edge */}
+      <span
+        aria-hidden
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          height: 2,
+          background: accent,
+          transformOrigin: isPrev ? "left center" : "right center",
+          transform: hover ? "scaleX(1)" : "scaleX(0)",
+          transition: "transform 420ms cubic-bezier(0.16, 1, 0.3, 1)",
+        }}
+      />
+
+      <div style={{ position: "relative", display: "flex", flexDirection: "column", gap: 20 }}>
+        {/* Direction label + arrow */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 12,
+            justifyContent: isPrev ? "flex-start" : "flex-end",
+          }}
+        >
+          {isPrev && (
+            <motion.span
+              animate={{ x: hover ? -4 : 0 }}
+              transition={{ type: "spring", stiffness: 260, damping: 20 }}
+              style={{ display: "inline-flex", color: hover ? accent : "var(--text-muted)", transition: "color 260ms ease-out" }}
+            >
+              <Arrow size={18} weight="regular" />
+            </motion.span>
+          )}
+          <span style={{ ...mono, fontSize: 12, color: "var(--text-muted)", letterSpacing: "0.22em", fontWeight: 600 }}>
+            {isPrev ? "Previous case" : "Next case"}
+          </span>
+          {!isPrev && (
+            <motion.span
+              animate={{ x: hover ? 4 : 0 }}
+              transition={{ type: "spring", stiffness: 260, damping: 20 }}
+              style={{ display: "inline-flex", color: hover ? accent : "var(--text-muted)", transition: "color 260ms ease-out" }}
+            >
+              <Arrow size={18} weight="regular" />
+            </motion.span>
+          )}
+        </div>
+
+        {/* Project title */}
+        <p
+          style={{
+            fontFamily: serif,
+            fontWeight: 700,
+            fontSize: "clamp(34px, 3.6vw, 52px)",
+            letterSpacing: "-0.03em",
+            lineHeight: 1.02,
+            color: hover ? accent : "var(--text-primary)",
+            transition: "color 280ms ease-out",
+            margin: 0,
+          }}
+        >
+          {project.title}
+        </p>
+
+        {/* Tagline */}
+        <p
+          style={{
+            fontFamily: sans,
+            fontSize: "clamp(15px, 1.1vw, 17px)",
+            lineHeight: 1.55,
+            color: "var(--text-secondary)",
+            maxWidth: 460,
+            margin: 0,
+            marginLeft: isPrev ? 0 : "auto",
+          }}
+        >
+          {project.subtitle}
+        </p>
+
+        {/* CTA */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 10,
+            marginTop: 8,
+            justifyContent: isPrev ? "flex-start" : "flex-end",
+          }}
+        >
+          <span
+            style={{
+              ...mono,
+              fontSize: 11,
+              letterSpacing: "0.24em",
+              fontWeight: 700,
+              color: hover ? accent : "var(--text-primary)",
+              transition: "color 260ms ease-out",
+            }}
+          >
+            View case study
+          </span>
+          <span
+            aria-hidden
+            style={{
+              display: "inline-block",
+              width: hover ? 36 : 20,
+              height: 1,
+              background: hover ? accent : "var(--text-muted)",
+              transition: "width 320ms cubic-bezier(0.16, 1, 0.3, 1), background-color 260ms ease-out",
+            }}
+          />
+        </div>
+      </div>
+    </Link>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════════════
    PAGE
 ══════════════════════════════════════════════════════════════════ */
 export default function ArkoCase() {
   const adjacent = getAdjacentProjects("arko");
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, { stiffness: 200, damping: 30 });
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const [showTop, setShowTop] = useState(false);
   useEffect(() => {
@@ -3123,46 +3283,35 @@ export default function ArkoCase() {
       </section>
 
       {/* ══════════════════════════════════════════════════════════════
-          NAVIGATION — prev / next
+          NAVIGATION — prev / next · editorial cards
       ══════════════════════════════════════════════════════════════ */}
-      <div className="max-w-7xl mx-auto px-6 md:px-10">
-        <div className="flex flex-wrap justify-between items-center gap-6"
-          style={{ paddingTop: 40, paddingBottom: 72, borderTop: "1px solid var(--border)" }}>
-          {adjacent.prev ? (
-            <Link to={`/work/${adjacent.prev.slug}`}
-              style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 12, maxWidth: "45%" }}>
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style={{ flexShrink: 0 }}>
-                <path d="M13 8H3M7 4L3 8l4 4" stroke="var(--text-muted)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-              <div>
-                <p style={{ ...mono, fontSize: 11, color: "var(--text-secondary)", marginBottom: 6, letterSpacing: "0.18em" }}>Previous</p>
-                <p style={{ fontFamily: serif, fontSize: "clamp(18px, 2vw, 22px)", color: "var(--text-secondary)", transitionProperty: "color", transitionDuration: "150ms" }}
-                  onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = "var(--text-primary)")}
-                  onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = "var(--text-secondary)")}>
-                  {adjacent.prev.title}
-                </p>
-              </div>
-            </Link>
-          ) : <div />}
+      <section style={{ padding: "clamp(64px, 8vw, 104px) 0", borderTop: "1px solid var(--border)" }}>
+        <div className="max-w-7xl mx-auto px-6 md:px-10">
+          <div style={{ display: "flex", alignItems: "baseline", gap: 14, marginBottom: 36 }}>
+            <span aria-hidden style={{ width: 3, height: 14, background: arko.primary }} />
+            <p style={{ ...mono, fontSize: 12, color: arko.dark, letterSpacing: "0.22em", fontWeight: 600 }}>
+              More case studies
+            </p>
+          </div>
 
-          {adjacent.next ? (
-            <Link to={`/work/${adjacent.next.slug}`}
-              style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 12, maxWidth: "45%", marginLeft: "auto" }}>
-              <div style={{ textAlign: "right" }}>
-                <p style={{ ...mono, fontSize: 11, color: "var(--text-secondary)", marginBottom: 6, letterSpacing: "0.18em" }}>Next</p>
-                <p style={{ fontFamily: serif, fontSize: "clamp(18px, 2vw, 22px)", color: "var(--text-secondary)", transitionProperty: "color", transitionDuration: "150ms" }}
-                  onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = "var(--text-primary)")}
-                  onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = "var(--text-secondary)")}>
-                  {adjacent.next.title}
-                </p>
-              </div>
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style={{ flexShrink: 0 }}>
-                <path d="M3 8h10M9 4l4 4-4 4" stroke="var(--text-muted)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </Link>
-          ) : <div />}
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: adjacent.prev && adjacent.next ? "1fr 1fr" : "1fr",
+              gap: 1,
+              background: "var(--border)",
+              border: "1px solid var(--border)",
+            }}
+          >
+            {adjacent.prev && (
+              <NavCard project={adjacent.prev} direction="prev" />
+            )}
+            {adjacent.next && (
+              <NavCard project={adjacent.next} direction="next" />
+            )}
+          </div>
         </div>
-      </div>
+      </section>
 
       {/* ══════════════════════════════════════════════════════════════
           Back to top — floating action, bottom-right
