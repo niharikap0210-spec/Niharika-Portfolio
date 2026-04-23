@@ -1387,38 +1387,6 @@ function ScanFlowStepper({
           gap: 18,
         }}
       >
-        {/* Top · viewfinder label strip */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            gap: 14,
-            paddingBottom: 12,
-            borderBottom: "0.75px solid var(--border)",
-          }}
-        >
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <span
-              aria-hidden
-              style={{
-                width: 6,
-                height: 6,
-                borderRadius: "50%",
-                background: arko.primary,
-                boxShadow: `0 0 0 3px ${arko.subtle}`,
-              }}
-              className="status-pulse"
-            />
-            <span style={{ ...mono, fontSize: 11, color: "var(--text-primary)", letterSpacing: "0.22em", fontWeight: 700 }}>
-              Active Spatial Scan
-            </span>
-          </div>
-          <span style={{ ...mono, fontSize: 10, color: "var(--text-muted)", letterSpacing: "0.22em" }}>
-            Grey Residence · Room 02
-          </span>
-        </div>
-
         {/* Main canvas — phone + flanking chips */}
         <div
           style={{
@@ -1581,39 +1549,36 @@ function ScanFlowStepper({
           </div>
         </div>
 
-        {/* Bottom · scan spec strip */}
+        {/* Bottom · viewfinder label strip */}
         <div
           style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(4, 1fr)",
-            borderTop: "0.75px solid var(--border)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 14,
             paddingTop: 14,
+            borderTop: "0.75px solid var(--border)",
           }}
         >
-          {[
-            { k: "Area",      v: "8.8 m²" },
-            { k: "Depth pts", v: "7,696" },
-            { k: "Ceiling",   v: "3.1 m" },
-            { k: "Device",    v: "LiDAR" },
-          ].map((s, i) => (
-            <div
-              key={i}
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <span
+              aria-hidden
               style={{
-                padding: "0 10px",
-                borderLeft: i === 0 ? "none" : "0.75px solid var(--border-light)",
-                display: "flex",
-                flexDirection: "column",
-                gap: 4,
+                width: 6,
+                height: 6,
+                borderRadius: "50%",
+                background: arko.primary,
+                boxShadow: `0 0 0 3px ${arko.subtle}`,
               }}
-            >
-              <span style={{ ...mono, fontSize: 9, color: "var(--text-muted)", letterSpacing: "0.2em" }}>
-                {s.k}
-              </span>
-              <span style={{ fontFamily: serif, fontWeight: 700, fontSize: 16, color: "var(--text-primary)", letterSpacing: "-0.015em", lineHeight: 1.1 }}>
-                {s.v}
-              </span>
-            </div>
-          ))}
+              className="status-pulse"
+            />
+            <span style={{ ...mono, fontSize: 11, color: "var(--text-primary)", letterSpacing: "0.22em", fontWeight: 700 }}>
+              Active Spatial Scan
+            </span>
+          </div>
+          <span style={{ ...mono, fontSize: 10, color: "var(--text-muted)", letterSpacing: "0.22em" }}>
+            Grey Residence · Room 02
+          </span>
         </div>
       </div>
     </div>
