@@ -563,15 +563,14 @@ function HeroVisual() {
       }} />
 
       <motion.img
-        src="/shelfie/shopper-confused.webp"
+        src="/shelfie/shopper-confused.png"
         alt="A shopper in the aisle puzzling over a product label"
         animate={{ y: [0, -8, 0] }}
         transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
         style={{
           position: "relative", zIndex: 1,
           width: "min(100%, 460px)", height: "auto", display: "block",
-          mixBlendMode: "multiply",
-          filter: "drop-shadow(0 22px 40px rgba(31,95,92,0.18))",
+          filter: "drop-shadow(0 22px 40px rgba(31,95,92,0.20))",
         }}
       />
     </motion.div>
