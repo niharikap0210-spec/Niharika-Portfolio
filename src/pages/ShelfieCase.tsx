@@ -5,7 +5,6 @@ import {
   ArrowUpIcon as ArrowUp,
   ArrowLeftIcon as ArrowLeft,
   ArrowRightIcon as ArrowRight,
-  QuotesIcon as Quotes,
   EyeIcon as Eye,
   TimerIcon as Timer,
   BrainIcon as Brain,
@@ -29,7 +28,6 @@ import {
   GearIcon as Gear,
   TargetIcon as Target,
   PlusIcon as Plus,
-  WaveformIcon as Waveform,
 } from "@phosphor-icons/react";
 import type { Icon } from "@phosphor-icons/react";
 import { getAdjacentProjects } from "../data/projects";
@@ -634,34 +632,6 @@ type Voice = {
   stat: string;
 };
 
-function WaveformBars({ active }: { active: boolean }) {
-  const bars = [0.4, 0.7, 0.9, 0.55, 0.85, 0.45, 0.7, 0.95, 0.6, 0.8, 0.5, 0.7, 0.4, 0.6, 0.3];
-  return (
-    <div style={{ display: "flex", alignItems: "center", gap: 3, height: 22 }}>
-      {bars.map((h, i) => (
-        <motion.span
-          key={i}
-          aria-hidden
-          animate={active
-            ? { scaleY: [h, h * 0.5, h * 1.1, h * 0.7, h], opacity: 1 }
-            : { scaleY: h * 0.5, opacity: 0.55 }}
-          transition={active
-            ? { duration: 1.6, repeat: Infinity, ease: "easeInOut", delay: i * 0.06 }
-            : { duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-          style={{
-            width: 2.5,
-            height: 22,
-            background: sh.primary,
-            display: "block",
-            transformOrigin: "center",
-            borderRadius: 1,
-          }}
-        />
-      ))}
-    </div>
-  );
-}
-
 function VoicesPanel({ voices }: { voices: Voice[] }) {
   const [active, setActive] = useState(0);
   const current = voices[active];
@@ -681,107 +651,64 @@ function VoicesPanel({ voices }: { voices: Voice[] }) {
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-0" style={{
       background: "var(--bg-elevated)",
       border: `1px solid ${sh.subtle}`,
-      borderTop: `2px solid ${sh.primary}`,
     }}>
       {/* LEFT - hero quote stage */}
-      <div className="lg:col-span-7" style={{
+      <div className="lg:col-span-8" style={{
         position: "relative",
-        padding: "36px 40px 32px",
+        padding: "40px 44px",
         borderRight: `1px solid ${sh.subtle}`,
-        minHeight: 460,
-        display: "flex", flexDirection: "column",
+        minHeight: 320,
+        display: "flex", flexDirection: "column", justifyContent: "center",
       }}>
-        {/* Top strip */}
-        <div style={{
-          display: "flex", justifyContent: "space-between", alignItems: "center",
-          marginBottom: 28,
-        }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <Waveform size={16} color={sh.primary} weight="bold" />
-            <p style={{ ...mono, fontSize: 10, letterSpacing: "0.24em", color: sh.primary, fontWeight: 700 }}>
-              FIELD RECORDING · {String(active + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
-            </p>
-          </div>
-          <WaveformBars active />
-        </div>
-
-        {/* Cross-fading quote + meta + finding */}
         <AnimatePresence mode="wait">
           <motion.div
             key={active}
-            initial={{ opacity: 0, y: 10 }}
+            initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-            style={{ display: "flex", flexDirection: "column", flex: 1 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
           >
-            <Quotes size={36} color={sh.primary} weight="fill" style={{ opacity: 0.35, marginBottom: 14 }} />
+            <p style={{
+              ...mono, fontSize: 10, letterSpacing: "0.24em",
+              color: sh.primary, fontWeight: 700,
+              marginBottom: 20,
+            }}>
+              {String(active + 1).padStart(2, "0")} · {current.theme.toUpperCase()}
+            </p>
+
             <blockquote style={{
               fontFamily: serif, fontStyle: "italic",
-              fontSize: "clamp(24px, 2.4vw, 34px)",
-              lineHeight: 1.35,
+              fontSize: "clamp(22px, 2.1vw, 28px)",
+              lineHeight: 1.4,
               color: "var(--text-primary)",
               letterSpacing: "-0.01em",
-              marginBottom: 28,
-              maxWidth: "44ch",
+              margin: 0,
+              maxWidth: "48ch",
             }}>
               &ldquo;{current.quote}&rdquo;
             </blockquote>
-
-            {/* Participant attribution - single slim line */}
-            <p style={{
-              ...mono, fontSize: 11, letterSpacing: "0.2em",
-              color: sh.muted, fontWeight: 700,
-              marginBottom: 24,
-            }}>
-              {current.meta.id} · AGE {current.meta.age} · {current.meta.role.toUpperCase()}
-            </p>
-
-            {/* Finding + stat - slim text-only band */}
-            <div style={{
-              marginTop: "auto",
-              paddingTop: 22,
-              borderTop: `1px solid ${sh.subtle}`,
-            }}>
-              <p style={{ ...mono, fontSize: 10, letterSpacing: "0.22em", color: sh.primary, fontWeight: 700, marginBottom: 8 }}>
-                FINDING · {current.theme.toUpperCase()}
-              </p>
-              <p style={{ fontFamily: serif, fontSize: 19, lineHeight: 1.4, fontWeight: 700, color: "var(--text-primary)", marginBottom: 8 }}>
-                {current.finding}
-              </p>
-              <p style={{ ...mono, fontSize: 11, letterSpacing: "0.16em", color: sh.muted }}>
-                {current.stat}
-              </p>
-            </div>
           </motion.div>
         </AnimatePresence>
       </div>
 
       {/* RIGHT - theme list */}
       <div
-        className="lg:col-span-5"
+        className="lg:col-span-4"
         role="tablist"
         aria-label="Voices from the aisle"
         tabIndex={0}
         onKeyDown={onKeyDown}
         style={{
-          padding: "20px 0",
           background: sh.surface,
           outline: "none",
           position: "relative",
+          display: "flex", flexDirection: "column",
         }}
       >
-        <p style={{
-          ...mono, fontSize: 10, letterSpacing: "0.24em", color: sh.muted, fontWeight: 700,
-          padding: "10px 26px 14px",
-        }}>
-          ALL VOICES · N = {total}
-        </p>
-
         {voices.map((v, i) => {
           const isActive = i === active;
           return (
-            <motion.button
+            <button
               key={i}
               type="button"
               role="tab"
@@ -789,28 +716,20 @@ function VoicesPanel({ voices }: { voices: Voice[] }) {
               onMouseEnter={() => setActive(i)}
               onFocus={() => setActive(i)}
               onClick={() => setActive(i)}
-              animate={{
-                backgroundColor: isActive ? "var(--bg-elevated)" : "rgba(0,0,0,0)",
-              }}
-              whileHover={{ x: isActive ? 0 : 2 }}
-              transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
               style={{
-                display: "grid",
-                gridTemplateColumns: "1fr auto",
-                gap: 16,
                 width: "100%",
-                padding: "20px 26px",
+                padding: "22px 26px",
                 textAlign: "left",
                 border: "none",
-                borderTop: i === 0 ? `1px solid ${sh.subtle}` : "none",
-                borderBottom: `1px solid ${sh.subtle}`,
+                borderBottom: i === total - 1 ? "none" : `1px solid ${sh.subtle}`,
+                background: isActive ? "var(--bg-elevated)" : "transparent",
                 cursor: "pointer",
                 position: "relative",
                 outline: "none",
-                alignItems: "center",
+                flex: 1,
+                transition: "background-color 0.32s ease",
               }}
             >
-              {/* Active indicator bar */}
               {isActive && (
                 <motion.span
                   layoutId="voice-active-bar"
@@ -825,30 +744,16 @@ function VoicesPanel({ voices }: { voices: Voice[] }) {
                 />
               )}
 
-              <div style={{ minWidth: 0 }}>
-                <p style={{ ...mono, fontSize: 9.5, letterSpacing: "0.22em", color: isActive ? sh.primary : sh.muted, fontWeight: 700, marginBottom: 6 }}>
-                  {String(i + 1).padStart(2, "0")} · {v.theme.toUpperCase()}
-                </p>
-                <p style={{
-                  fontFamily: serif, fontStyle: "italic",
-                  fontSize: 15, lineHeight: 1.4,
-                  color: isActive ? "var(--text-primary)" : "var(--text-secondary)",
-                  margin: 0,
-                  whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
-                }}>
-                  &ldquo;{v.quote.split(".")[0]}&hellip;&rdquo;
-                </p>
-              </div>
-
-              <motion.div
-                animate={{ x: isActive ? 0 : -4, opacity: isActive ? 1 : 0.35 }}
-                transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
-                style={{ color: sh.primary, display: "flex" }}
-                aria-hidden
-              >
-                <ArrowRight size={18} weight={isActive ? "bold" : "regular"} />
-              </motion.div>
-            </motion.button>
+              <p style={{
+                ...mono, fontSize: 11, letterSpacing: "0.22em",
+                color: isActive ? sh.primary : sh.muted,
+                fontWeight: 700,
+                margin: 0,
+                transition: "color 0.32s ease",
+              }}>
+                {String(i + 1).padStart(2, "0")} · {v.theme.toUpperCase()}
+              </p>
+            </button>
           );
         })}
       </div>
