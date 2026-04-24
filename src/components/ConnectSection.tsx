@@ -12,9 +12,7 @@ const mono: React.CSSProperties = {
 const SPRING = { type: "spring" as const, stiffness: 260, damping: 24, mass: 0.6 };
 
 interface Contact {
-  index: string;
   label: string;
-  value: string;
   display: string;
   href: string;
   icon: Icon;
@@ -23,27 +21,21 @@ interface Contact {
 
 const contacts: Contact[] = [
   {
-    index: "01",
     label: "Email",
-    value: "niharikap0210@gmail.com",
     display: "niharikap0210@gmail.com",
     href: "mailto:niharikap0210@gmail.com",
     icon: EnvelopeSimple,
     external: false,
   },
   {
-    index: "02",
     label: "LinkedIn",
-    value: "in/niharika-pundlik",
     display: "niharika-pundlik",
     href: "https://www.linkedin.com/in/niharika-pundlik-63a9a1288/",
     icon: LinkedinLogo,
     external: true,
   },
   {
-    index: "03",
     label: "Resume",
-    value: "Download PDF",
     display: "View PDF",
     href: "https://drive.google.com/file/d/1WbopauZ0xwmOnLNuEb1XZX5TmzxQCA6K/view?usp=sharing",
     icon: FileText,
@@ -100,10 +92,11 @@ function CursorRevealGrid({
   );
 }
 
-/* ─── Single contact card ────────────────────────────────────────── */
+/* ─── Single contact row ─────────────────────────────────────────── */
 function ContactCard({ contact, index }: { contact: Contact; index: number }) {
   const [hovered, setHovered] = useState(false);
   const IconComp = contact.icon;
+  const accent = "#B5924C";
 
   return (
     <motion.a
@@ -112,164 +105,81 @@ function ContactCard({ contact, index }: { contact: Contact; index: number }) {
       rel={contact.external ? "noopener noreferrer" : undefined}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      initial={{ opacity: 0, y: 24 }}
+      initial={{ opacity: 0, y: 16 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.55, delay: 0.1 + index * 0.08, ease: [0.16, 1, 0.3, 1] }}
-      animate={{ y: hovered ? -6 : 0 }}
-      className="group relative block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
+      transition={{ duration: 0.55, delay: 0.08 + index * 0.08, ease: [0.16, 1, 0.3, 1] }}
+      className="group relative flex items-center justify-between focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
       style={{
         textDecoration: "none",
         color: "inherit",
-        backgroundColor: "var(--bg-elevated)",
-        border: "1px solid var(--border)",
-        borderColor: hovered ? "#B5924C88" : "var(--border)",
-        padding: 24,
-        transitionProperty: "border-color, box-shadow",
-        transitionDuration: "320ms",
-        transitionTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)",
-        boxShadow: hovered
-          ? "0 2px 6px rgba(0,0,0,0.04), 0 18px 40px rgba(181,146,76,0.14)"
-          : "0 1px 3px rgba(0,0,0,0.03), 0 6px 20px rgba(0,0,0,0.025)",
+        padding: "26px 4px",
+        borderTop: "0.75px solid var(--border)",
+        gap: 24,
       }}
     >
-      {/* Corner construction ticks - reveal on hover */}
-      <CornerTicks hovered={hovered} />
-
-      {/* Inner dashed frame */}
-      <div
-        aria-hidden
-        style={{
-          position: "absolute",
-          inset: 8,
-          border: `0.75px dashed ${hovered ? "#B5924C55" : "var(--construction)"}`,
-          pointerEvents: "none",
-          transitionProperty: "border-color",
-          transitionDuration: "320ms",
-        }}
-      />
-
-      <div style={{ position: "relative", zIndex: 1 }}>
-        {/* Top row: index + external-arrow */}
-        <div className="flex items-center justify-between" style={{ marginBottom: 28 }}>
-          <span
-            style={{
-              ...mono,
-              fontSize: 10,
-              color: hovered ? "#B5924C" : "var(--text-muted)",
-              letterSpacing: "0.2em",
-              transitionProperty: "color",
-              transitionDuration: "320ms",
-            }}
-          >
-            {contact.index} / 03
-          </span>
-          <motion.div
-            animate={{ x: hovered ? 3 : 0, y: hovered ? -3 : 0, rotate: hovered ? 0 : 0 }}
-            transition={SPRING}
-            style={{ color: hovered ? "#B5924C" : "var(--text-muted)" }}
-          >
-            <ArrowUpRight size={18} weight="regular" />
-          </motion.div>
-        </div>
-
-        {/* Icon */}
-        <motion.div
-          animate={{ scale: hovered ? 1.05 : 1 }}
-          transition={SPRING}
-          style={{
-            display: "inline-flex",
-            padding: 14,
-            border: `0.75px solid ${hovered ? "#B5924C66" : "var(--border)"}`,
-            backgroundColor: hovered ? "#B5924C10" : "var(--bg-primary)",
-            marginBottom: 20,
-            transitionProperty: "background-color, border-color",
-            transitionDuration: "320ms",
-          }}
-        >
-          <IconComp
-            size={24}
-            weight={hovered ? "bold" : "regular"}
-            color={hovered ? "#B5924C" : "var(--text-primary)"}
-          />
-        </motion.div>
-
-        {/* Label */}
-        <p
+      {/* Left: icon + label */}
+      <div className="flex items-center" style={{ gap: 20, minWidth: 0 }}>
+        <IconComp
+          size={20}
+          weight="regular"
+          color={hovered ? accent : "var(--text-muted)"}
+          style={{ transition: "color 200ms", flexShrink: 0 }}
+        />
+        <span
           style={{
             ...mono,
-            fontSize: 9,
+            fontSize: 10,
             color: "var(--text-muted)",
             letterSpacing: "0.22em",
-            marginBottom: 8,
+            width: 90,
+            flexShrink: 0,
           }}
         >
           {contact.label}
-        </p>
-
-        {/* Value */}
-        <p
+        </span>
+        <span
           style={{
-            fontFamily: "'Playfair Display', Georgia, serif",
-            fontSize: "clamp(20px, 1.8vw, 24px)",
-            fontWeight: 600,
-            color: "var(--text-primary)",
-            letterSpacing: "-0.02em",
-            lineHeight: 1.2,
-            margin: 0,
-            wordBreak: "break-word",
-          }}
-        >
-          {contact.display}
-        </p>
-
-        {/* Animated underline */}
-        <div
-          aria-hidden
-          style={{
-            marginTop: 18,
-            height: 1,
-            backgroundColor: "var(--border)",
-            position: "relative",
+            minWidth: 0,
             overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+            display: "block",
+            paddingBottom: 2,
           }}
         >
-          <motion.div
-            initial={false}
-            animate={{ scaleX: hovered ? 1 : 0 }}
-            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          <span
             style={{
-              position: "absolute",
-              inset: 0,
-              backgroundColor: "#B5924C",
-              transformOrigin: "left center",
+              fontFamily: "'Playfair Display', Georgia, serif",
+              fontSize: "clamp(22px, 2.2vw, 30px)",
+              fontWeight: 500,
+              color: hovered ? accent : "var(--text-primary)",
+              letterSpacing: "-0.02em",
+              lineHeight: 1.35,
+              transition: "color 200ms",
+              display: "inline-block",
             }}
-          />
-        </div>
+          >
+            {contact.display}
+          </span>
+        </span>
       </div>
-    </motion.a>
-  );
-}
 
-/* ─── Corner ticks that reveal on hover ──────────────────────────── */
-function CornerTicks({ hovered }: { hovered: boolean }) {
-  const base: React.CSSProperties = {
-    position: "absolute",
-    width: 10,
-    height: 10,
-    pointerEvents: "none",
-    transitionProperty: "opacity",
-    transitionDuration: "320ms",
-    opacity: hovered ? 0.9 : 0,
-  };
-  const stroke = "0.75px solid #B5924C";
-  return (
-    <>
-      <span aria-hidden style={{ ...base, top: 3, left: 3, borderTop: stroke, borderLeft: stroke }} />
-      <span aria-hidden style={{ ...base, top: 3, right: 3, borderTop: stroke, borderRight: stroke }} />
-      <span aria-hidden style={{ ...base, bottom: 3, left: 3, borderBottom: stroke, borderLeft: stroke }} />
-      <span aria-hidden style={{ ...base, bottom: 3, right: 3, borderBottom: stroke, borderRight: stroke }} />
-    </>
+      {/* Right: arrow */}
+      <motion.span
+        aria-hidden
+        animate={{ x: hovered ? 6 : 0, y: hovered ? -6 : 0 }}
+        transition={SPRING}
+        style={{
+          display: "inline-flex",
+          color: hovered ? accent : "var(--text-muted)",
+          transition: "color 200ms",
+          flexShrink: 0,
+        }}
+      >
+        <ArrowUpRight size={22} weight="regular" />
+      </motion.span>
+    </motion.a>
   );
 }
 
@@ -408,7 +318,6 @@ export default function ConnectSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-40px" }}
             transition={{ duration: 0.7, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-            style={{ display: "flex", flexDirection: "column", gap: 24 }}
           >
             <p
               style={{
@@ -424,38 +333,11 @@ export default function ConnectSection() {
               Open to full-time Product Design roles, thoughtful side projects, and
               conversations about turning architectural thinking into digital products.
             </p>
-
-            {/* Status strip */}
-            <div className="flex items-center gap-3">
-              <span
-                aria-hidden
-                className="status-pulse"
-                style={{
-                  width: 9,
-                  height: 9,
-                  borderRadius: "50%",
-                  backgroundColor: "var(--status-green)",
-                  border: "1px solid #B5924C",
-                  display: "inline-block",
-                  flexShrink: 0,
-                }}
-              />
-              <span
-                style={{
-                  ...mono,
-                  fontSize: 10,
-                  color: "var(--text-secondary)",
-                  letterSpacing: "0.2em",
-                }}
-              >
-                Available · Virginia, US · GMT-5
-              </span>
-            </div>
           </motion.div>
         </div>
 
-        {/* Contact cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Contact list */}
+        <div style={{ borderBottom: "0.75px solid var(--border)" }}>
           {contacts.map((c, i) => (
             <ContactCard key={c.label} contact={c} index={i} />
           ))}
