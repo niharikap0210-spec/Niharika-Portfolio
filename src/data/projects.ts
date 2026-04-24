@@ -86,7 +86,7 @@ export const projects: Project[] = [
     tags: ["UX RESEARCH", "SERVICE DESIGN", "SMB", "CROSS-CULTURAL"],
     accentHue: "222",
     gradient: "linear-gradient(135deg, #EDF0F7 0%, #B9C4DC 100%)",
-    overview: "LocalLift is a mentorship and digital-tools platform built in collaboration with graduate students from Namibia University. It connects small business owners with industry-specific mentors, peer networks, and localised resources — reframing digital adoption as a supported, social act rather than a solo one.",
+    overview: "LocalLift is a mentorship and digital-tools platform for small business owners. It connects them with industry-specific mentors, peer networks, and localised resources — reframing digital adoption as a supported, social act rather than a solo one.",
     problem: "Most SMB-facing platforms are either too technical, too abstract, or too generic to help a specific owner in a specific market make a specific decision. Small business owners need mentorship grounded in their industry and geography, not enterprise software retrofitted for them.",
     problemStats: [
       "Digital tools feel built for enterprise scale, not for a single-location small business",

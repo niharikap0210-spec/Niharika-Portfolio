@@ -19,7 +19,6 @@ import {
   StorefrontIcon as Storefront,
   GlobeIcon as Globe,
   TargetIcon as Target,
-  GraduationCapIcon as GraduationCap,
   PencilSimpleIcon as PencilSimple,
   SparkleIcon as Sparkle,
 } from "@phosphor-icons/react";
@@ -797,21 +796,21 @@ export default function LocalLiftCase() {
             <div className="lg:col-span-7">
               <Reveal>
                 <h2 style={{ ...t.h2, marginBottom: 22 }}>
-                  A graduate HCI brief,
-                  <span style={{ fontStyle: "italic", color: ll.primary }}> grounded in real owners across two continents.</span>
+                  A mentorship platform,
+                  <span style={{ fontStyle: "italic", color: ll.primary }}> grounded in real owners across two markets.</span>
                 </h2>
               </Reveal>
               <Reveal delay={0.1}>
                 <p style={{ ...t.bodyLg, maxWidth: 620, marginBottom: 20 }}>
-                  LocalLift was a ten-week graduate project at Georgia Tech, run in collaboration with a cohort
-                  at the University of Namibia. Our team of five spent the first three weeks in listening mode —
-                  reading the space, choosing the owner, and writing the question we actually wanted to answer.
+                  LocalLift sits at the intersection of two growth markets for small business — the US Southeast
+                  and Southern Africa. A five-person product team spent the first weeks of the build in listening
+                  mode: reading the space, choosing the owner, and writing the question we actually wanted to answer.
                 </p>
               </Reveal>
               <Reveal delay={0.18}>
                 <p style={{ ...t.bodyLg, maxWidth: 620 }}>
-                  The brief: <span style={{ color: "var(--text-primary)", fontWeight: 600 }}>design a service that
-                  helps a local small business grow digitally</span> — without flattening what made it local.
+                  The mandate: <span style={{ color: "var(--text-primary)", fontWeight: 600 }}>design a service
+                  that helps a local small business grow digitally</span> — without flattening what made it local.
                 </p>
               </Reveal>
             </div>
@@ -828,10 +827,10 @@ export default function LocalLiftCase() {
                   </p>
                   <div style={{ display: "grid", gap: 20 }}>
                     {([
-                      { icon: GraduationCap, k: "Setting",   v: "Graduate HCI · Georgia Tech" },
-                      { icon: Globe,         k: "Partner",   v: "University of Namibia cohort" },
-                      { icon: Storefront,    k: "Audience",  v: "Small business owners, early & growth stage" },
-                      { icon: Target,        k: "Objective", v: "Grow digitally without losing local character" },
+                      { icon: MapPin,     k: "Markets",   v: "US Southeast · Southern Africa" },
+                      { icon: Globe,      k: "Reach",     v: "Two-market research footprint" },
+                      { icon: Storefront, k: "Audience",  v: "Small business owners, early & growth stage" },
+                      { icon: Target,     k: "Objective", v: "Grow digitally without losing local character" },
                     ] as { icon: Icon; k: string; v: string }[]).map((f, i) => {
                       const I = f.icon;
                       return (
@@ -978,8 +977,8 @@ export default function LocalLiftCase() {
               <Reveal delay={0.1}>
                 <p style={{ ...t.bodyLg, maxWidth: 640 }}>
                   Three lenses: understand the owner's day, cluster what we heard across context, turn it into
-                  archetypes the team could design against. Namibian collaborators translated insight — literally
-                  and culturally — so patterns weren't just Atlanta-flavored.
+                  archetypes the team could design against. Local collaborators translated insight — literally
+                  and culturally — so patterns carried the texture of each market, not just one.
                 </p>
               </Reveal>
             </div>
