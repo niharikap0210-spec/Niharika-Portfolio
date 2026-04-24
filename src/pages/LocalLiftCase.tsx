@@ -1397,42 +1397,38 @@ export default function LocalLiftCase() {
 
           {/* Affinity output — narrative above, full-width plate below */}
           <div style={{ marginBottom: "clamp(56px, 6vw, 88px)" }}>
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start" style={{ marginBottom: "clamp(32px, 3.4vw, 48px)" }}>
-              <div className="lg:col-span-5">
-                <Reveal>
-                  <p style={{ ...t.eyebrow, marginBottom: 14 }}>AFFINITY · OUTPUT</p>
-                  <h3 style={{ ...t.h3 }}>Forty observations, four tensions.</h3>
-                </Reveal>
-              </div>
-              <div className="lg:col-span-7">
-                <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "grid", gap: 2 }}>
-                  {[
-                    "Mentorship must be industry-specific",
-                    "Tools must feel built for them",
-                    "Peer networks are missing infrastructure",
-                    "Local context outperforms generic advice",
-                  ].map((item, i) => (
-                    <motion.li
-                      key={i}
-                      initial={{ opacity: 0, x: -12 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.6, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
-                      style={{
-                        display: "grid", gridTemplateColumns: "auto 1fr", gap: 16, alignItems: "baseline",
-                        padding: "14px 0", borderBottom: `1px solid ${ll.line}`,
-                      }}
-                    >
-                      <span style={{ ...mono, fontSize: 11, color: ll.primary, letterSpacing: "0.22em", fontWeight: 700 }}>
-                        T·0{i + 1}
-                      </span>
-                      <span style={{ fontFamily: sans, fontSize: 16, color: "var(--text-primary)", lineHeight: 1.55, fontWeight: 500 }}>
-                        {item}
-                      </span>
-                    </motion.li>
-                  ))}
-                </ul>
-              </div>
+            <div style={{ maxWidth: 560, marginBottom: "clamp(32px, 3.4vw, 48px)" }}>
+              <Reveal>
+                <p style={{ ...t.eyebrow, marginBottom: 14 }}>AFFINITY · OUTPUT</p>
+                <h3 style={{ ...t.h3, marginBottom: 22 }}>Forty observations, four tensions.</h3>
+              </Reveal>
+              <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "grid", gap: 2 }}>
+                {[
+                  "Mentorship must be industry-specific",
+                  "Tools must feel built for them",
+                  "Peer networks are missing infrastructure",
+                  "Local context outperforms generic advice",
+                ].map((item, i) => (
+                  <motion.li
+                    key={i}
+                    initial={{ opacity: 0, x: -12 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
+                    style={{
+                      display: "grid", gridTemplateColumns: "auto 1fr", gap: 16, alignItems: "baseline",
+                      padding: "14px 0", borderBottom: `1px solid ${ll.line}`,
+                    }}
+                  >
+                    <span style={{ ...mono, fontSize: 11, color: ll.primary, letterSpacing: "0.22em", fontWeight: 700 }}>
+                      T·0{i + 1}
+                    </span>
+                    <span style={{ fontFamily: sans, fontSize: 16, color: "var(--text-primary)", lineHeight: 1.55, fontWeight: 500 }}>
+                      {item}
+                    </span>
+                  </motion.li>
+                ))}
+              </ul>
             </div>
 
             <Reveal delay={0.1}>
