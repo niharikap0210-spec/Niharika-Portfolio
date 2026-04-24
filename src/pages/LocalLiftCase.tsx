@@ -1570,9 +1570,9 @@ function ReflectionStepper() {
                 </span>
               </span>
 
-              <span style={{ display: "flex", flexDirection: "column", gap: 3 }}>
+              <span style={{ display: "flex", flexDirection: "column", gap: 5 }}>
                 <span style={{
-                  ...mono, fontSize: 9.5, letterSpacing: "0.22em",
+                  ...mono, fontSize: 11, letterSpacing: "0.22em",
                   fontWeight: 700,
                   color: on ? ll.primary : ll.muted,
                   transition: "color 180ms ease",
@@ -1581,8 +1581,8 @@ function ReflectionStepper() {
                 </span>
                 <span style={{
                   fontFamily: serif, fontWeight: 700,
-                  fontSize: 17, lineHeight: 1.25,
-                  letterSpacing: "-0.01em",
+                  fontSize: "clamp(19px, 1.5vw, 22px)", lineHeight: 1.25,
+                  letterSpacing: "-0.015em",
                   color: on ? "var(--text-primary)" : ll.muted,
                   transition: "color 180ms ease",
                 }}>
