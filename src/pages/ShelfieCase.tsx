@@ -2716,32 +2716,54 @@ export default function ShelfieCase() {
         </div>
       </section>
 
-      {/* Scroll-to-top */}
-      {showTop && (
-        <motion.button
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 12 }}
-          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          aria-label="Back to top"
-          style={{
-            position: "fixed", bottom: 32, right: 32, zIndex: 40,
-            width: 44, height: 44,
-            background: sh.primary, color: "#fff",
-            border: "none",
-            display: "flex", alignItems: "center", justifyContent: "center",
-            cursor: "pointer",
-            boxShadow: "0 2px 4px rgba(20,63,61,0.18), 0 12px 32px rgba(20,63,61,0.22)",
-            transitionProperty: "transform, box-shadow",
-            transitionDuration: "200ms",
-          }}
-          onMouseEnter={(e) => ((e.currentTarget as HTMLButtonElement).style.transform = "translateY(-2px)")}
-          onMouseLeave={(e) => ((e.currentTarget as HTMLButtonElement).style.transform = "translateY(0)")}
-          className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
-        >
-          <ArrowUp size={18} weight="regular" />
-        </motion.button>
-      )}
+      {/* ══════════════════════════════════════════════════════════════
+          Back to top — floating action, bottom-right
+      ══════════════════════════════════════════════════════════════ */}
+      <AnimatePresence>
+        {showTop && (
+          <motion.button
+            key="back-to-top"
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            aria-label="Back to top"
+            initial={{ opacity: 0, y: 12, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 12, scale: 0.9 }}
+            transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+            whileHover={{ y: -3 }}
+            whileTap={{ scale: 0.94 }}
+            style={{
+              position: "fixed",
+              right: "clamp(20px, 2.4vw, 32px)",
+              bottom: "clamp(20px, 2.4vw, 32px)",
+              zIndex: 60,
+              width: 52,
+              height: 52,
+              borderRadius: 999,
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 0,
+              border: `1px solid ${sh.primary}`,
+              background: "var(--bg-elevated)",
+              color: sh.primary,
+              cursor: "pointer",
+              boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 12px 28px rgba(31,95,92,0.18)",
+              transitionProperty: "background-color, color, border-color",
+              transitionDuration: "180ms",
+            }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLElement).style.backgroundColor = sh.primary;
+              (e.currentTarget as HTMLElement).style.color = "#fff";
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLElement).style.backgroundColor = "var(--bg-elevated)";
+              (e.currentTarget as HTMLElement).style.color = sh.primary;
+            }}
+          >
+            <ArrowUp size={20} weight="bold" color="currentColor" />
+          </motion.button>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 }
