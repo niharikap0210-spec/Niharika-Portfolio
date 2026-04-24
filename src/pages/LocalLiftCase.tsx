@@ -1437,6 +1437,318 @@ function PersonasSection() {
 }
 
 /* ══════════════════════════════════════════════════════════════════
+   REFLECTION STEPPER — interactive lesson walkthrough
+══════════════════════════════════════════════════════════════════ */
+type Lesson = {
+  num: string; tag: string; icon: Icon;
+  short: string; body: string; principle: string;
+};
+
+const LESSONS: Lesson[] = [
+  {
+    num: "01", tag: "L·01", icon: Path,
+    short: "Follow the owner, not the feature.",
+    body: "The design followed the owner's day. When an insight didn't fit one of the four themes, we didn't force it in. We held it and kept listening.",
+    principle: "User reality outranks feature ambition.",
+  },
+  {
+    num: "02", tag: "L·02", icon: Lightbulb,
+    short: "Small iterations compound.",
+    body: "Three focused rounds produced the outcome, not one heroic redesign. Each fix targeted a single friction and left the rest of the product alone.",
+    principle: "Ship the correction, not the rewrite.",
+  },
+  {
+    num: "03", tag: "L·03", icon: Handshake,
+    short: "Mentorship is infrastructure.",
+    body: "Peer networks and industry mentors turned the platform from a tool into a place. The tool's retention job is to keep the community open, not to replace it.",
+    principle: "The tool hosts the community. It isn't one.",
+  },
+  {
+    num: "04", tag: "L·04", icon: MapPin,
+    short: "Local context is a feature.",
+    body: "Generic advice reads as noise. Designing search and content around industry + city made the product feel like it knew the owner, because it did.",
+    principle: "Specificity is the loudest signal of care.",
+  },
+];
+
+function ReflectionStepper() {
+  const [active, setActive] = useState(0);
+  const lesson = LESSONS[active];
+  const Icon = lesson.icon;
+
+  const goPrev = () => setActive((i) => (i - 1 + LESSONS.length) % LESSONS.length);
+  const goNext = () => setActive((i) => (i + 1) % LESSONS.length);
+
+  return (
+    <div
+      className="reflection-stepper"
+      style={{
+        display: "grid",
+        gridTemplateColumns: "minmax(240px, 0.9fr) minmax(0, 2fr)",
+        gap: "clamp(24px, 2.6vw, 44px)",
+        border: `1px solid ${ll.line}`,
+        background: "#FFFFFF",
+        padding: "clamp(24px, 2.6vw, 44px)",
+      }}
+    >
+      {/* LEFT — step rail */}
+      <div
+        role="tablist"
+        aria-label="Reflection lessons"
+        style={{
+          position: "relative",
+          display: "flex", flexDirection: "column",
+          gap: 4,
+        }}
+      >
+        {/* Vertical connector line */}
+        <div
+          aria-hidden
+          style={{
+            position: "absolute",
+            left: 15, top: 14, bottom: 14,
+            width: 1, background: ll.line,
+            zIndex: 0,
+          }}
+        />
+        {/* Active-length fill */}
+        <motion.div
+          aria-hidden
+          initial={false}
+          animate={{
+            height: `calc(${(active / (LESSONS.length - 1)) * 100}% - 28px)`,
+          }}
+          transition={{ type: "spring", stiffness: 180, damping: 24 }}
+          style={{
+            position: "absolute",
+            left: 15, top: 14,
+            width: 1, background: ll.primary,
+            zIndex: 1,
+          }}
+        />
+
+        {LESSONS.map((l, i) => {
+          const on = i === active;
+          return (
+            <button
+              key={l.tag}
+              role="tab"
+              aria-selected={on}
+              onClick={() => setActive(i)}
+              style={{
+                position: "relative",
+                zIndex: 2,
+                display: "grid",
+                gridTemplateColumns: "32px 1fr",
+                alignItems: "center",
+                gap: 14,
+                padding: "12px 8px 12px 0",
+                textAlign: "left",
+                background: "transparent",
+                border: "none",
+                cursor: "pointer",
+              }}
+            >
+              {/* Dot / number marker */}
+              <span
+                aria-hidden
+                style={{
+                  width: 32, height: 32,
+                  display: "grid", placeItems: "center",
+                  background: on ? ll.primary : "#FFFFFF",
+                  border: `1px solid ${on ? ll.primary : ll.line}`,
+                  borderRadius: "50%",
+                  transition: "background 180ms ease, border-color 180ms ease",
+                }}
+              >
+                <span style={{
+                  ...mono, fontSize: 9.5, fontWeight: 700,
+                  letterSpacing: "0.12em",
+                  color: on ? "#FFFFFF" : ll.muted,
+                }}>
+                  {l.num}
+                </span>
+              </span>
+
+              <span style={{ display: "flex", flexDirection: "column", gap: 3 }}>
+                <span style={{
+                  ...mono, fontSize: 9.5, letterSpacing: "0.22em",
+                  fontWeight: 700,
+                  color: on ? ll.primary : ll.muted,
+                  transition: "color 180ms ease",
+                }}>
+                  {l.tag}
+                </span>
+                <span style={{
+                  fontFamily: serif, fontWeight: 700,
+                  fontSize: 17, lineHeight: 1.25,
+                  letterSpacing: "-0.01em",
+                  color: on ? "var(--text-primary)" : ll.muted,
+                  transition: "color 180ms ease",
+                }}>
+                  {l.short}
+                </span>
+              </span>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* RIGHT — active lesson panel */}
+      <div
+        role="tabpanel"
+        style={{
+          position: "relative",
+          background: ll.surface,
+          border: `1px solid ${ll.line}`,
+          padding: "clamp(28px, 3.2vw, 48px)",
+          minHeight: 360,
+          display: "flex", flexDirection: "column",
+          overflow: "hidden",
+        }}
+      >
+        {/* Decorative big number in back */}
+        <motion.span
+          key={`big-${active}`}
+          aria-hidden
+          initial={{ opacity: 0, x: 16 }}
+          animate={{ opacity: 0.08, x: 0 }}
+          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          style={{
+            position: "absolute",
+            right: "clamp(20px, 3vw, 44px)",
+            top: "clamp(10px, 1.6vw, 20px)",
+            fontFamily: serif, fontWeight: 700,
+            fontSize: "clamp(130px, 16vw, 220px)",
+            letterSpacing: "-0.04em",
+            lineHeight: 1,
+            color: ll.primary,
+            pointerEvents: "none",
+          }}
+        >
+          {lesson.num}
+        </motion.span>
+
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={active}
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+            style={{
+              position: "relative", zIndex: 1,
+              display: "flex", flexDirection: "column",
+              gap: 20,
+              height: "100%",
+            }}
+          >
+            {/* Tag row */}
+            <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+              <span style={{
+                ...mono, fontSize: 10, letterSpacing: "0.22em",
+                color: ll.primary, fontWeight: 700,
+                padding: "6px 10px",
+                background: "#FFFFFF",
+                border: `1px solid ${ll.primary}`,
+              }}>
+                {lesson.tag}
+              </span>
+              <Icon size={22} color={ll.primary} weight="regular" />
+            </div>
+
+            {/* Headline */}
+            <h3 style={{
+              fontFamily: serif, fontWeight: 700,
+              fontSize: "clamp(26px, 3vw, 38px)",
+              letterSpacing: "-0.02em", lineHeight: 1.15,
+              color: "var(--text-primary)",
+              maxWidth: 540,
+            }}>
+              {lesson.short}
+            </h3>
+
+            {/* Body */}
+            <p style={{ ...t.bodyLg, maxWidth: 560, margin: 0 }}>
+              {lesson.body}
+            </p>
+
+            {/* Principle pull */}
+            <div style={{
+              marginTop: "auto",
+              paddingTop: 18,
+              borderTop: `1px solid ${ll.line}`,
+              display: "flex", alignItems: "center", gap: 14,
+            }}>
+              <span style={{
+                ...mono, fontSize: 9.5, letterSpacing: "0.22em",
+                color: ll.muted, fontWeight: 700, flexShrink: 0,
+              }}>
+                PRINCIPLE
+              </span>
+              <p style={{
+                fontFamily: serif, fontStyle: "italic",
+                fontWeight: 700, fontSize: "clamp(16px, 1.4vw, 19px)",
+                letterSpacing: "-0.01em", lineHeight: 1.45,
+                color: ll.primary, margin: 0,
+              }}>
+                {lesson.principle}
+              </p>
+            </div>
+          </motion.div>
+        </AnimatePresence>
+
+        {/* Nav controls */}
+        <div style={{
+          position: "absolute",
+          right: "clamp(20px, 3vw, 36px)",
+          bottom: "clamp(20px, 2.6vw, 32px)",
+          display: "flex", gap: 8,
+          zIndex: 2,
+        }}>
+          <button
+            aria-label="Previous lesson"
+            onClick={goPrev}
+            style={{
+              width: 38, height: 38,
+              display: "grid", placeItems: "center",
+              background: "#FFFFFF",
+              border: `1px solid ${ll.line}`,
+              cursor: "pointer",
+              transition: "background 160ms ease, border-color 160ms ease",
+            }}
+          >
+            <ArrowLeft size={16} color={ll.primary} weight="bold" />
+          </button>
+          <button
+            aria-label="Next lesson"
+            onClick={goNext}
+            style={{
+              width: 38, height: 38,
+              display: "grid", placeItems: "center",
+              background: ll.primary,
+              border: `1px solid ${ll.primary}`,
+              cursor: "pointer",
+              transition: "background 160ms ease",
+            }}
+          >
+            <ArrowRight size={16} color="#FFFFFF" weight="bold" />
+          </button>
+        </div>
+      </div>
+
+      <style>{`
+        @media (max-width: 880px) {
+          .reflection-stepper {
+            grid-template-columns: minmax(0, 1fr) !important;
+          }
+        }
+      `}</style>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════════════
    PAGE
 ══════════════════════════════════════════════════════════════════ */
 export default function LocalLiftCase() {
@@ -2367,50 +2679,7 @@ export default function LocalLiftCase() {
             </div>
           </div>
 
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-              gap: "clamp(18px, 1.8vw, 28px)",
-            }}
-          >
-            {([
-              { num: "01", icon: Path,      short: "Follow the owner, not the feature.", body: "The design followed the owner's day. When an insight didn't fit one of the four themes, we didn't force it in. We held it and kept listening." },
-              { num: "02", icon: Lightbulb, short: "Small iterations compound.",           body: "Three focused rounds produced the outcome, not one heroic redesign. Each fix targeted a single friction and left the rest of the product alone." },
-              { num: "03", icon: Handshake, short: "Mentorship is infrastructure.",        body: "Peer networks and industry mentors turned the platform from a tool into a place. The tool's retention job is to keep the community open, not to replace it." },
-              { num: "04", icon: MapPin,    short: "Local context is a feature.",          body: "Generic advice reads as noise. Designing search and content around industry + city made the product feel like it knew the owner, because it did." },
-            ] as { num: string; icon: Icon; short: string; body: string }[]).map((lesson, i) => {
-              const I = lesson.icon;
-              return (
-                <Reveal key={i} delay={0.05 + i * 0.06}>
-                  <motion.div
-                    whileHover={{ y: -4 }}
-                    transition={{ type: "spring", stiffness: 240, damping: 22 }}
-                    style={{
-                      background: "#FFFFFF",
-                      border: `1px solid ${ll.line}`,
-                      padding: "30px 28px 28px",
-                      height: "100%",
-                      display: "flex", flexDirection: "column",
-                      gap: 16,
-                    }}
-                  >
-                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                      <span style={{
-                        fontFamily: serif, fontWeight: 700, fontSize: 30,
-                        color: ll.primary, letterSpacing: "-0.03em", lineHeight: 1,
-                      }}>
-                        {lesson.num}
-                      </span>
-                      <I size={22} color={ll.primary} weight="regular" />
-                    </div>
-                    <h3 style={{ ...t.h3 }}>{lesson.short}</h3>
-                    <p style={{ ...t.body, margin: 0 }}>{lesson.body}</p>
-                  </motion.div>
-                </Reveal>
-              );
-            })}
-          </div>
+          <ReflectionStepper />
         </div>
       </section>
 
