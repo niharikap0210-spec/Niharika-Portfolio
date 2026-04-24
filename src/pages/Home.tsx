@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
 import HeroSection from "../components/HeroSection";
 import ProjectCard from "../components/ProjectCard";
-import SectionMarker from "../components/SectionMarker";
 import { projects } from "../data/projects";
 
 const mono: React.CSSProperties = {
@@ -26,14 +25,35 @@ export default function Home() {
       {/* Projects Grid */}
       <section className="max-w-6xl mx-auto px-6 md:px-10 py-20">
         {/* Section header */}
-        <div
-          className="mb-12"
-          style={{ borderTop: "1px solid var(--border)", paddingTop: 32 }}
-        >
-          <div className="flex items-end justify-between mb-6">
-            <SectionMarker label="Selected Work" letter="A" />
-            <span style={{ ...mono, fontSize: 9, color: "var(--text-muted)", opacity: 0.6 }}>
-              {projects.length} Projects
+        <div className="mb-14">
+          <div
+            className="flex items-center justify-between"
+            style={{
+              borderTop: "0.75px solid var(--border)",
+              paddingTop: 14,
+              marginBottom: 28,
+            }}
+          >
+            <span
+              style={{
+                ...mono,
+                fontSize: 11,
+                color: "var(--text-secondary)",
+                letterSpacing: "0.22em",
+                fontWeight: 500,
+              }}
+            >
+              Selected Work
+            </span>
+            <span
+              style={{
+                ...mono,
+                fontSize: 11,
+                color: "var(--text-muted)",
+                letterSpacing: "0.22em",
+              }}
+            >
+              {String(projects.length).padStart(2, "0")} Projects
             </span>
           </div>
 
@@ -45,13 +65,14 @@ export default function Home() {
             style={{
               fontFamily: "'Playfair Display', Georgia, serif",
               fontWeight: 700,
-              fontSize: "clamp(36px, 4.2vw, 52px)",
+              fontSize: "clamp(40px, 4.6vw, 56px)",
               color: "var(--text-primary)",
-              letterSpacing: "-0.02em",
-              lineHeight: 1.08,
+              letterSpacing: "-0.025em",
+              lineHeight: 1.05,
+              margin: 0,
             }}
           >
-            Projects
+            Projects<span style={{ color: "var(--accent)" }}>.</span>
           </motion.h2>
         </div>
 
