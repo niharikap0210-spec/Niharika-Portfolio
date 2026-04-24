@@ -1967,7 +1967,7 @@ export default function LocalLiftCase() {
                 }}>
                   <PencilSimple size={18} color={ll.primary} weight="regular" />
                   <span style={{ ...mono, fontSize: 11, color: ll.primary, letterSpacing: "0.22em", fontWeight: 700 }}>
-                    12 WIREFRAMES · 1 FLOW
+                    10 WIREFRAMES · 4 FLOWS
                   </span>
                 </div>
               </Reveal>
@@ -1986,15 +1986,12 @@ export default function LocalLiftCase() {
               { src: `${LOFI}/lofi-search.png`,       label: "Search" },
               { src: `${LOFI}/lofi-community.png`,    label: "Community" },
               { src: `${LOFI}/lofi-profile.png`,      label: "Profile" },
-              { src: `${LOFI}/lofi-session.png`,      label: "Session" },
-              { src: `${LOFI}/lofi-workspace.png`,    label: "Workspace" },
             ]}
             groups={[
-              { id: "all",        label: "All flows",  indices: [0,1,2,3,4,5,6,7,8,9,10,11] },
+              { id: "all",        label: "All flows",  indices: [0,1,2,3,4,5,6,7,8,9] },
               { id: "onboarding", label: "Onboarding", indices: [0,1,2,3] },
               { id: "auth",       label: "Auth",       indices: [4,5] },
               { id: "core",       label: "Core",       indices: [6,7,8,9] },
-              { id: "session",    label: "Session",    indices: [10,11] },
             ]}
           />
         </div>
