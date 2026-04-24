@@ -242,9 +242,11 @@ function Plate({
   fit = "contain",
   bg = "#FFFFFF",
   maxHeight,
+  padding,
 }: {
   src: string; alt: string; caption?: string; tag?: string;
   aspect?: string; fit?: "contain" | "cover"; bg?: string; maxHeight?: number;
+  padding?: string;
 }) {
   const [hover, setHover] = useState(false);
   return (
@@ -303,7 +305,7 @@ function Plate({
           width: "100%", aspectRatio: aspect,
           maxHeight: maxHeight ? `${maxHeight}px` : undefined,
           display: "flex", alignItems: "center", justifyContent: "center",
-          padding: fit === "contain" ? "clamp(20px, 3vw, 44px)" : 0,
+          padding: padding ?? (fit === "contain" ? "clamp(20px, 3vw, 44px)" : 0),
         }}>
           <motion.img
             src={src}
@@ -1393,17 +1395,21 @@ export default function LocalLiftCase() {
             })}
           </div>
 
-          {/* Affinity output — large */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start" style={{ marginBottom: "clamp(56px, 6vw, 88px)" }}>
-            <div className="lg:col-span-5">
-              <Reveal>
-                <p style={{ ...t.eyebrow, marginBottom: 14 }}>AFFINITY · OUTPUT</p>
-                <h3 style={{ ...t.h3, marginBottom: 18 }}>Forty observations, four tensions.</h3>
-                <p style={{ ...t.body, marginBottom: 22 }}>
-                  Different industries, different stages, one recurring shape. Owners wanted guidance from someone
-                  who had done the thing, tools that assumed their scale, peers to learn from, and advice tuned to
-                  their market.
-                </p>
+          {/* Affinity output — narrative above, full-width plate below */}
+          <div style={{ marginBottom: "clamp(56px, 6vw, 88px)" }}>
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start" style={{ marginBottom: "clamp(32px, 3.4vw, 48px)" }}>
+              <div className="lg:col-span-5">
+                <Reveal>
+                  <p style={{ ...t.eyebrow, marginBottom: 14 }}>AFFINITY · OUTPUT</p>
+                  <h3 style={{ ...t.h3, marginBottom: 18 }}>Forty observations, four tensions.</h3>
+                  <p style={{ ...t.body }}>
+                    Different industries, different stages, one recurring shape. Owners wanted guidance from someone
+                    who had done the thing, tools that assumed their scale, peers to learn from, and advice tuned to
+                    their market.
+                  </p>
+                </Reveal>
+              </div>
+              <div className="lg:col-span-7">
                 <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "grid", gap: 2 }}>
                   {[
                     "Mentorship must be industry-specific",
@@ -1431,21 +1437,20 @@ export default function LocalLiftCase() {
                     </motion.li>
                   ))}
                 </ul>
-              </Reveal>
+              </div>
             </div>
 
-            <div className="lg:col-span-7">
-              <Reveal delay={0.1}>
-                <Plate
-                  src={`${IMG}/user-stories.png`}
-                  alt="Affinity map of user stories from small business owner interviews."
-                  caption="FIG · 01 / AFFINITY MAP · USER STORIES CLUSTERED BY TENSION"
-                  tag="RESEARCH"
-                  aspect="16 / 11"
-                  bg={ll.surface}
-                />
-              </Reveal>
-            </div>
+            <Reveal delay={0.1}>
+              <Plate
+                src={`${IMG}/user-stories.png`}
+                alt="Affinity map of user stories from small business owner interviews."
+                caption="FIG · 01 / AFFINITY MAP · USER STORIES CLUSTERED BY TENSION"
+                tag="RESEARCH"
+                aspect="16 / 7"
+                bg={ll.surface}
+                padding="clamp(8px, 1vw, 16px)"
+              />
+            </Reveal>
           </div>
 
           {/* Voices */}
