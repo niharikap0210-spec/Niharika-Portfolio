@@ -562,6 +562,244 @@ function NavCard({ project }: { project: Project }) {
 }
 
 /* ══════════════════════════════════════════════════════════════════
+   AFFINITY OUTPUT — four tensions, one affinity map
+══════════════════════════════════════════════════════════════════ */
+const TENSIONS: {
+  tag: string; icon: Icon; title: string; takeaway: string; count: number;
+}[] = [
+  { tag: "T·01", icon: Handshake,  title: "Industry-specific mentorship", takeaway: "Generic advice doesn't land. Owners want someone from their lane.", count: 12 },
+  { tag: "T·02", icon: Wrench,     title: "Tools built for their scale",  takeaway: "Dashboards assume a team. A solo owner needs one next action, not twenty.", count: 11 },
+  { tag: "T·03", icon: UsersThree, title: "Peer networks as backbone",   takeaway: "Mistakes travel faster between owners than they do through playbooks.", count: 9 },
+  { tag: "T·04", icon: MapPin,     title: "Local context as feature",    takeaway: "A city, a street, a regulation. Specificity is what makes advice usable.", count: 8 },
+];
+
+function TensionCard({
+  t: tension, index, active, onEnter, onLeave,
+}: {
+  t: (typeof TENSIONS)[number]; index: number;
+  active: boolean;
+  onEnter: () => void; onLeave: () => void;
+}) {
+  const I = tension.icon;
+  return (
+    <motion.article
+      initial={{ opacity: 0, y: 18 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-40px" }}
+      transition={{ duration: 0.6, delay: index * 0.07, ease: [0.16, 1, 0.3, 1] }}
+      onMouseEnter={onEnter}
+      onMouseLeave={onLeave}
+      onFocus={onEnter}
+      onBlur={onLeave}
+      tabIndex={0}
+      style={{
+        position: "relative",
+        background: "#FFFFFF",
+        border: `1px solid ${active ? ll.primary : ll.line}`,
+        padding: "clamp(22px, 2.4vw, 32px)",
+        display: "grid",
+        gridTemplateColumns: "auto 1fr",
+        gap: "clamp(18px, 2vw, 28px)",
+        alignItems: "start",
+        cursor: "default",
+        outline: "none",
+        boxShadow: active
+          ? "0 2px 6px rgba(18,26,42,0.05), 0 18px 44px rgba(59,79,123,0.14)"
+          : "0 1px 2px rgba(18,26,42,0.03), 0 6px 18px rgba(59,79,123,0.05)",
+        transition: "border-color 260ms ease-out, box-shadow 260ms ease-out",
+      }}
+    >
+      {/* Accent stripe on active */}
+      <motion.span
+        aria-hidden
+        animate={{ scaleY: active ? 1 : 0 }}
+        transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+        style={{
+          position: "absolute", left: 0, top: 0, bottom: 0,
+          width: 3, background: ll.warm, transformOrigin: "top",
+        }}
+      />
+
+      {/* Left column — numeral + icon */}
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 14 }}>
+        <span style={{
+          fontFamily: serif, fontWeight: 700,
+          fontSize: "clamp(44px, 4.4vw, 60px)",
+          letterSpacing: "-0.04em",
+          lineHeight: 0.9,
+          color: active ? ll.primary : ll.light,
+          transition: "color 260ms ease-out",
+        }}>
+          {String(index + 1).padStart(2, "0")}
+        </span>
+        <span style={{
+          width: 36, height: 36,
+          background: active ? ll.primary : ll.surface,
+          border: `1px solid ${active ? ll.primary : ll.line}`,
+          display: "inline-flex", alignItems: "center", justifyContent: "center",
+          transition: "background 260ms ease-out, border-color 260ms ease-out",
+        }}>
+          <I size={18} color={active ? "#FFFFFF" : ll.primary} weight="regular" />
+        </span>
+      </div>
+
+      {/* Right column — content */}
+      <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
+          <span style={{ ...mono, fontSize: 10, color: ll.primary, letterSpacing: "0.22em", fontWeight: 700 }}>
+            {tension.tag}
+          </span>
+          <span style={{ ...mono, fontSize: 10, color: ll.muted, letterSpacing: "0.2em", fontWeight: 700 }}>
+            {tension.count} OBS
+          </span>
+        </div>
+        <h4 style={{
+          fontFamily: serif, fontWeight: 700,
+          fontSize: "clamp(19px, 1.7vw, 23px)",
+          letterSpacing: "-0.015em", lineHeight: 1.2,
+          color: "var(--text-primary)",
+        }}>
+          {tension.title}
+        </h4>
+        <p style={{
+          fontFamily: sans, fontSize: 14.5, lineHeight: 1.6,
+          color: "var(--text-secondary)",
+        }}>
+          {tension.takeaway}
+        </p>
+
+        {/* Proportional count bar */}
+        <div style={{
+          display: "flex", alignItems: "center", gap: 10,
+          marginTop: 6,
+        }}>
+          <div style={{ flex: 1, height: 3, background: ll.subtle, position: "relative" }}>
+            <motion.span
+              aria-hidden
+              initial={{ scaleX: 0 }}
+              whileInView={{ scaleX: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.9, delay: 0.2 + index * 0.08, ease: [0.16, 1, 0.3, 1] }}
+              style={{
+                position: "absolute", left: 0, top: 0,
+                width: `${(tension.count / 40) * 100}%`,
+                height: "100%",
+                background: active ? ll.warm : ll.primary,
+                transformOrigin: "left",
+                transition: "background 260ms ease-out",
+              }}
+            />
+          </div>
+          <span style={{ ...mono, fontSize: 10, color: ll.muted, letterSpacing: "0.2em", fontWeight: 700 }}>
+            {Math.round((tension.count / 40) * 100)}%
+          </span>
+        </div>
+      </div>
+    </motion.article>
+  );
+}
+
+function AffinityOutput() {
+  const [active, setActive] = useState<number | null>(null);
+  return (
+    <div style={{ marginBottom: "clamp(56px, 6vw, 88px)" }}>
+      {/* Header row */}
+      <div
+        className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end"
+        style={{ marginBottom: "clamp(28px, 3vw, 40px)" }}
+      >
+        <div className="lg:col-span-8">
+          <Reveal>
+            <p style={{ ...t.eyebrow, marginBottom: 14 }}>AFFINITY · OUTPUT</p>
+            <h3 style={{ ...t.h3 }}>
+              Forty observations,
+              <span style={{ fontStyle: "italic", color: ll.primary }}> four tensions.</span>
+            </h3>
+          </Reveal>
+        </div>
+        <div className="lg:col-span-4">
+          <Reveal delay={0.1}>
+            <div
+              style={{
+                display: "flex", justifyContent: "flex-end",
+                gap: 24, flexWrap: "wrap",
+              }}
+            >
+              {([
+                { k: "OBSERVATIONS", v: "40" },
+                { k: "THEMES",       v: "04" },
+                { k: "OWNERS",       v: "12" },
+              ] as { k: string; v: string }[]).map((m) => (
+                <div key={m.k} style={{ textAlign: "right" }}>
+                  <div style={{
+                    fontFamily: serif, fontWeight: 700,
+                    fontSize: "clamp(24px, 2.2vw, 30px)",
+                    letterSpacing: "-0.02em",
+                    color: ll.primary, lineHeight: 1,
+                  }}>
+                    {m.v}
+                  </div>
+                  <div style={{
+                    ...mono, fontSize: 9.5, color: ll.muted,
+                    letterSpacing: "0.22em", fontWeight: 700,
+                    marginTop: 6,
+                  }}>
+                    {m.k}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Reveal>
+        </div>
+      </div>
+
+      {/* 2x2 Tension grid */}
+      <div
+        className="tension-grid"
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+          gap: "clamp(16px, 1.8vw, 24px)",
+          marginBottom: "clamp(40px, 4.6vw, 64px)",
+        }}
+      >
+        {TENSIONS.map((tn, i) => (
+          <TensionCard
+            key={tn.tag}
+            t={tn}
+            index={i}
+            active={active === i}
+            onEnter={() => setActive(i)}
+            onLeave={() => setActive((curr) => (curr === i ? null : curr))}
+          />
+        ))}
+      </div>
+
+      {/* Full-width affinity map */}
+      <Reveal delay={0.1}>
+        <Plate
+          src={`${IMG}/user-stories.png`}
+          alt="Affinity map of user stories from small business owner interviews."
+          caption="FIG · 01 / AFFINITY MAP · USER STORIES CLUSTERED BY TENSION"
+          tag="RESEARCH"
+          aspect="16 / 7"
+          bg={ll.surface}
+          padding="clamp(8px, 1vw, 16px)"
+        />
+      </Reveal>
+
+      <style>{`
+        @media (max-width: 780px) {
+          .tension-grid {
+            grid-template-columns: minmax(0, 1fr) !important;
+          }
+        }
+      `}</style>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════════════
    PERSONAS — interactive tabbed explorer
 ══════════════════════════════════════════════════════════════════ */
 type PersonaGroup = { icon: Icon; label: string; items: string[] };
@@ -1395,54 +1633,9 @@ export default function LocalLiftCase() {
             })}
           </div>
 
-          {/* Affinity output — narrative above, full-width plate below */}
-          <div style={{ marginBottom: "clamp(56px, 6vw, 88px)" }}>
-            <div style={{ maxWidth: 560, marginBottom: "clamp(32px, 3.4vw, 48px)" }}>
-              <Reveal>
-                <p style={{ ...t.eyebrow, marginBottom: 14 }}>AFFINITY · OUTPUT</p>
-                <h3 style={{ ...t.h3, marginBottom: 22 }}>Forty observations, four tensions.</h3>
-              </Reveal>
-              <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "grid", gap: 2 }}>
-                {[
-                  "Mentorship must be industry-specific",
-                  "Tools must feel built for them",
-                  "Peer networks are missing infrastructure",
-                  "Local context outperforms generic advice",
-                ].map((item, i) => (
-                  <motion.li
-                    key={i}
-                    initial={{ opacity: 0, x: -12 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
-                    style={{
-                      display: "grid", gridTemplateColumns: "auto 1fr", gap: 16, alignItems: "baseline",
-                      padding: "14px 0", borderBottom: `1px solid ${ll.line}`,
-                    }}
-                  >
-                    <span style={{ ...mono, fontSize: 11, color: ll.primary, letterSpacing: "0.22em", fontWeight: 700 }}>
-                      T·0{i + 1}
-                    </span>
-                    <span style={{ fontFamily: sans, fontSize: 16, color: "var(--text-primary)", lineHeight: 1.55, fontWeight: 500 }}>
-                      {item}
-                    </span>
-                  </motion.li>
-                ))}
-              </ul>
-            </div>
+          {/* Affinity output — redesigned: header row, 2x2 tension grid, full-width plate */}
+          <AffinityOutput />
 
-            <Reveal delay={0.1}>
-              <Plate
-                src={`${IMG}/user-stories.png`}
-                alt="Affinity map of user stories from small business owner interviews."
-                caption="FIG · 01 / AFFINITY MAP · USER STORIES CLUSTERED BY TENSION"
-                tag="RESEARCH"
-                aspect="16 / 7"
-                bg={ll.surface}
-                padding="clamp(8px, 1vw, 16px)"
-              />
-            </Reveal>
-          </div>
 
           {/* Voices */}
           <Reveal>
