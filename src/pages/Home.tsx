@@ -23,7 +23,7 @@ export default function Home() {
       <HeroSection />
 
       {/* Projects Grid */}
-      <section id="projects" className="max-w-6xl mx-auto px-6 md:px-10 py-20" style={{ scrollMarginTop: 96 }}>
+      <section id="projects" className="max-w-7xl mx-auto px-6 md:px-10 py-20" style={{ scrollMarginTop: 96 }}>
         {/* Section header */}
         <div className="mb-14">
           <div
@@ -77,10 +77,44 @@ export default function Home() {
         </div>
 
         {/* 2-col grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {projects.map((project, i) => (
             <ProjectCard key={project.slug} project={project} index={i} />
           ))}
+        </div>
+
+        {/* Section footer — drafting rule + end marker */}
+        <div
+          className="flex items-center justify-between"
+          style={{
+            marginTop: 56,
+            paddingTop: 18,
+            borderTop: "0.75px solid var(--border)",
+            position: "relative",
+          }}
+        >
+          <span style={{ position: "absolute", top: -4, left: 0, width: 1, height: 9, backgroundColor: "var(--construction)" }} />
+          <span style={{ position: "absolute", top: -4, right: 0, width: 1, height: 9, backgroundColor: "var(--construction)" }} />
+          <span
+            style={{
+              ...mono,
+              fontSize: 10,
+              color: "var(--text-muted)",
+              letterSpacing: "0.22em",
+            }}
+          >
+            End of Sheet
+          </span>
+          <span
+            style={{
+              ...mono,
+              fontSize: 10,
+              color: "var(--text-muted)",
+              letterSpacing: "0.22em",
+            }}
+          >
+            A—{String(projects.length).padStart(2, "0")} / A—{String(projects.length).padStart(2, "0")}
+          </span>
         </div>
       </section>
     </motion.div>

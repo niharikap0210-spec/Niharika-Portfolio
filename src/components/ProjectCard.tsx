@@ -253,7 +253,7 @@ function HeroStage({ project, hovered }: { project: Project; hovered: boolean })
       style={{
         position: "relative",
         width: "100%",
-        aspectRatio: "16 / 10",
+        aspectRatio: "3 / 2",
         overflow: "hidden",
         background: `
           radial-gradient(120% 80% at 50% 0%, ${accent.surface} 0%, ${accent.primary}0d 60%, transparent 100%),
