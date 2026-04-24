@@ -157,7 +157,7 @@ export default function Home() {
               }}
             >
               A selection of end-to-end product work spanning enterprise SaaS, consumer
-              onboarding, and research-led discovery - each project a study in translating
+              onboarding, and research-led discovery. Each project a study in translating
               a specific constraint into something people actually reach for.
             </motion.p>
 
