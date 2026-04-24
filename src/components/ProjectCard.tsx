@@ -415,72 +415,90 @@ function VeriflowComposition({ accent }: { accent: ProjectAccent }) {
   );
 }
 
-/* ── LocalLift: 3 phones side-by-side with perspective, outer phones toed-in ── */
+/* ── LocalLift: 3 phones, center in front, outer two overlap behind ── */
 function LocalLiftComposition({ accent }: { accent: ProjectAccent }) {
   const phoneShadow = `drop-shadow(0 16px 28px ${accent.primary}3a) drop-shadow(0 6px 12px rgba(0,0,0,0.16))`;
-  const phoneW = "23%";
 
   return (
-    <div
-      style={{
-        position: "absolute",
-        inset: 0,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: "0.5%",
-        perspective: "1600px",
-      }}
-    >
-      {/* Left — mentor session, rotated so right side faces viewer */}
-      <motion.img
-        src="/locallift/hifi/hifi-session.png"
-        alt="LocalLift live mentor session"
-        loading="lazy"
-        animate={{ y: [0, -5, 0] }}
-        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
+    <div style={{ position: "absolute", inset: 0, perspective: "1600px" }}>
+      {/* Left phone — tilted so right edge faces viewer, tucked behind center */}
+      <div
         style={{
-          width: phoneW,
-          rotateY: 22,
-          transformOrigin: "right center",
-          filter: `${phoneShadow} brightness(0.97)`,
+          position: "absolute",
+          left: "15%",
+          top: "50%",
+          width: "26%",
+          transform: "translateY(-50%)",
           zIndex: 1,
-          display: "block",
-        } as React.CSSProperties}
-      />
-
-      {/* Center — Explore feed, straight on, front-most */}
-      <motion.img
-        src="/locallift/hifi/hifi-explore.png"
-        alt="LocalLift course browse feed"
-        loading="lazy"
-        animate={{ y: [0, -6, 0] }}
-        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-        style={{
-          width: phoneW,
-          filter: phoneShadow,
-          zIndex: 3,
-          display: "block",
-          objectFit: "contain",
         }}
-      />
+      >
+        <motion.img
+          src="/locallift/hifi/hifi-session.png"
+          alt="LocalLift live mentor session"
+          loading="lazy"
+          animate={{ y: [0, -5, 0] }}
+          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
+          style={{
+            width: "100%",
+            display: "block",
+            rotateY: 24,
+            transformOrigin: "right center",
+            filter: `${phoneShadow} brightness(0.96)`,
+          } as React.CSSProperties}
+        />
+      </div>
 
-      {/* Right — founder profile, rotated so left side faces viewer */}
-      <motion.img
-        src="/locallift/hifi/hifi-profile-founder.png"
-        alt="LocalLift founder profile"
-        loading="lazy"
-        animate={{ y: [0, -5, 0] }}
-        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1.4 }}
+      {/* Center phone — head-on, in front */}
+      <div
         style={{
-          width: phoneW,
-          rotateY: -22,
-          transformOrigin: "left center",
-          filter: `${phoneShadow} brightness(0.97)`,
+          position: "absolute",
+          left: "50%",
+          top: "50%",
+          width: "30%",
+          transform: "translate(-50%, -50%)",
+          zIndex: 3,
+        }}
+      >
+        <motion.img
+          src="/locallift/hifi/hifi-explore.png"
+          alt="LocalLift course browse feed"
+          loading="lazy"
+          animate={{ y: [0, -6, 0] }}
+          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+          style={{
+            width: "100%",
+            display: "block",
+            filter: phoneShadow,
+          }}
+        />
+      </div>
+
+      {/* Right phone — mirror of left, tucked behind center */}
+      <div
+        style={{
+          position: "absolute",
+          right: "15%",
+          top: "50%",
+          width: "26%",
+          transform: "translateY(-50%)",
           zIndex: 1,
-          display: "block",
-        } as React.CSSProperties}
-      />
+        }}
+      >
+        <motion.img
+          src="/locallift/hifi/hifi-profile-founder.png"
+          alt="LocalLift founder profile"
+          loading="lazy"
+          animate={{ y: [0, -5, 0] }}
+          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1.4 }}
+          style={{
+            width: "100%",
+            display: "block",
+            rotateY: -24,
+            transformOrigin: "left center",
+            filter: `${phoneShadow} brightness(0.96)`,
+          } as React.CSSProperties}
+        />
+      </div>
     </div>
   );
 }
