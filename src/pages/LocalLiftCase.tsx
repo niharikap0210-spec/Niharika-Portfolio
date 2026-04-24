@@ -66,16 +66,16 @@ const t = {
     color: "var(--text-primary)",
   } as React.CSSProperties,
   bodyLg: {
-    fontFamily: sans, fontSize: "clamp(17px, 1.2vw, 19px)",
-    lineHeight: 1.7, color: "var(--text-primary)",
+    fontFamily: sans, fontSize: "clamp(18px, 1.4vw, 21px)",
+    lineHeight: 1.75, color: "var(--text-primary)",
     fontWeight: 400,
   } as React.CSSProperties,
   body: {
-    fontFamily: sans, fontSize: 16, lineHeight: 1.65,
+    fontFamily: sans, fontSize: 18, lineHeight: 1.75,
     color: "var(--text-primary)",
   } as React.CSSProperties,
   bodyMuted: {
-    fontFamily: sans, fontSize: 15, lineHeight: 1.65,
+    fontFamily: sans, fontSize: 15, lineHeight: 1.7,
     color: "var(--text-secondary)",
   } as React.CSSProperties,
 };
@@ -85,6 +85,17 @@ const TOTAL = "09";
 const LOFI  = "/locallift/lofi";
 const HIFI  = "/locallift/hifi";
 const IMG   = "/locallift";
+
+/* Indigo-tinted blueprint grid used on the ll.surface sections */
+const gridSurface: React.CSSProperties = {
+  backgroundColor: ll.surface,
+  backgroundImage: [
+    "repeating-linear-gradient(0deg, rgba(59,79,123,0.06) 0, rgba(59,79,123,0.06) 0.5px, transparent 0.5px, transparent 20px)",
+    "repeating-linear-gradient(90deg, rgba(59,79,123,0.06) 0, rgba(59,79,123,0.06) 0.5px, transparent 0.5px, transparent 20px)",
+    "repeating-linear-gradient(0deg, rgba(59,79,123,0.14) 0, rgba(59,79,123,0.14) 0.5px, transparent 0.5px, transparent 80px)",
+    "repeating-linear-gradient(90deg, rgba(59,79,123,0.14) 0, rgba(59,79,123,0.14) 0.5px, transparent 0.5px, transparent 80px)",
+  ].join(", "),
+};
 
 /* ══════════════════════════════════════════════════════════════════
    PRIMITIVES
@@ -864,7 +875,7 @@ export default function LocalLiftCase() {
       {/* ─── 02 · PROBLEM ─────────────────────────────────────── */}
       <section style={{
         padding: SECTION_PAD,
-        background: ll.surface,
+        ...gridSurface,
         borderTop: `1px solid ${ll.line}`,
         borderBottom: `1px solid ${ll.line}`,
       }}>
@@ -1163,7 +1174,7 @@ export default function LocalLiftCase() {
       {/* ─── 04 · PERSONAS ─────────────────────────────────── */}
       <section style={{
         padding: SECTION_PAD,
-        background: ll.surface,
+        ...gridSurface,
         borderTop: `1px solid ${ll.line}`,
         borderBottom: `1px solid ${ll.line}`,
       }}>
@@ -1286,7 +1297,7 @@ export default function LocalLiftCase() {
       {/* ─── 06 · HIFI FINAL DESIGN ──────────────────────── */}
       <section style={{
         padding: SECTION_PAD,
-        background: ll.surface,
+        ...gridSurface,
         borderTop: `1px solid ${ll.line}`,
         borderBottom: `1px solid ${ll.line}`,
       }}>
