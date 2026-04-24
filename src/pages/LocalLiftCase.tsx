@@ -1401,12 +1401,7 @@ export default function LocalLiftCase() {
               <div className="lg:col-span-5">
                 <Reveal>
                   <p style={{ ...t.eyebrow, marginBottom: 14 }}>AFFINITY · OUTPUT</p>
-                  <h3 style={{ ...t.h3, marginBottom: 18 }}>Forty observations, four tensions.</h3>
-                  <p style={{ ...t.body }}>
-                    Different industries, different stages, one recurring shape. Owners wanted guidance from someone
-                    who had done the thing, tools that assumed their scale, peers to learn from, and advice tuned to
-                    their market.
-                  </p>
+                  <h3 style={{ ...t.h3 }}>Forty observations, four tensions.</h3>
                 </Reveal>
               </div>
               <div className="lg:col-span-7">
