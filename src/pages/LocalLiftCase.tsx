@@ -67,12 +67,12 @@ const t = {
   } as React.CSSProperties,
   bodyLg: {
     fontFamily: sans, fontSize: "clamp(18px, 1.4vw, 21px)",
-    lineHeight: 1.75, color: "var(--text-primary)",
+    lineHeight: 1.75, color: "var(--text-secondary)",
     fontWeight: 400,
   } as React.CSSProperties,
   body: {
     fontFamily: sans, fontSize: 18, lineHeight: 1.75,
-    color: "var(--text-primary)",
+    color: "var(--text-secondary)",
   } as React.CSSProperties,
   bodyMuted: {
     fontFamily: sans, fontSize: 15, lineHeight: 1.7,
@@ -824,15 +824,15 @@ export default function LocalLiftCase() {
               </Reveal>
               <Reveal delay={0.1}>
                 <p style={{ ...t.bodyLg, maxWidth: 620, marginBottom: 20 }}>
-                  LocalLift sits at the intersection of two growth markets for small business — the US Southeast
+                  LocalLift sits at the intersection of two growth markets for small business: the US Southeast
                   and Southern Africa. A five-person product team spent the first weeks of the build in listening
-                  mode: reading the space, choosing the owner, and writing the question we actually wanted to answer.
+                  mode, reading the space, choosing the owner, and writing the question we actually wanted to answer.
                 </p>
               </Reveal>
               <Reveal delay={0.18}>
                 <p style={{ ...t.bodyLg, maxWidth: 620 }}>
                   The mandate: <span style={{ color: "var(--text-primary)", fontWeight: 600 }}>design a service
-                  that helps a local small business grow digitally</span> — without flattening what made it local.
+                  that helps a local small business grow digitally</span>, without flattening what made it local.
                 </p>
               </Reveal>
             </div>
@@ -905,8 +905,8 @@ export default function LocalLiftCase() {
               <Reveal delay={0.12}>
                 <p style={{ ...t.bodyLg, maxWidth: 620 }}>
                   SMB-facing platforms are either too technical, too abstract, or too generic to help a specific
-                  owner in a specific market make a specific decision. The result isn't a gap in ambition —
-                  it's a gap in access, in mentorship, and in the feedback loop between tool and user.
+                  owner in a specific market make a specific decision. The result isn't a gap in ambition.
+                  It's a gap in access, in mentorship, and in the feedback loop between tool and user.
                 </p>
               </Reveal>
             </div>
@@ -928,7 +928,7 @@ export default function LocalLiftCase() {
                     ...mono, fontSize: 10, color: ll.muted, fontStyle: "normal",
                     letterSpacing: "0.22em", fontWeight: 700, marginTop: 16,
                   }}>
-                    — OWNER, EARLY STAGE
+                    OWNER, EARLY STAGE
                   </footer>
                 </blockquote>
               </Reveal>
@@ -945,7 +945,7 @@ export default function LocalLiftCase() {
             }}
           >
             {([
-              { icon: Wrench,     head: "Built for enterprise",    body: "Dashboards, settings, and workflows assume a team. The owner of one location is navigating them alone — between customers.", tag: "OBS · 01" },
+              { icon: Wrench,     head: "Built for enterprise",    body: "Dashboards, settings, and workflows assume a team. The owner of one location is navigating them alone, between customers.", tag: "OBS · 01" },
               { icon: UsersThree, head: "No peer backbone",         body: "Owners learn by doing and re-doing. There's no channel to exchange what works with other owners one block over, one industry across.", tag: "OBS · 02" },
               { icon: MapPin,     head: "Advice without a ZIP code", body: "Generic playbooks miss local regulation, local customers, local pricing. What an owner needs is advice that knows their street.", tag: "OBS · 03" },
             ] as { icon: Icon; head: string; body: string; tag: string }[]).map((o, i) => {
@@ -999,8 +999,8 @@ export default function LocalLiftCase() {
               <Reveal delay={0.1}>
                 <p style={{ ...t.bodyLg, maxWidth: 640 }}>
                   Three lenses: understand the owner's day, cluster what we heard across context, turn it into
-                  archetypes the team could design against. Local collaborators translated insight — literally
-                  and culturally — so patterns carried the texture of each market, not just one.
+                  archetypes the team could design against. Local collaborators translated insight, literally
+                  and culturally, so patterns carried the texture of each market, not just one.
                 </p>
               </Reveal>
             </div>
@@ -1072,7 +1072,7 @@ export default function LocalLiftCase() {
                 <p style={{ ...t.eyebrow, marginBottom: 14 }}>AFFINITY · OUTPUT</p>
                 <h3 style={{ ...t.h3, marginBottom: 18 }}>Forty observations, four tensions.</h3>
                 <p style={{ ...t.body, marginBottom: 22 }}>
-                  Different industries, different stages — one recurring shape. Owners wanted guidance from someone
+                  Different industries, different stages, one recurring shape. Owners wanted guidance from someone
                   who had done the thing, tools that assumed their scale, peers to learn from, and advice tuned to
                   their market.
                 </p>
@@ -1111,7 +1111,7 @@ export default function LocalLiftCase() {
                 <Plate
                   src={`${IMG}/user-stories.png`}
                   alt="Affinity map of user stories from small business owner interviews."
-                  caption="FIG · 01 / AFFINITY MAP — USER STORIES CLUSTERED BY TENSION"
+                  caption="FIG · 01 / AFFINITY MAP · USER STORIES CLUSTERED BY TENSION"
                   tag="RESEARCH"
                   aspect="16 / 11"
                   bg={ll.surface}
@@ -1202,8 +1202,8 @@ export default function LocalLiftCase() {
               </Reveal>
               <Reveal delay={0.1}>
                 <p style={{ ...t.bodyLg, maxWidth: 640 }}>
-                  The early-stage owner and the growth-oriented owner showed up in every interview — same
-                  platform needs, different stakes. Every feature had to answer to both without favoring either.
+                  The early-stage owner and the growth-oriented owner showed up in every interview with the
+                  same platform needs and different stakes. Every feature had to answer to both without favoring either.
                 </p>
               </Reveal>
             </div>
@@ -1261,7 +1261,7 @@ export default function LocalLiftCase() {
               </Reveal>
               <Reveal delay={0.1}>
                 <p style={{ ...t.bodyLg, maxWidth: 620 }}>
-                  Every flow began as a lo-fi wireframe — onboarding, auth, explore, search, community, profile.
+                  Every flow began as a lo-fi wireframe: onboarding, auth, explore, search, community, profile.
                   We tested placement, hierarchy, and task sequence first so that colour, copy, and type couldn't
                   mask a broken structure.
                 </p>
@@ -1326,7 +1326,7 @@ export default function LocalLiftCase() {
               <Reveal delay={0.1}>
                 <p style={{ ...t.bodyLg, maxWidth: 620 }}>
                   The hi-fi system layered type weight, gentle elevation, and an indigo accent on a near-white
-                  surface. Every screen earns one primary action — the rest of the UI recedes until it's asked for.
+                  surface. Every screen earns one primary action. The rest of the UI recedes until it's asked for.
                 </p>
               </Reveal>
             </div>
@@ -1373,7 +1373,7 @@ export default function LocalLiftCase() {
               <Plate
                 src={`${IMG}/user-flow.png`}
                 alt="Primary user flow from onboarding through mentorship match."
-                caption="FIG · 02 / PRIMARY USER FLOW — ONBOARD → MATCH → LEARN → APPLY"
+                caption="FIG · 02 / PRIMARY USER FLOW · ONBOARD → MATCH → LEARN → APPLY"
                 tag="FLOW"
                 aspect="16 / 7"
                 bg="#FFFFFF"
@@ -1399,7 +1399,7 @@ export default function LocalLiftCase() {
               <Reveal delay={0.1}>
                 <p style={{ ...t.bodyLg, maxWidth: 640 }}>
                   Each usability round surfaced a single friction. Each iteration answered that friction with one
-                  visible move — not a redesign, a correction. The outcome came from stacking the three.
+                  visible move, not a redesign but a correction. The outcome came from stacking the three.
                 </p>
               </Reveal>
             </div>
@@ -1680,10 +1680,10 @@ export default function LocalLiftCase() {
             }}
           >
             {([
-              { num: "01", icon: Path,      short: "Follow the owner, not the feature.", body: "The design followed the owner's day. When an insight didn't fit one of the four themes, we didn't force it in — we held it and kept listening." },
+              { num: "01", icon: Path,      short: "Follow the owner, not the feature.", body: "The design followed the owner's day. When an insight didn't fit one of the four themes, we didn't force it in. We held it and kept listening." },
               { num: "02", icon: Lightbulb, short: "Small iterations compound.",           body: "Three focused rounds produced the outcome, not one heroic redesign. Each fix targeted a single friction and left the rest of the product alone." },
-              { num: "03", icon: Handshake, short: "Mentorship is infrastructure.",        body: "Peer networks and industry mentors turned the platform from a tool into a place. The tool's retention job is to keep the community open — not to replace it." },
-              { num: "04", icon: MapPin,    short: "Local context is a feature.",          body: "Generic advice reads as noise. Designing search and content around industry + city made the product feel like it knew the owner — because it did." },
+              { num: "03", icon: Handshake, short: "Mentorship is infrastructure.",        body: "Peer networks and industry mentors turned the platform from a tool into a place. The tool's retention job is to keep the community open, not to replace it." },
+              { num: "04", icon: MapPin,    short: "Local context is a feature.",          body: "Generic advice reads as noise. Designing search and content around industry + city made the product feel like it knew the owner, because it did." },
             ] as { num: string; icon: Icon; short: string; body: string }[]).map((lesson, i) => {
               const I = lesson.icon;
               return (
