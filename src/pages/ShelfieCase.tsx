@@ -2072,42 +2072,6 @@ export default function ShelfieCase() {
                 </p>
               </Reveal>
             </div>
-            <div className="lg:col-span-6">
-              <Reveal delay={0.18}>
-                <div style={{
-                  display: "grid", gridTemplateColumns: "auto 1fr", gap: "14px 20px",
-                  padding: "26px 28px",
-                  background: "var(--bg-elevated)",
-                  border: `1px solid ${sh.subtle}`,
-                  borderLeft: `3px solid ${sh.primary}`,
-                }}>
-                  {[
-                    { icon: ChatCircleText, label: "Vocabulary", body: "Four competing terms, no legal definition." },
-                    { icon: Eye,            label: "Legibility", body: "Low contrast, micro-type, hidden placement." },
-                    { icon: Brain,          label: "Memory",     body: "The printed date stops meaning anything once opened." },
-                  ].map((row, i) => {
-                    const I = row.icon as Icon;
-                    return (
-                      <div key={i} style={{ display: "contents" }}>
-                        <div style={{
-                          width: 36, height: 36, flexShrink: 0,
-                          background: sh.subtle,
-                          display: "flex", alignItems: "center", justifyContent: "center",
-                        }}>
-                          <I size={18} color={sh.primary} weight="regular" />
-                        </div>
-                        <div style={{ alignSelf: "center" }}>
-                          <p style={{ ...mono, fontSize: 10, color: sh.primary, letterSpacing: "0.2em", fontWeight: 700, marginBottom: 2 }}>
-                            {row.label}
-                          </p>
-                          <p style={{ ...t.bodyLg, margin: 0 }}>{row.body}</p>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </Reveal>
-            </div>
           </div>
 
           {/* Evidence band - vocabulary chaos in the wild */}
