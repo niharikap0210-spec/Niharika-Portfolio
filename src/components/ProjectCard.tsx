@@ -354,19 +354,25 @@ function ArkoComposition({ accent }: { accent: ProjectAccent }) {
         <LaptopFrame src="/arko/web-1.png" alt="Arko designer dashboard" accent={accent.primary} />
       </motion.div>
 
-      {/* Phone — peeks from bottom-right of laptop, counter-float */}
+      {/* Phone — pre-rendered mockup PNG (used directly, not wrapped) */}
       <motion.div
         animate={{ y: [0, -6, 0] }}
         transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
         style={{
           position: "absolute",
-          right: "8%",
-          bottom: "4%",
-          width: "17%",
+          right: "6%",
+          bottom: "2%",
+          width: "22%",
           zIndex: 3,
+          filter: `drop-shadow(0 18px 30px ${accent.primary}40) drop-shadow(0 6px 12px rgba(0,0,0,0.18))`,
         }}
       >
-        <PhoneFrame src="/arko/phone-13.png" alt="Arko client view" accent={accent.primary} size="compact" />
+        <img
+          src="/arko/phone-13.png"
+          alt="Arko client view"
+          style={{ width: "100%", display: "block" }}
+          loading="lazy"
+        />
       </motion.div>
     </div>
   );
