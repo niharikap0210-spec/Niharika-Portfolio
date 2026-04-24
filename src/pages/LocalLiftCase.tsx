@@ -378,6 +378,239 @@ function PhoneGallery({
   );
 }
 
+/* ──────────────────────────────────────────────────────────────
+   LOFI FILMSTRIP — horizontal snap-scroll carousel (space-saving)
+   Groups screens into flows; user switches flow via tabs.
+────────────────────────────────────────────────────────────── */
+type FlowGroup = { id: string; label: string; indices: number[] };
+
+function LofiFilmstrip({
+  items, groups,
+}: {
+  items: { src: string; label: string }[];
+  groups: FlowGroup[];
+}) {
+  const [activeFlow, setActiveFlow] = useState(groups[0].id);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [progress, setProgress] = useState(0);
+  const [canLeft, setCanLeft] = useState(false);
+  const [canRight, setCanRight] = useState(true);
+
+  const active = groups.find(g => g.id === activeFlow) ?? groups[0];
+  const visible = active.indices.map(i => items[i]);
+
+  const updateState = () => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const max = el.scrollWidth - el.clientWidth;
+    const p = max > 0 ? el.scrollLeft / max : 0;
+    setProgress(p);
+    setCanLeft(el.scrollLeft > 4);
+    setCanRight(el.scrollLeft < max - 4);
+  };
+
+  useEffect(() => {
+    updateState();
+    const el = scrollRef.current;
+    if (!el) return;
+    el.addEventListener("scroll", updateState, { passive: true });
+    const ro = new ResizeObserver(updateState);
+    ro.observe(el);
+    return () => {
+      el.removeEventListener("scroll", updateState);
+      ro.disconnect();
+    };
+  }, [activeFlow]);
+
+  useEffect(() => {
+    scrollRef.current?.scrollTo({ left: 0, behavior: "smooth" });
+  }, [activeFlow]);
+
+  const scrollBy = (dir: "left" | "right") => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const card = el.querySelector<HTMLElement>("[data-lofi-card]");
+    const step = card ? card.offsetWidth + 24 : el.clientWidth * 0.75;
+    el.scrollBy({ left: dir === "right" ? step : -step, behavior: "smooth" });
+  };
+
+  return (
+    <div>
+      {/* Flow tabs + counter row */}
+      <div style={{
+        display: "flex", flexWrap: "wrap", alignItems: "center",
+        justifyContent: "space-between", gap: 18, marginBottom: 20,
+      }}>
+        <div role="tablist" aria-label="Lo-fi flows" style={{
+          display: "flex", flexWrap: "wrap", gap: 6,
+          padding: 4, background: ll.subtle,
+          border: `1px solid ${ll.line}`,
+        }}>
+          {groups.map(g => {
+            const on = g.id === activeFlow;
+            return (
+              <button
+                key={g.id}
+                role="tab"
+                aria-selected={on}
+                onClick={() => setActiveFlow(g.id)}
+                style={{
+                  position: "relative",
+                  padding: "9px 14px",
+                  background: on ? "#FFFFFF" : "transparent",
+                  border: `1px solid ${on ? ll.line : "transparent"}`,
+                  ...mono, fontSize: 10, fontWeight: 700, letterSpacing: "0.22em",
+                  color: on ? ll.primary : ll.muted,
+                  cursor: "pointer",
+                  transition: "color 180ms ease, background 180ms ease",
+                }}
+              >
+                {g.label}
+                <span style={{
+                  marginLeft: 8, opacity: 0.7,
+                  fontSize: 9,
+                }}>
+                  {String(g.indices.length).padStart(2, "0")}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
+        <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+          <span style={{
+            ...mono, fontSize: 10, fontWeight: 700,
+            letterSpacing: "0.22em", color: ll.muted,
+          }}>
+            {active.label} · {visible.length} SCREENS
+          </span>
+          <div style={{ display: "flex", gap: 6 }}>
+            <button
+              aria-label="Scroll left"
+              onClick={() => scrollBy("left")}
+              disabled={!canLeft}
+              style={{
+                width: 36, height: 36,
+                display: "grid", placeItems: "center",
+                background: "#FFFFFF",
+                border: `1px solid ${ll.line}`,
+                cursor: canLeft ? "pointer" : "not-allowed",
+                opacity: canLeft ? 1 : 0.4,
+                transition: "opacity 160ms ease, background 160ms ease",
+              }}
+            >
+              <ArrowLeft size={16} color={ll.primary} weight="bold" />
+            </button>
+            <button
+              aria-label="Scroll right"
+              onClick={() => scrollBy("right")}
+              disabled={!canRight}
+              style={{
+                width: 36, height: 36,
+                display: "grid", placeItems: "center",
+                background: "#FFFFFF",
+                border: `1px solid ${ll.line}`,
+                cursor: canRight ? "pointer" : "not-allowed",
+                opacity: canRight ? 1 : 0.4,
+                transition: "opacity 160ms ease, background 160ms ease",
+              }}
+            >
+              <ArrowRight size={16} color={ll.primary} weight="bold" />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Strip container */}
+      <div style={{
+        position: "relative",
+        background: ll.surface,
+        border: `1px solid ${ll.line}`,
+      }}>
+        {/* Edge fades */}
+        <div aria-hidden style={{
+          position: "absolute", left: 0, top: 0, bottom: 0, width: 48,
+          background: `linear-gradient(to right, ${ll.surface}, rgba(237,240,247,0))`,
+          opacity: canLeft ? 1 : 0,
+          transition: "opacity 200ms ease",
+          zIndex: 2, pointerEvents: "none",
+        }} />
+        <div aria-hidden style={{
+          position: "absolute", right: 0, top: 0, bottom: 0, width: 48,
+          background: `linear-gradient(to left, ${ll.surface}, rgba(237,240,247,0))`,
+          opacity: canRight ? 1 : 0,
+          transition: "opacity 200ms ease",
+          zIndex: 2, pointerEvents: "none",
+        }} />
+
+        <div
+          ref={scrollRef}
+          className="ll-lofi-strip"
+          style={{
+            display: "flex",
+            gap: 24,
+            overflowX: "auto",
+            scrollSnapType: "x mandatory",
+            padding: "clamp(32px, 3.6vw, 56px) clamp(18px, 2vw, 32px)",
+            scrollbarWidth: "none",
+          }}
+        >
+          <AnimatePresence mode="wait" initial={false}>
+            {visible.map((s, i) => (
+              <motion.figure
+                key={`${activeFlow}-${s.src}`}
+                data-lofi-card
+                initial={{ opacity: 0, y: 18 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.45, delay: i * 0.04, ease: [0.16, 1, 0.3, 1] }}
+                style={{
+                  margin: 0,
+                  flex: "0 0 clamp(160px, 17vw, 200px)",
+                  scrollSnapAlign: "start",
+                  display: "flex", flexDirection: "column",
+                  alignItems: "center", gap: 14,
+                }}
+              >
+                <PhoneFrame src={s.src} alt={`LocalLift ${s.label}`} />
+                <figcaption style={{
+                  ...mono, fontSize: 9.5, letterSpacing: "0.22em",
+                  color: ll.muted, fontWeight: 700, textAlign: "center",
+                }}>
+                  {s.label}
+                </figcaption>
+              </motion.figure>
+            ))}
+          </AnimatePresence>
+        </div>
+
+        {/* Progress bar */}
+        <div style={{
+          position: "relative",
+          height: 2, background: ll.subtle,
+          borderTop: `1px solid ${ll.line}`,
+        }}>
+          <motion.span
+            aria-hidden
+            style={{
+              position: "absolute", inset: 0,
+              background: ll.primary,
+              transformOrigin: "0 50%",
+              scaleX: progress,
+            }}
+            animate={{ scaleX: progress }}
+            transition={{ type: "spring", stiffness: 180, damping: 24 }}
+          />
+        </div>
+      </div>
+
+      <style>{`
+        .ll-lofi-strip::-webkit-scrollbar { display: none; }
+      `}</style>
+    </div>
+  );
+}
+
 /* ══════════════════════════════════════════════════════════════════
    HERO MOCKUP — three floating phones
 ══════════════════════════════════════════════════════════════════ */
@@ -1741,8 +1974,7 @@ export default function LocalLiftCase() {
             </div>
           </div>
 
-          <PhoneGallery
-            tone="paper"
+          <LofiFilmstrip
             items={[
               { src: `${LOFI}/lofi-splash.png`,       label: "Splash" },
               { src: `${LOFI}/lofi-onboarding-1.png`, label: "Onboard · 1" },
@@ -1756,6 +1988,13 @@ export default function LocalLiftCase() {
               { src: `${LOFI}/lofi-profile.png`,      label: "Profile" },
               { src: `${LOFI}/lofi-session.png`,      label: "Session" },
               { src: `${LOFI}/lofi-workspace.png`,    label: "Workspace" },
+            ]}
+            groups={[
+              { id: "all",        label: "All flows",  indices: [0,1,2,3,4,5,6,7,8,9,10,11] },
+              { id: "onboarding", label: "Onboarding", indices: [0,1,2,3] },
+              { id: "auth",       label: "Auth",       indices: [4,5] },
+              { id: "core",       label: "Core",       indices: [6,7,8,9] },
+              { id: "session",    label: "Session",    indices: [10,11] },
             ]}
           />
         </div>
