@@ -587,25 +587,25 @@ const PERSONAS: Persona[] = [
       {
         icon: Sparkle, label: "Goals",
         items: [
-          "Get my business found in local search",
-          "Post once, reach the right people",
-          "Learn from someone who's been here",
+          "Local discoverability",
+          "Mentor who's been here",
+          "Tools that save time",
         ],
       },
       {
         icon: Wrench, label: "Frustrations",
         items: [
-          "Every tool assumes I have a team",
-          "Advice online is too generic to act on",
-          "Community forums are too big to feel safe",
+          "Tools built for teams",
+          "Generic advice",
+          "Forums feel too big",
         ],
       },
       {
         icon: Path, label: "Behaviours",
         items: [
-          "Runs everything from a phone, on the move",
-          "Trusts word-of-mouth over ad copy",
-          "Pays only for tools that save real time",
+          "Runs shop from a phone",
+          "Trusts word of mouth",
+          "Tries, then commits",
         ],
       },
     ],
@@ -622,25 +622,25 @@ const PERSONAS: Persona[] = [
       {
         icon: Sparkle, label: "Goals",
         items: [
-          "Benchmark against owners in my industry",
-          "Turn social traffic into repeat customers",
-          "Systemize what's been ad-hoc so far",
+          "Benchmark by industry",
+          "Convert social to repeat",
+          "Systemize the ad-hoc",
         ],
       },
       {
         icon: Wrench, label: "Frustrations",
         items: [
-          "Generic growth playbooks miss local nuance",
-          "Hard to find mentors who've been in my stage",
-          "Tools overwhelm with data, not decisions",
+          "Generic playbooks",
+          "Stage-specific mentors",
+          "Data without decisions",
         ],
       },
       {
         icon: Path, label: "Behaviours",
         items: [
-          "Compares vendors before committing",
-          "Values peer conversations over templates",
-          "Tracks weekly metrics, monthly goals",
+          "Compares before committing",
+          "Peers over templates",
+          "Tracks weekly metrics",
         ],
       },
     ],
