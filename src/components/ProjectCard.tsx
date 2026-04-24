@@ -278,47 +278,13 @@ function HeroStage({ project, hovered }: { project: Project; hovered: boolean })
         }}
       />
 
-      {/* FIG label */}
-      <span
-        style={{
-          ...mono,
-          position: "absolute",
-          top: 12,
-          left: 14,
-          fontSize: 8,
-          color: accent.dark,
-          opacity: 0.6,
-          letterSpacing: "0.18em",
-          zIndex: 4,
-        }}
-      >
-        FIG. {project.slug.slice(0, 3).toUpperCase()}-01
-      </span>
-
-      {/* Kind label */}
-      <span
-        style={{
-          ...mono,
-          position: "absolute",
-          top: 12,
-          right: 14,
-          fontSize: 8,
-          color: accent.dark,
-          opacity: 0.5,
-          letterSpacing: "0.16em",
-          zIndex: 4,
-        }}
-      >
-        {project.heroMockupKind === "photo" ? "FIELD" : project.heroMockupKind.toUpperCase()}
-      </span>
-
       {/* Composition — swapped by slug */}
       <motion.div
         animate={{ scale: hovered ? 1.03 : 1 }}
         transition={{ type: "spring", stiffness: 180, damping: 22, mass: 0.7 }}
         style={{
           position: "absolute",
-          inset: 0,
+          inset: 22,
           zIndex: 2,
         }}
       >
