@@ -429,10 +429,10 @@ function LocalLiftComposition({ accent }: { accent: ProjectAccent }) {
         justifyContent: "center",
       }}
     >
-      {/* Back-left phone — tilt -6, same proportions as hero */}
+      {/* Back-left phone — mentor session */}
       <motion.img
-        src="/locallift/hifi-explore.png"
-        alt="LocalLift login screen"
+        src="/locallift/hifi/hifi-session.png"
+        alt="LocalLift live mentor session"
         loading="lazy"
         animate={{ y: [0, -6, 0] }}
         transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
@@ -449,10 +449,10 @@ function LocalLiftComposition({ accent }: { accent: ProjectAccent }) {
         }}
       />
 
-      {/* Center phone — focal, flows in flex center so it's always fully visible */}
+      {/* Center phone — Explore feed (most product-iconic) */}
       <motion.img
-        src="/locallift/hifi-splash.png"
-        alt="LocalLift splash screen"
+        src="/locallift/hifi/hifi-explore.png"
+        alt="LocalLift course browse feed"
         loading="lazy"
         animate={{ y: [0, -6, 0] }}
         transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
@@ -467,10 +467,10 @@ function LocalLiftComposition({ accent }: { accent: ProjectAccent }) {
         }}
       />
 
-      {/* Back-right phone — tilt +6 */}
+      {/* Back-right phone — founder profile */}
       <motion.img
-        src="/locallift/hifi-community.png"
-        alt="LocalLift confirmation screen"
+        src="/locallift/hifi/hifi-profile-founder.png"
+        alt="LocalLift founder profile"
         loading="lazy"
         animate={{ y: [0, -6, 0] }}
         transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1.4 }}
