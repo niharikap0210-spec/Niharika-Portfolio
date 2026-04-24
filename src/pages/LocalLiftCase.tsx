@@ -172,7 +172,8 @@ function SectionHeader({
 }
 
 /* ──────────────────────────────────────────────────────────────
-   PHONE FRAME — mobile bezel wrapping a screen image
+   PHONE FRAME — float + hover wrapper (images already contain
+   their own phone mockup, so no bezel is drawn here)
 ────────────────────────────────────────────────────────────── */
 function PhoneFrame({
   src, alt, scale = 1, tilt = 0, floatDelay = 0, priority = false,
@@ -195,63 +196,21 @@ function PhoneFrame({
         width: "100%",
         willChange: "transform",
         cursor: "default",
+        filter: "drop-shadow(0 2px 6px rgba(18,26,42,0.10)) drop-shadow(0 24px 48px rgba(59,79,123,0.18))",
         ...style,
       }}
     >
-      <div
+      <img
+        src={src}
+        alt={alt}
+        loading={priority ? "eager" : "lazy"}
         style={{
-          position: "relative",
-          padding: "10px 9px",
-          background: "linear-gradient(140deg, #1E2A45 0%, #2A3A5C 55%, #121A2A 100%)",
-          borderRadius: 42,
-          boxShadow: `
-            0 2px 6px rgba(18, 26, 42, 0.14),
-            0 24px 60px rgba(18, 26, 42, 0.24),
-            inset 0 1px 1px rgba(255,255,255,0.08)
-          `,
+          width: "100%",
+          height: "auto",
+          display: "block",
+          objectFit: "contain",
         }}
-      >
-        {/* Inner bezel */}
-        <div style={{
-          position: "absolute",
-          inset: 3,
-          borderRadius: 40,
-          border: "1px solid rgba(255,255,255,0.06)",
-          pointerEvents: "none",
-        }} />
-
-        {/* Screen */}
-        <div style={{
-          position: "relative",
-          borderRadius: 32,
-          overflow: "hidden",
-          background: "#F4F6FB",
-          aspectRatio: "9 / 19.5",
-        }}>
-          {/* Dynamic Island / notch */}
-          <div style={{
-            position: "absolute",
-            top: 10,
-            left: "50%",
-            transform: "translateX(-50%)",
-            width: 78,
-            height: 22,
-            borderRadius: 14,
-            background: "#0B0F1A",
-            zIndex: 2,
-          }} />
-          <img
-            src={src}
-            alt={alt}
-            loading={priority ? "eager" : "lazy"}
-            style={{
-              width: "100%", height: "100%",
-              objectFit: "cover",
-              display: "block",
-            }}
-          />
-        </div>
-      </div>
+      />
     </motion.div>
   );
 }
