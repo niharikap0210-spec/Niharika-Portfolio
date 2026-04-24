@@ -32,9 +32,8 @@ export interface Project {
   keyTakeaways: string[];
   accentHue: string;
   gradient: string; // card thumbnail fallback
-  heroImage: string; // primary card mockup (first frame / fallback)
-  heroScreens: string[]; // ordered screens to cycle through on the card
-  heroMockupKind: "laptop" | "tablet" | "phone" | "photo"; // framing
+  heroImage: string; // primary card mockup (single, static)
+  heroMockupKind: "laptop" | "tablet" | "phone" | "photo"; // framing hint
   accent: ProjectAccent; // per-project palette pulled from case-study page
 }
 
@@ -55,7 +54,6 @@ export const projects: Project[] = [
     accentHue: "130",
     gradient: "linear-gradient(135deg, #1C2B1C 0%, #243824 50%, #2D4A2D 100%)",
     heroImage: "/arko/web-1.png",
-    heroScreens: ["/arko/web-1.png", "/arko/web-2.png", "/arko/web-3.png", "/arko/web-4.png"],
     heroMockupKind: "laptop",
     accent: {
       primary: "#6E8F4E",
@@ -106,14 +104,8 @@ export const projects: Project[] = [
     tags: ["ENTERPRISE", "HEALTHCARE", "UI DESIGN", "DESIGN SYSTEMS"],
     accentHue: "220",
     gradient: "linear-gradient(135deg, #EFF4FD 0%, #C9DAFA 100%)",
-    heroImage: "/veriflow/dashboard.png",
-    heroScreens: [
-      "/veriflow/dashboard.png",
-      "/veriflow/container-assignment.png",
-      "/veriflow/cooler-assignment.png",
-      "/veriflow/collect-container.png",
-    ],
-    heroMockupKind: "tablet",
+    heroImage: "/veriflow/home.png",
+    heroMockupKind: "laptop",
     accent: {
       primary: "#1E40AF",
       light:   "#3B82F6",
@@ -166,13 +158,7 @@ export const projects: Project[] = [
     tags: ["UX RESEARCH", "SERVICE DESIGN", "SMB", "CROSS-CULTURAL"],
     accentHue: "222",
     gradient: "linear-gradient(135deg, #EDF0F7 0%, #B9C4DC 100%)",
-    heroImage: "/locallift/hifi-explore.png",
-    heroScreens: [
-      "/locallift/hifi-explore.png",
-      "/locallift/hifi-community.png",
-      "/locallift/hifi-profile.png",
-      "/locallift/hifi-session.png",
-    ],
+    heroImage: "/locallift/hifi-splash.png",
     heroMockupKind: "phone",
     accent: {
       primary: "#3B4F7B",
@@ -226,13 +212,7 @@ export const projects: Project[] = [
     tags: ["UX RESEARCH", "FIELD STUDY", "PACKAGING DESIGN", "CONSUMER"],
     accentHue: "12",
     gradient: "linear-gradient(135deg, #FBEDE6 0%, #E8B5A1 100%)",
-    heroImage: "/shelfie/shopper-aisle.jpg",
-    heroScreens: [
-      "/shelfie/shopper-aisle.jpg",
-      "/shelfie/shopper-confused.png",
-      "/shelfie/best-before-bag.jpg",
-      "/shelfie/decoding-mfg-code.jpg",
-    ],
+    heroImage: "/shelfie/expiration-reader.jpg",
     heroMockupKind: "photo",
     accent: {
       primary: "#1F5F5C",

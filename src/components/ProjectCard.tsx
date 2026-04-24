@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { motion, useInView } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
-import type { Project } from "../data/projects";
+import { useRef, useState } from "react";
+import type { Project, ProjectAccent } from "../data/projects";
 
 interface ProjectCardProps {
   project: Project;
@@ -16,19 +16,6 @@ const mono: React.CSSProperties = {
 
 const SPRING = { type: "spring" as const, stiffness: 260, damping: 26, mass: 0.6 };
 const EASE = [0.16, 1, 0.3, 1] as const;
-
-/** Respect reduced-motion preference. */
-function usePrefersReducedMotion() {
-  const [reduced, setReduced] = useState(false);
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setReduced(mq.matches);
-    const handler = () => setReduced(mq.matches);
-    mq.addEventListener("change", handler);
-    return () => mq.removeEventListener("change", handler);
-  }, []);
-  return reduced;
-}
 
 export default function ProjectCard({ project, index }: ProjectCardProps) {
   const ref = useRef<HTMLDivElement>(null);
@@ -83,7 +70,6 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
             }}
           />
 
-          {/* Corner construction ticks */}
           <CornerTicks hovered={hovered} color={accent.primary} />
 
           <div style={{ position: "relative", zIndex: 2 }}>
@@ -138,8 +124,8 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
               <span style={{ position: "absolute", top: -3, right: 0, width: 1, height: 6, backgroundColor: "var(--construction)" }} />
             </div>
 
-            {/* Hero mockup stage */}
-            <MockupStage project={project} hovered={hovered} />
+            {/* Hero composition */}
+            <HeroStage project={project} hovered={hovered} />
 
             {/* Title + subtitle */}
             <div style={{ marginTop: 24 }}>
@@ -186,7 +172,6 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
                 {project.subtitle}
               </p>
 
-              {/* CTA */}
               <div className="flex items-center justify-between" style={{ marginTop: 8 }}>
                 <div
                   className="flex items-center"
@@ -258,30 +243,11 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   Mockup stage — renders a realistic device frame and auto-cycles
-   screens inside it.
+   Hero stage — ambient backdrop + per-project creative composition
 ══════════════════════════════════════════════════════════════════ */
-function MockupStage({ project, hovered }: { project: Project; hovered: boolean }) {
-  const { accent, heroScreens, heroMockupKind } = project;
-  const [active, setActive] = useState(0);
-  const reducedMotion = usePrefersReducedMotion();
+function HeroStage({ project, hovered }: { project: Project; hovered: boolean }) {
+  const { accent } = project;
 
-  useEffect(() => {
-    if (reducedMotion || hovered || heroScreens.length <= 1) return;
-    const id = window.setInterval(() => {
-      setActive((i) => (i + 1) % heroScreens.length);
-    }, 2800);
-    return () => window.clearInterval(id);
-  }, [hovered, heroScreens.length, reducedMotion]);
-
-  useEffect(() => {
-    heroScreens.slice(1).forEach((src) => {
-      const img = new Image();
-      img.src = src;
-    });
-  }, [heroScreens]);
-
-  // ── Ambient stage backdrop ──────────────────────────────────────
   return (
     <div
       style={{
@@ -296,7 +262,7 @@ function MockupStage({ project, hovered }: { project: Project; hovered: boolean 
         border: `0.75px solid ${accent.primary}22`,
       }}
     >
-      {/* Very soft grid (background texture, not architectural) */}
+      {/* Soft grid texture */}
       <div
         aria-hidden
         style={{
@@ -313,11 +279,7 @@ function MockupStage({ project, hovered }: { project: Project; hovered: boolean 
       />
 
       {/* FIG label */}
-      <motion.span
-        key={active}
-        initial={{ opacity: 0, y: -4 }}
-        animate={{ opacity: 0.65, y: 0 }}
-        transition={{ duration: 0.4, ease: EASE }}
+      <span
         style={{
           ...mono,
           position: "absolute",
@@ -325,12 +287,13 @@ function MockupStage({ project, hovered }: { project: Project; hovered: boolean 
           left: 14,
           fontSize: 8,
           color: accent.dark,
+          opacity: 0.6,
           letterSpacing: "0.18em",
-          zIndex: 3,
+          zIndex: 4,
         }}
       >
-        FIG. {project.slug.slice(0, 3).toUpperCase()}-{String(active + 1).padStart(2, "0")}
-      </motion.span>
+        FIG. {project.slug.slice(0, 3).toUpperCase()}-01
+      </span>
 
       {/* Kind label */}
       <span
@@ -343,72 +306,222 @@ function MockupStage({ project, hovered }: { project: Project; hovered: boolean 
           color: accent.dark,
           opacity: 0.5,
           letterSpacing: "0.16em",
-          zIndex: 3,
+          zIndex: 4,
         }}
       >
-        {heroMockupKind === "photo" ? "FIELD" : heroMockupKind.toUpperCase()}
+        {project.heroMockupKind === "photo" ? "FIELD" : project.heroMockupKind.toUpperCase()}
       </span>
 
-      {/* Device frame — picks appropriate mockup for kind */}
+      {/* Composition — swapped by slug */}
       <motion.div
-        animate={{ scale: hovered ? 1.03 : 1, y: hovered ? -4 : 0 }}
+        animate={{ scale: hovered ? 1.03 : 1 }}
         transition={{ type: "spring", stiffness: 180, damping: 22, mass: 0.7 }}
         style={{
           position: "absolute",
           inset: 0,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          padding: heroMockupKind === "phone" ? "22px 0 28px" : "34px 44px 40px",
           zIndex: 2,
         }}
       >
-        {heroMockupKind === "laptop" && (
-          <LaptopFrame screens={heroScreens} active={active} accent={accent.primary} title={project.title} />
-        )}
-        {heroMockupKind === "tablet" && (
-          <TabletFrame screens={heroScreens} active={active} accent={accent.primary} title={project.title} />
-        )}
-        {heroMockupKind === "phone" && (
-          <PhoneFrame screens={heroScreens} active={active} accent={accent.primary} title={project.title} />
-        )}
-        {heroMockupKind === "photo" && (
-          <PolaroidFrame screens={heroScreens} active={active} accent={accent} title={project.title} />
-        )}
+        {project.slug === "arko" && <ArkoComposition accent={accent} />}
+        {project.slug === "veriflow" && <VeriflowComposition accent={accent} />}
+        {project.slug === "locallift" && <LocalLiftComposition accent={accent} />}
+        {project.slug === "shelfie" && <ShelfieComposition accent={accent} />}
       </motion.div>
-
-      {/* Progress ticks */}
-      <ProgressTicks count={heroScreens.length} active={active} color={accent.primary} />
     </div>
   );
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   Device frames — minimal, modern, built from divs + subtle details
+   Per-project creative compositions
 ══════════════════════════════════════════════════════════════════ */
 
-/* ── Laptop (macbook-style) ──────────────────────────────────────── */
-function LaptopFrame({
-  screens,
-  active,
-  accent,
-  title,
-}: {
-  screens: string[];
-  active: number;
-  accent: string;
-  title: string;
-}) {
+/* ── Arko: laptop + overlapping phone (mirrors case-study hero) ── */
+function ArkoComposition({ accent }: { accent: ProjectAccent }) {
   return (
-    <div style={{ width: "100%", maxWidth: 460, display: "flex", flexDirection: "column", alignItems: "center" }}>
-      {/* Lid with screen */}
+    <div style={{ position: "absolute", inset: 0, padding: "26px 38px 32px" }}>
+      {/* Laptop — main, left-biased, slow float */}
+      <motion.div
+        animate={{ y: [0, -5, 0] }}
+        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+        style={{
+          position: "absolute",
+          left: "6%",
+          top: "12%",
+          width: "72%",
+          zIndex: 2,
+        }}
+      >
+        <LaptopFrame src="/arko/web-1.png" alt="Arko designer dashboard" accent={accent.primary} />
+      </motion.div>
+
+      {/* Phone — overlaps bottom-right, counter-float */}
+      <motion.div
+        animate={{ y: [0, -8, 0] }}
+        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
+        style={{
+          position: "absolute",
+          right: "5%",
+          bottom: "6%",
+          width: "23%",
+          zIndex: 3,
+        }}
+      >
+        <PhoneFrame src="/arko/phone-13.png" alt="Arko client view" accent={accent.primary} size="compact" />
+      </motion.div>
+    </div>
+  );
+}
+
+/* ── Veriflow: laptop + overlapping tablet (mirrors case-study hero) ── */
+function VeriflowComposition({ accent }: { accent: ProjectAccent }) {
+  return (
+    <div style={{ position: "absolute", inset: 0, padding: "22px 40px 30px" }}>
+      {/* Laptop — left-biased, slow float */}
+      <motion.div
+        animate={{ y: [0, -5, 0] }}
+        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+        style={{
+          position: "absolute",
+          left: "2%",
+          top: "10%",
+          width: "68%",
+          zIndex: 2,
+        }}
+      >
+        <LaptopFrame src="/veriflow/home.png" alt="Veriflow admin dashboard" accent={accent.primary} />
+      </motion.div>
+
+      {/* Tablet — overlaps bottom-right, slight rotation */}
+      <motion.div
+        animate={{ y: [0, -8, 0], rotate: [-1.2, -0.4, -1.2] }}
+        transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut", delay: 0.7 }}
+        style={{
+          position: "absolute",
+          right: "2%",
+          bottom: "-2%",
+          width: "38%",
+          zIndex: 3,
+        }}
+      >
+        <TabletFrame src="/veriflow/start-scanning.png" alt="Veriflow clinic tablet" accent={accent.primary} />
+      </motion.div>
+    </div>
+  );
+}
+
+/* ── LocalLift: 3-phone fan (mirrors case-study hero) ───────────── */
+function LocalLiftComposition({ accent }: { accent: ProjectAccent }) {
+  return (
+    <div style={{ position: "absolute", inset: 0, padding: "18px 0 26px" }}>
+      {/* Back-left phone, tilt -6 */}
+      <motion.div
+        animate={{ y: [0, -6, 0] }}
+        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
+        style={{
+          position: "absolute",
+          left: "14%",
+          top: "16%",
+          width: "22%",
+          transform: "rotate(-6deg)",
+          filter: "saturate(0.95)",
+          zIndex: 1,
+        }}
+      >
+        <PhoneFrame src="/locallift/hifi-explore.png" alt="Explore" accent={accent.primary} size="compact" />
+      </motion.div>
+
+      {/* Center phone — primary */}
+      <motion.div
+        animate={{ y: [0, -8, 0] }}
+        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+        style={{
+          position: "absolute",
+          left: "50%",
+          top: "6%",
+          width: "26%",
+          transform: "translateX(-50%)",
+          zIndex: 3,
+        }}
+      >
+        <PhoneFrame src="/locallift/hifi-splash.png" alt="Splash" accent={accent.primary} size="compact" />
+      </motion.div>
+
+      {/* Back-right phone, tilt +6 */}
+      <motion.div
+        animate={{ y: [0, -6, 0] }}
+        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1.4 }}
+        style={{
+          position: "absolute",
+          right: "14%",
+          top: "16%",
+          width: "22%",
+          transform: "rotate(6deg)",
+          filter: "saturate(0.95)",
+          zIndex: 1,
+        }}
+      >
+        <PhoneFrame src="/locallift/hifi-community.png" alt="Community" accent={accent.primary} size="compact" />
+      </motion.div>
+    </div>
+  );
+}
+
+/* ── Shelfie: feathered research photo with soft teal glow ─────── */
+function ShelfieComposition({ accent }: { accent: ProjectAccent }) {
+  return (
+    <div style={{ position: "absolute", inset: 0 }}>
+      {/* Soft radial glow behind figure */}
+      <div
+        aria-hidden
+        style={{
+          position: "absolute",
+          inset: "-10%",
+          background: `radial-gradient(50% 50% at 50% 50%, ${accent.light} 0%, ${accent.primary} 38%, transparent 72%)`,
+          filter: "blur(80px)",
+          opacity: 0.28,
+          zIndex: 1,
+        }}
+      />
+
+      <motion.img
+        src="/shelfie/expiration-reader.jpg"
+        alt="A shopper trying to read an expiration date"
+        animate={{ y: [0, -6, 0] }}
+        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+        style={{
+          position: "absolute",
+          inset: 0,
+          margin: "auto",
+          width: "min(100%, 380px)",
+          height: "auto",
+          maxHeight: "82%",
+          objectFit: "contain",
+          zIndex: 2,
+          // feather all edges so the rectangle dissolves into the stage
+          maskImage:
+            "radial-gradient(ellipse 72% 80% at 50% 50%, #000 30%, rgba(0,0,0,0.85) 55%, transparent 96%)",
+          WebkitMaskImage:
+            "radial-gradient(ellipse 72% 80% at 50% 50%, #000 30%, rgba(0,0,0,0.85) 55%, transparent 96%)",
+        }}
+      />
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   Device frames — static, take a single src
+══════════════════════════════════════════════════════════════════ */
+
+function LaptopFrame({ src, alt, accent }: { src: string; alt: string; accent: string }) {
+  return (
+    <div style={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "center" }}>
       <div
         style={{
           width: "100%",
           aspectRatio: "16 / 10",
           backgroundColor: "#1A1A1A",
           borderRadius: "10px 10px 2px 2px",
-          padding: 7,
+          padding: 6,
           boxShadow: `
             0 0 0 0.75px rgba(0,0,0,0.2),
             0 14px 36px ${accent}22,
@@ -417,12 +530,11 @@ function LaptopFrame({
           position: "relative",
         }}
       >
-        {/* Camera dot */}
         <span
           aria-hidden
           style={{
             position: "absolute",
-            top: 3,
+            top: 2,
             left: "50%",
             transform: "translateX(-50%)",
             width: 3,
@@ -432,7 +544,6 @@ function LaptopFrame({
             zIndex: 2,
           }}
         />
-        {/* Screen */}
         <div
           style={{
             position: "relative",
@@ -441,11 +552,14 @@ function LaptopFrame({
             borderRadius: 3,
             overflow: "hidden",
             backgroundColor: "#0A0A0A",
-            boxShadow: "inset 0 0 0 0.5px rgba(255,255,255,0.05)",
           }}
         >
-          <ScreenStack screens={screens} active={active} alt={title} fit="cover" />
-          {/* Subtle screen sheen */}
+          <img
+            src={src}
+            alt={alt}
+            style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+            loading="lazy"
+          />
           <div
             aria-hidden
             style={{
@@ -457,19 +571,16 @@ function LaptopFrame({
           />
         </div>
       </div>
-
-      {/* Base / keyboard deck */}
       <div
         style={{
           width: "108%",
-          height: 10,
+          height: 9,
           background: "linear-gradient(180deg, #2A2A2A 0%, #1A1A1A 40%, #0F0F0F 100%)",
           borderRadius: "0 0 10px 10px",
           position: "relative",
           boxShadow: "0 6px 12px rgba(0,0,0,0.18)",
         }}
       >
-        {/* Trackpad notch */}
         <span
           aria-hidden
           style={{
@@ -477,7 +588,7 @@ function LaptopFrame({
             top: 0,
             left: "50%",
             transform: "translateX(-50%)",
-            width: 56,
+            width: 52,
             height: 3,
             backgroundColor: "#0A0A0A",
             borderRadius: "0 0 4px 4px",
@@ -488,28 +599,16 @@ function LaptopFrame({
   );
 }
 
-/* ── Tablet (iPad-style landscape) ───────────────────────────────── */
-function TabletFrame({
-  screens,
-  active,
-  accent,
-  title,
-}: {
-  screens: string[];
-  active: number;
-  accent: string;
-  title: string;
-}) {
+function TabletFrame({ src, alt, accent }: { src: string; alt: string; accent: string }) {
   return (
     <div
       style={{
         position: "relative",
         width: "100%",
-        maxWidth: 420,
         aspectRatio: "4 / 3",
         backgroundColor: "#141414",
-        borderRadius: 16,
-        padding: 10,
+        borderRadius: 14,
+        padding: 8,
         boxShadow: `
           0 0 0 0.75px rgba(0,0,0,0.25),
           0 20px 48px ${accent}22,
@@ -517,12 +616,11 @@ function TabletFrame({
         `,
       }}
     >
-      {/* Camera dot (left edge, centered) */}
       <span
         aria-hidden
         style={{
           position: "absolute",
-          left: 4,
+          left: 3,
           top: "50%",
           transform: "translateY(-50%)",
           width: 3,
@@ -531,19 +629,22 @@ function TabletFrame({
           borderRadius: "50%",
         }}
       />
-      {/* Screen */}
       <div
         style={{
           position: "relative",
           width: "100%",
           height: "100%",
-          borderRadius: 8,
+          borderRadius: 7,
           overflow: "hidden",
           backgroundColor: "#0A0A0A",
-          boxShadow: "inset 0 0 0 0.5px rgba(255,255,255,0.05)",
         }}
       >
-        <ScreenStack screens={screens} active={active} alt={title} fit="cover" />
+        <img
+          src={src}
+          alt={alt}
+          style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+          loading="lazy"
+        />
         <div
           aria-hidden
           style={{
@@ -558,27 +659,27 @@ function TabletFrame({
   );
 }
 
-/* ── Phone (modern with dynamic-island notch) ────────────────────── */
 function PhoneFrame({
-  screens,
-  active,
+  src,
+  alt,
   accent,
-  title,
+  size = "full",
 }: {
-  screens: string[];
-  active: number;
+  src: string;
+  alt: string;
   accent: string;
-  title: string;
+  size?: "full" | "compact";
 }) {
+  const notchWidth = size === "compact" ? "38%" : "34%";
   return (
     <div
       style={{
         position: "relative",
-        width: "min(34%, 175px)",
+        width: "100%",
         aspectRatio: "9 / 19",
-        borderRadius: 30,
+        borderRadius: size === "compact" ? 20 : 30,
         background: "linear-gradient(145deg, #232323 0%, #0A0A0A 100%)",
-        padding: 5,
+        padding: size === "compact" ? 4 : 5,
         boxShadow: `
           0 0 0 0.75px rgba(0,0,0,0.3),
           0 24px 56px ${accent}33,
@@ -586,42 +687,48 @@ function PhoneFrame({
         `,
       }}
     >
-      {/* Side buttons */}
-      <span aria-hidden style={{ position: "absolute", left: -1.5, top: "18%", width: 2, height: 20, backgroundColor: "#1A1A1A", borderRadius: 1 }} />
-      <span aria-hidden style={{ position: "absolute", left: -1.5, top: "28%", width: 2, height: 34, backgroundColor: "#1A1A1A", borderRadius: 1 }} />
-      <span aria-hidden style={{ position: "absolute", left: -1.5, top: "38%", width: 2, height: 34, backgroundColor: "#1A1A1A", borderRadius: 1 }} />
-      <span aria-hidden style={{ position: "absolute", right: -1.5, top: "24%", width: 2, height: 48, backgroundColor: "#1A1A1A", borderRadius: 1 }} />
+      {/* Side buttons (only visible on full size — compact would be noisy) */}
+      {size === "full" && (
+        <>
+          <span aria-hidden style={{ position: "absolute", left: -1.5, top: "24%", width: 2, height: 34, backgroundColor: "#1A1A1A", borderRadius: 1 }} />
+          <span aria-hidden style={{ position: "absolute", left: -1.5, top: "36%", width: 2, height: 34, backgroundColor: "#1A1A1A", borderRadius: 1 }} />
+          <span aria-hidden style={{ position: "absolute", right: -1.5, top: "28%", width: 2, height: 48, backgroundColor: "#1A1A1A", borderRadius: 1 }} />
+        </>
+      )}
 
-      {/* Screen */}
       <div
         style={{
           position: "relative",
           width: "100%",
           height: "100%",
-          borderRadius: 25,
+          borderRadius: size === "compact" ? 16 : 25,
           overflow: "hidden",
           backgroundColor: "#000",
         }}
       >
-        <ScreenStack screens={screens} active={active} alt={title} fit="cover" />
+        <img
+          src={src}
+          alt={alt}
+          style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+          loading="lazy"
+        />
 
         {/* Dynamic Island */}
         <span
           aria-hidden
           style={{
             position: "absolute",
-            top: 7,
+            top: size === "compact" ? 5 : 7,
             left: "50%",
             transform: "translateX(-50%)",
-            width: "34%",
-            height: 14,
+            width: notchWidth,
+            height: size === "compact" ? 10 : 14,
             backgroundColor: "#000",
             borderRadius: 10,
             zIndex: 3,
           }}
         />
 
-        {/* Subtle screen sheen */}
         <div
           aria-hidden
           style={{
@@ -633,165 +740,6 @@ function PhoneFrame({
           }}
         />
       </div>
-    </div>
-  );
-}
-
-/* ── Polaroid (for field research photos) ───────────────────────── */
-function PolaroidFrame({
-  screens,
-  active,
-  accent,
-  title,
-}: {
-  screens: string[];
-  active: number;
-  accent: { primary: string; dark: string };
-  title: string;
-}) {
-  return (
-    <div
-      style={{
-        position: "relative",
-        transform: "rotate(-1.2deg)",
-        width: "min(70%, 320px)",
-        padding: "10px 10px 34px",
-        backgroundColor: "#FDFBF6",
-        boxShadow: `
-          0 0 0 0.5px rgba(0,0,0,0.06),
-          0 18px 36px ${accent.primary}26,
-          0 6px 14px rgba(0,0,0,0.10)
-        `,
-      }}
-    >
-      <div
-        style={{
-          position: "relative",
-          width: "100%",
-          aspectRatio: "4 / 3",
-          backgroundColor: "#1A1A1A",
-          overflow: "hidden",
-        }}
-      >
-        <ScreenStack screens={screens} active={active} alt={title} fit="cover" />
-        {/* Film-like warm overlay */}
-        <div
-          aria-hidden
-          style={{
-            position: "absolute",
-            inset: 0,
-            background: `linear-gradient(180deg, transparent 0%, ${accent.dark}12 100%)`,
-            mixBlendMode: "multiply",
-            pointerEvents: "none",
-          }}
-        />
-      </div>
-      {/* Handwritten-style caption */}
-      <div
-        style={{
-          position: "absolute",
-          bottom: 8,
-          left: 0,
-          right: 0,
-          textAlign: "center",
-          fontFamily: "'Playfair Display', Georgia, serif",
-          fontStyle: "italic",
-          fontSize: 11,
-          color: "#6B6B6B",
-          letterSpacing: "0.02em",
-        }}
-      >
-        field observation · {String(active + 1).padStart(2, "0")}
-      </div>
-    </div>
-  );
-}
-
-/* ══════════════════════════════════════════════════════════════════
-   ScreenStack — absolutely stacked screens, crossfaded + slid
-══════════════════════════════════════════════════════════════════ */
-function ScreenStack({
-  screens,
-  active,
-  alt,
-  fit = "cover",
-}: {
-  screens: string[];
-  active: number;
-  alt: string;
-  fit?: "cover" | "contain";
-}) {
-  return (
-    <div style={{ position: "relative", width: "100%", height: "100%" }}>
-      {screens.map((src, i) => (
-        <motion.img
-          key={src}
-          src={src}
-          alt={i === 0 ? `${alt} screen` : ""}
-          aria-hidden={i !== active}
-          initial={false}
-          animate={{
-            opacity: i === active ? 1 : 0,
-            y: i === active ? 0 : 8,
-          }}
-          transition={{ duration: 0.7, ease: EASE }}
-          style={{
-            position: "absolute",
-            inset: 0,
-            width: "100%",
-            height: "100%",
-            objectFit: fit,
-            display: "block",
-            pointerEvents: "none",
-          }}
-          loading={i === 0 ? "eager" : "lazy"}
-        />
-      ))}
-    </div>
-  );
-}
-
-/* ── Progress ticks ──────────────────────────────────────────────── */
-function ProgressTicks({
-  count,
-  active,
-  color,
-}: {
-  count: number;
-  active: number;
-  color: string;
-}) {
-  return (
-    <div
-      style={{
-        position: "absolute",
-        bottom: 12,
-        left: 14,
-        display: "flex",
-        alignItems: "center",
-        gap: 6,
-        zIndex: 3,
-      }}
-    >
-      {Array.from({ length: count }).map((_, i) => {
-        const isActive = i === active;
-        return (
-          <motion.span
-            key={i}
-            aria-hidden
-            animate={{
-              width: isActive ? 18 : 6,
-              opacity: isActive ? 1 : 0.35,
-            }}
-            transition={{ duration: 0.5, ease: EASE }}
-            style={{
-              height: 2,
-              backgroundColor: color,
-              display: "inline-block",
-            }}
-          />
-        );
-      })}
     </div>
   );
 }
