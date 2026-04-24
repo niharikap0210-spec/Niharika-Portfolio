@@ -208,6 +208,76 @@ export default function Home() {
             </motion.h2>
           </div>
 
+          {/* ── Intro paragraph + stats row ── */}
+          <div
+            className="grid grid-cols-1 lg:grid-cols-[1.3fr_1fr] gap-10 lg:gap-14"
+            style={{ marginBottom: 56 }}
+          >
+            <motion.p
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-40px" }}
+              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+              style={{
+                fontFamily: "'Playfair Display', Georgia, serif",
+                fontStyle: "italic",
+                fontSize: "clamp(18px, 1.5vw, 22px)",
+                lineHeight: 1.55,
+                color: "var(--text-secondary)",
+                margin: 0,
+                maxWidth: 640,
+              }}
+            >
+              A selection of end-to-end product work spanning enterprise SaaS, consumer
+              onboarding, and research-led discovery — each project a study in translating
+              a specific constraint into something people actually reach for.
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-40px" }}
+              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.25 }}
+              className="grid grid-cols-3 gap-6"
+              style={{
+                borderTop: "0.75px solid var(--border)",
+                paddingTop: 18,
+                alignSelf: "end",
+              }}
+            >
+              {[
+                { value: "04", label: "Case Studies" },
+                { value: "2022—26", label: "Active Span" },
+                { value: "Web + iOS", label: "Surfaces" },
+              ].map((s) => (
+                <div key={s.label} style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                  <span
+                    style={{
+                      fontFamily: "'Playfair Display', Georgia, serif",
+                      fontSize: "clamp(22px, 2vw, 28px)",
+                      fontWeight: 700,
+                      color: "var(--text-primary)",
+                      letterSpacing: "-0.02em",
+                      lineHeight: 1,
+                    }}
+                  >
+                    {s.value}
+                  </span>
+                  <span
+                    style={{
+                      ...mono,
+                      fontSize: 9,
+                      color: "var(--text-muted)",
+                      letterSpacing: "0.18em",
+                    }}
+                  >
+                    {s.label}
+                  </span>
+                </div>
+              ))}
+            </motion.div>
+          </div>
+
           {/* 2-col grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {projects.map((project, i) => (
@@ -215,24 +285,99 @@ export default function Home() {
             ))}
           </div>
 
-          {/* Section footer — drafting rule + end marker */}
-          <div
-            className="flex items-center justify-between"
+          {/* ── Tools / Methodologies strip ── */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+            className="grid grid-cols-1 lg:grid-cols-[auto_1fr_auto] gap-6 lg:gap-10 items-start"
             style={{
               marginTop: 56,
-              paddingTop: 18,
+              paddingTop: 22,
               borderTop: "0.75px solid var(--border)",
               position: "relative",
             }}
           >
             <span style={{ position: "absolute", top: -4, left: 0, width: 1, height: 9, backgroundColor: "var(--construction)" }} />
             <span style={{ position: "absolute", top: -4, right: 0, width: 1, height: 9, backgroundColor: "var(--construction)" }} />
+
             <span
               style={{
                 ...mono,
                 fontSize: 10,
                 color: "var(--text-muted)",
                 letterSpacing: "0.22em",
+                whiteSpace: "nowrap",
+              }}
+            >
+              Shared Stack
+            </span>
+
+            <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+              {[
+                "Figma",
+                "Framer",
+                "Protopie",
+                "SwiftUI",
+                "Rive",
+                "FigJam",
+                "User Research",
+                "Design Systems",
+                "Prototyping",
+              ].map((tool, i, arr) => (
+                <span key={tool} style={{ display: "inline-flex", alignItems: "center", gap: 20 }}>
+                  <span
+                    style={{
+                      fontFamily: "'Inter', system-ui, sans-serif",
+                      fontSize: 13,
+                      color: "var(--text-secondary)",
+                      letterSpacing: "0.01em",
+                    }}
+                  >
+                    {tool}
+                  </span>
+                  {i < arr.length - 1 && (
+                    <span
+                      aria-hidden
+                      style={{
+                        width: 3,
+                        height: 3,
+                        backgroundColor: "var(--text-muted)",
+                        opacity: 0.5,
+                        borderRadius: "50%",
+                      }}
+                    />
+                  )}
+                </span>
+              ))}
+            </div>
+
+            <span
+              style={{
+                ...mono,
+                fontSize: 10,
+                color: "var(--text-muted)",
+                letterSpacing: "0.22em",
+                whiteSpace: "nowrap",
+              }}
+            >
+              09 Tools
+            </span>
+          </motion.div>
+
+          {/* Section footer — light end marker (tools strip above serves as the ruling line) */}
+          <div
+            className="flex items-center justify-between"
+            style={{ marginTop: 22 }}
+          >
+            <span
+              style={{
+                ...mono,
+                fontSize: 9,
+                color: "var(--text-muted)",
+                letterSpacing: "0.22em",
+                opacity: 0.7,
               }}
             >
               End of Sheet
@@ -240,9 +385,10 @@ export default function Home() {
             <span
               style={{
                 ...mono,
-                fontSize: 10,
+                fontSize: 9,
                 color: "var(--text-muted)",
                 letterSpacing: "0.22em",
+                opacity: 0.7,
               }}
             >
               A—{String(projects.length).padStart(2, "0")} / A—{String(projects.length).padStart(2, "0")}
