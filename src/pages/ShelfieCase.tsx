@@ -762,242 +762,46 @@ function VoicesPanel({ voices }: { voices: Voice[] }) {
 }
 
 /* ──────────────────────────────────────────────────────────────────
-   TAKEAWAYS PANEL - reflective closer. Numbered horizontal rail of
-   four lessons; the active one expands into a focal card with the
-   full thought, an icon mark, and the finding it traces back to.
+   TAKEAWAYS PANEL - simple 2x2 grid of lessons.
 ────────────────────────────────────────────────────────────────── */
 type Takeaway = {
   num: string;
-  icon: Icon;
   short: string;
-  head: string;
   body: string;
-  tiesTo: string;
 };
 
 function TakeawaysPanel({ takeaways }: { takeaways: Takeaway[] }) {
-  const [active, setActive] = useState(0);
-  const total = takeaways.length;
-  const current = takeaways[active];
-  const ActiveIcon = current.icon as Icon;
-
-  const onKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "ArrowRight" || e.key === "ArrowDown") {
-      e.preventDefault();
-      setActive((v) => (v + 1) % total);
-    } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
-      e.preventDefault();
-      setActive((v) => (v - 1 + total) % total);
-    }
-  };
-
   return (
-    <div
-      role="tablist"
-      aria-label="Takeaways"
-      tabIndex={0}
-      onKeyDown={onKeyDown}
-      style={{
-        background: "var(--bg-elevated)",
-        border: `1px solid ${sh.subtle}`,
-        borderTop: `2px solid ${sh.primary}`,
-        outline: "none",
-      }}
-    >
-      {/* Top patent strip */}
-      <div style={{
-        display: "flex", justifyContent: "space-between", alignItems: "center",
-        padding: "14px 28px",
-        background: sh.surface,
-        borderBottom: `1px solid ${sh.subtle}`,
-        ...mono, fontSize: 10, letterSpacing: "0.22em",
-      }}>
-        <span style={{ color: sh.primary, fontWeight: 700 }}>
-          REFLECTION · TAKEAWAY {current.num} / {String(total).padStart(2, "0")}
-        </span>
-        <span style={{ color: sh.muted, fontWeight: 700 }}>
-          ARROW KEYS · HOVER · CLICK
-        </span>
-      </div>
-
-      {/* Horizontal numbered rail */}
-      <div className="grid grid-cols-2 lg:grid-cols-4" style={{ position: "relative" }}>
-        {takeaways.map((tk, i) => {
-          const isActive = i === active;
-          return (
-            <button
-              key={tk.num}
-              type="button"
-              role="tab"
-              aria-selected={isActive}
-              onMouseEnter={() => setActive(i)}
-              onFocus={() => setActive(i)}
-              onClick={() => setActive(i)}
-              style={{
-                position: "relative",
-                padding: "26px 22px 28px",
-                textAlign: "left",
-                background: isActive ? "var(--bg-elevated)" : sh.surface,
-                border: "none",
-                borderRight: i < total - 1 ? `1px solid ${sh.subtle}` : "none",
-                borderBottom: `1px solid ${sh.subtle}`,
-                cursor: "pointer",
-                outline: "none",
-                transition: "background 320ms ease",
-              }}
-            >
-              {isActive && (
-                <motion.span
-                  layoutId="takeaway-active-bar"
-                  aria-hidden
-                  style={{
-                    position: "absolute",
-                    top: 0, left: 0, right: 0,
-                    height: 3,
-                    background: sh.primary,
-                  }}
-                  transition={{ type: "spring", stiffness: 380, damping: 32 }}
-                />
-              )}
-              <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
-                <span style={{
-                  width: 32, height: 32,
-                  background: isActive ? sh.primary : "transparent",
-                  border: `1px solid ${isActive ? sh.primary : sh.subtle}`,
-                  color: isActive ? "#fff" : sh.muted,
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  ...mono, fontSize: 11, fontWeight: 700, letterSpacing: "0.06em",
-                  transition: "all 320ms ease",
-                }}>
-                  {tk.num}
-                </span>
-                <span style={{
-                  ...mono, fontSize: 9.5, letterSpacing: "0.22em", fontWeight: 700,
-                  color: isActive ? sh.primary : sh.muted,
-                  transition: "color 320ms ease",
-                }}>
-                  TAKEAWAY
-                </span>
-              </div>
-              <p style={{
-                fontFamily: serif, fontWeight: 700,
-                fontSize: "clamp(18px, 1.4vw, 21px)", lineHeight: 1.3,
-                letterSpacing: "-0.014em",
-                color: isActive ? "var(--text-primary)" : "var(--text-secondary)",
-                margin: 0,
-                transition: "color 320ms ease",
-              }}>
-                {tk.short}
-              </p>
-            </button>
-          );
-        })}
-      </div>
-
-      {/* Focal stage */}
-      <div className="grid grid-cols-1 lg:grid-cols-12" style={{ position: "relative", minHeight: 360 }}>
-        {/* Left: icon + ties-to */}
-        <div className="lg:col-span-4" style={{
-          padding: "clamp(36px, 4vw, 52px)",
-          background: sh.surface,
-          borderRight: `1px solid ${sh.subtle}`,
-          display: "flex", flexDirection: "column", justifyContent: "space-between",
-          minHeight: 360,
-          position: "relative",
-        }}>
-          {/* corner registration marks */}
-          {([
-            { top: 14, left: 14,    borderTop: `1px solid ${sh.primary}`, borderLeft: `1px solid ${sh.primary}` },
-            { top: 14, right: 14,   borderTop: `1px solid ${sh.primary}`, borderRight: `1px solid ${sh.primary}` },
-            { bottom: 14, left: 14, borderBottom: `1px solid ${sh.primary}`, borderLeft: `1px solid ${sh.primary}` },
-            { bottom: 14, right: 14, borderBottom: `1px solid ${sh.primary}`, borderRight: `1px solid ${sh.primary}` },
-          ] as React.CSSProperties[]).map((p, i) => (
-            <div key={i} style={{ position: "absolute", width: 12, height: 12, ...p }} />
-          ))}
-
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={`icon-${active}`}
-              initial={{ opacity: 0, scale: 0.92, rotate: -4 }}
-              animate={{ opacity: 1, scale: 1, rotate: 0 }}
-              exit={{ opacity: 0, scale: 1.04 }}
-              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-              style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 22 }}
-            >
-              <div style={{
-                width: 88, height: 88,
-                background: "var(--bg-elevated)",
-                border: `1px solid ${sh.primary}`,
-                display: "flex", alignItems: "center", justifyContent: "center",
-              }}>
-                <ActiveIcon size={44} color={sh.primary} weight="regular" />
-              </div>
-              <span style={{
-                fontFamily: serif, fontWeight: 700,
-                fontSize: "clamp(56px, 6vw, 76px)",
-                lineHeight: 1, letterSpacing: "-0.04em",
-                color: sh.primary,
-              }}>
-                {current.num}
-              </span>
-            </motion.div>
-          </AnimatePresence>
-
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={`ties-${active}`}
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-              style={{ marginTop: 24 }}
-            >
-              <p style={{
-                ...mono, fontSize: 9.5, letterSpacing: "0.22em",
-                color: sh.muted, fontWeight: 700, marginBottom: 8,
-              }}>
-                TIES BACK TO
-              </p>
-              <p style={{
-                ...mono, fontSize: 12, letterSpacing: "0.16em",
-                color: sh.primary, fontWeight: 700,
-              }}>
-                {current.tiesTo}
-              </p>
-            </motion.div>
-          </AnimatePresence>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+      {takeaways.map((tk) => (
+        <div
+          key={tk.num}
+          style={{
+            padding: "clamp(28px, 3vw, 40px)",
+            background: "var(--bg-elevated)",
+            border: `1px solid ${sh.subtle}`,
+            borderLeft: `3px solid ${sh.primary}`,
+          }}
+        >
+          <p style={{
+            ...mono, fontSize: 11, letterSpacing: "0.22em",
+            color: sh.primary, fontWeight: 700,
+            margin: 0, marginBottom: 14,
+          }}>
+            {tk.num} · TAKEAWAY
+          </p>
+          <h3 style={{
+            fontFamily: serif, fontWeight: 700,
+            fontSize: "clamp(22px, 1.8vw, 26px)",
+            letterSpacing: "-0.02em", lineHeight: 1.28,
+            color: "var(--text-primary)",
+            margin: 0, marginBottom: 14,
+          }}>
+            {tk.short}
+          </h3>
+          <p style={{ ...t.bodyLg, margin: 0 }}>{tk.body}</p>
         </div>
-
-        {/* Right: headline + body */}
-        <div className="lg:col-span-8" style={{
-          padding: "clamp(40px, 4.5vw, 60px) clamp(32px, 4vw, 56px)",
-          display: "flex", flexDirection: "column", justifyContent: "center",
-        }}>
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={`body-${active}`}
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -12 }}
-              transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <h3 style={{
-                fontFamily: serif, fontWeight: 700,
-                fontSize: "clamp(26px, 2.6vw, 36px)",
-                letterSpacing: "-0.022em", lineHeight: 1.22,
-                color: "var(--text-primary)",
-                marginBottom: 22,
-                maxWidth: "26ch",
-              }}>
-                {current.head}
-              </h3>
-              <p style={{ ...t.bodyLg, maxWidth: "54ch" }}>
-                {current.body}
-              </p>
-            </motion.div>
-          </AnimatePresence>
-        </div>
-      </div>
+      ))}
     </div>
   );
 }
@@ -2651,32 +2455,24 @@ export default function ShelfieCase() {
             <TakeawaysPanel
               takeaways={[
                 {
-                  num: "01", icon: Stack,
+                  num: "01",
                   short: "A label is a system, not a sticker.",
-                  head: "A label is a system, not a sticker.",
                   body: "Terminology, placement, contrast, and post-open behaviour all have to be designed together. A perfect typeface fails on the wrong vocabulary; perfect vocabulary fails at the wrong height.",
-                  tiesTo: "F·01 Vocabulary",
                 },
                 {
-                  num: "02", icon: Eye,
+                  num: "02",
                   short: "Field research reveals what surveys flatter away.",
-                  head: "Field research reveals what surveys flatter away.",
                   body: "People say they check dates carefully. The timing data disagrees. Watching a 1.4-second decision happen in real light, in a real aisle, beats any self-report ten times over.",
-                  tiesTo: "F·02 Time-on-decision",
                 },
                 {
-                  num: "03", icon: UsersThree,
+                  num: "03",
                   short: "Vulnerable users set the floor.",
-                  head: "Vulnerable users set the floor.",
                   body: "Designing for tired eyes, bifocals, low light, and one-handed grocery carts raises the floor for everyone. The 67-year-old who can read the date is the test the 27-year-old benefits from silently.",
-                  tiesTo: "F·05 Visibility",
                 },
                 {
-                  num: "04", icon: Lightbulb,
+                  num: "04",
                   short: "Research is the leverage, not the deliverable.",
-                  head: "Research is the leverage, not the deliverable.",
                   body: "This study didn't ship a label. It made every future label argument shorter, every concept easier to defend, and every objection answerable by the page it lives on.",
-                  tiesTo: "All findings",
                 },
               ]}
             />
