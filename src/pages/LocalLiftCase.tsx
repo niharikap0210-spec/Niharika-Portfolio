@@ -243,10 +243,12 @@ function Plate({
   bg = "#FFFFFF",
   maxHeight,
   padding,
+  compareArrow = false,
 }: {
   src: string; alt: string; caption?: string; tag?: string;
   aspect?: string; fit?: "contain" | "cover"; bg?: string; maxHeight?: number;
   padding?: string;
+  compareArrow?: boolean;
 }) {
   const [hover, setHover] = useState(false);
   return (
@@ -319,6 +321,27 @@ function Plate({
               display: "block",
             }}
           />
+          {compareArrow && (
+            <motion.div
+              aria-hidden
+              animate={{ x: hover ? 4 : 0 }}
+              transition={{ type: "spring", stiffness: 220, damping: 20 }}
+              style={{
+                position: "absolute",
+                left: "50%", top: "50%",
+                transform: "translate(-50%, -50%)",
+                width: 56, height: 56,
+                borderRadius: "50%",
+                background: ll.primary,
+                display: "grid", placeItems: "center",
+                boxShadow: "0 2px 6px rgba(18,26,42,0.12), 0 14px 32px rgba(59,79,123,0.32)",
+                border: "2px solid #FFFFFF",
+                zIndex: 4,
+              }}
+            >
+              <ArrowRight size={24} color="#FFFFFF" weight="bold" />
+            </motion.div>
+          )}
         </div>
       </motion.div>
       {caption && (
@@ -2202,6 +2225,7 @@ export default function LocalLiftCase() {
                         aspect="16 / 10"
                         fit="contain"
                         bg={ll.surface}
+                        compareArrow
                       />
                     </div>
                   </div>
