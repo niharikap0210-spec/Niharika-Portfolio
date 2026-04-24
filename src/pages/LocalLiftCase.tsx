@@ -560,6 +560,407 @@ function NavCard({ project }: { project: Project }) {
 }
 
 /* ══════════════════════════════════════════════════════════════════
+   PERSONAS — interactive tabbed explorer
+══════════════════════════════════════════════════════════════════ */
+type PersonaGroup = { icon: Icon; label: string; items: string[] };
+type Persona = {
+  tag: string;
+  archetype: string;
+  name: string;
+  role: string;
+  stage: string;
+  quote: string;
+  img: string;
+  groups: PersonaGroup[];
+};
+
+const PERSONAS: Persona[] = [
+  {
+    tag: "P·01",
+    archetype: "Early-stage owner",
+    name: "Amara N.",
+    role: "Founder · solo operator",
+    stage: "0–12 months in business",
+    quote: "I have customers. I just need a way to actually reach more of them online.",
+    img: `${IMG}/persona-1.png`,
+    groups: [
+      {
+        icon: Sparkle, label: "Goals",
+        items: [
+          "Get my business found in local search",
+          "Post once, reach the right people",
+          "Learn from someone who's been here",
+        ],
+      },
+      {
+        icon: Wrench, label: "Frustrations",
+        items: [
+          "Every tool assumes I have a team",
+          "Advice online is too generic to act on",
+          "Community forums are too big to feel safe",
+        ],
+      },
+      {
+        icon: Path, label: "Behaviours",
+        items: [
+          "Runs everything from a phone, on the move",
+          "Trusts word-of-mouth over ad copy",
+          "Pays only for tools that save real time",
+        ],
+      },
+    ],
+  },
+  {
+    tag: "P·02",
+    archetype: "Growth-oriented owner",
+    name: "Daniel O.",
+    role: "Owner · small team lead",
+    stage: "2–5 years, starting to scale",
+    quote: "I don't need another dashboard. I need the right person to tell me what to fix next.",
+    img: `${IMG}/persona-2.png`,
+    groups: [
+      {
+        icon: Sparkle, label: "Goals",
+        items: [
+          "Benchmark against owners in my industry",
+          "Turn social traffic into repeat customers",
+          "Systemize what's been ad-hoc so far",
+        ],
+      },
+      {
+        icon: Wrench, label: "Frustrations",
+        items: [
+          "Generic growth playbooks miss local nuance",
+          "Hard to find mentors who've been in my stage",
+          "Tools overwhelm with data, not decisions",
+        ],
+      },
+      {
+        icon: Path, label: "Behaviours",
+        items: [
+          "Compares vendors before committing",
+          "Values peer conversations over templates",
+          "Tracks weekly metrics, monthly goals",
+        ],
+      },
+    ],
+  },
+];
+
+function PersonasSection() {
+  const [active, setActive] = useState(0);
+  const p = PERSONAS[active];
+
+  return (
+    <section style={{
+      padding: SECTION_PAD,
+      ...gridSurface,
+      borderTop: `1px solid ${ll.line}`,
+      borderBottom: `1px solid ${ll.line}`,
+    }}>
+      <div className="max-w-7xl mx-auto px-6 md:px-10">
+        <SectionHeader num="04" title="Personas" phase="Synthesis" />
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-12 items-end">
+          <div className="lg:col-span-8">
+            <Reveal>
+              <h2 style={{ ...t.h2, marginBottom: 20 }}>
+                Two owners,
+                <span style={{ fontStyle: "italic", color: ll.primary }}> one shared platform.</span>
+              </h2>
+            </Reveal>
+            <Reveal delay={0.1}>
+              <p style={{ ...t.bodyLg, maxWidth: 640 }}>
+                The early-stage owner and the growth-oriented owner showed up in every interview with the
+                same platform needs and different stakes. Every feature had to answer to both without favoring either.
+              </p>
+            </Reveal>
+          </div>
+          <div className="lg:col-span-4">
+            <Reveal delay={0.16}>
+              <p style={{
+                ...mono, fontSize: 11, letterSpacing: "0.22em",
+                color: ll.muted, fontWeight: 700, textAlign: "right",
+              }}>
+                02 ARCHETYPES<br />PRESSURE-TESTED ACROSS EVERY SCREEN
+              </p>
+            </Reveal>
+          </div>
+        </div>
+
+        {/* Tab bar */}
+        <Reveal delay={0.05}>
+          <div
+            role="tablist"
+            aria-label="Personas"
+            style={{
+              display: "flex",
+              gap: 10,
+              flexWrap: "wrap",
+              marginBottom: "clamp(28px, 3vw, 40px)",
+            }}
+          >
+            {PERSONAS.map((persona, i) => {
+              const isActive = i === active;
+              return (
+                <motion.button
+                  key={persona.tag}
+                  role="tab"
+                  aria-selected={isActive}
+                  onClick={() => setActive(i)}
+                  whileTap={{ scale: 0.98 }}
+                  style={{
+                    position: "relative",
+                    display: "inline-flex", alignItems: "center", gap: 12,
+                    padding: "14px 22px",
+                    background: isActive ? ll.primary : "#FFFFFF",
+                    color: isActive ? "#FFFFFF" : ll.primary,
+                    border: `1px solid ${isActive ? ll.primary : ll.line}`,
+                    cursor: "pointer",
+                    transition: "background 240ms ease-out, color 240ms ease-out, border-color 240ms ease-out",
+                    fontFamily: sans,
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!isActive) (e.currentTarget as HTMLButtonElement).style.borderColor = ll.primary;
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!isActive) (e.currentTarget as HTMLButtonElement).style.borderColor = ll.line;
+                  }}
+                >
+                  <span style={{
+                    ...mono, fontSize: 10, letterSpacing: "0.22em",
+                    fontWeight: 700,
+                    color: isActive ? "rgba(255,255,255,0.75)" : ll.muted,
+                  }}>
+                    {persona.tag}
+                  </span>
+                  <span style={{ fontSize: 15, fontWeight: 500, letterSpacing: "-0.005em" }}>
+                    {persona.archetype}
+                  </span>
+                  {isActive && (
+                    <motion.span
+                      layoutId="persona-tab-underline"
+                      transition={{ type: "spring", stiffness: 380, damping: 32 }}
+                      style={{
+                        position: "absolute", left: 0, right: 0, bottom: -1,
+                        height: 2, background: ll.warm,
+                      }}
+                    />
+                  )}
+                </motion.button>
+              );
+            })}
+          </div>
+        </Reveal>
+
+        {/* Content */}
+        <div
+          className="persona-card"
+          style={{
+            background: "#FFFFFF",
+            border: `1px solid ${ll.line}`,
+            overflow: "hidden",
+            boxShadow: "0 1px 2px rgba(18,26,42,0.03), 0 14px 36px rgba(59,79,123,0.08)",
+          }}
+        >
+          <div
+            className="persona-grid"
+            style={{
+              display: "grid",
+              gridTemplateColumns: "minmax(280px, 5fr) minmax(280px, 7fr)",
+              minHeight: 560,
+            }}
+          >
+            {/* Left — image */}
+            <div style={{
+              position: "relative",
+              background: ll.surface,
+              borderRight: `1px solid ${ll.line}`,
+              overflow: "hidden",
+            }}>
+              {/* Registration marks */}
+              {[
+                { top: 12, left: 12,  t: true,  l: true  },
+                { top: 12, right: 12, t: true,  l: false },
+                { bottom: 12, left: 12,  t: false, l: true  },
+                { bottom: 12, right: 12, t: false, l: false },
+              ].map((pos, i) => (
+                <span
+                  key={i} aria-hidden
+                  style={{
+                    position: "absolute", width: 11, height: 11,
+                    borderTop:    pos.t  ? `1px solid ${ll.primary}` : "none",
+                    borderBottom: !pos.t ? `1px solid ${ll.primary}` : "none",
+                    borderLeft:   pos.l  ? `1px solid ${ll.primary}` : "none",
+                    borderRight:  !pos.l ? `1px solid ${ll.primary}` : "none",
+                    opacity: 0.5, zIndex: 2,
+                    top: pos.top, left: pos.left, bottom: pos.bottom, right: pos.right,
+                  }}
+                />
+              ))}
+              <span style={{
+                position: "absolute", top: 20, left: 20,
+                ...mono, fontSize: 9.5, color: ll.primary,
+                letterSpacing: "0.22em", fontWeight: 700,
+                background: "rgba(255,255,255,0.92)",
+                padding: "5px 10px",
+                border: `1px solid ${ll.line}`,
+                zIndex: 3,
+              }}>
+                {p.tag}
+              </span>
+              <AnimatePresence mode="wait">
+                <motion.img
+                  key={p.img}
+                  src={p.img}
+                  alt={p.archetype}
+                  loading="lazy"
+                  initial={{ opacity: 0, scale: 1.02 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.99 }}
+                  transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+                  style={{
+                    width: "100%", height: "100%",
+                    objectFit: "contain",
+                    padding: "clamp(24px, 3vw, 44px)",
+                    display: "block",
+                  }}
+                />
+              </AnimatePresence>
+            </div>
+
+            {/* Right — content */}
+            <div style={{
+              padding: "clamp(28px, 3.4vw, 48px)",
+              display: "flex", flexDirection: "column",
+              gap: "clamp(20px, 2vw, 28px)",
+            }}>
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={p.tag}
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+                  style={{ display: "flex", flexDirection: "column", gap: "clamp(20px, 2vw, 28px)" }}
+                >
+                  {/* Header */}
+                  <div>
+                    <p style={{
+                      ...mono, fontSize: 10, letterSpacing: "0.22em",
+                      color: ll.primary, fontWeight: 700, marginBottom: 10,
+                    }}>
+                      {p.archetype.toUpperCase()}
+                    </p>
+                    <h3 style={{
+                      fontFamily: serif, fontWeight: 700,
+                      fontSize: "clamp(26px, 2.6vw, 34px)",
+                      letterSpacing: "-0.02em", lineHeight: 1.15,
+                      color: "var(--text-primary)",
+                      marginBottom: 8,
+                    }}>
+                      {p.name}
+                    </h3>
+                    <p style={{
+                      fontFamily: sans, fontSize: 14,
+                      color: ll.muted, fontWeight: 500,
+                      letterSpacing: "0.01em",
+                    }}>
+                      {p.role} · {p.stage}
+                    </p>
+                  </div>
+
+                  {/* Quote */}
+                  <blockquote style={{
+                    margin: 0, padding: "16px 20px",
+                    borderLeft: `3px solid ${ll.primary}`,
+                    background: ll.surface,
+                    fontFamily: serif, fontStyle: "italic",
+                    fontSize: "clamp(16px, 1.25vw, 19px)",
+                    lineHeight: 1.5, color: "var(--text-primary)",
+                    letterSpacing: "-0.005em",
+                  }}>
+                    "{p.quote}"
+                  </blockquote>
+
+                  {/* Trait groups */}
+                  <div style={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+                    gap: "clamp(16px, 1.6vw, 24px)",
+                  }}>
+                    {p.groups.map((g, gi) => {
+                      const I = g.icon;
+                      return (
+                        <motion.div
+                          key={g.label}
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.45, delay: 0.15 + gi * 0.08, ease: [0.16, 1, 0.3, 1] }}
+                          style={{ display: "flex", flexDirection: "column", gap: 10 }}
+                        >
+                          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                            <span style={{
+                              width: 28, height: 28,
+                              background: ll.surface,
+                              border: `1px solid ${ll.line}`,
+                              display: "inline-flex", alignItems: "center", justifyContent: "center",
+                            }}>
+                              <I size={14} color={ll.primary} weight="regular" />
+                            </span>
+                            <span style={{
+                              ...mono, fontSize: 10, letterSpacing: "0.22em",
+                              color: ll.primary, fontWeight: 700,
+                            }}>
+                              {g.label.toUpperCase()}
+                            </span>
+                          </div>
+                          <ul style={{
+                            margin: 0, paddingLeft: 0, listStyle: "none",
+                            display: "flex", flexDirection: "column", gap: 8,
+                          }}>
+                            {g.items.map((item, ii) => (
+                              <li key={ii} style={{
+                                position: "relative", paddingLeft: 16,
+                                fontFamily: sans, fontSize: 14.5, lineHeight: 1.55,
+                                color: "var(--text-secondary)",
+                              }}>
+                                <span aria-hidden style={{
+                                  position: "absolute", left: 0, top: "0.75em",
+                                  width: 6, height: 1, background: ll.primary,
+                                }} />
+                                {item}
+                              </li>
+                            ))}
+                          </ul>
+                        </motion.div>
+                      );
+                    })}
+                  </div>
+                </motion.div>
+              </AnimatePresence>
+            </div>
+          </div>
+        </div>
+
+        <style>{`
+          @media (max-width: 880px) {
+            .persona-grid {
+              grid-template-columns: minmax(0, 1fr) !important;
+            }
+            .persona-grid > div:first-child {
+              border-right: none !important;
+              border-bottom: 1px solid ${ll.line} !important;
+              min-height: 340px;
+            }
+          }
+        `}</style>
+      </div>
+    </section>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════════════
    PAGE
 ══════════════════════════════════════════════════════════════════ */
 export default function LocalLiftCase() {
@@ -1110,68 +1511,7 @@ export default function LocalLiftCase() {
       </section>
 
       {/* ─── 04 · PERSONAS ─────────────────────────────────── */}
-      <section style={{
-        padding: SECTION_PAD,
-        ...gridSurface,
-        borderTop: `1px solid ${ll.line}`,
-        borderBottom: `1px solid ${ll.line}`,
-      }}>
-        <div className="max-w-7xl mx-auto px-6 md:px-10">
-          <SectionHeader num="04" title="Personas" phase="Synthesis" />
-
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-16 items-end">
-            <div className="lg:col-span-8">
-              <Reveal>
-                <h2 style={{ ...t.h2, marginBottom: 20 }}>
-                  Two owners,
-                  <span style={{ fontStyle: "italic", color: ll.primary }}> one shared platform.</span>
-                </h2>
-              </Reveal>
-              <Reveal delay={0.1}>
-                <p style={{ ...t.bodyLg, maxWidth: 640 }}>
-                  The early-stage owner and the growth-oriented owner showed up in every interview with the
-                  same platform needs and different stakes. Every feature had to answer to both without favoring either.
-                </p>
-              </Reveal>
-            </div>
-            <div className="lg:col-span-4">
-              <Reveal delay={0.16}>
-                <p style={{
-                  ...mono, fontSize: 11, letterSpacing: "0.22em",
-                  color: ll.muted, fontWeight: 700, textAlign: "right",
-                }}>
-                  02 ARCHETYPES<br />PRESSURE-TESTED ACROSS EVERY SCREEN
-                </p>
-              </Reveal>
-            </div>
-          </div>
-
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
-              gap: "clamp(20px, 2.2vw, 32px)",
-            }}
-          >
-            {[
-              { src: `${IMG}/persona-1.png`, tag: "P·01", caption: "PERSONA · EARLY-STAGE OWNER" },
-              { src: `${IMG}/persona-2.png`, tag: "P·02", caption: "PERSONA · GROWTH-ORIENTED OWNER" },
-            ].map((p, i) => (
-              <Reveal key={i} delay={0.08 + i * 0.1}>
-                <Plate
-                  src={p.src}
-                  alt={p.caption}
-                  caption={p.caption}
-                  tag={p.tag}
-                  aspect="4 / 5"
-                  fit="contain"
-                  bg="#FFFFFF"
-                />
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
+      <PersonasSection />
 
       {/* ─── 05 · LOFI EXPLORATION ──────────────────────────── */}
       <section style={{ padding: SECTION_PAD, background: "var(--bg-primary)" }}>
