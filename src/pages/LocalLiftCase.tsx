@@ -2205,7 +2205,6 @@ export default function LocalLiftCase() {
                         aspect="16 / 10"
                         fit="contain"
                         bg={ll.surface}
-                        imgFilter="contrast(1.35) brightness(0.92) saturate(1.08)"
                       />
                     </div>
                   </div>
