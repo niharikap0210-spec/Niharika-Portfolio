@@ -67,7 +67,7 @@ const menuIconVar = {
 
 /* ─── Component ──────────────────────────────────────────────────── */
 export default function Nav() {
-  const { pathname } = useLocation();
+  const { pathname, hash } = useLocation();
   const [isExpanded, setExpanded] = useState(true);
   const [menuOpen,   setMenuOpen] = useState(false);
   const [hovered,    setHovered]  = useState<string | null>(null);
@@ -88,7 +88,7 @@ export default function Nav() {
     lastY.current = latest;
   });
 
-  useEffect(() => { setMenuOpen(false); }, [pathname]);
+  useEffect(() => { setMenuOpen(false); }, [pathname, hash]);
   useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
@@ -98,7 +98,9 @@ export default function Nav() {
   const isActive = (item: NavItem) => {
     if (item.external) return false;
     if (item.label === "Home") return false;
-    if (item.label === "Work") return pathname.startsWith("/work/");
+    if (item.label === "Work") {
+      return pathname.startsWith("/work/") || (pathname === "/" && hash === "#projects");
+    }
     return pathname === item.href;
   };
 

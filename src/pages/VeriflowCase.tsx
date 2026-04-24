@@ -18,6 +18,7 @@ import {
 } from "@phosphor-icons/react";
 import type { Icon } from "@phosphor-icons/react";
 import { projects, type Project } from "../data/projects";
+import { ProjectHeroStage } from "../components/ProjectHeroStage";
 
 /* ── Veriflow palette, scoped to this page ──────────────────────── */
 const vf = {
@@ -1536,7 +1537,7 @@ function CoolerSketch() {
 function NavCard({ project }: { project: Project }) {
   const [hover, setHover] = useState(false);
   const accent = `hsl(${project.accentHue}, 38%, 48%)`;
-  const primaryTag = project.tags[0] ?? project.year;
+  const pa = project.accent;
 
   return (
     <Link
@@ -1549,62 +1550,40 @@ function NavCard({ project }: { project: Project }) {
         textDecoration: "none",
         display: "block",
         overflow: "hidden",
-        aspectRatio: "5 / 4",
-        background: project.gradient,
+        background: `
+          radial-gradient(140% 60% at 50% 0%, ${pa.surface} 0%, ${pa.primary}0d 55%, ${pa.surface} 100%),
+          linear-gradient(180deg, ${pa.surface} 0%, ${pa.primary}10 100%)
+        `,
+        transition: "transform 320ms cubic-bezier(0.16, 1, 0.3, 1)",
+        transform: hover ? "translateY(-4px)" : "translateY(0)",
       }}
     >
-      <span
+      <div
         aria-hidden
         style={{
           position: "absolute",
           inset: 0,
-          background: `linear-gradient(180deg, transparent 35%, ${accent}26 100%)`,
-          opacity: hover ? 1 : 0,
-          transition: "opacity 420ms ease-out",
+          backgroundImage: `
+            repeating-linear-gradient(0deg, ${pa.primary}10 0, ${pa.primary}10 0.5px, transparent 0.5px, transparent 48px),
+            repeating-linear-gradient(90deg, ${pa.primary}10 0, ${pa.primary}10 0.5px, transparent 0.5px, transparent 48px)
+          `,
+          opacity: hover ? 0.7 : 0.45,
+          transitionProperty: "opacity",
+          transitionDuration: "400ms",
           pointerEvents: "none",
+          zIndex: 1,
         }}
       />
 
-      <div
-        style={{
-          position: "absolute",
-          top: "clamp(24px, 2.4vw, 36px)",
-          left: "clamp(24px, 2.4vw, 36px)",
-          right: "clamp(24px, 2.4vw, 36px)",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          gap: 12,
-        }}
-      >
-        <span style={{ ...mono, fontSize: 11, color: "rgba(26,26,26,0.65)", letterSpacing: "0.24em", fontWeight: 600 }}>
-          {project.year}
-        </span>
-        <span
-          style={{
-            ...mono,
-            fontSize: 10,
-            color: "rgba(26,26,26,0.65)",
-            letterSpacing: "0.22em",
-            fontWeight: 600,
-            padding: "6px 10px",
-            border: "1px solid rgba(26,26,26,0.18)",
-            borderRadius: 999,
-          }}
-        >
-          {primaryTag}
-        </span>
+      <div style={{ position: "relative", width: "100%", aspectRatio: "16 / 10", zIndex: 2 }}>
+        <ProjectHeroStage project={project} hovered={hover} bare />
       </div>
 
       <div
         style={{
-          position: "absolute",
-          left: "clamp(24px, 2.4vw, 36px)",
-          right: "clamp(24px, 2.4vw, 36px)",
-          bottom: "clamp(24px, 2.4vw, 36px)",
-          display: "flex",
-          flexDirection: "column",
-          gap: 14,
+          position: "relative",
+          zIndex: 2,
+          padding: "clamp(18px, 2vw, 26px) clamp(22px, 2.4vw, 32px) clamp(22px, 2.4vw, 30px)",
         }}
       >
         <motion.p
@@ -1613,48 +1592,36 @@ function NavCard({ project }: { project: Project }) {
           style={{
             fontFamily: serif,
             fontWeight: 700,
-            fontSize: "clamp(36px, 4.2vw, 60px)",
-            letterSpacing: "-0.03em",
-            lineHeight: 1.02,
-            color: "#1A1A1A",
+            fontSize: "clamp(28px, 3vw, 42px)",
+            letterSpacing: "-0.025em",
+            lineHeight: 1.05,
+            color: "var(--text-primary)",
             margin: 0,
+            marginBottom: 14,
           }}
         >
           {project.title}
         </motion.p>
 
-        <p
-          style={{
-            fontFamily: sans,
-            fontSize: "clamp(15px, 1.05vw, 17px)",
-            lineHeight: 1.55,
-            color: "rgba(26,26,26,0.72)",
-            maxWidth: 460,
-            margin: 0,
-          }}
-        >
-          {project.subtitle}
-        </p>
-
-        <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 6 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <span
             style={{
               ...mono,
-              fontSize: 11,
-              letterSpacing: "0.24em",
+              fontSize: 10,
+              letterSpacing: "0.22em",
               fontWeight: 700,
-              color: hover ? accent : "#1A1A1A",
+              color: hover ? accent : "var(--text-primary)",
               transition: "color 260ms ease-out",
             }}
           >
             View case study
           </span>
           <motion.span
-            animate={{ x: hover ? 6 : 0 }}
+            animate={{ x: hover ? 5 : 0 }}
             transition={{ type: "spring", stiffness: 260, damping: 22 }}
-            style={{ display: "inline-flex", color: hover ? accent : "#1A1A1A", transition: "color 260ms ease-out" }}
+            style={{ display: "inline-flex", color: hover ? accent : "var(--text-primary)", transition: "color 260ms ease-out" }}
           >
-            <ArrowRight size={16} weight="regular" />
+            <ArrowRight size={14} weight="regular" />
           </motion.span>
         </div>
       </div>
