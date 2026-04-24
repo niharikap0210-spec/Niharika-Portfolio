@@ -1519,7 +1519,7 @@ function FailureExplorer() {
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   NAV CARD — editorial gradient tile for "more case studies"
+   NAV CARD - editorial gradient tile for "more case studies"
 ══════════════════════════════════════════════════════════════════ */
 function NavCard({ project }: { project: Project }) {
   const [hover, setHover] = useState(false);
@@ -2525,7 +2525,7 @@ export default function ShelfieCase() {
       </section>
 
       {/* ══════════════════════════════════════════════════════════════
-          MORE CASE STUDIES — editorial gradient tiles
+          MORE CASE STUDIES - editorial gradient tiles
       ══════════════════════════════════════════════════════════════ */}
       <section style={{ padding: "clamp(64px, 8vw, 104px) 0", borderTop: "1px solid var(--border)" }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
@@ -2557,7 +2557,7 @@ export default function ShelfieCase() {
       </section>
 
       {/* ══════════════════════════════════════════════════════════════
-          Back to top — floating action, bottom-right
+          Back to top - floating action, bottom-right
       ══════════════════════════════════════════════════════════════ */}
       <AnimatePresence>
         {showTop && (

@@ -23,7 +23,7 @@ import type { Icon } from "@phosphor-icons/react";
 import { projects, type Project } from "../data/projects";
 
 /* ══════════════════════════════════════════════════════════════════
-   LOCALLIFT — scoped palette + type tokens
+   LOCALLIFT - scoped palette + type tokens
 ══════════════════════════════════════════════════════════════════ */
 const ll = {
   primary: "#3B4F7B",
@@ -190,7 +190,7 @@ function SectionHeader({
 }
 
 /* ──────────────────────────────────────────────────────────────
-   PHONE FRAME — float + hover wrapper (images already contain
+   PHONE FRAME - float + hover wrapper (images already contain
    their own phone mockup, so no bezel is drawn here)
 ────────────────────────────────────────────────────────────── */
 function PhoneFrame({
@@ -234,7 +234,7 @@ function PhoneFrame({
 }
 
 /* ──────────────────────────────────────────────────────────────
-   ASPECT PLATE — large image tile with registration marks
+   ASPECT PLATE - large image tile with registration marks
 ────────────────────────────────────────────────────────────── */
 function Plate({
   src, alt, caption, tag,
@@ -339,7 +339,7 @@ function Plate({
 }
 
 /* ──────────────────────────────────────────────────────────────
-   PHONE GALLERY — responsive grid of phone-framed screens
+   PHONE GALLERY - responsive grid of phone-framed screens
 ────────────────────────────────────────────────────────────── */
 function PhoneGallery({
   items, tone = "light",
@@ -382,7 +382,7 @@ function PhoneGallery({
 }
 
 /* ──────────────────────────────────────────────────────────────
-   LOFI FILMSTRIP — horizontal snap-scroll carousel (space-saving)
+   LOFI FILMSTRIP - horizontal snap-scroll carousel (space-saving)
    Groups screens into flows; user switches flow via tabs.
 ────────────────────────────────────────────────────────────── */
 type FlowGroup = { id: string; label: string; indices: number[] };
@@ -615,7 +615,7 @@ function LofiFilmstrip({
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   HERO MOCKUP — three floating phones
+   HERO MOCKUP - three floating phones
 ══════════════════════════════════════════════════════════════════ */
 function HeroMockup() {
   return (
@@ -671,7 +671,7 @@ function HeroMockup() {
         <PhoneFrame src={`${HIFI}/hifi-explore.png`}   alt="Explore" tilt={-6} floatDelay={0.8} />
       </motion.div>
 
-      {/* Center phone — main focal */}
+      {/* Center phone - main focal */}
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
@@ -798,7 +798,7 @@ function NavCard({ project }: { project: Project }) {
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   AFFINITY OUTPUT — four tensions, one affinity map
+   AFFINITY OUTPUT - four tensions, one affinity map
 ══════════════════════════════════════════════════════════════════ */
 const TENSIONS: {
   tag: string; icon: Icon; title: string; takeaway: string; count: number;
@@ -856,7 +856,7 @@ function TensionCard({
         }}
       />
 
-      {/* Left column — numeral + icon */}
+      {/* Left column - numeral + icon */}
       <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 14 }}>
         <span style={{
           fontFamily: serif, fontWeight: 700,
@@ -879,7 +879,7 @@ function TensionCard({
         </span>
       </div>
 
-      {/* Right column — content */}
+      {/* Right column - content */}
       <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
           <span style={{ ...mono, fontSize: 10, color: ll.primary, letterSpacing: "0.22em", fontWeight: 700 }}>
@@ -1036,7 +1036,7 @@ function AffinityOutput() {
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   PERSONAS — interactive tabbed explorer
+   PERSONAS - interactive tabbed explorer
 ══════════════════════════════════════════════════════════════════ */
 type PersonaGroup = { icon: Icon; label: string; items: string[] };
 type Persona = {
@@ -1247,7 +1247,7 @@ function PersonasSection() {
               minHeight: 640,
             }}
           >
-            {/* Left — image */}
+            {/* Left - image */}
             <div style={{
               position: "relative",
               background: ll.surface,
@@ -1305,7 +1305,7 @@ function PersonasSection() {
               </AnimatePresence>
             </div>
 
-            {/* Right — content */}
+            {/* Right - content */}
             <div style={{
               padding: "clamp(28px, 3.4vw, 48px)",
               display: "flex", flexDirection: "column",
@@ -1437,7 +1437,7 @@ function PersonasSection() {
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   REFLECTION STEPPER — interactive lesson walkthrough
+   REFLECTION STEPPER - interactive lesson walkthrough
 ══════════════════════════════════════════════════════════════════ */
 type Lesson = {
   num: string; tag: string; icon: Icon;
@@ -1491,7 +1491,7 @@ function ReflectionStepper() {
         padding: "clamp(24px, 2.6vw, 44px)",
       }}
     >
-      {/* LEFT — step rail */}
+      {/* LEFT - step rail */}
       <div
         role="tablist"
         aria-label="Reflection lessons"
@@ -1594,7 +1594,7 @@ function ReflectionStepper() {
         })}
       </div>
 
-      {/* RIGHT — active lesson panel */}
+      {/* RIGHT - active lesson panel */}
       <div
         role="tabpanel"
         style={{
@@ -1794,7 +1794,7 @@ export default function LocalLiftCase() {
       </div>
 
       {/* ══════════════════════════════════════════════════════════════
-          00 · HERO — three-phone mockup stage
+          00 · HERO - three-phone mockup stage
       ══════════════════════════════════════════════════════════════ */}
       <section
         ref={heroRef}
@@ -1878,7 +1878,7 @@ export default function LocalLiftCase() {
               width: "100%",
             }}
           >
-            {/* LEFT — title + lede + meta */}
+            {/* LEFT - title + lede + meta */}
             <motion.div
               className="md:col-span-5"
               style={{ minWidth: 0, opacity: heroOpacity, y: heroY }}
@@ -1928,7 +1928,7 @@ export default function LocalLiftCase() {
                 they're supposed to already live in.
               </motion.p>
 
-              {/* Meta — 2x2 grid */}
+              {/* Meta - 2x2 grid */}
               <motion.div
                 initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8, duration: 0.6 }}
                 style={{
@@ -1959,7 +1959,7 @@ export default function LocalLiftCase() {
               </motion.div>
             </motion.div>
 
-            {/* RIGHT — phones */}
+            {/* RIGHT - phones */}
             <HeroMockup />
           </div>
         </div>
@@ -2181,7 +2181,7 @@ export default function LocalLiftCase() {
             })}
           </div>
 
-          {/* Affinity output — redesigned: header row, 2x2 tension grid, full-width plate */}
+          {/* Affinity output - redesigned: header row, 2x2 tension grid, full-width plate */}
           <AffinityOutput />
 
 
@@ -2374,7 +2374,7 @@ export default function LocalLiftCase() {
             ]}
           />
 
-          {/* User flow — full-width under gallery */}
+          {/* User flow - full-width under gallery */}
           <div style={{ marginTop: "clamp(56px, 6vw, 88px)" }}>
             <Reveal>
               <Plate
@@ -2464,7 +2464,7 @@ export default function LocalLiftCase() {
                       alignItems: "center",
                     }}
                   >
-                    {/* LEFT — narrative */}
+                    {/* LEFT - narrative */}
                     <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
                       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                         <span style={{
@@ -2508,7 +2508,7 @@ export default function LocalLiftCase() {
                       </div>
                     </div>
 
-                    {/* RIGHT — image */}
+                    {/* RIGHT - image */}
                     <div>
                       <Plate
                         src={m.img}

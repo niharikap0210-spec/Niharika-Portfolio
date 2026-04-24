@@ -75,7 +75,7 @@ export default function Footer() {
           </ul>
         </div>
 
-        {/* Drawing sheet detail — bottom right corner */}
+        {/* Drawing sheet detail - bottom right corner */}
         <div className="flex justify-end mt-4">
           <p
             aria-hidden

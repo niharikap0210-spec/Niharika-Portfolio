@@ -243,7 +243,7 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   Hero stage — ambient backdrop + per-project creative composition
+   Hero stage - ambient backdrop + per-project creative composition
 ══════════════════════════════════════════════════════════════════ */
 function HeroStage({ project, hovered }: { project: Project; hovered: boolean }) {
   const { accent } = project;
@@ -278,7 +278,7 @@ function HeroStage({ project, hovered }: { project: Project; hovered: boolean })
         }}
       />
 
-      {/* Composition — swapped by slug */}
+      {/* Composition - swapped by slug */}
       <motion.div
         animate={{ scale: hovered ? 1.03 : 1 }}
         transition={{ type: "spring", stiffness: 180, damping: 22, mass: 0.7 }}
@@ -305,7 +305,7 @@ function HeroStage({ project, hovered }: { project: Project; hovered: boolean })
 function ArkoComposition({ accent }: { accent: ProjectAccent }) {
   return (
     <div style={{ position: "absolute", inset: 0, padding: "26px 38px 32px" }}>
-      {/* Laptop — main, left-biased, slow float */}
+      {/* Laptop - main, left-biased, slow float */}
       <motion.div
         animate={{ y: [0, -5, 0] }}
         transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
@@ -320,7 +320,7 @@ function ArkoComposition({ accent }: { accent: ProjectAccent }) {
         <LaptopFrame src="/arko/web-1.png" alt="Arko designer dashboard" accent={accent.primary} />
       </motion.div>
 
-      {/* Phone — pre-rendered mockup PNG (used directly, not wrapped) */}
+      {/* Phone - pre-rendered mockup PNG (used directly, not wrapped) */}
       <motion.div
         animate={{ y: [0, -6, 0] }}
         transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
@@ -348,7 +348,7 @@ function ArkoComposition({ accent }: { accent: ProjectAccent }) {
 function VeriflowComposition({ accent }: { accent: ProjectAccent }) {
   return (
     <div style={{ position: "absolute", inset: 0, padding: "22px 40px 30px" }}>
-      {/* Laptop — left-biased, slow float */}
+      {/* Laptop - left-biased, slow float */}
       <motion.div
         animate={{ y: [0, -5, 0] }}
         transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
@@ -363,7 +363,7 @@ function VeriflowComposition({ accent }: { accent: ProjectAccent }) {
         <LaptopFrame src="/veriflow/home.png" alt="Veriflow admin dashboard" accent={accent.primary} />
       </motion.div>
 
-      {/* Tablet — overlaps bottom-right, slight rotation */}
+      {/* Tablet - overlaps bottom-right, slight rotation */}
       <motion.div
         animate={{ y: [0, -8, 0], rotate: [-1.2, -0.4, -1.2] }}
         transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut", delay: 0.7 }}
@@ -387,7 +387,7 @@ function LocalLiftComposition({ accent }: { accent: ProjectAccent }) {
 
   return (
     <div style={{ position: "absolute", inset: 0, perspective: "1600px" }}>
-      {/* Left phone — tilted so right edge faces viewer, tucked behind center */}
+      {/* Left phone - tilted so right edge faces viewer, tucked behind center */}
       <div
         style={{
           position: "absolute",
@@ -414,7 +414,7 @@ function LocalLiftComposition({ accent }: { accent: ProjectAccent }) {
         />
       </div>
 
-      {/* Center phone — head-on, in front */}
+      {/* Center phone - head-on, in front */}
       <div
         style={{
           position: "absolute",
@@ -439,7 +439,7 @@ function LocalLiftComposition({ accent }: { accent: ProjectAccent }) {
         />
       </div>
 
-      {/* Right phone — mirror of left, tucked behind center */}
+      {/* Right phone - mirror of left, tucked behind center */}
       <div
         style={{
           position: "absolute",
@@ -512,7 +512,7 @@ function ShelfieComposition({ accent }: { accent: ProjectAccent }) {
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   Device frames — static, take a single src
+   Device frames - static, take a single src
 ══════════════════════════════════════════════════════════════════ */
 
 function LaptopFrame({ src, alt, accent }: { src: string; alt: string; accent: string }) {

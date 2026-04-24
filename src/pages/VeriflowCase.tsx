@@ -464,7 +464,7 @@ function StepperBtn({ disabled, onClick, dir }: { disabled: boolean; onClick: ()
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   OVERRIDE TIMELINE: failure path — forensic log treatment
+   OVERRIDE TIMELINE: failure path - forensic log treatment
 ══════════════════════════════════════════════════════════════════ */
 function OverrideTimeline() {
   const stages: {
@@ -1531,7 +1531,7 @@ function CoolerSketch() {
    PAGE
 ══════════════════════════════════════════════════════════════════ */
 /* ══════════════════════════════════════════════════════════════════
-   NAV CARD — visual "more case studies" tile (project gradient hero)
+   NAV CARD - visual "more case studies" tile (project gradient hero)
 ══════════════════════════════════════════════════════════════════ */
 function NavCard({ project }: { project: Project }) {
   const [hover, setHover] = useState(false);
@@ -2347,7 +2347,7 @@ export default function VeriflowCase() {
       </section>
 
       {/* ══════════════════════════════════════════════════════════════
-          MORE CASE STUDIES — editorial gradient tiles
+          MORE CASE STUDIES - editorial gradient tiles
       ══════════════════════════════════════════════════════════════ */}
       <section style={{ padding: "clamp(64px, 8vw, 104px) 0", borderTop: "1px solid var(--border)" }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
@@ -2379,7 +2379,7 @@ export default function VeriflowCase() {
       </section>
 
       {/* ══════════════════════════════════════════════════════════════
-          Back to top — floating action, bottom-right
+          Back to top - floating action, bottom-right
       ══════════════════════════════════════════════════════════════ */}
       <AnimatePresence>
         {showTop && (

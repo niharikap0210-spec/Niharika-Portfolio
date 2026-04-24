@@ -203,7 +203,7 @@ export default function Resume() {
 
               <div style={{ position: "relative", zIndex: 1 }}>
                 <p style={{ ...mono, fontSize: 9, color: "var(--text-muted)", marginBottom: 16 }}>
-                  Document — Resume
+                  Document - Resume
                 </p>
                 <h3
                   style={{
@@ -313,7 +313,7 @@ export default function Resume() {
               textTransform: "uppercase",
             }}
           >
-            Available for full-time Product Designer roles — open to relocation
+            Available for full-time Product Designer roles - open to relocation
           </p>
         </div>
       </div>

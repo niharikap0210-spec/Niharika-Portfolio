@@ -119,7 +119,7 @@ function SelectionBox({ visible }: { visible: boolean }) {
 function EdgeAnnotations() {
   return (
     <>
-      {/* Left edge — dimension markers */}
+      {/* Left edge - dimension markers */}
       <div
         aria-hidden
         className="hidden lg:flex flex-col absolute left-6 top-16 bottom-16 justify-between"
@@ -133,7 +133,7 @@ function EdgeAnnotations() {
         ))}
       </div>
 
-      {/* Top edge — column labels */}
+      {/* Top edge - column labels */}
       <div
         aria-hidden
         className="hidden lg:flex absolute top-6 left-20 right-20 justify-between"
@@ -300,14 +300,14 @@ export default function HeroSection() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       if (alpha > 0.005) {
-        // Effect 1 — faint warm radial wash
+        // Effect 1 - faint warm radial wash
         const grad = ctx.createRadialGradient(x, y, 0, x, y, 180);
         grad.addColorStop(0, `rgba(181,146,76,${0.14 * alpha})`);
         grad.addColorStop(1, "rgba(181,146,76,0)");
         ctx.fillStyle = grad;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        // Effect 2 — accent dots at 80px grid intersections within 160px radius
+        // Effect 2 - accent dots at 80px grid intersections within 160px radius
         const GRID   = 80;
         const RADIUS = 160;
         const n0 = Math.floor((x - RADIUS) / GRID);
@@ -341,7 +341,7 @@ export default function HeroSection() {
       cOpacity.current = 0;
       cRaf.current = null;
     }
-  }, []); // all values are refs — stable, no deps needed
+  }, []); // all values are refs - stable, no deps needed
 
   // Resize canvas to match container whenever container size changes
   useEffect(() => {
@@ -385,7 +385,7 @@ export default function HeroSection() {
     mouseX.set(x);
     mouseY.set(y);
 
-    // Canvas accent — update mouse, kick off loop if not running
+    // Canvas accent - update mouse, kick off loop if not running
     cMouse.current = { x, y };
     if (cTarget.current === 0) {
       cTarget.current = 1;
@@ -415,7 +415,7 @@ export default function HeroSection() {
     if (cursorRef.current) cursorRef.current.style.opacity = "0";
     if (spotlightRef.current) spotlightRef.current.style.background = "transparent";
     if (parallaxRef.current) parallaxRef.current.style.transform = "translate(0, 0)";
-    // Canvas accent — begin fade-out; RAF loop will stop itself when fully transparent
+    // Canvas accent - begin fade-out; RAF loop will stop itself when fully transparent
     cTarget.current = 0;
   }, [mouseX, mouseY]);
 
@@ -424,7 +424,7 @@ export default function HeroSection() {
       titleBlock={{
         name: "NIHARIKA PUNDLIK",
         title: "PRODUCT DESIGNER • PORTFOLIO",
-        scale: "SCALE: 1:1 — DATE: 2026",
+        scale: "SCALE: 1:1 - DATE: 2026",
         sheet: "01 OF 01",
       }}
       style={{ minHeight: "100svh" }}
@@ -484,7 +484,7 @@ export default function HeroSection() {
           </svg>
         </div>
 
-        {/* SVG grid base layer — auto-scrolls continuously at low opacity */}
+        {/* SVG grid base layer - auto-scrolls continuously at low opacity */}
         <div
           aria-hidden
           style={{
@@ -498,7 +498,7 @@ export default function HeroSection() {
           <GridSVGPattern id="hero-grid-base" offsetX={gridOffsetX} offsetY={gridOffsetY} />
         </div>
 
-        {/* SVG grid cursor-reveal layer — follows the mouse */}
+        {/* SVG grid cursor-reveal layer - follows the mouse */}
         <motion.div
           aria-hidden
           style={{
@@ -514,7 +514,7 @@ export default function HeroSection() {
           <GridSVGPattern id="hero-grid-reveal" offsetX={gridOffsetX} offsetY={gridOffsetY} />
         </motion.div>
 
-        {/* Canvas accent layer — accent glow + grid-node dots, above grid, below content */}
+        {/* Canvas accent layer - accent glow + grid-node dots, above grid, below content */}
         <canvas
           ref={canvasRef}
           aria-hidden
@@ -543,22 +543,22 @@ export default function HeroSection() {
             transitionTimingFunction: "ease-out",
           }}
         >
-          {/* Sketch — upper left: floor plan */}
+          {/* Sketch - upper left: floor plan */}
           <div className="hidden lg:block absolute" style={{ top: "8%", left: "4%", opacity: 0.72 }}>
             <HandDrawnSketch type="floorPlan" width={120} height={85} annotation="initial layout" delay={0.5} animateOnMount />
           </div>
 
-          {/* Sketch — upper right: wireframe (slightly lower than floor plan) */}
+          {/* Sketch - upper right: wireframe (slightly lower than floor plan) */}
           <div className="hidden lg:block absolute" style={{ top: "15%", right: "6%", opacity: 0.68 }}>
             <HandDrawnSketch type="wireframe" width={55} height={75} annotation="v3 iteration" delay={0.8} animateOnMount />
           </div>
 
-          {/* Sketch — lower right: perspective (well above title block) */}
+          {/* Sketch - lower right: perspective (well above title block) */}
           <div className="hidden lg:block absolute" style={{ bottom: "26%", right: "5%", opacity: 0.72 }}>
             <HandDrawnSketch type="perspective" width={115} height={70} annotation="spatial flow" delay={1.2} animateOnMount />
           </div>
 
-          {/* Sketch — lower left: morph transition */}
+          {/* Sketch - lower left: morph transition */}
           <div className="hidden lg:block absolute" style={{ bottom: "14%", left: "5%", opacity: 0.65 }}>
             <HandDrawnSketch type="morphTransition" width={130} height={100} annotation="from arch to digital" delay={1.6} animateOnMount />
           </div>
@@ -640,7 +640,7 @@ export default function HeroSection() {
                   ))}
               </span>
 
-              {/* Line 3 — rotating typewriter word */}
+              {/* Line 3 - rotating typewriter word */}
               <span
                 style={{ display: "block", minHeight: "1.1em" }}
                 aria-live="polite"
@@ -660,12 +660,12 @@ export default function HeroSection() {
             </h1>
           </div>
 
-          {/* Subheading — dragged up from below by cursor */}
+          {/* Subheading - dragged up from below by cursor */}
           <div
             className="relative"
             style={{ maxWidth: "min(550px, 90vw)", marginBottom: 24, textAlign: "center" }}
           >
-            {/* Drag cursor — bottom-centre of text box, rises with it */}
+            {/* Drag cursor - bottom-centre of text box, rises with it */}
             <motion.div
               aria-hidden
               initial={{ y: 40, opacity: 0 }}
@@ -704,7 +704,7 @@ export default function HeroSection() {
             {/* Selection box */}
             <SelectionBox visible={showSelBox && !selBoxFaded} />
 
-            {/* Subtext — floats up from below, cursor lifts it into place */}
+            {/* Subtext - floats up from below, cursor lifts it into place */}
             <motion.p
               initial={{ y: 40, opacity: 0 }}
               animate={

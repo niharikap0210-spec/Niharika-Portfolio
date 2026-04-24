@@ -29,11 +29,11 @@ export default function Home() {
         className="relative py-20"
         style={{ scrollMarginTop: 96 }}
       >
-        {/* ── Marginalia — hand-drawn sketches & arrows in the outer margins ── */}
+        {/* ── Marginalia - hand-drawn sketches & arrows in the outer margins ── */}
         <div
           aria-hidden
           className="hidden lg:block absolute"
-          style={{ top: 120, right: "2.5%", opacity: 0.55, pointerEvents: "none" }}
+          style={{ top: 120, right: "9%", opacity: 0.55, pointerEvents: "none" }}
         >
           <HandDrawnSketch
             type="approvalStamp"
@@ -47,7 +47,7 @@ export default function Home() {
         <div
           aria-hidden
           className="hidden lg:block absolute"
-          style={{ top: "44%", left: "2%", opacity: 0.5, pointerEvents: "none" }}
+          style={{ top: "44%", left: "8%", opacity: 0.5, pointerEvents: "none" }}
         >
           <HandDrawnSketch
             type="commentBubble"
@@ -61,7 +61,7 @@ export default function Home() {
         <div
           aria-hidden
           className="hidden lg:block absolute"
-          style={{ bottom: 110, right: "2.5%", opacity: 0.55, pointerEvents: "none" }}
+          style={{ bottom: 110, right: "8%", opacity: 0.55, pointerEvents: "none" }}
         >
           <HandDrawnSketch
             type="morphTransition"
@@ -75,7 +75,7 @@ export default function Home() {
         <div
           aria-hidden
           className="hidden lg:block absolute"
-          style={{ top: "52%", right: "3%", opacity: 0.45, pointerEvents: "none" }}
+          style={{ top: "52%", right: "9%", opacity: 0.45, pointerEvents: "none" }}
         >
           <HandDrawnSketch
             type="wireframe"
@@ -86,11 +86,11 @@ export default function Home() {
           />
         </div>
 
-        {/* Curved arrow — upper left, gesturing from annotation toward first card */}
+        {/* Curved arrow - upper left, gesturing from annotation toward first card */}
         <svg
           aria-hidden
           className="hidden lg:block absolute"
-          style={{ top: 210, left: "3.5%", opacity: 0.4, pointerEvents: "none" }}
+          style={{ top: 210, left: "8%", opacity: 0.4, pointerEvents: "none" }}
           width="90"
           height="120"
           viewBox="0 0 90 120"
@@ -120,11 +120,11 @@ export default function Home() {
           />
         </svg>
 
-        {/* Curved arrow — mid-right, gesturing from comment sketch toward second card */}
+        {/* Curved arrow - mid-right, gesturing from comment sketch toward second card */}
         <svg
           aria-hidden
           className="hidden lg:block absolute"
-          style={{ bottom: 220, left: "3%", opacity: 0.38, pointerEvents: "none" }}
+          style={{ bottom: 220, left: "8%", opacity: 0.38, pointerEvents: "none" }}
           width="100"
           height="90"
           viewBox="0 0 100 90"
@@ -229,7 +229,7 @@ export default function Home() {
               }}
             >
               A selection of end-to-end product work spanning enterprise SaaS, consumer
-              onboarding, and research-led discovery — each project a study in translating
+              onboarding, and research-led discovery - each project a study in translating
               a specific constraint into something people actually reach for.
             </motion.p>
 
@@ -247,7 +247,7 @@ export default function Home() {
             >
               {[
                 { value: "04", label: "Case Studies" },
-                { value: "2022—26", label: "Active Span" },
+                { value: "2022-26", label: "Active Span" },
                 { value: "Web + iOS", label: "Surfaces" },
               ].map((s) => (
                 <div key={s.label} style={{ display: "flex", flexDirection: "column", gap: 6 }}>
@@ -366,7 +366,7 @@ export default function Home() {
             </span>
           </motion.div>
 
-          {/* Section footer — light end marker (tools strip above serves as the ruling line) */}
+          {/* Section footer - light end marker (tools strip above serves as the ruling line) */}
           <div
             className="flex items-center justify-between"
             style={{ marginTop: 22 }}
@@ -391,7 +391,7 @@ export default function Home() {
                 opacity: 0.7,
               }}
             >
-              A—{String(projects.length).padStart(2, "0")} / A—{String(projects.length).padStart(2, "0")}
+              A-{String(projects.length).padStart(2, "0")} / A-{String(projects.length).padStart(2, "0")}
             </span>
           </div>
         </div>

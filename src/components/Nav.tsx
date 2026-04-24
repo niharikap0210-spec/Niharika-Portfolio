@@ -174,7 +174,7 @@ export default function Nav() {
               <Link
                 to="/"
                 onClick={(e) => e.stopPropagation()}
-                aria-label="Niharika Pundlik — home"
+                aria-label="Niharika Pundlik - home"
                 style={{
                   fontFamily: "'Playfair Display', Georgia, serif",
                   fontStyle: "italic",
@@ -297,7 +297,7 @@ export default function Nav() {
               color: C_ACTIVE,
               textDecoration: "none",
             }}
-            aria-label="Niharika Pundlik — home"
+            aria-label="Niharika Pundlik - home"
           >
             NP
           </Link>

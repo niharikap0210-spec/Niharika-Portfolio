@@ -67,7 +67,7 @@ function SkillsFloorPlan() {
                 : "transparent",
             }}
           >
-            {/* Room label — centered like architectural floor plan label */}
+            {/* Room label - centered like architectural floor plan label */}
             <div
               className="flex items-center justify-center gap-2 mb-5"
             >
@@ -379,7 +379,7 @@ export default function About() {
                 }}
               />
 
-              {/* Annotation — only safe to show when photo column is narrow enough (lg grid layout) */}
+              {/* Annotation - only safe to show when photo column is narrow enough (lg grid layout) */}
               <div
                 aria-hidden
                 className="hidden lg:flex"
@@ -402,8 +402,8 @@ export default function About() {
           {/* Bio col */}
           <div className="lg:col-span-8 space-y-6">
             {[
-              <>I'm <strong>Niharika Pundlik</strong> — a Product Designer based in Virginia with a Master's in Human-Computer Interaction from Iowa State University and a Bachelor's in Architecture.</>,
-              <>My path from architecture to product design wasn't a pivot — it was an <strong>evolution</strong>. I still think in systems, space, and structure. I still obsess over how people move through environments. The environments just happen to be digital now.</>,
+              <>I'm <strong>Niharika Pundlik</strong> - a Product Designer based in Virginia with a Master's in Human-Computer Interaction from Iowa State University and a Bachelor's in Architecture.</>,
+              <>My path from architecture to product design wasn't a pivot - it was an <strong>evolution</strong>. I still think in systems, space, and structure. I still obsess over how people move through environments. The environments just happen to be digital now.</>,
               <>I've designed enterprise tools at PyCube, AI-driven products at Mercor, and built design systems from scratch at Qnaptics. I bring an architect's <strong>rigor for detail</strong> and a researcher's empathy for users to everything I design.</>,
               <>When I'm not pushing pixels, I'm probably sketching floor plans I'll never build, experimenting with 3D renders, or exploring new coffee shops.</>,
             ].map((para, i) => (
