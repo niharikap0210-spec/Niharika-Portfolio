@@ -1007,8 +1007,8 @@ function PersonasSection() {
             className="persona-grid"
             style={{
               display: "grid",
-              gridTemplateColumns: "minmax(280px, 5fr) minmax(280px, 7fr)",
-              minHeight: 560,
+              gridTemplateColumns: "minmax(320px, 6fr) minmax(280px, 6fr)",
+              minHeight: 640,
             }}
           >
             {/* Left — image */}
@@ -1062,7 +1062,7 @@ function PersonasSection() {
                   style={{
                     width: "100%", height: "100%",
                     objectFit: "contain",
-                    padding: "clamp(24px, 3vw, 44px)",
+                    padding: "clamp(10px, 1.4vw, 20px)",
                     display: "block",
                   }}
                 />
