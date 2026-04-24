@@ -76,7 +76,7 @@ export default function SplashScreen({ onComplete }: SplashScreenProps) {
         overflow: "hidden",
       }}
     >
-      {/* SVG canvas — coordinate space 0 0 160 90 (16:9) */}
+      {/* SVG canvas - coordinate space 0 0 160 90 (16:9) */}
       <svg
         viewBox="0 0 160 90"
         style={{ width: "min(90vw, 600px)", height: "auto" }}
@@ -124,7 +124,7 @@ export default function SplashScreen({ onComplete }: SplashScreenProps) {
               transition={{ duration: 0.4, ease: "easeIn" }}
               style={{ transformOrigin: "80px 45px" }}
             >
-              {/* N — single-stroke architectural letterform */}
+              {/* N - single-stroke architectural letterform */}
               {/* Path: bottom-left → top-left → bottom-right → top-right */}
               <motion.path
                 d="M 59 61 L 59 29 L 76 61 L 76 29"
@@ -145,7 +145,7 @@ export default function SplashScreen({ onComplete }: SplashScreenProps) {
                 }}
               />
 
-              {/* P — single-stroke: up from bottom, arc for bowl */}
+              {/* P - single-stroke: up from bottom, arc for bowl */}
               {/* Path: bottom → top → bowl arc back to middle */}
               <motion.path
                 d="M 83 61 L 83 29 C 101 29 101 45 83 45"
@@ -166,7 +166,7 @@ export default function SplashScreen({ onComplete }: SplashScreenProps) {
                 }}
               />
 
-              {/* Underline — subtle architectural rule */}
+              {/* Underline - subtle architectural rule */}
               <motion.path
                 d="M 59 65 L 101 65"
                 fill="none"

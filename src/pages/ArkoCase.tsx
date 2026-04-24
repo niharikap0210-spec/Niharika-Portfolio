@@ -30,7 +30,7 @@ const caption: React.CSSProperties = {
   lineHeight: 1.5,
 };
 
-/* ── Unified type scale — single source of truth ─────────────────── */
+/* ── Unified type scale - single source of truth ─────────────────── */
 const t = {
   eyebrow: {
     ...mono,
@@ -133,7 +133,7 @@ function CountUp({
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   SECTION HEADER — replaces the old decorative ChapterMark
+   SECTION HEADER - replaces the old decorative ChapterMark
    Clean editorial eyebrow: number · section · phase + rule line
 ══════════════════════════════════════════════════════════════════ */
 function SectionHeader({
@@ -193,7 +193,7 @@ function SectionHeader({
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   LAPTOP MOCKUP — inline CSS chassis, no external SVG.
+   LAPTOP MOCKUP - inline CSS chassis, no external SVG.
    Minimal flat frame with a thin dark bezel, screen cutout, and a
    tapered base + hinge shelf below. Matches the architectural aesthetic.
 ══════════════════════════════════════════════════════════════════ */
@@ -294,7 +294,7 @@ function LaptopMockup({ src, alt }: { src: string; alt: string }) {
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   LOOP CARD — single integrated "before state" visualization.
+   LOOP CARD - single integrated "before state" visualization.
    Replaces the earlier stacked workflow + anatomy table.
 ══════════════════════════════════════════════════════════════════ */
 function LoopCard() {
@@ -327,7 +327,7 @@ function LoopCard() {
       background: "var(--bg-elevated)",
       overflow: "hidden",
     }}>
-      {/* Four-stage flow — the focal object */}
+      {/* Four-stage flow - the focal object */}
       <div style={{
         display: "grid",
         gridTemplateColumns: "repeat(4, 1fr)",
@@ -396,7 +396,7 @@ function LoopCard() {
         })}
       </div>
 
-      {/* Dynamic reason band — updates with active stage */}
+      {/* Dynamic reason band - updates with active stage */}
       <div style={{
         padding: "32px 36px 36px",
         borderTop: "1px solid var(--border)",
@@ -477,7 +477,7 @@ function WebGallery({
 
   return (
     <div style={{ width: "100%" }}>
-      {/* Editorial tab row — flush on page, single baseline rail */}
+      {/* Editorial tab row - flush on page, single baseline rail */}
       <div
         role="tablist"
         aria-label="Workspace screens"
@@ -674,7 +674,7 @@ function WebGallery({
         </div>
       </div>
 
-      {/* Caption — centered */}
+      {/* Caption - centered */}
       <AnimatePresence mode="wait">
         <motion.p
           key={`cap-${active}`}
@@ -692,7 +692,7 @@ function WebGallery({
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   USER TABS — editorial, no sketches/hand-labels/sparkles
+   USER TABS - editorial, no sketches/hand-labels/sparkles
 ══════════════════════════════════════════════════════════════════ */
 function UserTabs() {
   const [tab, setTab] = useState<0 | 1>(0);
@@ -788,7 +788,7 @@ function UserTabs() {
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   INSIGHT QUOTE — scroll-linked word-by-word reveal.
+   INSIGHT QUOTE - scroll-linked word-by-word reveal.
    Drives opacity of each word off the section's scroll progress so the
    quote "types in" as the user scrolls past it.
 ══════════════════════════════════════════════════════════════════ */
@@ -862,7 +862,7 @@ function InsightQuote() {
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   RESEARCH LEDGER — editorial research-depth block.
+   RESEARCH LEDGER - editorial research-depth block.
    4 method tiles with icons, counters, hover lift + olive top-rail.
 ══════════════════════════════════════════════════════════════════ */
 function ResearchLedger() {
@@ -1149,7 +1149,7 @@ function DecisionStepper() {
    AR EDITOR STEPPER
 ══════════════════════════════════════════════════════════════════ */
 /* ══════════════════════════════════════════════════════════════════
-   SCAN FLOW STEPPER — vertical timeline of iOS scan stages.
+   SCAN FLOW STEPPER - vertical timeline of iOS scan stages.
    Auto-advances every 5s; pauses on hover. Each stage carries its
    own metric inline, so the top grid of stats can go away entirely.
 ══════════════════════════════════════════════════════════════════ */
@@ -1188,7 +1188,7 @@ function ScanFlowStepper({
     >
       {/* LEFT · timeline */}
       <div className="md:col-span-6">
-        {/* Header strip — progress */}
+        {/* Header strip - progress */}
         <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 26 }}>
           <span style={{ ...mono, fontSize: 11, color: arko.dark, letterSpacing: "0.22em", fontWeight: 700 }}>
             {String(active + 1).padStart(2, "0")} <span style={{ color: "var(--text-muted)", fontWeight: 400 }}>/ {String(stages.length).padStart(2, "0")}</span>
@@ -1271,7 +1271,7 @@ function ScanFlowStepper({
                     (e.currentTarget as HTMLElement).style.outline = "none";
                   }}
                 >
-                  {/* Node square — solid fill so it covers the rail cleanly */}
+                  {/* Node square - solid fill so it covers the rail cleanly */}
                   <motion.span
                     animate={{
                       scale: isActive ? 1.05 : 1,
@@ -1387,7 +1387,7 @@ function ScanFlowStepper({
           gap: 18,
         }}
       >
-        {/* Main canvas — phone + flanking chips */}
+        {/* Main canvas - phone + flanking chips */}
         <div
           style={{
             position: "relative",
@@ -1586,7 +1586,7 @@ function ScanFlowStepper({
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   CLIENT JOURNEY REEL — dark-themed 4-up stepper for the
+   CLIENT JOURNEY REEL - dark-themed 4-up stepper for the
    Approval · Client section. Phones sit on the olive-dark surface,
    no containing rectangle. Active card expands with caption + metric.
 ══════════════════════════════════════════════════════════════════ */
@@ -1731,7 +1731,7 @@ function ClientJourneyReel() {
                 />
               </div>
 
-              {/* Step header — number + icon */}
+              {/* Step header - number + icon */}
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
                   <motion.span
@@ -2009,7 +2009,7 @@ function ArEditorStepper({
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   NAV CARD — visual "more case studies" tile (project gradient hero)
+   NAV CARD - visual "more case studies" tile (project gradient hero)
 ══════════════════════════════════════════════════════════════════ */
 function NavCard({ project }: { project: Project }) {
   const [hover, setHover] = useState(false);
@@ -2044,7 +2044,7 @@ function NavCard({ project }: { project: Project }) {
         }}
       />
 
-      {/* Top meta row — year + tag */}
+      {/* Top meta row - year + tag */}
       <div
         style={{
           position: "absolute",
@@ -2076,7 +2076,7 @@ function NavCard({ project }: { project: Project }) {
         </span>
       </div>
 
-      {/* Bottom content — title, subtitle, CTA */}
+      {/* Bottom content - title, subtitle, CTA */}
       <div
         style={{
           position: "absolute",
@@ -2187,7 +2187,7 @@ export default function ArkoCase() {
       </div>
 
       {/* ══════════════════════════════════════════════════════════════
-          00 · HERO — editorial monograph cover
+          00 · HERO - editorial monograph cover
       ══════════════════════════════════════════════════════════════ */}
       <section className="blueprint-grid" style={{
         position: "relative",
@@ -2197,7 +2197,7 @@ export default function ArkoCase() {
         flexDirection: "column",
         overflow: "hidden",
       }}>
-        {/* Top bar — back link + tag strip */}
+        {/* Top bar - back link + tag strip */}
         <motion.div
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.05, duration: 0.5 }}
           className="max-w-7xl mx-auto px-6 md:px-10"
@@ -2233,7 +2233,7 @@ export default function ArkoCase() {
           </div>
         </motion.div>
 
-        {/* Hero body — 2-column: text left, laptop right, all in viewport */}
+        {/* Hero body - 2-column: text left, laptop right, all in viewport */}
         <div
           className="max-w-7xl mx-auto px-6 md:px-10"
           style={{
@@ -2254,7 +2254,7 @@ export default function ArkoCase() {
               width: "100%",
             }}
           >
-            {/* LEFT — title, subtitle */}
+            {/* LEFT - title, subtitle */}
             <div className="md:col-span-5" style={{ minWidth: 0 }}>
               <motion.div
                 initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1, duration: 0.6 }}
@@ -2300,7 +2300,7 @@ export default function ArkoCase() {
                 in one closed loop.
               </motion.p>
 
-              {/* Meta row — compact, below subtitle */}
+              {/* Meta row - compact, below subtitle */}
               <motion.div
                 initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8, duration: 0.6 }}
                 style={{
@@ -2331,14 +2331,14 @@ export default function ArkoCase() {
               </motion.div>
             </div>
 
-            {/* RIGHT — laptop + phone mockup with olive blur backdrop */}
+            {/* RIGHT - laptop + phone mockup with olive blur backdrop */}
             <motion.div
               className="md:col-span-7"
               initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6, duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
               style={{ position: "relative", width: "100%", minWidth: 0 }}
             >
-              {/* Olive radial blur — sits behind the mockups */}
+              {/* Olive radial blur - sits behind the mockups */}
               <div
                 aria-hidden
                 style={{
@@ -2367,7 +2367,7 @@ export default function ArkoCase() {
                 }}
               />
 
-              {/* Laptop — main focal object */}
+              {/* Laptop - main focal object */}
               <motion.div
                 animate={{ y: [0, -6, 0] }}
                 transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
@@ -2386,7 +2386,7 @@ export default function ArkoCase() {
                 </div>
               </motion.div>
 
-              {/* Phone — overlaps bottom-right of laptop */}
+              {/* Phone - overlaps bottom-right of laptop */}
               <motion.div
                 animate={{ y: [0, -10, 0] }}
                 transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
@@ -2413,7 +2413,7 @@ export default function ArkoCase() {
           </div>
         </div>
 
-        {/* Scroll cue — bottom strip */}
+        {/* Scroll cue - bottom strip */}
         <motion.div
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.1, duration: 0.6 }}
           className="max-w-7xl mx-auto px-6 md:px-10"
@@ -2441,7 +2441,7 @@ export default function ArkoCase() {
       </section>
 
       {/* ══════════════════════════════════════════════════════════════
-          01 · PREMISE — the whole thesis
+          01 · PREMISE - the whole thesis
       ══════════════════════════════════════════════════════════════ */}
       <section style={{ padding: SECTION_PAD, background: "var(--bg-primary)" }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
@@ -2463,7 +2463,7 @@ export default function ArkoCase() {
                 on-site walkthroughs) with one continuous product.
               </p>
 
-              {/* Pull-line — the thesis in one breath */}
+              {/* Pull-line - the thesis in one breath */}
               <div style={{
                 display: "flex",
                 alignItems: "flex-start",
@@ -2571,7 +2571,7 @@ export default function ArkoCase() {
                   Hours lost per project
                 </p>
 
-                {/* Breakdown bars — where those hours go */}
+                {/* Breakdown bars - where those hours go */}
                 <div style={{
                   display: "flex", flexDirection: "column", gap: 10,
                   paddingTop: 20,
@@ -2617,7 +2617,7 @@ export default function ArkoCase() {
       </section>
 
       {/* ══════════════════════════════════════════════════════════════
-          02 · CONTEXT — the broken workflow
+          02 · CONTEXT - the broken workflow
       ══════════════════════════════════════════════════════════════ */}
       <section className="blueprint-grid-subtle" style={{ padding: SECTION_PAD }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
@@ -2638,7 +2638,7 @@ export default function ArkoCase() {
             </p>
           </Reveal>
 
-          {/* The revision loop — single integrated card */}
+          {/* The revision loop - single integrated card */}
           <Reveal delay={0.08}>
             <LoopCard />
           </Reveal>
@@ -2646,7 +2646,7 @@ export default function ArkoCase() {
       </section>
 
       {/* ══════════════════════════════════════════════════════════════
-          03 · USERS — two contexts
+          03 · USERS - two contexts
       ══════════════════════════════════════════════════════════════ */}
       <section style={{ padding: SECTION_PAD, background: "var(--bg-primary)" }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
@@ -2666,7 +2666,7 @@ export default function ArkoCase() {
             <UserTabs />
           </Reveal>
 
-          {/* Research depth — ledger-style card with icons + hover interactions */}
+          {/* Research depth - ledger-style card with icons + hover interactions */}
           <Reveal delay={0.15}>
             <ResearchLedger />
           </Reveal>
@@ -2674,7 +2674,7 @@ export default function ArkoCase() {
       </section>
 
       {/* ══════════════════════════════════════════════════════════════
-          04 · INSIGHT — full bleed dark
+          04 · INSIGHT - full bleed dark
       ══════════════════════════════════════════════════════════════ */}
       <section style={{
         backgroundColor: "var(--text-primary)",
@@ -2716,7 +2716,7 @@ export default function ArkoCase() {
       </section>
 
       {/* ══════════════════════════════════════════════════════════════
-          05 · WORKSPACE · WEB — desk-side platform for the designer
+          05 · WORKSPACE · WEB - desk-side platform for the designer
       ══════════════════════════════════════════════════════════════ */}
       <section className="blueprint-grid" style={{ padding: SECTION_PAD }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
@@ -2750,7 +2750,7 @@ export default function ArkoCase() {
       </section>
 
       {/* ══════════════════════════════════════════════════════════════
-          06 · CAPTURE · iOS — scan flow + AR editor
+          06 · CAPTURE · iOS - scan flow + AR editor
       ══════════════════════════════════════════════════════════════ */}
       <section style={{ padding: SECTION_PAD, background: "var(--bg-secondary)" }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
@@ -2852,7 +2852,7 @@ export default function ArkoCase() {
       </section>
 
       {/* ══════════════════════════════════════════════════════════════
-          07 · APPROVAL — full-bleed olive client surface
+          07 · APPROVAL - full-bleed olive client surface
       ══════════════════════════════════════════════════════════════ */}
       <section style={{
         padding: SECTION_PAD,
@@ -2887,7 +2887,7 @@ export default function ArkoCase() {
             </div>
           </Reveal>
 
-          {/* Hero block — statement + lede */}
+          {/* Hero block - statement + lede */}
           <Reveal>
             <div style={{ maxWidth: 860, marginBottom: 56 }}>
               <h2 style={{
@@ -2950,7 +2950,7 @@ export default function ArkoCase() {
             </div>
           </Reveal>
 
-          {/* Client Journey Reel — 4-up dark stepper */}
+          {/* Client Journey Reel - 4-up dark stepper */}
           <Reveal delay={0.08}>
             <ClientJourneyReel />
           </Reveal>
@@ -3048,7 +3048,7 @@ export default function ArkoCase() {
             </p>
           </Reveal>
 
-          {/* Editorial impact banner — one strip, no card borders */}
+          {/* Editorial impact banner - one strip, no card borders */}
           <Reveal delay={0.08}>
             <div style={{ marginBottom: 96 }}>
               {/* Eyebrow */}
@@ -3135,7 +3135,7 @@ export default function ArkoCase() {
             </div>
           </Reveal>
 
-          {/* Reflection — two pull-quote editorial cards */}
+          {/* Reflection - two pull-quote editorial cards */}
           <div
             className="grid grid-cols-1 md:grid-cols-2"
             style={{ gap: 32, marginBottom: 88 }}
@@ -3214,7 +3214,7 @@ export default function ArkoCase() {
             ))}
           </div>
 
-          {/* Closing line — cinematic */}
+          {/* Closing line - cinematic */}
           <Reveal>
             <div style={{
               paddingTop: 56,
@@ -3262,7 +3262,7 @@ export default function ArkoCase() {
       </section>
 
       {/* ══════════════════════════════════════════════════════════════
-          NAVIGATION — prev / next · editorial cards
+          NAVIGATION - prev / next · editorial cards
       ══════════════════════════════════════════════════════════════ */}
       <section style={{ padding: "clamp(64px, 8vw, 104px) 0", borderTop: "1px solid var(--border)" }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
@@ -3288,7 +3288,7 @@ export default function ArkoCase() {
       </section>
 
       {/* ══════════════════════════════════════════════════════════════
-          Back to top — floating action, bottom-right
+          Back to top - floating action, bottom-right
       ══════════════════════════════════════════════════════════════ */}
       <AnimatePresence>
         {showTop && (

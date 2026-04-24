@@ -13,9 +13,9 @@ interface NavItem {
 
 /* ─── Nav items ─────────────────────────────────────────────────── */
 const navItems: NavItem[] = [
-  { label: "Home",     href: "/",      external: false },
-  { label: "Work",     href: "/",      external: false },
-  { label: "About",    href: "/about", external: false },
+  { label: "Home",     href: "/",              external: false },
+  { label: "Work",     href: "/#projects",     external: false },
+  { label: "About",    href: "/about",         external: false },
   { label: "Resume",   href: "https://drive.google.com/file/d/1WbopauZ0xwmOnLNuEb1XZX5TmzxQCA6K/view?usp=sharing", external: true },
   { label: "LinkedIn", href: "https://linkedin.com/in/niharika-pundlik", external: true },
 ];
@@ -174,7 +174,7 @@ export default function Nav() {
               <Link
                 to="/"
                 onClick={(e) => e.stopPropagation()}
-                aria-label="Niharika Pundlik — home"
+                aria-label="Niharika Pundlik - home"
                 style={{
                   fontFamily: "'Playfair Display', Georgia, serif",
                   fontStyle: "italic",
@@ -297,7 +297,7 @@ export default function Nav() {
               color: C_ACTIVE,
               textDecoration: "none",
             }}
-            aria-label="Niharika Pundlik — home"
+            aria-label="Niharika Pundlik - home"
           >
             NP
           </Link>

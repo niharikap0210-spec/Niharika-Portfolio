@@ -36,7 +36,7 @@ export default function DrawingSheetBorder({
         }}
       />
 
-      {/* Title block — bottom right, hidden on mobile to prevent overlap */}
+      {/* Title block - bottom right, hidden on mobile to prevent overlap */}
       {titleBlock && (
         <div
           aria-hidden

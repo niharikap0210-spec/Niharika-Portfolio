@@ -234,7 +234,7 @@ export default function CaseStudy() {
         </motion.div>
       </div>
 
-      {/* Sheet 01 — Overview */}
+      {/* Sheet 01 - Overview */}
       <DrawingSheet sheetNumber="01 OF 04" sheetTitle="Overview" letter="A">
         <h2
           style={{
@@ -301,7 +301,7 @@ export default function CaseStudy() {
         </span>
       </div>
 
-      {/* Sheet 02 — Research */}
+      {/* Sheet 02 - Research */}
       <DrawingSheet sheetNumber="02 OF 04" sheetTitle="Research" letter="B">
         <h2
           style={{
@@ -355,7 +355,7 @@ export default function CaseStudy() {
             style={{ width: "100%", height: "auto", display: "block" }}
           />
           <p style={{ ...mono, fontSize: 8, color: "var(--text-muted)", padding: "8px 12px" }}>
-            Fig. 01 — Research artifacts, affinity maps, and user insights
+            Fig. 01 - Research artifacts, affinity maps, and user insights
           </p>
         </div>
       </DrawingSheet>
@@ -366,7 +366,7 @@ export default function CaseStudy() {
         </span>
       </div>
 
-      {/* Sheet 03 — Design */}
+      {/* Sheet 03 - Design */}
       <DrawingSheet sheetNumber="03 OF 04" sheetTitle="Design Process" letter="C">
         <h2
           style={{
@@ -434,7 +434,7 @@ export default function CaseStudy() {
             style={{ width: "100%", height: "auto", display: "block" }}
           />
           <p style={{ ...mono, fontSize: 8, color: "var(--text-muted)", padding: "8px 12px" }}>
-            Fig. 02 — Wireframes, iterations, and high-fidelity screens
+            Fig. 02 - Wireframes, iterations, and high-fidelity screens
           </p>
         </div>
       </DrawingSheet>
@@ -445,7 +445,7 @@ export default function CaseStudy() {
         </span>
       </div>
 
-      {/* Sheet 04 — Outcome */}
+      {/* Sheet 04 - Outcome */}
       <DrawingSheet sheetNumber="04 OF 04" sheetTitle="Outcome & Learnings" letter="D">
         <h2
           style={{
