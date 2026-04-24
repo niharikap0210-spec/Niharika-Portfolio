@@ -159,6 +159,24 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
                     display: "inline-block",
                   }}
                 />
+                {project.slug === "shelfie" && (
+                  <span
+                    style={{
+                      ...mono,
+                      alignSelf: "center",
+                      fontSize: 9,
+                      fontWeight: 700,
+                      letterSpacing: "0.2em",
+                      color: accent.dark,
+                      backgroundColor: accent.surface,
+                      border: `0.75px solid ${accent.primary}55`,
+                      padding: "3px 8px",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    UX Research
+                  </span>
+                )}
               </div>
 
               <p

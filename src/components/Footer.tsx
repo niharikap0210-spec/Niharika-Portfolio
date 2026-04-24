@@ -3,7 +3,6 @@ import {
   LinkedinLogo,
   EnvelopeSimple,
   FileArrowDown,
-  GithubLogo,
 } from "@phosphor-icons/react";
 
 interface SocialLink {
@@ -34,11 +33,6 @@ const socialLinks: SocialLink[] = [
     href: "https://drive.google.com/file/d/1WbopauZ0xwmOnLNuEb1XZX5TmzxQCA6K/view?usp=sharing",
     label: "Resume",
   },
-  {
-    icon: <GithubLogo size={18} weight="regular" color="currentColor" />,
-    href: "https://github.com/niharikap0210-spec/Niharika-Portfolio",
-    label: "GitHub",
-  },
 ];
 
 const mainLinks: NavLink[] = [
@@ -50,7 +44,6 @@ const mainLinks: NavLink[] = [
 
 const legalLinks: NavLink[] = [
   { href: "#top", label: "Back to top" },
-  { href: "https://github.com/niharikap0210-spec/Niharika-Portfolio", label: "Source" },
 ];
 
 const copyright = {
@@ -124,7 +117,7 @@ export default function Footer() {
               style={{
                 fontFamily: "'Playfair Display', Georgia, serif",
                 fontWeight: 700,
-                fontSize: 20,
+                fontSize: 22,
                 color: "var(--text-primary)",
                 letterSpacing: "-0.015em",
               }}
@@ -186,7 +179,7 @@ export default function Footer() {
                       className="hover-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded"
                       style={{
                         ...mono,
-                        fontSize: 11,
+                        fontSize: 13,
                         color: "var(--text-primary)",
                         textDecoration: "none",
                         transitionProperty: "color",
@@ -209,7 +202,7 @@ export default function Footer() {
                       className="hover-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded"
                       style={{
                         ...mono,
-                        fontSize: 11,
+                        fontSize: 13,
                         color: "var(--text-primary)",
                         textDecoration: "none",
                         transitionProperty: "color",
@@ -242,7 +235,7 @@ export default function Footer() {
                     className="hover-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded"
                     style={{
                       ...mono,
-                      fontSize: 10,
+                      fontSize: 12,
                       color: "var(--text-muted)",
                       textDecoration: "none",
                       transitionProperty: "color",
@@ -267,7 +260,7 @@ export default function Footer() {
             className="mt-6 lg:mt-0 lg:row-[1/3] lg:col-[1/4]"
             style={{
               ...mono,
-              fontSize: 10,
+              fontSize: 12,
               color: "var(--text-muted)",
               lineHeight: 1.8,
             }}
@@ -277,7 +270,7 @@ export default function Footer() {
               <div
                 style={{
                   fontFamily: "'Inter', system-ui, sans-serif",
-                  fontSize: 12,
+                  fontSize: 14,
                   fontStyle: "normal",
                   fontWeight: 400,
                   letterSpacing: "0",
@@ -299,7 +292,7 @@ export default function Footer() {
             aria-hidden
             style={{
               ...mono,
-              fontSize: 8,
+              fontSize: 10,
               opacity: 0.35,
               letterSpacing: "0.14em",
             }}
