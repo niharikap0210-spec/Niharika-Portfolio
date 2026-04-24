@@ -409,7 +409,7 @@ function VeriflowComposition({ accent }: { accent: ProjectAccent }) {
           zIndex: 3,
         }}
       >
-        <TabletFrame src="/veriflow/start-scanning.png" alt="Veriflow clinic tablet" accent={accent.primary} />
+        <TabletFrame src="/veriflow/pickup-dashboard.png" alt="Veriflow pickup dashboard" accent={accent.primary} />
       </motion.div>
     </div>
   );
