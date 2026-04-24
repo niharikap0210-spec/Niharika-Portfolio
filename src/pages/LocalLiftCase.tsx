@@ -662,7 +662,7 @@ function TensionCard({
           {tension.title}
         </h4>
         <p style={{
-          fontFamily: sans, fontSize: 14.5, lineHeight: 1.6,
+          fontFamily: sans, fontSize: 16.5, lineHeight: 1.65,
           color: "var(--text-secondary)",
         }}>
           {tension.takeaway}
