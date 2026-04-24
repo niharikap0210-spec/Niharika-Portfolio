@@ -5,7 +5,6 @@ import {
   ArrowUpIcon as ArrowUp,
   ArrowLeftIcon as ArrowLeft,
   ArrowRightIcon as ArrowRight,
-  QuotesIcon as Quotes,
   EyeIcon as Eye,
   TimerIcon as Timer,
   BrainIcon as Brain,
@@ -29,10 +28,9 @@ import {
   GearIcon as Gear,
   TargetIcon as Target,
   PlusIcon as Plus,
-  WaveformIcon as Waveform,
 } from "@phosphor-icons/react";
 import type { Icon } from "@phosphor-icons/react";
-import { getAdjacentProjects } from "../data/projects";
+import { projects, type Project } from "../data/projects";
 
 /* ── Shelfie palette, scoped to this page ─────────────────────────── */
 const sh = {
@@ -79,7 +77,7 @@ const t = {
     color: "var(--text-primary)",
   } as React.CSSProperties,
   bodyLg: {
-    fontFamily: sans, fontSize: "clamp(20px, 1.55vw, 23px)",
+    fontFamily: sans, fontSize: "clamp(18px, 1.4vw, 21px)",
     lineHeight: 1.75, color: "var(--text-secondary)",
   } as React.CSSProperties,
   body: {
@@ -87,7 +85,7 @@ const t = {
     color: "var(--text-secondary)",
   } as React.CSSProperties,
   bodySm: {
-    fontFamily: sans, fontSize: 14.5, lineHeight: 1.7,
+    fontFamily: sans, fontSize: 14, lineHeight: 1.7,
     color: "var(--text-secondary)",
   } as React.CSSProperties,
 };
@@ -634,34 +632,6 @@ type Voice = {
   stat: string;
 };
 
-function WaveformBars({ active }: { active: boolean }) {
-  const bars = [0.4, 0.7, 0.9, 0.55, 0.85, 0.45, 0.7, 0.95, 0.6, 0.8, 0.5, 0.7, 0.4, 0.6, 0.3];
-  return (
-    <div style={{ display: "flex", alignItems: "center", gap: 3, height: 22 }}>
-      {bars.map((h, i) => (
-        <motion.span
-          key={i}
-          aria-hidden
-          animate={active
-            ? { scaleY: [h, h * 0.5, h * 1.1, h * 0.7, h], opacity: 1 }
-            : { scaleY: h * 0.5, opacity: 0.55 }}
-          transition={active
-            ? { duration: 1.6, repeat: Infinity, ease: "easeInOut", delay: i * 0.06 }
-            : { duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-          style={{
-            width: 2.5,
-            height: 22,
-            background: sh.primary,
-            display: "block",
-            transformOrigin: "center",
-            borderRadius: 1,
-          }}
-        />
-      ))}
-    </div>
-  );
-}
-
 function VoicesPanel({ voices }: { voices: Voice[] }) {
   const [active, setActive] = useState(0);
   const current = voices[active];
@@ -681,107 +651,64 @@ function VoicesPanel({ voices }: { voices: Voice[] }) {
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-0" style={{
       background: "var(--bg-elevated)",
       border: `1px solid ${sh.subtle}`,
-      borderTop: `2px solid ${sh.primary}`,
     }}>
       {/* LEFT - hero quote stage */}
-      <div className="lg:col-span-7" style={{
+      <div className="lg:col-span-8" style={{
         position: "relative",
-        padding: "36px 40px 32px",
+        padding: "40px 44px",
         borderRight: `1px solid ${sh.subtle}`,
-        minHeight: 460,
-        display: "flex", flexDirection: "column",
+        minHeight: 320,
+        display: "flex", flexDirection: "column", justifyContent: "center",
       }}>
-        {/* Top strip */}
-        <div style={{
-          display: "flex", justifyContent: "space-between", alignItems: "center",
-          marginBottom: 28,
-        }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <Waveform size={16} color={sh.primary} weight="bold" />
-            <p style={{ ...mono, fontSize: 10, letterSpacing: "0.24em", color: sh.primary, fontWeight: 700 }}>
-              FIELD RECORDING · {String(active + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
-            </p>
-          </div>
-          <WaveformBars active />
-        </div>
-
-        {/* Cross-fading quote + meta + finding */}
         <AnimatePresence mode="wait">
           <motion.div
             key={active}
-            initial={{ opacity: 0, y: 10 }}
+            initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-            style={{ display: "flex", flexDirection: "column", flex: 1 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
           >
-            <Quotes size={36} color={sh.primary} weight="fill" style={{ opacity: 0.35, marginBottom: 14 }} />
+            <p style={{
+              ...mono, fontSize: 10, letterSpacing: "0.24em",
+              color: sh.primary, fontWeight: 700,
+              marginBottom: 20,
+            }}>
+              {String(active + 1).padStart(2, "0")} · {current.theme.toUpperCase()}
+            </p>
+
             <blockquote style={{
               fontFamily: serif, fontStyle: "italic",
-              fontSize: "clamp(24px, 2.4vw, 34px)",
-              lineHeight: 1.35,
+              fontSize: "clamp(22px, 2.1vw, 28px)",
+              lineHeight: 1.4,
               color: "var(--text-primary)",
               letterSpacing: "-0.01em",
-              marginBottom: 28,
-              maxWidth: "44ch",
+              margin: 0,
+              maxWidth: "48ch",
             }}>
               &ldquo;{current.quote}&rdquo;
             </blockquote>
-
-            {/* Participant attribution - single slim line */}
-            <p style={{
-              ...mono, fontSize: 11, letterSpacing: "0.2em",
-              color: sh.muted, fontWeight: 700,
-              marginBottom: 24,
-            }}>
-              {current.meta.id} · AGE {current.meta.age} · {current.meta.role.toUpperCase()}
-            </p>
-
-            {/* Finding + stat - slim text-only band */}
-            <div style={{
-              marginTop: "auto",
-              paddingTop: 22,
-              borderTop: `1px solid ${sh.subtle}`,
-            }}>
-              <p style={{ ...mono, fontSize: 10, letterSpacing: "0.22em", color: sh.primary, fontWeight: 700, marginBottom: 8 }}>
-                FINDING · {current.theme.toUpperCase()}
-              </p>
-              <p style={{ fontFamily: serif, fontSize: 19, lineHeight: 1.4, fontWeight: 700, color: "var(--text-primary)", marginBottom: 8 }}>
-                {current.finding}
-              </p>
-              <p style={{ ...mono, fontSize: 11, letterSpacing: "0.16em", color: sh.muted }}>
-                {current.stat}
-              </p>
-            </div>
           </motion.div>
         </AnimatePresence>
       </div>
 
       {/* RIGHT - theme list */}
       <div
-        className="lg:col-span-5"
+        className="lg:col-span-4"
         role="tablist"
         aria-label="Voices from the aisle"
         tabIndex={0}
         onKeyDown={onKeyDown}
         style={{
-          padding: "20px 0",
           background: sh.surface,
           outline: "none",
           position: "relative",
+          display: "flex", flexDirection: "column",
         }}
       >
-        <p style={{
-          ...mono, fontSize: 10, letterSpacing: "0.24em", color: sh.muted, fontWeight: 700,
-          padding: "10px 26px 14px",
-        }}>
-          ALL VOICES · N = {total}
-        </p>
-
         {voices.map((v, i) => {
           const isActive = i === active;
           return (
-            <motion.button
+            <button
               key={i}
               type="button"
               role="tab"
@@ -789,28 +716,20 @@ function VoicesPanel({ voices }: { voices: Voice[] }) {
               onMouseEnter={() => setActive(i)}
               onFocus={() => setActive(i)}
               onClick={() => setActive(i)}
-              animate={{
-                backgroundColor: isActive ? "var(--bg-elevated)" : "rgba(0,0,0,0)",
-              }}
-              whileHover={{ x: isActive ? 0 : 2 }}
-              transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
               style={{
-                display: "grid",
-                gridTemplateColumns: "1fr auto",
-                gap: 16,
                 width: "100%",
-                padding: "20px 26px",
+                padding: "22px 26px",
                 textAlign: "left",
                 border: "none",
-                borderTop: i === 0 ? `1px solid ${sh.subtle}` : "none",
-                borderBottom: `1px solid ${sh.subtle}`,
+                borderBottom: i === total - 1 ? "none" : `1px solid ${sh.subtle}`,
+                background: isActive ? "var(--bg-elevated)" : "transparent",
                 cursor: "pointer",
                 position: "relative",
                 outline: "none",
-                alignItems: "center",
+                flex: 1,
+                transition: "background-color 0.32s ease",
               }}
             >
-              {/* Active indicator bar */}
               {isActive && (
                 <motion.span
                   layoutId="voice-active-bar"
@@ -825,30 +744,16 @@ function VoicesPanel({ voices }: { voices: Voice[] }) {
                 />
               )}
 
-              <div style={{ minWidth: 0 }}>
-                <p style={{ ...mono, fontSize: 9.5, letterSpacing: "0.22em", color: isActive ? sh.primary : sh.muted, fontWeight: 700, marginBottom: 6 }}>
-                  {String(i + 1).padStart(2, "0")} · {v.theme.toUpperCase()}
-                </p>
-                <p style={{
-                  fontFamily: serif, fontStyle: "italic",
-                  fontSize: 15, lineHeight: 1.4,
-                  color: isActive ? "var(--text-primary)" : "var(--text-secondary)",
-                  margin: 0,
-                  whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
-                }}>
-                  &ldquo;{v.quote.split(".")[0]}&hellip;&rdquo;
-                </p>
-              </div>
-
-              <motion.div
-                animate={{ x: isActive ? 0 : -4, opacity: isActive ? 1 : 0.35 }}
-                transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
-                style={{ color: sh.primary, display: "flex" }}
-                aria-hidden
-              >
-                <ArrowRight size={18} weight={isActive ? "bold" : "regular"} />
-              </motion.div>
-            </motion.button>
+              <p style={{
+                ...mono, fontSize: 13, letterSpacing: "0.22em",
+                color: isActive ? sh.primary : sh.muted,
+                fontWeight: 700,
+                margin: 0,
+                transition: "color 0.32s ease",
+              }}>
+                {String(i + 1).padStart(2, "0")} · {v.theme.toUpperCase()}
+              </p>
+            </button>
           );
         })}
       </div>
@@ -857,242 +762,90 @@ function VoicesPanel({ voices }: { voices: Voice[] }) {
 }
 
 /* ──────────────────────────────────────────────────────────────────
-   TAKEAWAYS PANEL - reflective closer. Numbered horizontal rail of
-   four lessons; the active one expands into a focal card with the
-   full thought, an icon mark, and the finding it traces back to.
+   TAKEAWAYS PANEL - simple 2x2 grid of lessons.
 ────────────────────────────────────────────────────────────────── */
 type Takeaway = {
   num: string;
-  icon: Icon;
   short: string;
-  head: string;
   body: string;
-  tiesTo: string;
 };
 
-function TakeawaysPanel({ takeaways }: { takeaways: Takeaway[] }) {
-  const [active, setActive] = useState(0);
-  const total = takeaways.length;
-  const current = takeaways[active];
-  const ActiveIcon = current.icon as Icon;
-
-  const onKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "ArrowRight" || e.key === "ArrowDown") {
-      e.preventDefault();
-      setActive((v) => (v + 1) % total);
-    } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
-      e.preventDefault();
-      setActive((v) => (v - 1 + total) % total);
-    }
-  };
+function TakeawayCard({ tk }: { tk: Takeaway }) {
+  const [open, setOpen] = useState(false);
 
   return (
-    <div
-      role="tablist"
-      aria-label="Takeaways"
-      tabIndex={0}
-      onKeyDown={onKeyDown}
+    <button
+      type="button"
+      onClick={() => setOpen((v) => !v)}
+      aria-expanded={open}
       style={{
+        textAlign: "left",
+        padding: "clamp(28px, 3vw, 36px)",
         background: "var(--bg-elevated)",
-        border: `1px solid ${sh.subtle}`,
-        borderTop: `2px solid ${sh.primary}`,
+        border: `1px solid ${open ? sh.primary : sh.subtle}`,
+        borderLeft: `3px solid ${sh.primary}`,
+        cursor: "pointer",
         outline: "none",
+        transition: "border-color 240ms ease",
+        display: "block", width: "100%",
       }}
     >
-      {/* Top patent strip */}
-      <div style={{
-        display: "flex", justifyContent: "space-between", alignItems: "center",
-        padding: "14px 28px",
-        background: sh.surface,
-        borderBottom: `1px solid ${sh.subtle}`,
-        ...mono, fontSize: 10, letterSpacing: "0.22em",
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 20, marginBottom: 14 }}>
+        <p style={{
+          ...mono, fontSize: 11, letterSpacing: "0.22em",
+          color: sh.primary, fontWeight: 700,
+          margin: 0,
+        }}>
+          {tk.num} · TAKEAWAY
+        </p>
+        <motion.span
+          aria-hidden
+          animate={{ rotate: open ? 45 : 0 }}
+          transition={{ type: "spring", stiffness: 340, damping: 24 }}
+          style={{
+            display: "inline-flex",
+            color: sh.primary,
+            flexShrink: 0,
+          }}
+        >
+          <Plus size={18} weight="regular" />
+        </motion.span>
+      </div>
+
+      <h3 style={{
+        fontFamily: serif, fontWeight: 700,
+        fontSize: "clamp(22px, 1.8vw, 26px)",
+        letterSpacing: "-0.02em", lineHeight: 1.28,
+        color: "var(--text-primary)",
+        margin: 0,
       }}>
-        <span style={{ color: sh.primary, fontWeight: 700 }}>
-          REFLECTION · TAKEAWAY {current.num} / {String(total).padStart(2, "0")}
-        </span>
-        <span style={{ color: sh.muted, fontWeight: 700 }}>
-          ARROW KEYS · HOVER · CLICK
-        </span>
-      </div>
+        {tk.short}
+      </h3>
 
-      {/* Horizontal numbered rail */}
-      <div className="grid grid-cols-2 lg:grid-cols-4" style={{ position: "relative" }}>
-        {takeaways.map((tk, i) => {
-          const isActive = i === active;
-          return (
-            <button
-              key={tk.num}
-              type="button"
-              role="tab"
-              aria-selected={isActive}
-              onMouseEnter={() => setActive(i)}
-              onFocus={() => setActive(i)}
-              onClick={() => setActive(i)}
-              style={{
-                position: "relative",
-                padding: "26px 22px 28px",
-                textAlign: "left",
-                background: isActive ? "var(--bg-elevated)" : sh.surface,
-                border: "none",
-                borderRight: i < total - 1 ? `1px solid ${sh.subtle}` : "none",
-                borderBottom: `1px solid ${sh.subtle}`,
-                cursor: "pointer",
-                outline: "none",
-                transition: "background 320ms ease",
-              }}
-            >
-              {isActive && (
-                <motion.span
-                  layoutId="takeaway-active-bar"
-                  aria-hidden
-                  style={{
-                    position: "absolute",
-                    top: 0, left: 0, right: 0,
-                    height: 3,
-                    background: sh.primary,
-                  }}
-                  transition={{ type: "spring", stiffness: 380, damping: 32 }}
-                />
-              )}
-              <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
-                <span style={{
-                  width: 32, height: 32,
-                  background: isActive ? sh.primary : "transparent",
-                  border: `1px solid ${isActive ? sh.primary : sh.subtle}`,
-                  color: isActive ? "#fff" : sh.muted,
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  ...mono, fontSize: 11, fontWeight: 700, letterSpacing: "0.06em",
-                  transition: "all 320ms ease",
-                }}>
-                  {tk.num}
-                </span>
-                <span style={{
-                  ...mono, fontSize: 9.5, letterSpacing: "0.22em", fontWeight: 700,
-                  color: isActive ? sh.primary : sh.muted,
-                  transition: "color 320ms ease",
-                }}>
-                  TAKEAWAY
-                </span>
-              </div>
-              <p style={{
-                fontFamily: serif, fontWeight: 700,
-                fontSize: "clamp(18px, 1.4vw, 21px)", lineHeight: 1.3,
-                letterSpacing: "-0.014em",
-                color: isActive ? "var(--text-primary)" : "var(--text-secondary)",
-                margin: 0,
-                transition: "color 320ms ease",
-              }}>
-                {tk.short}
-              </p>
-            </button>
-          );
-        })}
-      </div>
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            key="body"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
+            style={{ overflow: "hidden" }}
+          >
+            <p style={{ ...t.bodyLg, margin: 0, marginTop: 16 }}>{tk.body}</p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </button>
+  );
+}
 
-      {/* Focal stage */}
-      <div className="grid grid-cols-1 lg:grid-cols-12" style={{ position: "relative", minHeight: 360 }}>
-        {/* Left: icon + ties-to */}
-        <div className="lg:col-span-4" style={{
-          padding: "clamp(36px, 4vw, 52px)",
-          background: sh.surface,
-          borderRight: `1px solid ${sh.subtle}`,
-          display: "flex", flexDirection: "column", justifyContent: "space-between",
-          minHeight: 360,
-          position: "relative",
-        }}>
-          {/* corner registration marks */}
-          {([
-            { top: 14, left: 14,    borderTop: `1px solid ${sh.primary}`, borderLeft: `1px solid ${sh.primary}` },
-            { top: 14, right: 14,   borderTop: `1px solid ${sh.primary}`, borderRight: `1px solid ${sh.primary}` },
-            { bottom: 14, left: 14, borderBottom: `1px solid ${sh.primary}`, borderLeft: `1px solid ${sh.primary}` },
-            { bottom: 14, right: 14, borderBottom: `1px solid ${sh.primary}`, borderRight: `1px solid ${sh.primary}` },
-          ] as React.CSSProperties[]).map((p, i) => (
-            <div key={i} style={{ position: "absolute", width: 12, height: 12, ...p }} />
-          ))}
-
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={`icon-${active}`}
-              initial={{ opacity: 0, scale: 0.92, rotate: -4 }}
-              animate={{ opacity: 1, scale: 1, rotate: 0 }}
-              exit={{ opacity: 0, scale: 1.04 }}
-              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-              style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 22 }}
-            >
-              <div style={{
-                width: 88, height: 88,
-                background: "var(--bg-elevated)",
-                border: `1px solid ${sh.primary}`,
-                display: "flex", alignItems: "center", justifyContent: "center",
-              }}>
-                <ActiveIcon size={44} color={sh.primary} weight="regular" />
-              </div>
-              <span style={{
-                fontFamily: serif, fontWeight: 700,
-                fontSize: "clamp(56px, 6vw, 76px)",
-                lineHeight: 1, letterSpacing: "-0.04em",
-                color: sh.primary,
-              }}>
-                {current.num}
-              </span>
-            </motion.div>
-          </AnimatePresence>
-
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={`ties-${active}`}
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-              style={{ marginTop: 24 }}
-            >
-              <p style={{
-                ...mono, fontSize: 9.5, letterSpacing: "0.22em",
-                color: sh.muted, fontWeight: 700, marginBottom: 8,
-              }}>
-                TIES BACK TO
-              </p>
-              <p style={{
-                ...mono, fontSize: 12, letterSpacing: "0.16em",
-                color: sh.primary, fontWeight: 700,
-              }}>
-                {current.tiesTo}
-              </p>
-            </motion.div>
-          </AnimatePresence>
-        </div>
-
-        {/* Right: headline + body */}
-        <div className="lg:col-span-8" style={{
-          padding: "clamp(40px, 4.5vw, 60px) clamp(32px, 4vw, 56px)",
-          display: "flex", flexDirection: "column", justifyContent: "center",
-        }}>
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={`body-${active}`}
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -12 }}
-              transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <h3 style={{
-                fontFamily: serif, fontWeight: 700,
-                fontSize: "clamp(26px, 2.6vw, 36px)",
-                letterSpacing: "-0.022em", lineHeight: 1.22,
-                color: "var(--text-primary)",
-                marginBottom: 22,
-                maxWidth: "26ch",
-              }}>
-                {current.head}
-              </h3>
-              <p style={{ ...t.bodyLg, maxWidth: "54ch" }}>
-                {current.body}
-              </p>
-            </motion.div>
-          </AnimatePresence>
-        </div>
-      </div>
+function TakeawaysPanel({ takeaways }: { takeaways: Takeaway[] }) {
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+      {takeaways.map((tk) => (
+        <TakeawayCard key={tk.num} tk={tk} />
+      ))}
     </div>
   );
 }
@@ -1482,7 +1235,6 @@ type FailureSpec = {
   title: string;
   body: string;
   time: number;
-  hits: string;
   illus?: React.ReactNode;
   image?: string;
   alt?: string;
@@ -1499,7 +1251,6 @@ function FailureExplorer() {
       title: "Same color as the product.",
       body: "A yellow stamp on yellow oil. Printed, but functionally invisible.",
       time: 8.9,
-      hits: "3 of 25 located it under 5 s",
       illus: <OilBottleIllustration />,
     },
     {
@@ -1507,7 +1258,6 @@ function FailureExplorer() {
       title: "Somewhere on the bag.",
       body: "Loose placement turns every scan into a scavenger hunt.",
       time: 7.6,
-      hits: "11 of 25 flipped the bag",
       illus: <BreadBagIllustration />,
     },
     {
@@ -1515,7 +1265,6 @@ function FailureExplorer() {
       title: "Coded, not communicated.",
       body: "Manufacture codes (\u201Cmfg 213\u201D) demand a decoder ring. Useless at a glance.",
       time: 6.4,
-      hits: "9 of 25 read the wrong number",
       illus: <CodedDateIllustration />,
     },
     {
@@ -1523,7 +1272,6 @@ function FailureExplorer() {
       title: "Smaller than the lot code.",
       body: "3.4 pt on a foil rim. Below the comfortable reading threshold.",
       time: 9.2,
-      hits: "5 of 25 needed it closer",
       illus: <YogurtCupIllustration />,
     },
   ];
@@ -1722,9 +1470,9 @@ function FailureExplorer() {
             >
               <div style={{
                 background: sh.surface,
-                padding: "32px 36px",
-                marginBottom: 20,
-                minHeight: 360,
+                padding: "24px 28px",
+                marginBottom: 16,
+                minHeight: 280,
                 display: "flex", alignItems: "center", justifyContent: "center",
                 position: "relative", overflow: "hidden",
               }}>
@@ -1744,66 +1492,24 @@ function FailureExplorer() {
                     src={current.image}
                     alt={current.alt ?? ""}
                     style={{
-                      maxWidth: "100%", maxHeight: 320,
+                      maxWidth: "100%", maxHeight: 240,
                       objectFit: "contain",
                       mixBlendMode: "multiply",
                     }}
                   />
                 ) : (
-                  <div style={{ width: "100%", maxWidth: 560 }}>
+                  <div style={{ width: "100%", maxWidth: 480 }}>
                     {current.illus}
                   </div>
                 )}
               </div>
 
-              <h3 style={{ ...t.h3Lede, fontSize: 24, marginBottom: 10 }}>
+              <h3 style={{ ...t.h3Lede, fontSize: 22, marginBottom: 8 }}>
                 {current.title}
               </h3>
-              <p style={{ ...t.bodyLg, marginBottom: "auto" }}>
+              <p style={{ ...t.bodyLg, margin: 0 }}>
                 {current.body}
               </p>
-
-              <div style={{
-                display: "grid", gridTemplateColumns: "auto 1fr",
-                gap: 28,
-                marginTop: 22, paddingTop: 16,
-                borderTop: `1px solid ${sh.subtle}`,
-                alignItems: "end",
-              }}>
-                <div>
-                  <p style={{
-                    ...mono, fontSize: 9, color: "var(--text-muted)",
-                    letterSpacing: "0.2em", marginBottom: 4,
-                  }}>
-                    AVG · LOCATE TIME
-                  </p>
-                  <p style={{
-                    fontFamily: serif, fontWeight: 700,
-                    fontSize: 32, color: sh.primary,
-                    letterSpacing: "-0.02em", lineHeight: 1, margin: 0,
-                  }}>
-                    {current.time.toFixed(1)}
-                    <span style={{
-                      fontSize: 17, color: sh.muted, marginLeft: 4,
-                      fontWeight: 400,
-                    }}>s</span>
-                  </p>
-                </div>
-                <div>
-                  <p style={{
-                    ...mono, fontSize: 9, color: "var(--text-muted)",
-                    letterSpacing: "0.2em", marginBottom: 4,
-                  }}>
-                    OBSERVATION
-                  </p>
-                  <p style={{
-                    ...t.bodySm, fontSize: 14,
-                    color: "var(--text-primary)", margin: 0, lineHeight: 1.45,
-                  }}>
-                    {current.hits}
-                  </p>
-                </div>
-              </div>
             </motion.div>
           </AnimatePresence>
         </div>
@@ -1813,10 +1519,142 @@ function FailureExplorer() {
 }
 
 /* ══════════════════════════════════════════════════════════════════
+   NAV CARD — editorial gradient tile for "more case studies"
+══════════════════════════════════════════════════════════════════ */
+function NavCard({ project }: { project: Project }) {
+  const [hover, setHover] = useState(false);
+  const accent = `hsl(${project.accentHue}, 38%, 48%)`;
+  const primaryTag = project.tags[0] ?? project.year;
+
+  return (
+    <Link
+      to={`/work/${project.slug}`}
+      onClick={() => window.scrollTo({ top: 0, left: 0, behavior: "auto" })}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      style={{
+        position: "relative",
+        textDecoration: "none",
+        display: "block",
+        overflow: "hidden",
+        aspectRatio: "5 / 4",
+        background: project.gradient,
+      }}
+    >
+      <span
+        aria-hidden
+        style={{
+          position: "absolute",
+          inset: 0,
+          background: `linear-gradient(180deg, transparent 35%, ${accent}26 100%)`,
+          opacity: hover ? 1 : 0,
+          transition: "opacity 420ms ease-out",
+          pointerEvents: "none",
+        }}
+      />
+
+      <div
+        style={{
+          position: "absolute",
+          top: "clamp(24px, 2.4vw, 36px)",
+          left: "clamp(24px, 2.4vw, 36px)",
+          right: "clamp(24px, 2.4vw, 36px)",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          gap: 12,
+        }}
+      >
+        <span style={{ ...mono, fontSize: 11, color: "rgba(26,26,26,0.65)", letterSpacing: "0.24em", fontWeight: 600 }}>
+          {project.year}
+        </span>
+        <span
+          style={{
+            ...mono,
+            fontSize: 10,
+            color: "rgba(26,26,26,0.65)",
+            letterSpacing: "0.22em",
+            fontWeight: 600,
+            padding: "6px 10px",
+            border: "1px solid rgba(26,26,26,0.18)",
+            borderRadius: 999,
+          }}
+        >
+          {primaryTag}
+        </span>
+      </div>
+
+      <div
+        style={{
+          position: "absolute",
+          left: "clamp(24px, 2.4vw, 36px)",
+          right: "clamp(24px, 2.4vw, 36px)",
+          bottom: "clamp(24px, 2.4vw, 36px)",
+          display: "flex",
+          flexDirection: "column",
+          gap: 14,
+        }}
+      >
+        <motion.p
+          animate={{ y: hover ? -2 : 0 }}
+          transition={{ type: "spring", stiffness: 240, damping: 22 }}
+          style={{
+            fontFamily: serif,
+            fontWeight: 700,
+            fontSize: "clamp(36px, 4.2vw, 60px)",
+            letterSpacing: "-0.03em",
+            lineHeight: 1.02,
+            color: "#1A1A1A",
+            margin: 0,
+          }}
+        >
+          {project.title}
+        </motion.p>
+
+        <p
+          style={{
+            fontFamily: sans,
+            fontSize: "clamp(15px, 1.05vw, 17px)",
+            lineHeight: 1.55,
+            color: "rgba(26,26,26,0.72)",
+            maxWidth: 460,
+            margin: 0,
+          }}
+        >
+          {project.subtitle}
+        </p>
+
+        <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 6 }}>
+          <span
+            style={{
+              ...mono,
+              fontSize: 11,
+              letterSpacing: "0.24em",
+              fontWeight: 700,
+              color: hover ? accent : "#1A1A1A",
+              transition: "color 260ms ease-out",
+            }}
+          >
+            View case study
+          </span>
+          <motion.span
+            animate={{ x: hover ? 6 : 0 }}
+            transition={{ type: "spring", stiffness: 260, damping: 22 }}
+            style={{ display: "inline-flex", color: hover ? accent : "#1A1A1A", transition: "color 260ms ease-out" }}
+          >
+            <ArrowRight size={16} weight="regular" />
+          </motion.span>
+        </div>
+      </div>
+    </Link>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════════════
    PAGE
 ══════════════════════════════════════════════════════════════════ */
 export default function ShelfieCase() {
-  const adjacent = getAdjacentProjects("shelfie");
+  const otherProjects = projects.filter((p) => p.slug !== "shelfie").slice(-2);
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, { stiffness: 200, damping: 30, restDelta: 0.001 });
   const [showTop, setShowTop] = useState(false);
@@ -2072,42 +1910,6 @@ export default function ShelfieCase() {
                 </p>
               </Reveal>
             </div>
-            <div className="lg:col-span-6">
-              <Reveal delay={0.18}>
-                <div style={{
-                  display: "grid", gridTemplateColumns: "auto 1fr", gap: "14px 20px",
-                  padding: "26px 28px",
-                  background: "var(--bg-elevated)",
-                  border: `1px solid ${sh.subtle}`,
-                  borderLeft: `3px solid ${sh.primary}`,
-                }}>
-                  {[
-                    { icon: ChatCircleText, label: "Vocabulary", body: "Four competing terms, no legal definition." },
-                    { icon: Eye,            label: "Legibility", body: "Low contrast, micro-type, hidden placement." },
-                    { icon: Brain,          label: "Memory",     body: "The printed date stops meaning anything once opened." },
-                  ].map((row, i) => {
-                    const I = row.icon as Icon;
-                    return (
-                      <div key={i} style={{ display: "contents" }}>
-                        <div style={{
-                          width: 36, height: 36, flexShrink: 0,
-                          background: sh.subtle,
-                          display: "flex", alignItems: "center", justifyContent: "center",
-                        }}>
-                          <I size={18} color={sh.primary} weight="regular" />
-                        </div>
-                        <div style={{ alignSelf: "center" }}>
-                          <p style={{ ...mono, fontSize: 10, color: sh.primary, letterSpacing: "0.2em", fontWeight: 700, marginBottom: 2 }}>
-                            {row.label}
-                          </p>
-                          <p style={{ ...t.bodyLg, margin: 0 }}>{row.body}</p>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </Reveal>
-            </div>
           </div>
 
           {/* Evidence band - vocabulary chaos in the wild */}
@@ -2312,27 +2114,6 @@ export default function ShelfieCase() {
                   twenty-five shoppers locating each date. Every product failed differently,
                   and the spread between best and worst was almost two-to-one.
                 </p>
-              </Reveal>
-            </div>
-            <div className="lg:col-span-5">
-              <Reveal delay={0.18}>
-                <div style={{
-                  display: "flex", alignItems: "center", gap: 14,
-                  padding: "16px 20px",
-                  background: "var(--bg-elevated)",
-                  border: `1px solid ${sh.subtle}`,
-                  borderLeft: `3px solid ${sh.primary}`,
-                }}>
-                  <Flask size={22} color={sh.primary} weight="regular" />
-                  <div>
-                    <p style={{ ...mono, fontSize: 10, color: sh.primary, letterSpacing: "0.2em", fontWeight: 700, marginBottom: 2 }}>
-                      METHOD
-                    </p>
-                    <p style={{ ...t.bodyLg, margin: 0 }}>
-                      Naturalistic locate-task · in-aisle lighting · n = 25
-                    </p>
-                  </div>
-                </div>
               </Reveal>
             </div>
           </div>
@@ -2718,32 +2499,24 @@ export default function ShelfieCase() {
             <TakeawaysPanel
               takeaways={[
                 {
-                  num: "01", icon: Stack,
+                  num: "01",
                   short: "A label is a system, not a sticker.",
-                  head: "A label is a system, not a sticker.",
                   body: "Terminology, placement, contrast, and post-open behaviour all have to be designed together. A perfect typeface fails on the wrong vocabulary; perfect vocabulary fails at the wrong height.",
-                  tiesTo: "F·01 Vocabulary",
                 },
                 {
-                  num: "02", icon: Eye,
+                  num: "02",
                   short: "Field research reveals what surveys flatter away.",
-                  head: "Field research reveals what surveys flatter away.",
                   body: "People say they check dates carefully. The timing data disagrees. Watching a 1.4-second decision happen in real light, in a real aisle, beats any self-report ten times over.",
-                  tiesTo: "F·02 Time-on-decision",
                 },
                 {
-                  num: "03", icon: UsersThree,
+                  num: "03",
                   short: "Vulnerable users set the floor.",
-                  head: "Vulnerable users set the floor.",
                   body: "Designing for tired eyes, bifocals, low light, and one-handed grocery carts raises the floor for everyone. The 67-year-old who can read the date is the test the 27-year-old benefits from silently.",
-                  tiesTo: "F·05 Visibility",
                 },
                 {
-                  num: "04", icon: Lightbulb,
+                  num: "04",
                   short: "Research is the leverage, not the deliverable.",
-                  head: "Research is the leverage, not the deliverable.",
                   body: "This study didn't ship a label. It made every future label argument shorter, every concept easier to defend, and every objection answerable by the page it lives on.",
-                  tiesTo: "All findings",
                 },
               ]}
             />
@@ -2751,84 +2524,86 @@ export default function ShelfieCase() {
         </div>
       </section>
 
-      {/* ─── NEXT CASE ─────────────────────────────────────────────── */}
-      <section style={{ padding: "clamp(64px, 8vw, 96px) 0", borderTop: "1px solid var(--border)" }}>
+      {/* ══════════════════════════════════════════════════════════════
+          MORE CASE STUDIES — editorial gradient tiles
+      ══════════════════════════════════════════════════════════════ */}
+      <section style={{ padding: "clamp(64px, 8vw, 104px) 0", borderTop: "1px solid var(--border)" }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
-          <div style={{
-            display: "grid", gap: "clamp(16px, 3vw, 40px)",
-            gridTemplateColumns: adjacent.prev && adjacent.next ? "1fr 1fr" : "1fr",
-          }}>
-            {adjacent.prev && (
-              <Link to={`/work/${adjacent.prev.slug}`}
-                style={{
-                  padding: "clamp(24px, 3vw, 36px)",
-                  background: "var(--bg-elevated)",
-                  border: `1px solid ${sh.subtle}`,
-                  textDecoration: "none", display: "block",
-                  transition: "border-color 240ms, transform 240ms, box-shadow 240ms",
-                }}
-                onMouseEnter={(e) => { e.currentTarget.style.borderColor = sh.primary; e.currentTarget.style.transform = "translateY(-3px)"; e.currentTarget.style.boxShadow = `0 1px 2px rgba(0,0,0,0.04), 0 18px 44px rgba(31,95,92,0.13)`; }}
-                onMouseLeave={(e) => { e.currentTarget.style.borderColor = sh.subtle; e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "none"; }}
-              >
-                <div style={{ ...mono, fontSize: 11, color: sh.muted, letterSpacing: "0.2em", marginBottom: 12, display: "flex", alignItems: "center", gap: 8 }}>
-                  <ArrowLeft size={14} weight="regular" />
-                  PREVIOUS CASE
-                </div>
-                <div style={{ ...t.h3Lede }}>{adjacent.prev.title}</div>
-                <div style={{ ...t.bodySm, marginTop: 6 }}>{adjacent.prev.subtitle}</div>
-              </Link>
-            )}
-            {adjacent.next && (
-              <Link to={`/work/${adjacent.next.slug}`}
-                style={{
-                  padding: "clamp(24px, 3vw, 36px)",
-                  background: "var(--bg-elevated)",
-                  border: `1px solid ${sh.subtle}`,
-                  textDecoration: "none", display: "block",
-                  transition: "border-color 240ms, transform 240ms, box-shadow 240ms",
-                  textAlign: adjacent.prev ? "right" : "left",
-                }}
-                onMouseEnter={(e) => { e.currentTarget.style.borderColor = sh.primary; e.currentTarget.style.transform = "translateY(-3px)"; e.currentTarget.style.boxShadow = `0 1px 2px rgba(0,0,0,0.04), 0 18px 44px rgba(31,95,92,0.13)`; }}
-                onMouseLeave={(e) => { e.currentTarget.style.borderColor = sh.subtle; e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "none"; }}
-              >
-                <div style={{ ...mono, fontSize: 11, color: sh.muted, letterSpacing: "0.2em", marginBottom: 12, display: "flex", alignItems: "center", gap: 8, justifyContent: adjacent.prev ? "flex-end" : "flex-start" }}>
-                  NEXT CASE
-                  <ArrowRight size={14} weight="regular" />
-                </div>
-                <div style={{ ...t.h3Lede }}>{adjacent.next.title}</div>
-                <div style={{ ...t.bodySm, marginTop: 6 }}>{adjacent.next.subtitle}</div>
-              </Link>
-            )}
+          <div style={{ display: "flex", alignItems: "baseline", gap: 14, marginBottom: 36 }}>
+            <span aria-hidden style={{ width: 3, height: 14, background: sh.primary }} />
+            <p style={{ ...mono, fontSize: 12, color: sh.primary, letterSpacing: "0.22em", fontWeight: 600 }}>
+              More case studies
+            </p>
           </div>
+
+          <div
+            className="more-cases-grid"
+            style={{
+              display: "grid",
+              gridTemplateColumns: otherProjects.length > 1 ? "1fr 1fr" : "1fr",
+              gap: "clamp(16px, 1.6vw, 24px)",
+            }}
+          >
+            {otherProjects.map((p) => (
+              <NavCard key={p.slug} project={p} />
+            ))}
+          </div>
+          <style>{`
+            @media (max-width: 720px) {
+              .more-cases-grid { grid-template-columns: minmax(0, 1fr) !important; }
+            }
+          `}</style>
         </div>
       </section>
 
-      {/* Scroll-to-top */}
-      {showTop && (
-        <motion.button
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 12 }}
-          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          aria-label="Back to top"
-          style={{
-            position: "fixed", bottom: 32, right: 32, zIndex: 40,
-            width: 44, height: 44,
-            background: sh.primary, color: "#fff",
-            border: "none",
-            display: "flex", alignItems: "center", justifyContent: "center",
-            cursor: "pointer",
-            boxShadow: "0 2px 4px rgba(20,63,61,0.18), 0 12px 32px rgba(20,63,61,0.22)",
-            transitionProperty: "transform, box-shadow",
-            transitionDuration: "200ms",
-          }}
-          onMouseEnter={(e) => ((e.currentTarget as HTMLButtonElement).style.transform = "translateY(-2px)")}
-          onMouseLeave={(e) => ((e.currentTarget as HTMLButtonElement).style.transform = "translateY(0)")}
-          className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
-        >
-          <ArrowUp size={18} weight="regular" />
-        </motion.button>
-      )}
+      {/* ══════════════════════════════════════════════════════════════
+          Back to top — floating action, bottom-right
+      ══════════════════════════════════════════════════════════════ */}
+      <AnimatePresence>
+        {showTop && (
+          <motion.button
+            key="back-to-top"
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            aria-label="Back to top"
+            initial={{ opacity: 0, y: 12, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 12, scale: 0.9 }}
+            transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+            whileHover={{ y: -3 }}
+            whileTap={{ scale: 0.94 }}
+            style={{
+              position: "fixed",
+              right: "clamp(20px, 2.4vw, 32px)",
+              bottom: "clamp(20px, 2.4vw, 32px)",
+              zIndex: 60,
+              width: 52,
+              height: 52,
+              borderRadius: 999,
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 0,
+              border: `1px solid ${sh.primary}`,
+              background: "var(--bg-elevated)",
+              color: sh.primary,
+              cursor: "pointer",
+              boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 12px 28px rgba(31,95,92,0.18)",
+              transitionProperty: "background-color, color, border-color",
+              transitionDuration: "180ms",
+            }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLElement).style.backgroundColor = sh.primary;
+              (e.currentTarget as HTMLElement).style.color = "#fff";
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLElement).style.backgroundColor = "var(--bg-elevated)";
+              (e.currentTarget as HTMLElement).style.color = sh.primary;
+            }}
+          >
+            <ArrowUp size={20} weight="bold" color="currentColor" />
+          </motion.button>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 }
