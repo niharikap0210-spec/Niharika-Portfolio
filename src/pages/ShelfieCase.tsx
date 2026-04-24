@@ -770,37 +770,81 @@ type Takeaway = {
   body: string;
 };
 
+function TakeawayCard({ tk }: { tk: Takeaway }) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <button
+      type="button"
+      onClick={() => setOpen((v) => !v)}
+      aria-expanded={open}
+      style={{
+        textAlign: "left",
+        padding: "clamp(28px, 3vw, 36px)",
+        background: "var(--bg-elevated)",
+        border: `1px solid ${open ? sh.primary : sh.subtle}`,
+        borderLeft: `3px solid ${sh.primary}`,
+        cursor: "pointer",
+        outline: "none",
+        transition: "border-color 240ms ease",
+        display: "block", width: "100%",
+      }}
+    >
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 20, marginBottom: 14 }}>
+        <p style={{
+          ...mono, fontSize: 11, letterSpacing: "0.22em",
+          color: sh.primary, fontWeight: 700,
+          margin: 0,
+        }}>
+          {tk.num} · TAKEAWAY
+        </p>
+        <motion.span
+          aria-hidden
+          animate={{ rotate: open ? 45 : 0 }}
+          transition={{ type: "spring", stiffness: 340, damping: 24 }}
+          style={{
+            display: "inline-flex",
+            color: sh.primary,
+            flexShrink: 0,
+          }}
+        >
+          <Plus size={18} weight="regular" />
+        </motion.span>
+      </div>
+
+      <h3 style={{
+        fontFamily: serif, fontWeight: 700,
+        fontSize: "clamp(22px, 1.8vw, 26px)",
+        letterSpacing: "-0.02em", lineHeight: 1.28,
+        color: "var(--text-primary)",
+        margin: 0,
+      }}>
+        {tk.short}
+      </h3>
+
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            key="body"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
+            style={{ overflow: "hidden" }}
+          >
+            <p style={{ ...t.bodyLg, margin: 0, marginTop: 16 }}>{tk.body}</p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </button>
+  );
+}
+
 function TakeawaysPanel({ takeaways }: { takeaways: Takeaway[] }) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
       {takeaways.map((tk) => (
-        <div
-          key={tk.num}
-          style={{
-            padding: "clamp(28px, 3vw, 40px)",
-            background: "var(--bg-elevated)",
-            border: `1px solid ${sh.subtle}`,
-            borderLeft: `3px solid ${sh.primary}`,
-          }}
-        >
-          <p style={{
-            ...mono, fontSize: 11, letterSpacing: "0.22em",
-            color: sh.primary, fontWeight: 700,
-            margin: 0, marginBottom: 14,
-          }}>
-            {tk.num} · TAKEAWAY
-          </p>
-          <h3 style={{
-            fontFamily: serif, fontWeight: 700,
-            fontSize: "clamp(22px, 1.8vw, 26px)",
-            letterSpacing: "-0.02em", lineHeight: 1.28,
-            color: "var(--text-primary)",
-            margin: 0, marginBottom: 14,
-          }}>
-            {tk.short}
-          </h3>
-          <p style={{ ...t.bodyLg, margin: 0 }}>{tk.body}</p>
-        </div>
+        <TakeawayCard key={tk.num} tk={tk} />
       ))}
     </div>
   );
