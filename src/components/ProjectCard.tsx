@@ -415,13 +415,21 @@ function VeriflowComposition({ accent }: { accent: ProjectAccent }) {
   );
 }
 
-/* ── LocalLift: 3-phone fan (pre-rendered phone PNGs, used directly) ── */
+/* ── LocalLift: 3-phone fan — mirrors case-study hero proportions ── */
 function LocalLiftComposition({ accent }: { accent: ProjectAccent }) {
-  const phoneShadow = `drop-shadow(0 18px 30px ${accent.primary}3a) drop-shadow(0 6px 12px rgba(0,0,0,0.16))`;
+  const phoneShadow = `drop-shadow(0 16px 28px ${accent.primary}3a) drop-shadow(0 6px 12px rgba(0,0,0,0.16))`;
 
   return (
-    <div style={{ position: "absolute", inset: 0 }}>
-      {/* Back-left phone, tilt -8 */}
+    <div
+      style={{
+        position: "absolute",
+        inset: 0,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      {/* Back-left phone — tilt -6, same proportions as hero */}
       <motion.img
         src="/locallift/hifi-explore.png"
         alt="LocalLift login screen"
@@ -430,36 +438,36 @@ function LocalLiftComposition({ accent }: { accent: ProjectAccent }) {
         transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
         style={{
           position: "absolute",
-          left: "8%",
-          top: "14%",
-          width: "26%",
-          transform: "rotate(-8deg)",
-          filter: `${phoneShadow} saturate(0.95)`,
+          left: "10%",
+          top: "50%",
+          width: "22%",
+          transform: "translateY(-50%) rotate(-6deg)",
+          transformOrigin: "center center",
+          filter: `${phoneShadow} saturate(0.92)`,
           zIndex: 1,
           display: "block",
         }}
       />
 
-      {/* Center phone — primary */}
+      {/* Center phone — focal, flows in flex center so it's always fully visible */}
       <motion.img
         src="/locallift/hifi-splash.png"
         alt="LocalLift splash screen"
         loading="lazy"
-        animate={{ y: [0, -8, 0] }}
+        animate={{ y: [0, -6, 0] }}
         transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
         style={{
-          position: "absolute",
-          left: "50%",
-          top: "4%",
-          width: "30%",
-          transform: "translateX(-50%)",
+          position: "relative",
+          width: "26%",
           filter: phoneShadow,
           zIndex: 3,
           display: "block",
+          maxHeight: "94%",
+          objectFit: "contain",
         }}
       />
 
-      {/* Back-right phone, tilt +8 */}
+      {/* Back-right phone — tilt +6 */}
       <motion.img
         src="/locallift/hifi-community.png"
         alt="LocalLift confirmation screen"
@@ -468,11 +476,12 @@ function LocalLiftComposition({ accent }: { accent: ProjectAccent }) {
         transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1.4 }}
         style={{
           position: "absolute",
-          right: "8%",
-          top: "14%",
-          width: "26%",
-          transform: "rotate(8deg)",
-          filter: `${phoneShadow} saturate(0.95)`,
+          right: "10%",
+          top: "50%",
+          width: "22%",
+          transform: "translateY(-50%) rotate(6deg)",
+          transformOrigin: "center center",
+          filter: `${phoneShadow} saturate(0.92)`,
           zIndex: 1,
           display: "block",
         }}
