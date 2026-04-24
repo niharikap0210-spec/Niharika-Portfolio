@@ -55,10 +55,16 @@ export default function Home() {
           </motion.h2>
         </div>
 
-        {/* 2-col grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Staggered blueprint grid — right column offset like drafting plates */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-6 md:gap-y-10">
           {projects.map((project, i) => (
-            <ProjectCard key={project.slug} project={project} index={i} />
+            <div
+              key={project.slug}
+              className={i % 2 === 1 ? "md:mt-20" : ""}
+              style={{ alignSelf: "start" }}
+            >
+              <ProjectCard project={project} index={i} />
+            </div>
           ))}
         </div>
       </section>
