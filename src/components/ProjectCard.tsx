@@ -354,15 +354,15 @@ function ArkoComposition({ accent }: { accent: ProjectAccent }) {
         <LaptopFrame src="/arko/web-1.png" alt="Arko designer dashboard" accent={accent.primary} />
       </motion.div>
 
-      {/* Phone — overlaps bottom-right, counter-float */}
+      {/* Phone — peeks from bottom-right of laptop, counter-float */}
       <motion.div
-        animate={{ y: [0, -8, 0] }}
+        animate={{ y: [0, -6, 0] }}
         transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
         style={{
           position: "absolute",
-          right: "5%",
-          bottom: "6%",
-          width: "23%",
+          right: "8%",
+          bottom: "4%",
+          width: "17%",
           zIndex: 3,
         }}
       >
