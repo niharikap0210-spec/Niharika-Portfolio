@@ -16,9 +16,6 @@ import {
   PathIcon as Path,
   StackIcon as Stack,
   HandshakeIcon as Handshake,
-  StorefrontIcon as Storefront,
-  GlobeIcon as Globe,
-  TargetIcon as Target,
   PencilSimpleIcon as PencilSimple,
   SparkleIcon as Sparkle,
 } from "@phosphor-icons/react";
@@ -814,71 +811,26 @@ export default function LocalLiftCase() {
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <SectionHeader num="01" title="Context" phase="Setup" />
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-            <div className="lg:col-span-7">
-              <Reveal>
-                <h2 style={{ ...t.h2, marginBottom: 22 }}>
-                  A mentorship platform,
-                  <span style={{ fontStyle: "italic", color: ll.primary }}> grounded in real owners across two markets.</span>
-                </h2>
-              </Reveal>
-              <Reveal delay={0.1}>
-                <p style={{ ...t.bodyLg, maxWidth: 620, marginBottom: 20 }}>
-                  LocalLift sits at the intersection of two growth markets for small business: the US Southeast
-                  and Southern Africa. A five-person product team spent the first weeks of the build in listening
-                  mode, reading the space, choosing the owner, and writing the question we actually wanted to answer.
-                </p>
-              </Reveal>
-              <Reveal delay={0.18}>
-                <p style={{ ...t.bodyLg, maxWidth: 620 }}>
-                  The mandate: <span style={{ color: "var(--text-primary)", fontWeight: 600 }}>design a service
-                  that helps a local small business grow digitally</span>, without flattening what made it local.
-                </p>
-              </Reveal>
-            </div>
-
-            <div className="lg:col-span-5">
-              <Reveal delay={0.14}>
-                <div style={{
-                  background: ll.surface,
-                  border: `1px solid ${ll.line}`,
-                  padding: "28px 28px 26px",
-                }}>
-                  <p style={{ ...mono, fontSize: 10, letterSpacing: "0.22em", color: ll.primary, fontWeight: 700, marginBottom: 20 }}>
-                    PROJECT · 04 FACTS
-                  </p>
-                  <div style={{ display: "grid", gap: 20 }}>
-                    {([
-                      { icon: MapPin,     k: "Markets",   v: "US Southeast · Southern Africa" },
-                      { icon: Globe,      k: "Reach",     v: "Two-market research footprint" },
-                      { icon: Storefront, k: "Audience",  v: "Small business owners, early & growth stage" },
-                      { icon: Target,     k: "Objective", v: "Grow digitally without losing local character" },
-                    ] as { icon: Icon; k: string; v: string }[]).map((f, i) => {
-                      const I = f.icon;
-                      return (
-                        <div key={i} style={{ display: "grid", gridTemplateColumns: "auto 1fr", gap: 16, alignItems: "flex-start" }}>
-                          <div style={{
-                            width: 38, height: 38, background: "#FFFFFF",
-                            border: `1px solid ${ll.line}`,
-                            display: "flex", alignItems: "center", justifyContent: "center",
-                          }}>
-                            <I size={18} color={ll.primary} weight="regular" />
-                          </div>
-                          <div style={{ display: "flex", flexDirection: "column", gap: 4, paddingTop: 4 }}>
-                            <span style={{ ...mono, fontSize: 10, color: ll.muted, letterSpacing: "0.22em", fontWeight: 700 }}>
-                              {f.k}
-                            </span>
-                            <span style={{ fontFamily: sans, fontSize: 15, color: "var(--text-primary)", lineHeight: 1.5, fontWeight: 500 }}>
-                              {f.v}
-                            </span>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              </Reveal>
-            </div>
+          <div style={{ maxWidth: 820 }}>
+            <Reveal>
+              <h2 style={{ ...t.h2, marginBottom: 22 }}>
+                A mentorship platform,
+                <span style={{ fontStyle: "italic", color: ll.primary }}> grounded in real owners across two markets.</span>
+              </h2>
+            </Reveal>
+            <Reveal delay={0.1}>
+              <p style={{ ...t.bodyLg, marginBottom: 20 }}>
+                LocalLift sits at the intersection of two growth markets for small business: the US Southeast
+                and Southern Africa. A five-person product team spent the first weeks of the build in listening
+                mode, reading the space, choosing the owner, and writing the question we actually wanted to answer.
+              </p>
+            </Reveal>
+            <Reveal delay={0.18}>
+              <p style={{ ...t.bodyLg }}>
+                The mandate: <span style={{ color: "var(--text-primary)", fontWeight: 600 }}>design a service
+                that helps a local small business grow digitally</span>, without flattening what made it local.
+              </p>
+            </Reveal>
           </div>
         </div>
       </section>
@@ -893,46 +845,21 @@ export default function LocalLiftCase() {
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <SectionHeader num="02" title="The gap" phase="Problem" />
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-16 items-start">
-            <div className="lg:col-span-7">
-              <Reveal>
-                <h2 style={{ ...t.h2, marginBottom: 20 }}>
-                  Digital tools were built for scale.
-                  <br />
-                  <span style={{ fontStyle: "italic", color: ll.primary }}>Most small businesses are built for survival.</span>
-                </h2>
-              </Reveal>
-              <Reveal delay={0.12}>
-                <p style={{ ...t.bodyLg, maxWidth: 620 }}>
-                  SMB-facing platforms are either too technical, too abstract, or too generic to help a specific
-                  owner in a specific market make a specific decision. The result isn't a gap in ambition.
-                  It's a gap in access, in mentorship, and in the feedback loop between tool and user.
-                </p>
-              </Reveal>
-            </div>
-
-            <div className="lg:col-span-5">
-              <Reveal delay={0.16}>
-                <blockquote style={{
-                  margin: 0, padding: "26px 30px",
-                  borderLeft: `3px solid ${ll.primary}`,
-                  background: "#FFFFFF",
-                  fontFamily: serif, fontStyle: "italic",
-                  fontSize: "clamp(19px, 1.55vw, 24px)",
-                  lineHeight: 1.45,
-                  color: "var(--text-primary)",
-                  letterSpacing: "-0.01em",
-                }}>
-                  "I know I need to be online, but I have no idea how to make it work."
-                  <footer style={{
-                    ...mono, fontSize: 10, color: ll.muted, fontStyle: "normal",
-                    letterSpacing: "0.22em", fontWeight: 700, marginTop: 16,
-                  }}>
-                    OWNER, EARLY STAGE
-                  </footer>
-                </blockquote>
-              </Reveal>
-            </div>
+          <div style={{ maxWidth: 820, marginBottom: "clamp(48px, 5vw, 72px)" }}>
+            <Reveal>
+              <h2 style={{ ...t.h2, marginBottom: 20 }}>
+                Digital tools were built for scale.
+                <br />
+                <span style={{ fontStyle: "italic", color: ll.primary }}>Most small businesses are built for survival.</span>
+              </h2>
+            </Reveal>
+            <Reveal delay={0.12}>
+              <p style={{ ...t.bodyLg }}>
+                SMB-facing platforms are either too technical, too abstract, or too generic to help a specific
+                owner in a specific market make a specific decision. The result isn't a gap in ambition.
+                It's a gap in access, in mentorship, and in the feedback loop between tool and user.
+              </p>
+            </Reveal>
           </div>
 
           <div
