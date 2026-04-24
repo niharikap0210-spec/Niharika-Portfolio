@@ -2378,36 +2378,54 @@ export default function VeriflowCase() {
         </div>
       </section>
 
-      {/* scroll-to-top */}
-      {showTop && (
-        <motion.button
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.9 }}
-          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          aria-label="Scroll to top"
-          style={{
-            position: "fixed", bottom: 24, right: 24,
-            width: 44, height: 44, borderRadius: "50%",
-            background: "var(--bg-elevated)",
-            border: `1px solid ${vf.subtle}`,
-            display: "flex", alignItems: "center", justifyContent: "center",
-            cursor: "pointer", zIndex: 50,
-            boxShadow: `0 1px 2px rgba(0,0,0,0.04), 0 8px 24px ${vf.subtle}`,
-            transition: "background 240ms",
-          }}
-          onMouseEnter={(e) => {
-            (e.currentTarget as HTMLElement).style.background = vf.primary;
-            (e.currentTarget as HTMLElement).querySelector("svg")?.setAttribute("color", "#fff");
-          }}
-          onMouseLeave={(e) => {
-            (e.currentTarget as HTMLElement).style.background = "var(--bg-elevated)";
-            (e.currentTarget as HTMLElement).querySelector("svg")?.setAttribute("color", vf.primary);
-          }}
-        >
-          <ArrowUp size={18} color={vf.primary} weight="regular" />
-        </motion.button>
-      )}
+      {/* ══════════════════════════════════════════════════════════════
+          Back to top — floating action, bottom-right
+      ══════════════════════════════════════════════════════════════ */}
+      <AnimatePresence>
+        {showTop && (
+          <motion.button
+            key="back-to-top"
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            aria-label="Back to top"
+            initial={{ opacity: 0, y: 12, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 12, scale: 0.9 }}
+            transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+            whileHover={{ y: -3 }}
+            whileTap={{ scale: 0.94 }}
+            style={{
+              position: "fixed",
+              right: "clamp(20px, 2.4vw, 32px)",
+              bottom: "clamp(20px, 2.4vw, 32px)",
+              zIndex: 60,
+              width: 52,
+              height: 52,
+              borderRadius: 999,
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 0,
+              border: `1px solid ${vf.primary}`,
+              background: "var(--bg-elevated)",
+              color: vf.primary,
+              cursor: "pointer",
+              boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 12px 28px rgba(30,64,175,0.18)",
+              transitionProperty: "background-color, color, border-color",
+              transitionDuration: "180ms",
+            }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLElement).style.backgroundColor = vf.primary;
+              (e.currentTarget as HTMLElement).style.color = "#fff";
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLElement).style.backgroundColor = "var(--bg-elevated)";
+              (e.currentTarget as HTMLElement).style.color = vf.primary;
+            }}
+          >
+            <ArrowUp size={20} weight="bold" color="currentColor" />
+          </motion.button>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 }
