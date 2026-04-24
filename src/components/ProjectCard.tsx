@@ -415,59 +415,68 @@ function VeriflowComposition({ accent }: { accent: ProjectAccent }) {
   );
 }
 
-/* ── LocalLift: 3-phone fan (mirrors case-study hero) ───────────── */
+/* ── LocalLift: 3-phone fan (pre-rendered phone PNGs, used directly) ── */
 function LocalLiftComposition({ accent }: { accent: ProjectAccent }) {
+  const phoneShadow = `drop-shadow(0 18px 30px ${accent.primary}3a) drop-shadow(0 6px 12px rgba(0,0,0,0.16))`;
+
   return (
-    <div style={{ position: "absolute", inset: 0, padding: "18px 0 26px" }}>
-      {/* Back-left phone, tilt -6 */}
-      <motion.div
+    <div style={{ position: "absolute", inset: 0 }}>
+      {/* Back-left phone, tilt -8 */}
+      <motion.img
+        src="/locallift/hifi-explore.png"
+        alt="LocalLift login screen"
+        loading="lazy"
         animate={{ y: [0, -6, 0] }}
         transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
         style={{
           position: "absolute",
-          left: "14%",
-          top: "16%",
-          width: "22%",
-          transform: "rotate(-6deg)",
-          filter: "saturate(0.95)",
+          left: "8%",
+          top: "14%",
+          width: "26%",
+          transform: "rotate(-8deg)",
+          filter: `${phoneShadow} saturate(0.95)`,
           zIndex: 1,
+          display: "block",
         }}
-      >
-        <PhoneFrame src="/locallift/hifi-explore.png" alt="Explore" accent={accent.primary} size="compact" />
-      </motion.div>
+      />
 
       {/* Center phone — primary */}
-      <motion.div
+      <motion.img
+        src="/locallift/hifi-splash.png"
+        alt="LocalLift splash screen"
+        loading="lazy"
         animate={{ y: [0, -8, 0] }}
         transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
         style={{
           position: "absolute",
           left: "50%",
-          top: "6%",
-          width: "26%",
+          top: "4%",
+          width: "30%",
           transform: "translateX(-50%)",
+          filter: phoneShadow,
           zIndex: 3,
+          display: "block",
         }}
-      >
-        <PhoneFrame src="/locallift/hifi-splash.png" alt="Splash" accent={accent.primary} size="compact" />
-      </motion.div>
+      />
 
-      {/* Back-right phone, tilt +6 */}
-      <motion.div
+      {/* Back-right phone, tilt +8 */}
+      <motion.img
+        src="/locallift/hifi-community.png"
+        alt="LocalLift confirmation screen"
+        loading="lazy"
         animate={{ y: [0, -6, 0] }}
         transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1.4 }}
         style={{
           position: "absolute",
-          right: "14%",
-          top: "16%",
-          width: "22%",
-          transform: "rotate(6deg)",
-          filter: "saturate(0.95)",
+          right: "8%",
+          top: "14%",
+          width: "26%",
+          transform: "rotate(8deg)",
+          filter: `${phoneShadow} saturate(0.95)`,
           zIndex: 1,
+          display: "block",
         }}
-      >
-        <PhoneFrame src="/locallift/hifi-community.png" alt="Community" accent={accent.primary} size="compact" />
-      </motion.div>
+      />
     </div>
   );
 }
@@ -658,91 +667,6 @@ function TabletFrame({ src, alt, accent }: { src: string; alt: string; accent: s
             inset: 0,
             background: "linear-gradient(135deg, rgba(255,255,255,0.05) 0%, transparent 45%)",
             pointerEvents: "none",
-          }}
-        />
-      </div>
-    </div>
-  );
-}
-
-function PhoneFrame({
-  src,
-  alt,
-  accent,
-  size = "full",
-}: {
-  src: string;
-  alt: string;
-  accent: string;
-  size?: "full" | "compact";
-}) {
-  const notchWidth = size === "compact" ? "38%" : "34%";
-  return (
-    <div
-      style={{
-        position: "relative",
-        width: "100%",
-        aspectRatio: "9 / 19",
-        borderRadius: size === "compact" ? 20 : 30,
-        background: "linear-gradient(145deg, #232323 0%, #0A0A0A 100%)",
-        padding: size === "compact" ? 4 : 5,
-        boxShadow: `
-          0 0 0 0.75px rgba(0,0,0,0.3),
-          0 24px 56px ${accent}33,
-          0 8px 18px rgba(0,0,0,0.18)
-        `,
-      }}
-    >
-      {/* Side buttons (only visible on full size — compact would be noisy) */}
-      {size === "full" && (
-        <>
-          <span aria-hidden style={{ position: "absolute", left: -1.5, top: "24%", width: 2, height: 34, backgroundColor: "#1A1A1A", borderRadius: 1 }} />
-          <span aria-hidden style={{ position: "absolute", left: -1.5, top: "36%", width: 2, height: 34, backgroundColor: "#1A1A1A", borderRadius: 1 }} />
-          <span aria-hidden style={{ position: "absolute", right: -1.5, top: "28%", width: 2, height: 48, backgroundColor: "#1A1A1A", borderRadius: 1 }} />
-        </>
-      )}
-
-      <div
-        style={{
-          position: "relative",
-          width: "100%",
-          height: "100%",
-          borderRadius: size === "compact" ? 16 : 25,
-          overflow: "hidden",
-          backgroundColor: "#000",
-        }}
-      >
-        <img
-          src={src}
-          alt={alt}
-          style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-          loading="lazy"
-        />
-
-        {/* Dynamic Island */}
-        <span
-          aria-hidden
-          style={{
-            position: "absolute",
-            top: size === "compact" ? 5 : 7,
-            left: "50%",
-            transform: "translateX(-50%)",
-            width: notchWidth,
-            height: size === "compact" ? 10 : 14,
-            backgroundColor: "#000",
-            borderRadius: 10,
-            zIndex: 3,
-          }}
-        />
-
-        <div
-          aria-hidden
-          style={{
-            position: "absolute",
-            inset: 0,
-            background: "linear-gradient(135deg, rgba(255,255,255,0.05) 0%, transparent 40%)",
-            pointerEvents: "none",
-            zIndex: 2,
           }}
         />
       </div>
