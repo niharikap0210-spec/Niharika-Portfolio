@@ -2278,27 +2278,6 @@ export default function ShelfieCase() {
                 </p>
               </Reveal>
             </div>
-            <div className="lg:col-span-5">
-              <Reveal delay={0.18}>
-                <div style={{
-                  display: "flex", alignItems: "center", gap: 14,
-                  padding: "16px 20px",
-                  background: "var(--bg-elevated)",
-                  border: `1px solid ${sh.subtle}`,
-                  borderLeft: `3px solid ${sh.primary}`,
-                }}>
-                  <Flask size={22} color={sh.primary} weight="regular" />
-                  <div>
-                    <p style={{ ...mono, fontSize: 10, color: sh.primary, letterSpacing: "0.2em", fontWeight: 700, marginBottom: 2 }}>
-                      METHOD
-                    </p>
-                    <p style={{ ...t.bodyLg, margin: 0 }}>
-                      Naturalistic locate-task · in-aisle lighting · n = 25
-                    </p>
-                  </div>
-                </div>
-              </Reveal>
-            </div>
           </div>
 
           {/* Interactive comparative explorer - chart + live specimen */}
