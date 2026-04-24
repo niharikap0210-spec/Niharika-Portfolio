@@ -39,7 +39,6 @@ export default function Home() {
             type="approvalStamp"
             width={68}
             height={68}
-            annotation="final review"
             delay={0.2}
           />
         </div>
@@ -53,7 +52,6 @@ export default function Home() {
             type="commentBubble"
             width={86}
             height={70}
-            annotation="hover to explore"
             delay={0.3}
           />
         </div>
@@ -67,7 +65,6 @@ export default function Home() {
             type="morphTransition"
             width={118}
             height={76}
-            annotation="concept → product"
             delay={0.4}
           />
         </div>
@@ -81,7 +78,6 @@ export default function Home() {
             type="wireframe"
             width={48}
             height={68}
-            annotation="v2 iteration"
             delay={0.5}
           />
         </div>
