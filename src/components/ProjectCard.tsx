@@ -326,9 +326,9 @@ function ArkoComposition({ accent }: { accent: ProjectAccent }) {
         transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
         style={{
           position: "absolute",
-          right: "6%",
-          bottom: "2%",
-          width: "22%",
+          right: "4%",
+          bottom: "-2%",
+          width: "28%",
           zIndex: 3,
           filter: `drop-shadow(0 18px 30px ${accent.primary}40) drop-shadow(0 6px 12px rgba(0,0,0,0.18))`,
         }}
