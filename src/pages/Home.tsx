@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import HeroSection from "../components/HeroSection";
 import ProjectCard from "../components/ProjectCard";
 import HandDrawnSketch from "../components/HandDrawnSketch";
+import ConnectSection from "../components/ConnectSection";
 import { projects } from "../data/projects";
 
 const mono: React.CSSProperties = {
@@ -324,6 +325,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Let's Connect */}
+      <ConnectSection />
     </motion.div>
   );
 }
