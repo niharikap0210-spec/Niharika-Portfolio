@@ -10,6 +10,7 @@ import CaseStudy from "./pages/CaseStudy";
 import ArkoCase from "./pages/ArkoCase";
 import VeriflowCase from "./pages/VeriflowCase";
 import ShelfieCase from "./pages/ShelfieCase";
+import LocalLiftCase from "./pages/LocalLiftCase";
 import Resume from "./pages/Resume";
 import NotFound from "./pages/NotFound";
 
@@ -23,6 +24,7 @@ function AnimatedRoutes() {
         <Route path="/work/arko" element={<ArkoCase />} />
         <Route path="/work/veriflow" element={<VeriflowCase />} />
         <Route path="/work/shelfie" element={<ShelfieCase />} />
+        <Route path="/work/locallift" element={<LocalLiftCase />} />
         <Route path="/work/:slug" element={<CaseStudy />} />
         <Route path="/resume" element={<Resume />} />
         <Route path="*" element={<NotFound />} />
