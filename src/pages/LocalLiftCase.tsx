@@ -97,6 +97,17 @@ const gridSurface: React.CSSProperties = {
   ].join(", "),
 };
 
+/* Light blueprint grid for the dark Outcomes panel */
+const gridDark: React.CSSProperties = {
+  backgroundColor: ll.dark,
+  backgroundImage: [
+    "repeating-linear-gradient(0deg, rgba(255,255,255,0.04) 0, rgba(255,255,255,0.04) 0.5px, transparent 0.5px, transparent 20px)",
+    "repeating-linear-gradient(90deg, rgba(255,255,255,0.04) 0, rgba(255,255,255,0.04) 0.5px, transparent 0.5px, transparent 20px)",
+    "repeating-linear-gradient(0deg, rgba(255,255,255,0.09) 0, rgba(255,255,255,0.09) 0.5px, transparent 0.5px, transparent 80px)",
+    "repeating-linear-gradient(90deg, rgba(255,255,255,0.09) 0, rgba(255,255,255,0.09) 0.5px, transparent 0.5px, transparent 80px)",
+  ].join(", "),
+};
+
 /* ══════════════════════════════════════════════════════════════════
    PRIMITIVES
 ══════════════════════════════════════════════════════════════════ */
@@ -1520,7 +1531,7 @@ export default function LocalLiftCase() {
       {/* ─── 08 · OUTCOMES ──────────────────────────────── */}
       <section style={{
         padding: SECTION_PAD,
-        background: ll.dark,
+        ...gridDark,
         color: "#FFFFFF",
         borderTop: `1px solid ${ll.dark}`,
       }}>
