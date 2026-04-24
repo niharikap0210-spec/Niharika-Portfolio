@@ -37,7 +37,6 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
 
   const accent = project.accent;
   const indexLabel = `A-${String(index + 1).padStart(2, "0")}`;
-  const isPhone = project.heroMockupKind === "phone";
 
   return (
     <motion.div
@@ -89,10 +88,7 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
 
           <div style={{ position: "relative", zIndex: 2 }}>
             {/* Eyebrow row */}
-            <div
-              className="flex items-center justify-between"
-              style={{ marginBottom: 14, gap: 12 }}
-            >
+            <div className="flex items-center justify-between" style={{ marginBottom: 14, gap: 12 }}>
               <motion.span
                 animate={{ color: hovered ? accent.dark : "var(--text-muted)" }}
                 transition={{ duration: 0.3 }}
@@ -142,8 +138,8 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
               <span style={{ position: "absolute", top: -3, right: 0, width: 1, height: 6, backgroundColor: "var(--construction)" }} />
             </div>
 
-            {/* Hero stage with cycling screens */}
-            <MockupStage project={project} hovered={hovered} isPhone={isPhone} />
+            {/* Hero mockup stage */}
+            <MockupStage project={project} hovered={hovered} />
 
             {/* Title + subtitle */}
             <div style={{ marginTop: 24 }}>
@@ -262,25 +258,14 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   Mockup stage — auto-cycles through project.heroScreens with
-   architectural progress ticks. Pauses on hover so the viewer can
-   inspect the current frame.
+   Mockup stage — renders a realistic device frame and auto-cycles
+   screens inside it.
 ══════════════════════════════════════════════════════════════════ */
-function MockupStage({
-  project,
-  hovered,
-  isPhone,
-}: {
-  project: Project;
-  hovered: boolean;
-  isPhone: boolean;
-}) {
-  const { accent, heroScreens } = project;
+function MockupStage({ project, hovered }: { project: Project; hovered: boolean }) {
+  const { accent, heroScreens, heroMockupKind } = project;
   const [active, setActive] = useState(0);
   const reducedMotion = usePrefersReducedMotion();
 
-  // Auto-cycle every 2.8s. Pauses when hovered (reader wants to look)
-  // or when user prefers reduced motion.
   useEffect(() => {
     if (reducedMotion || hovered || heroScreens.length <= 1) return;
     const id = window.setInterval(() => {
@@ -289,7 +274,6 @@ function MockupStage({
     return () => window.clearInterval(id);
   }, [hovered, heroScreens.length, reducedMotion]);
 
-  // Preload subsequent screens (first frame already in DOM as <img>).
   useEffect(() => {
     heroScreens.slice(1).forEach((src) => {
       const img = new Image();
@@ -297,6 +281,7 @@ function MockupStage({
     });
   }, [heroScreens]);
 
+  // ── Ambient stage backdrop ──────────────────────────────────────
   return (
     <div
       style={{
@@ -304,23 +289,24 @@ function MockupStage({
         width: "100%",
         aspectRatio: "16 / 10",
         overflow: "hidden",
-        backgroundColor: accent.surface,
+        background: `
+          radial-gradient(120% 80% at 50% 0%, ${accent.surface} 0%, ${accent.primary}0d 60%, transparent 100%),
+          linear-gradient(180deg, ${accent.surface} 0%, ${accent.primary}0a 100%)
+        `,
         border: `0.75px solid ${accent.primary}22`,
       }}
     >
-      {/* Blueprint grid tinted to accent */}
+      {/* Very soft grid (background texture, not architectural) */}
       <div
         aria-hidden
         style={{
           position: "absolute",
           inset: 0,
           backgroundImage: `
-            repeating-linear-gradient(0deg, ${accent.primary}14 0, ${accent.primary}14 0.5px, transparent 0.5px, transparent 20px),
-            repeating-linear-gradient(90deg, ${accent.primary}14 0, ${accent.primary}14 0.5px, transparent 0.5px, transparent 20px),
-            repeating-linear-gradient(0deg, ${accent.primary}26 0, ${accent.primary}26 0.5px, transparent 0.5px, transparent 80px),
-            repeating-linear-gradient(90deg, ${accent.primary}26 0, ${accent.primary}26 0.5px, transparent 0.5px, transparent 80px)
+            repeating-linear-gradient(0deg, ${accent.primary}10 0, ${accent.primary}10 0.5px, transparent 0.5px, transparent 48px),
+            repeating-linear-gradient(90deg, ${accent.primary}10 0, ${accent.primary}10 0.5px, transparent 0.5px, transparent 48px)
           `,
-          opacity: hovered ? 0.9 : 0.6,
+          opacity: hovered ? 0.8 : 0.5,
           transitionProperty: "opacity",
           transitionDuration: "400ms",
         }}
@@ -355,17 +341,17 @@ function MockupStage({
           right: 14,
           fontSize: 8,
           color: accent.dark,
-          opacity: 0.55,
+          opacity: 0.5,
           letterSpacing: "0.16em",
           zIndex: 3,
         }}
       >
-        {project.heroMockupKind === "photo" ? "FIELD" : project.heroMockupKind.toUpperCase()}
+        {heroMockupKind === "photo" ? "FIELD" : heroMockupKind.toUpperCase()}
       </span>
 
-      {/* Mockup frame — screens stacked, crossfaded */}
+      {/* Device frame — picks appropriate mockup for kind */}
       <motion.div
-        animate={{ scale: hovered ? 1.04 : 1, y: hovered ? -4 : 0 }}
+        animate={{ scale: hovered ? 1.03 : 1, y: hovered ? -4 : 0 }}
         transition={{ type: "spring", stiffness: 180, damping: 22, mass: 0.7 }}
         style={{
           position: "absolute",
@@ -373,117 +359,206 @@ function MockupStage({
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          padding: isPhone ? "24px 0" : "36px",
+          padding: heroMockupKind === "phone" ? "22px 0 28px" : "34px 44px 40px",
           zIndex: 2,
         }}
       >
-        {isPhone ? (
+        {heroMockupKind === "laptop" && (
+          <LaptopFrame screens={heroScreens} active={active} accent={accent.primary} title={project.title} />
+        )}
+        {heroMockupKind === "tablet" && (
+          <TabletFrame screens={heroScreens} active={active} accent={accent.primary} title={project.title} />
+        )}
+        {heroMockupKind === "phone" && (
           <PhoneFrame screens={heroScreens} active={active} accent={accent.primary} title={project.title} />
-        ) : (
-          <ScreenStack
-            screens={heroScreens}
-            active={active}
-            shadow={`0 10px 30px ${accent.dark}33, 0 2px 6px rgba(0,0,0,0.08)`}
-            alt={project.title}
-          />
+        )}
+        {heroMockupKind === "photo" && (
+          <PolaroidFrame screens={heroScreens} active={active} accent={accent} title={project.title} />
         )}
       </motion.div>
 
-      {/* Bottom vignette */}
-      <div
-        aria-hidden
-        style={{
-          position: "absolute",
-          inset: 0,
-          background: `linear-gradient(to top, ${accent.dark}18 0%, transparent 45%)`,
-          mixBlendMode: "multiply",
-          zIndex: 2,
-          pointerEvents: "none",
-        }}
-      />
-
-      {/* Progress ticks (architectural) */}
-      <ProgressTicks
-        count={heroScreens.length}
-        active={active}
-        color={accent.primary}
-      />
-
-      {/* Frame counter */}
-      <span
-        style={{
-          ...mono,
-          position: "absolute",
-          bottom: 12,
-          right: 14,
-          fontSize: 8,
-          color: accent.dark,
-          opacity: 0.6,
-          letterSpacing: "0.18em",
-          zIndex: 3,
-        }}
-      >
-        {String(active + 1).padStart(2, "0")} / {String(heroScreens.length).padStart(2, "0")}
-      </span>
+      {/* Progress ticks */}
+      <ProgressTicks count={heroScreens.length} active={active} color={accent.primary} />
     </div>
   );
 }
 
-/* ── Stacked screen crossfade (non-phone) ──────────────────────────── */
-function ScreenStack({
+/* ══════════════════════════════════════════════════════════════════
+   Device frames — minimal, modern, built from divs + subtle details
+══════════════════════════════════════════════════════════════════ */
+
+/* ── Laptop (macbook-style) ──────────────────────────────────────── */
+function LaptopFrame({
   screens,
   active,
-  shadow,
-  alt,
+  accent,
+  title,
 }: {
   screens: string[];
   active: number;
-  shadow: string;
-  alt: string;
+  accent: string;
+  title: string;
+}) {
+  return (
+    <div style={{ width: "100%", maxWidth: 460, display: "flex", flexDirection: "column", alignItems: "center" }}>
+      {/* Lid with screen */}
+      <div
+        style={{
+          width: "100%",
+          aspectRatio: "16 / 10",
+          backgroundColor: "#1A1A1A",
+          borderRadius: "10px 10px 2px 2px",
+          padding: 7,
+          boxShadow: `
+            0 0 0 0.75px rgba(0,0,0,0.2),
+            0 14px 36px ${accent}22,
+            0 4px 10px rgba(0,0,0,0.10)
+          `,
+          position: "relative",
+        }}
+      >
+        {/* Camera dot */}
+        <span
+          aria-hidden
+          style={{
+            position: "absolute",
+            top: 3,
+            left: "50%",
+            transform: "translateX(-50%)",
+            width: 3,
+            height: 3,
+            backgroundColor: "#3A3A3A",
+            borderRadius: "50%",
+            zIndex: 2,
+          }}
+        />
+        {/* Screen */}
+        <div
+          style={{
+            position: "relative",
+            width: "100%",
+            height: "100%",
+            borderRadius: 3,
+            overflow: "hidden",
+            backgroundColor: "#0A0A0A",
+            boxShadow: "inset 0 0 0 0.5px rgba(255,255,255,0.05)",
+          }}
+        >
+          <ScreenStack screens={screens} active={active} alt={title} fit="cover" />
+          {/* Subtle screen sheen */}
+          <div
+            aria-hidden
+            style={{
+              position: "absolute",
+              inset: 0,
+              background: "linear-gradient(135deg, rgba(255,255,255,0.06) 0%, transparent 40%)",
+              pointerEvents: "none",
+            }}
+          />
+        </div>
+      </div>
+
+      {/* Base / keyboard deck */}
+      <div
+        style={{
+          width: "108%",
+          height: 10,
+          background: "linear-gradient(180deg, #2A2A2A 0%, #1A1A1A 40%, #0F0F0F 100%)",
+          borderRadius: "0 0 10px 10px",
+          position: "relative",
+          boxShadow: "0 6px 12px rgba(0,0,0,0.18)",
+        }}
+      >
+        {/* Trackpad notch */}
+        <span
+          aria-hidden
+          style={{
+            position: "absolute",
+            top: 0,
+            left: "50%",
+            transform: "translateX(-50%)",
+            width: 56,
+            height: 3,
+            backgroundColor: "#0A0A0A",
+            borderRadius: "0 0 4px 4px",
+          }}
+        />
+      </div>
+    </div>
+  );
+}
+
+/* ── Tablet (iPad-style landscape) ───────────────────────────────── */
+function TabletFrame({
+  screens,
+  active,
+  accent,
+  title,
+}: {
+  screens: string[];
+  active: number;
+  accent: string;
+  title: string;
 }) {
   return (
     <div
       style={{
         position: "relative",
         width: "100%",
-        height: "100%",
-        maxWidth: "100%",
-        maxHeight: "100%",
+        maxWidth: 420,
+        aspectRatio: "4 / 3",
+        backgroundColor: "#141414",
+        borderRadius: 16,
+        padding: 10,
+        boxShadow: `
+          0 0 0 0.75px rgba(0,0,0,0.25),
+          0 20px 48px ${accent}22,
+          0 6px 14px rgba(0,0,0,0.12)
+        `,
       }}
     >
-      {screens.map((src, i) => (
-        <motion.img
-          key={src}
-          src={src}
-          alt={i === 0 ? `${alt} mockup` : ""}
-          aria-hidden={i !== active}
-          initial={false}
-          animate={{
-            opacity: i === active ? 1 : 0,
-            scale: i === active ? 1 : 1.02,
-          }}
-          transition={{ duration: 0.7, ease: EASE }}
+      {/* Camera dot (left edge, centered) */}
+      <span
+        aria-hidden
+        style={{
+          position: "absolute",
+          left: 4,
+          top: "50%",
+          transform: "translateY(-50%)",
+          width: 3,
+          height: 3,
+          backgroundColor: "#333",
+          borderRadius: "50%",
+        }}
+      />
+      {/* Screen */}
+      <div
+        style={{
+          position: "relative",
+          width: "100%",
+          height: "100%",
+          borderRadius: 8,
+          overflow: "hidden",
+          backgroundColor: "#0A0A0A",
+          boxShadow: "inset 0 0 0 0.5px rgba(255,255,255,0.05)",
+        }}
+      >
+        <ScreenStack screens={screens} active={active} alt={title} fit="cover" />
+        <div
+          aria-hidden
           style={{
             position: "absolute",
             inset: 0,
-            margin: "auto",
-            maxWidth: "100%",
-            maxHeight: "100%",
-            width: "auto",
-            height: "auto",
-            objectFit: "contain",
-            borderRadius: 4,
-            boxShadow: shadow,
+            background: "linear-gradient(135deg, rgba(255,255,255,0.05) 0%, transparent 45%)",
             pointerEvents: "none",
           }}
-          loading={i === 0 ? "eager" : "lazy"}
         />
-      ))}
+      </div>
     </div>
   );
 }
 
-/* ── Phone frame with stacked + crossfaded screens ────────────────── */
+/* ── Phone (modern with dynamic-island notch) ────────────────────── */
 function PhoneFrame({
   screens,
   active,
@@ -499,72 +574,184 @@ function PhoneFrame({
     <div
       style={{
         position: "relative",
-        width: "min(32%, 180px)",
+        width: "min(34%, 175px)",
         aspectRatio: "9 / 19",
-        borderRadius: 24,
-        backgroundColor: "#111",
-        padding: 6,
-        boxShadow: `0 20px 50px ${accent}33, 0 4px 12px rgba(0,0,0,0.18)`,
+        borderRadius: 30,
+        background: "linear-gradient(145deg, #232323 0%, #0A0A0A 100%)",
+        padding: 5,
+        boxShadow: `
+          0 0 0 0.75px rgba(0,0,0,0.3),
+          0 24px 56px ${accent}33,
+          0 8px 18px rgba(0,0,0,0.18)
+        `,
+      }}
+    >
+      {/* Side buttons */}
+      <span aria-hidden style={{ position: "absolute", left: -1.5, top: "18%", width: 2, height: 20, backgroundColor: "#1A1A1A", borderRadius: 1 }} />
+      <span aria-hidden style={{ position: "absolute", left: -1.5, top: "28%", width: 2, height: 34, backgroundColor: "#1A1A1A", borderRadius: 1 }} />
+      <span aria-hidden style={{ position: "absolute", left: -1.5, top: "38%", width: 2, height: 34, backgroundColor: "#1A1A1A", borderRadius: 1 }} />
+      <span aria-hidden style={{ position: "absolute", right: -1.5, top: "24%", width: 2, height: 48, backgroundColor: "#1A1A1A", borderRadius: 1 }} />
+
+      {/* Screen */}
+      <div
+        style={{
+          position: "relative",
+          width: "100%",
+          height: "100%",
+          borderRadius: 25,
+          overflow: "hidden",
+          backgroundColor: "#000",
+        }}
+      >
+        <ScreenStack screens={screens} active={active} alt={title} fit="cover" />
+
+        {/* Dynamic Island */}
+        <span
+          aria-hidden
+          style={{
+            position: "absolute",
+            top: 7,
+            left: "50%",
+            transform: "translateX(-50%)",
+            width: "34%",
+            height: 14,
+            backgroundColor: "#000",
+            borderRadius: 10,
+            zIndex: 3,
+          }}
+        />
+
+        {/* Subtle screen sheen */}
+        <div
+          aria-hidden
+          style={{
+            position: "absolute",
+            inset: 0,
+            background: "linear-gradient(135deg, rgba(255,255,255,0.05) 0%, transparent 40%)",
+            pointerEvents: "none",
+            zIndex: 2,
+          }}
+        />
+      </div>
+    </div>
+  );
+}
+
+/* ── Polaroid (for field research photos) ───────────────────────── */
+function PolaroidFrame({
+  screens,
+  active,
+  accent,
+  title,
+}: {
+  screens: string[];
+  active: number;
+  accent: { primary: string; dark: string };
+  title: string;
+}) {
+  return (
+    <div
+      style={{
+        position: "relative",
+        transform: "rotate(-1.2deg)",
+        width: "min(70%, 320px)",
+        padding: "10px 10px 34px",
+        backgroundColor: "#FDFBF6",
+        boxShadow: `
+          0 0 0 0.5px rgba(0,0,0,0.06),
+          0 18px 36px ${accent.primary}26,
+          0 6px 14px rgba(0,0,0,0.10)
+        `,
       }}
     >
       <div
         style={{
           position: "relative",
           width: "100%",
-          height: "100%",
-          borderRadius: 18,
+          aspectRatio: "4 / 3",
+          backgroundColor: "#1A1A1A",
           overflow: "hidden",
-          backgroundColor: "#000",
         }}
       >
-        {screens.map((src, i) => (
-          <motion.img
-            key={src}
-            src={src}
-            alt={i === 0 ? `${title} screen` : ""}
-            aria-hidden={i !== active}
-            initial={false}
-            animate={{
-              opacity: i === active ? 1 : 0,
-              y: i === active ? 0 : 12,
-            }}
-            transition={{ duration: 0.7, ease: EASE }}
-            style={{
-              position: "absolute",
-              inset: 0,
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              display: "block",
-            }}
-            loading={i === 0 ? "eager" : "lazy"}
-          />
-        ))}
+        <ScreenStack screens={screens} active={active} alt={title} fit="cover" />
+        {/* Film-like warm overlay */}
+        <div
+          aria-hidden
+          style={{
+            position: "absolute",
+            inset: 0,
+            background: `linear-gradient(180deg, transparent 0%, ${accent.dark}12 100%)`,
+            mixBlendMode: "multiply",
+            pointerEvents: "none",
+          }}
+        />
       </div>
-      {/* Notch */}
-      <span
-        aria-hidden
+      {/* Handwritten-style caption */}
+      <div
         style={{
           position: "absolute",
-          top: 8,
-          left: "50%",
-          transform: "translateX(-50%)",
-          width: 44,
-          height: 4,
-          backgroundColor: "#000",
-          borderRadius: 2,
-          zIndex: 2,
+          bottom: 8,
+          left: 0,
+          right: 0,
+          textAlign: "center",
+          fontFamily: "'Playfair Display', Georgia, serif",
+          fontStyle: "italic",
+          fontSize: 11,
+          color: "#6B6B6B",
+          letterSpacing: "0.02em",
         }}
-      />
+      >
+        field observation · {String(active + 1).padStart(2, "0")}
+      </div>
     </div>
   );
 }
 
-/* ── Progress ticks ─────────────────────────────────────────────────
-   Minimal row of ticks at the bottom of the stage. Active tick is
-   long + solid in the accent color; inactive ticks are short +
-   muted. Mirrors the drafting-line tick aesthetic.
-────────────────────────────────────────────────────────────────── */
+/* ══════════════════════════════════════════════════════════════════
+   ScreenStack — absolutely stacked screens, crossfaded + slid
+══════════════════════════════════════════════════════════════════ */
+function ScreenStack({
+  screens,
+  active,
+  alt,
+  fit = "cover",
+}: {
+  screens: string[];
+  active: number;
+  alt: string;
+  fit?: "cover" | "contain";
+}) {
+  return (
+    <div style={{ position: "relative", width: "100%", height: "100%" }}>
+      {screens.map((src, i) => (
+        <motion.img
+          key={src}
+          src={src}
+          alt={i === 0 ? `${alt} screen` : ""}
+          aria-hidden={i !== active}
+          initial={false}
+          animate={{
+            opacity: i === active ? 1 : 0,
+            y: i === active ? 0 : 8,
+          }}
+          transition={{ duration: 0.7, ease: EASE }}
+          style={{
+            position: "absolute",
+            inset: 0,
+            width: "100%",
+            height: "100%",
+            objectFit: fit,
+            display: "block",
+            pointerEvents: "none",
+          }}
+          loading={i === 0 ? "eager" : "lazy"}
+        />
+      ))}
+    </div>
+  );
+}
+
+/* ── Progress ticks ──────────────────────────────────────────────── */
 function ProgressTicks({
   count,
   active,
@@ -599,8 +786,7 @@ function ProgressTicks({
             transition={{ duration: 0.5, ease: EASE }}
             style={{
               height: 2,
-              backgroundColor: isActive ? color : "currentColor",
-              color: color,
+              backgroundColor: color,
               display: "inline-block",
             }}
           />
