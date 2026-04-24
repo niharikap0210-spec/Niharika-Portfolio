@@ -2395,8 +2395,8 @@ export default function VeriflowCase() {
             whileTap={{ scale: 0.94 }}
             style={{
               position: "fixed",
-              right: "clamp(20px, 2.4vw, 32px)",
-              bottom: "clamp(20px, 2.4vw, 32px)",
+              right: "clamp(48px, 5.5vw, 88px)",
+              bottom: "clamp(32px, 3.2vw, 52px)",
               zIndex: 60,
               width: 52,
               height: 52,
