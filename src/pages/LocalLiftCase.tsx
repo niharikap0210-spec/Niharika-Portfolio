@@ -13,23 +13,26 @@ import {
   MagnifyingGlassIcon as MagnifyingGlass,
   LayoutIcon as Layout,
   ChartBarIcon as ChartBar,
-  CompassIcon as Compass,
   PathIcon as Path,
   StackIcon as Stack,
   HandshakeIcon as Handshake,
+  StorefrontIcon as Storefront,
+  GlobeIcon as Globe,
+  TargetIcon as Target,
+  GraduationCapIcon as GraduationCap,
 } from "@phosphor-icons/react";
 import type { Icon } from "@phosphor-icons/react";
 import { projects, type Project } from "../data/projects";
 
 /* ── LocalLift palette, scoped to this page ───────────────────────── */
 const ll = {
-  primary: "#3B4F7B",         // deep indigo — mentorship, trust
+  primary: "#3B4F7B",
   light:   "#6577A0",
   dark:    "#2A3A5C",
   surface: "#EDF0F7",
   subtle:  "rgba(59, 79, 123, 0.08)",
   muted:   "rgba(59, 79, 123, 0.55)",
-  warm:    "#C47B3A",         // warm amber — the "lift", used sparingly
+  warm:    "#C47B3A",
 };
 
 const mono: React.CSSProperties = {
@@ -66,7 +69,8 @@ const t = {
 };
 
 const SECTION_PAD = "clamp(72px, 9vw, 120px) 0";
-const TOTAL = "06";
+const TOTAL = "08";
+const IMG = "/locallift";
 
 /* ══════════════════════════════════════════════════════════════════
    PRIMITIVES
@@ -159,10 +163,88 @@ function SectionHeader({
   );
 }
 
+/* Image frame with registration marks */
+function Plate({
+  src, alt, caption, tag,
+  aspect = "16 / 10",
+  fit = "contain",
+  bg = "#FFFFFF",
+}: {
+  src: string; alt: string; caption?: string; tag?: string;
+  aspect?: string; fit?: "contain" | "cover"; bg?: string;
+}) {
+  return (
+    <figure style={{ margin: 0, width: "100%" }}>
+      <div style={{
+        position: "relative",
+        background: bg,
+        border: `1px solid ${ll.subtle}`,
+        overflow: "hidden",
+      }}>
+        {/* Registration marks */}
+        {[
+          { top: 6, left: 6 },
+          { top: 6, right: 6 },
+          { bottom: 6, left: 6 },
+          { bottom: 6, right: 6 },
+        ].map((pos, i) => (
+          <span
+            key={i}
+            aria-hidden
+            style={{
+              position: "absolute", width: 10, height: 10,
+              borderTop: i < 2 ? `1px solid ${ll.primary}` : "none",
+              borderBottom: i >= 2 ? `1px solid ${ll.primary}` : "none",
+              borderLeft: (i % 2 === 0) ? `1px solid ${ll.primary}` : "none",
+              borderRight: (i % 2 === 1) ? `1px solid ${ll.primary}` : "none",
+              opacity: 0.4, zIndex: 2, ...pos,
+            }}
+          />
+        ))}
+        {tag && (
+          <span style={{
+            position: "absolute", top: 14, left: 14,
+            ...mono, fontSize: 9, color: ll.primary,
+            letterSpacing: "0.22em", fontWeight: 700,
+            background: "rgba(255,255,255,0.85)",
+            padding: "4px 8px", zIndex: 3,
+          }}>
+            {tag}
+          </span>
+        )}
+        <div style={{
+          width: "100%", aspectRatio: aspect,
+          display: "flex", alignItems: "center", justifyContent: "center",
+          padding: fit === "contain" ? "clamp(14px, 2vw, 28px)" : 0,
+        }}>
+          <img
+            src={src}
+            alt={alt}
+            loading="lazy"
+            style={{
+              width: "100%", height: "100%",
+              objectFit: fit,
+              display: "block",
+            }}
+          />
+        </div>
+      </div>
+      {caption && (
+        <figcaption style={{
+          ...mono, fontSize: 10, color: ll.muted,
+          letterSpacing: "0.2em", fontWeight: 700,
+          marginTop: 12, paddingTop: 10,
+          borderTop: `1px solid ${ll.subtle}`,
+        }}>
+          {caption}
+        </figcaption>
+      )}
+    </figure>
+  );
+}
+
 /* ══════════════════════════════════════════════════════════════════
    HERO VISUAL — editorial stack diagram
-   Shows the gap LocalLift closes: owner → platform → market,
-   with mentorship and peer network as the bridging layers.
 ══════════════════════════════════════════════════════════════════ */
 function HeroVisual() {
   return (
@@ -182,7 +264,6 @@ function HeroVisual() {
         transition={{ delay: 0.3, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
       >
         <svg viewBox="0 0 560 420" width="100%" aria-hidden>
-          {/* Blueprint grid backing */}
           <defs>
             <pattern id="ll-grid" width="20" height="20" patternUnits="userSpaceOnUse">
               <path d="M 20 0 L 0 0 0 20" fill="none" stroke={ll.subtle} strokeWidth="0.5" />
@@ -190,7 +271,6 @@ function HeroVisual() {
           </defs>
           <rect x="0" y="0" width="560" height="420" fill="url(#ll-grid)" opacity="0.7" />
 
-          {/* Registration marks */}
           {[
             { x: 8, y: 8, d: "M 0 0 L 12 0 M 0 0 L 0 12" },
             { x: 552, y: 8, d: "M 0 0 L -12 0 M 0 0 L 0 12" },
@@ -202,13 +282,11 @@ function HeroVisual() {
             </g>
           ))}
 
-          {/* Title bar */}
           <text x="24" y="36" {...{ fontFamily: "'Space Mono', monospace", fontSize: 10, letterSpacing: "0.22em", fontWeight: 700 }} fill={ll.primary}>
             FIG · 01 / THE STACK
           </text>
           <line x1="24" y1="44" x2="536" y2="44" stroke={ll.primary} strokeWidth="0.5" opacity="0.5" />
 
-          {/* Column A: without LocalLift */}
           <text x="92" y="72" textAnchor="middle" {...{ fontFamily: "'Space Mono', monospace", fontSize: 9, letterSpacing: "0.2em", fontWeight: 700 }} fill={ll.muted}>
             WITHOUT
           </text>
@@ -224,7 +302,6 @@ function HeroVisual() {
               </text>
             </g>
           ))}
-          {/* Gap indicator */}
           <g>
             <line x1="92" y1="182" x2="92" y2="242" stroke={ll.warm} strokeWidth="1" strokeDasharray="3 3" />
             <text x="100" y="216" {...{ fontFamily: "'Space Mono', monospace", fontSize: 9, letterSpacing: "0.18em", fontWeight: 700 }} fill={ll.warm}>
@@ -232,16 +309,13 @@ function HeroVisual() {
             </text>
           </g>
 
-          {/* Divider */}
           <line x1="200" y1="88" x2="200" y2="336" stroke={ll.subtle} strokeWidth="1" strokeDasharray="2 4" />
 
-          {/* Arrow between columns */}
           <g transform="translate(220 200)">
             <line x1="0" y1="0" x2="24" y2="0" stroke={ll.primary} strokeWidth="1" />
             <path d="M 18 -4 L 24 0 L 18 4" fill="none" stroke={ll.primary} strokeWidth="1" />
           </g>
 
-          {/* Column B: with LocalLift — full stack */}
           <text x="400" y="72" textAnchor="middle" {...{ fontFamily: "'Space Mono', monospace", fontSize: 9, letterSpacing: "0.2em", fontWeight: 700 }} fill={ll.primary}>
             WITH LOCALLIFT
           </text>
@@ -271,7 +345,6 @@ function HeroVisual() {
             </g>
           ))}
 
-          {/* Right-side callouts */}
           <line x1="460" y1="194" x2="516" y2="194" stroke={ll.primary} strokeWidth="0.8" />
           <rect x="458" y="192" width="4" height="4" fill={ll.primary} />
           <text x="524" y="191" {...{ fontFamily: "'Space Mono', monospace", fontSize: 9, letterSpacing: "0.18em", fontWeight: 700 }} fill={ll.primary} textAnchor="end">
@@ -281,7 +354,6 @@ function HeroVisual() {
             LAYERS
           </text>
 
-          {/* Footer */}
           <line x1="24" y1="368" x2="536" y2="368" stroke={ll.primary} strokeWidth="0.5" opacity="0.5" />
           <text x="24" y="390" {...{ fontFamily: "'Space Mono', monospace", fontSize: 9, letterSpacing: "0.2em", fontWeight: 700 }} fill={ll.muted}>
             SCALE · 1:1
@@ -296,7 +368,7 @@ function HeroVisual() {
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   NAV CARD — matching Shelfie pattern for consistency
+   NAV CARD — matching Shelfie pattern
 ══════════════════════════════════════════════════════════════════ */
 function NavCard({ project }: { project: Project }) {
   const [hover, setHover] = useState(false);
@@ -427,13 +499,11 @@ export default function LocalLiftCase() {
       transition={{ duration: 0.4 }}
       className="pt-14"
     >
-      {/* Top mask for fixed nav */}
       <div style={{
         position: "fixed", top: 0, left: 0, right: 0, height: 59,
         background: "var(--bg-primary)", zIndex: 45, pointerEvents: "none",
       }} />
 
-      {/* Scroll progress */}
       <div style={{
         position: "fixed", top: 56, left: 0, right: 0, height: 2,
         background: "var(--bg-primary)", zIndex: 49,
@@ -454,7 +524,6 @@ export default function LocalLiftCase() {
         flexDirection: "column",
         overflow: "hidden",
       }}>
-        {/* Blueprint grid backdrop */}
         <div aria-hidden style={{
           position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none",
           backgroundImage: `
@@ -468,7 +537,6 @@ export default function LocalLiftCase() {
           WebkitMaskImage: "radial-gradient(ellipse 80% 80% at 50% 45%, #000 40%, transparent 100%)",
         }} />
 
-        {/* Top bar */}
         <motion.div
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.05, duration: 0.5 }}
           className="max-w-7xl mx-auto px-6 md:px-10"
@@ -503,7 +571,6 @@ export default function LocalLiftCase() {
           </div>
         </motion.div>
 
-        {/* Hero body */}
         <div
           className="max-w-7xl mx-auto px-6 md:px-10"
           style={{
@@ -525,7 +592,6 @@ export default function LocalLiftCase() {
               width: "100%",
             }}
           >
-            {/* LEFT */}
             <div className="md:col-span-5" style={{ minWidth: 0 }}>
               <motion.div
                 initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1, duration: 0.6 }}
@@ -571,7 +637,6 @@ export default function LocalLiftCase() {
                 they're supposed to already live in.
               </motion.p>
 
-              {/* Meta row */}
               <motion.div
                 initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8, duration: 0.6 }}
                 style={{
@@ -602,12 +667,10 @@ export default function LocalLiftCase() {
               </motion.div>
             </div>
 
-            {/* RIGHT — hero diagram */}
             <HeroVisual />
           </div>
         </div>
 
-        {/* Scroll cue */}
         <motion.div
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.1, duration: 0.6 }}
           className="max-w-7xl mx-auto px-6 md:px-10"
@@ -635,7 +698,85 @@ export default function LocalLiftCase() {
         </motion.div>
       </section>
 
-      {/* ─── 01 THE GAP ──────────────────────────────────────────── */}
+      {/* ─── 01 CONTEXT ────────────────────────────────────────── */}
+      <section style={{
+        padding: SECTION_PAD,
+        background: "var(--bg-primary)",
+        borderTop: "1px solid var(--border)",
+      }}>
+        <div className="max-w-7xl mx-auto px-6 md:px-10">
+          <SectionHeader num="01" title="Context" phase="Setup" />
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+            <div className="lg:col-span-7">
+              <Reveal>
+                <h2 style={{ ...t.h2Section, marginBottom: 22 }}>
+                  A graduate HCI brief,
+                  <span style={{ fontStyle: "italic", color: ll.primary }}> grounded in real owners across two continents.</span>
+                </h2>
+              </Reveal>
+              <Reveal delay={0.1}>
+                <p style={{ ...t.bodyLg, maxWidth: 640, marginBottom: 18 }}>
+                  LocalLift was a ten-week graduate project at Georgia Tech, run in collaboration with a cohort
+                  at the University of Namibia. Our team of five spent the first three weeks in listening mode —
+                  reading the space, choosing the owner, and writing the question we actually wanted to answer.
+                </p>
+              </Reveal>
+              <Reveal delay={0.18}>
+                <p style={{ ...t.bodyLg, maxWidth: 640 }}>
+                  The brief: <span style={{ color: "var(--text-primary)", fontWeight: 500 }}>design a service that helps a
+                  local small business grow digitally</span> — without flattening what made it local.
+                </p>
+              </Reveal>
+            </div>
+
+            <div className="lg:col-span-5">
+              <Reveal delay={0.14}>
+                <div style={{
+                  background: ll.surface,
+                  border: `1px solid ${ll.subtle}`,
+                  padding: "28px 28px 24px",
+                }}>
+                  <p style={{ ...mono, fontSize: 10, letterSpacing: "0.22em", color: ll.primary, fontWeight: 700, marginBottom: 20 }}>
+                    PROJECT · 04 FACTS
+                  </p>
+                  <div style={{ display: "grid", gap: 18 }}>
+                    {([
+                      { icon: GraduationCap, k: "Setting",   v: "Graduate HCI · Georgia Tech" },
+                      { icon: Globe,         k: "Partner",   v: "University of Namibia cohort" },
+                      { icon: Storefront,    k: "Audience",  v: "Small business owners, early & growth stage" },
+                      { icon: Target,        k: "Objective", v: "Grow digitally without losing local character" },
+                    ] as { icon: Icon; k: string; v: string }[]).map((f, i) => {
+                      const I = f.icon;
+                      return (
+                        <div key={i} style={{ display: "grid", gridTemplateColumns: "auto 1fr", gap: 16, alignItems: "flex-start" }}>
+                          <div style={{
+                            width: 36, height: 36, background: "#FFFFFF",
+                            border: `1px solid ${ll.subtle}`,
+                            display: "flex", alignItems: "center", justifyContent: "center",
+                          }}>
+                            <I size={18} color={ll.primary} weight="regular" />
+                          </div>
+                          <div style={{ display: "flex", flexDirection: "column", gap: 3, paddingTop: 4 }}>
+                            <span style={{ ...mono, fontSize: 10, color: ll.muted, letterSpacing: "0.2em", fontWeight: 700 }}>
+                              {f.k}
+                            </span>
+                            <span style={{ fontFamily: sans, fontSize: 15, color: "var(--text-primary)", lineHeight: 1.5 }}>
+                              {f.v}
+                            </span>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </Reveal>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── 02 PROBLEM ────────────────────────────────────────── */}
       <section style={{
         padding: SECTION_PAD,
         background: ll.surface,
@@ -643,7 +784,7 @@ export default function LocalLiftCase() {
         borderBottom: "1px solid var(--border)",
       }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
-          <SectionHeader num="01" title="The gap" phase="Problem" />
+          <SectionHeader num="02" title="The gap" phase="Problem" />
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mb-14 items-start">
             <div className="lg:col-span-7">
@@ -662,9 +803,31 @@ export default function LocalLiftCase() {
                 </p>
               </Reveal>
             </div>
+            <div className="lg:col-span-5">
+              <Reveal delay={0.16}>
+                <blockquote style={{
+                  margin: 0,
+                  padding: "24px 28px",
+                  borderLeft: `2px solid ${ll.primary}`,
+                  background: "rgba(255,255,255,0.6)",
+                  fontFamily: serif, fontStyle: "italic",
+                  fontSize: "clamp(18px, 1.45vw, 22px)",
+                  lineHeight: 1.5,
+                  color: "var(--text-primary)",
+                  letterSpacing: "-0.01em",
+                }}>
+                  "I know I need to be online, but I have no idea how to make it work."
+                  <footer style={{
+                    ...mono, fontSize: 10, color: ll.muted, fontStyle: "normal",
+                    letterSpacing: "0.2em", fontWeight: 700, marginTop: 14,
+                  }}>
+                    — OWNER, EARLY STAGE
+                  </footer>
+                </blockquote>
+              </Reveal>
+            </div>
           </div>
 
-          {/* Three observation tiles */}
           <div style={{
             display: "grid",
             gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
@@ -740,12 +903,12 @@ export default function LocalLiftCase() {
         </div>
       </section>
 
-      {/* ─── 02 METHOD ──────────────────────────────────────────── */}
+      {/* ─── 03 RESEARCH ────────────────────────────────────────── */}
       <section className="blueprint-grid-subtle" style={{ padding: SECTION_PAD }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
-          <SectionHeader num="02" title="How I studied it" phase="Method" />
+          <SectionHeader num="03" title="Research" phase="Method + synthesis" />
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mb-12 items-end">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mb-14 items-end">
             <div className="lg:col-span-8">
               <Reveal>
                 <h2 style={{ ...t.h2Section, marginBottom: 18 }}>
@@ -755,9 +918,9 @@ export default function LocalLiftCase() {
               </Reveal>
               <Reveal delay={0.1}>
                 <p style={{ ...t.bodyLg, maxWidth: 640 }}>
-                  Ten weeks. Graduate students from Namibia University co-designing the questions and helping
-                  translate insights across context. Three lenses: understand the owner's day, cluster what we heard,
-                  turn it into archetypes the team could design against.
+                  Three lenses: understand the owner's day, cluster what we heard across context, turn it into
+                  archetypes the team could design against. Namibian collaborators translated insight — literally
+                  and culturally — so patterns weren't just Atlanta-flavored.
                 </p>
               </Reveal>
             </div>
@@ -778,6 +941,7 @@ export default function LocalLiftCase() {
             display: "grid",
             gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
             gap: "clamp(16px, 1.6vw, 24px)",
+            marginBottom: "clamp(48px, 5vw, 72px)",
           }}>
             {([
               {
@@ -785,7 +949,7 @@ export default function LocalLiftCase() {
                 icon: ChatCircleText,
                 title: "Interviews",
                 body: "Semi-structured conversations with small business owners across industries and stages. Recorded, coded, revisited.",
-                output: "5 voices · 4 themes",
+                output: "5 voices · 6 questions",
               },
               {
                 num: "M·02",
@@ -798,7 +962,7 @@ export default function LocalLiftCase() {
                 num: "M·03",
                 icon: UsersThree,
                 title: "Personas",
-                body: "Two archetypes pressure-tested across every screen: the early-stage owner and the growth-oriented owner. Different needs, same platform.",
+                body: "Two archetypes pressure-tested across every screen: the early-stage owner and the growth-oriented owner.",
                 output: "2 archetypes",
               },
             ] as { num: string; icon: Icon; title: string; body: string; output: string }[]).map((m, i) => {
@@ -844,102 +1008,113 @@ export default function LocalLiftCase() {
               );
             })}
           </div>
-        </div>
-      </section>
 
-      {/* ─── 03 VOICES & INSIGHTS ──────────────────────────────── */}
-      <section style={{
-        padding: SECTION_PAD,
-        background: ll.surface,
-        borderTop: "1px solid var(--border)",
-        borderBottom: "1px solid var(--border)",
-      }}>
-        <div className="max-w-7xl mx-auto px-6 md:px-10">
-          <SectionHeader num="03" title="What I heard" phase="Research highlights" />
-
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mb-14 items-end">
-            <div className="lg:col-span-8">
+          {/* User stories / affinity output */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start" style={{ marginBottom: "clamp(48px, 5vw, 72px)" }}>
+            <div className="lg:col-span-5">
               <Reveal>
-                <h2 style={{ ...t.h2Section, marginBottom: 18 }}>
-                  Four tensions kept
-                  <span style={{ fontStyle: "italic", color: ll.primary }}> showing up in different words.</span>
-                </h2>
-              </Reveal>
-              <Reveal delay={0.1}>
-                <p style={{ ...t.bodyLg, maxWidth: 640 }}>
-                  Different industries, different stages, one recurring shape: owners wanted guidance from someone
-                  who had done the thing, tools that assumed their scale, peers they could learn from, and advice
-                  tuned to their market — not a generic one.
+                <p style={{ ...mono, fontSize: 11, letterSpacing: "0.22em", color: ll.primary, fontWeight: 700, marginBottom: 14 }}>
+                  AFFINITY OUTPUT
                 </p>
+                <h3 style={{
+                  fontFamily: serif, fontWeight: 700,
+                  fontSize: "clamp(26px, 2.6vw, 34px)",
+                  color: "var(--text-primary)",
+                  letterSpacing: "-0.025em", lineHeight: 1.2,
+                  marginBottom: 16,
+                }}>
+                  Forty observations, four tensions.
+                </h3>
+                <p style={{ ...t.body, fontSize: 17, lineHeight: 1.7, marginBottom: 18 }}>
+                  Different industries, different stages — one recurring shape. Owners wanted guidance from
+                  someone who had done the thing, tools that assumed their scale, peers to learn from, and
+                  advice tuned to their market.
+                </p>
+                <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "grid", gap: 10 }}>
+                  {[
+                    "Mentorship must be industry-specific",
+                    "Tools must feel built for them",
+                    "Peer networks are missing infrastructure",
+                    "Local context outperforms generic advice",
+                  ].map((item, i) => (
+                    <li key={i} style={{
+                      display: "grid", gridTemplateColumns: "auto 1fr", gap: 14, alignItems: "baseline",
+                      padding: "10px 0", borderBottom: `1px solid ${ll.subtle}`,
+                    }}>
+                      <span style={{ ...mono, fontSize: 11, color: ll.primary, letterSpacing: "0.22em", fontWeight: 700 }}>
+                        T·0{i + 1}
+                      </span>
+                      <span style={{ fontFamily: sans, fontSize: 16, color: "var(--text-primary)", lineHeight: 1.55 }}>
+                        {item}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </Reveal>
+            </div>
+
+            <div className="lg:col-span-7">
+              <Reveal delay={0.1}>
+                <Plate
+                  src={`${IMG}/user-stories.png`}
+                  alt="Affinity map of user stories from small business owner interviews."
+                  caption="FIG · 02 / AFFINITY MAP — USER STORIES BY THEME"
+                  tag="RESEARCH"
+                  aspect="16 / 11"
+                  bg={ll.surface}
+                />
               </Reveal>
             </div>
           </div>
 
-          {/* Quote grid */}
+          {/* Voices */}
+          <Reveal>
+            <p style={{ ...mono, fontSize: 11, letterSpacing: "0.22em", color: ll.primary, fontWeight: 700, marginBottom: 14 }}>
+              VOICES · DIRECT QUOTES
+            </p>
+          </Reveal>
           <div style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
+            gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
             gap: "clamp(16px, 1.6vw, 24px)",
           }}>
             {([
-              {
-                num: "V·01",
-                finding: "Mentorship must be industry-specific",
-                quote: "I need someone who's been in my shoes to tell me exactly what works and what doesn't.",
-              },
-              {
-                num: "V·02",
-                finding: "Tools must feel built for them",
-                quote: "There are so many tools, but they feel built for big companies, not me.",
-              },
-              {
-                num: "V·03",
-                finding: "Peer networks are missing infrastructure",
-                quote: "I'm figuring everything out alone. Connecting with other owners would help me avoid mistakes.",
-              },
-              {
-                num: "V·04",
-                finding: "Local context outperforms generic advice",
-                quote: "I need insights relevant to my city and industry, not generic business tips.",
-              },
+              { num: "V·01", finding: "Mentorship must be industry-specific", quote: "I need someone who's been in my shoes to tell me exactly what works and what doesn't." },
+              { num: "V·02", finding: "Tools must feel built for them",       quote: "There are so many tools, but they feel built for big companies, not me." },
+              { num: "V·03", finding: "Peer networks are missing",             quote: "I'm figuring everything out alone. Connecting with other owners would help me avoid mistakes." },
+              { num: "V·04", finding: "Local context beats generic",           quote: "I need insights relevant to my city and industry, not generic business tips." },
             ] as { num: string; finding: string; quote: string }[]).map((v, i) => (
-              <Reveal key={i} delay={0.05 + i * 0.06}>
+              <Reveal key={i} delay={0.05 + i * 0.05}>
                 <figure style={{
                   background: "var(--bg-elevated)",
                   border: `1px solid ${ll.subtle}`,
-                  padding: "30px 28px 26px",
+                  padding: "26px 24px 22px",
                   height: "100%",
                   display: "flex", flexDirection: "column",
-                  gap: 18,
+                  gap: 16, margin: 0,
                 }}>
-                  <div style={{
-                    display: "flex", alignItems: "center", justifyContent: "space-between",
-                  }}>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                     <span style={{ ...mono, fontSize: 11, color: ll.primary, letterSpacing: "0.22em", fontWeight: 700 }}>
                       {v.num}
                     </span>
                     <span aria-hidden style={{
-                      fontFamily: serif, fontStyle: "italic", fontSize: 40,
+                      fontFamily: serif, fontStyle: "italic", fontSize: 36,
                       color: ll.primary, opacity: 0.25, lineHeight: 0.6,
-                    }}>
-                      "
-                    </span>
+                    }}>"</span>
                   </div>
-
                   <blockquote style={{
                     fontFamily: serif, fontStyle: "italic",
-                    fontSize: "clamp(19px, 1.5vw, 22px)",
+                    fontSize: "clamp(17px, 1.3vw, 20px)",
                     color: "var(--text-primary)",
                     lineHeight: 1.45, letterSpacing: "-0.01em",
                     margin: 0, flex: 1,
                   }}>
                     {v.quote}
                   </blockquote>
-
                   <figcaption style={{
-                    ...mono, fontSize: 10, letterSpacing: "0.2em",
+                    ...mono, fontSize: 9, letterSpacing: "0.2em",
                     color: ll.muted, fontWeight: 700,
-                    paddingTop: 16, borderTop: `1px solid ${ll.subtle}`,
+                    paddingTop: 14, borderTop: `1px solid ${ll.subtle}`,
                   }}>
                     FINDING · {v.finding}
                   </figcaption>
@@ -950,16 +1125,259 @@ export default function LocalLiftCase() {
         </div>
       </section>
 
-      {/* ─── 04 DESIGN MOVES ───────────────────────────────────── */}
-      <section className="blueprint-grid-subtle" style={{ padding: SECTION_PAD }}>
+      {/* ─── 04 PERSONAS ────────────────────────────────────────── */}
+      <section style={{
+        padding: SECTION_PAD,
+        background: ll.surface,
+        borderTop: "1px solid var(--border)",
+        borderBottom: "1px solid var(--border)",
+      }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
-          <SectionHeader num="04" title="Design moves" phase="Response" />
+          <SectionHeader num="04" title="Personas" phase="Synthesis" />
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mb-14 items-end">
             <div className="lg:col-span-8">
               <Reveal>
                 <h2 style={{ ...t.h2Section, marginBottom: 18 }}>
-                  Three iterations, three
+                  Two owners,
+                  <span style={{ fontStyle: "italic", color: ll.primary }}> one shared platform.</span>
+                </h2>
+              </Reveal>
+              <Reveal delay={0.1}>
+                <p style={{ ...t.bodyLg, maxWidth: 640 }}>
+                  The early-stage owner and the growth-oriented owner showed up in every interview — same
+                  platform needs, different stakes. Every feature had to answer to both without favoring either.
+                </p>
+              </Reveal>
+            </div>
+            <div className="lg:col-span-4">
+              <Reveal delay={0.16}>
+                <p style={{
+                  ...mono, fontSize: 11, letterSpacing: "0.22em",
+                  color: ll.muted, fontWeight: 700, textAlign: "right",
+                }}>
+                  02 ARCHETYPES<br />PRESSURE-TESTED ACROSS EVERY SCREEN
+                </p>
+              </Reveal>
+            </div>
+          </div>
+
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
+            gap: "clamp(16px, 1.6vw, 24px)",
+          }}>
+            {[
+              { src: `${IMG}/persona-1.png`, tag: "P·01", caption: "PERSONA · EARLY-STAGE OWNER" },
+              { src: `${IMG}/persona-2.png`, tag: "P·02", caption: "PERSONA · GROWTH-ORIENTED OWNER" },
+            ].map((p, i) => (
+              <Reveal key={i} delay={0.08 + i * 0.08}>
+                <Plate
+                  src={p.src}
+                  alt={p.caption}
+                  caption={p.caption}
+                  tag={p.tag}
+                  aspect="4 / 5"
+                  fit="contain"
+                  bg="#FFFFFF"
+                />
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ─── 05 SOLUTION ────────────────────────────────────────── */}
+      <section className="blueprint-grid-subtle" style={{ padding: SECTION_PAD }}>
+        <div className="max-w-7xl mx-auto px-6 md:px-10">
+          <SectionHeader num="05" title="Solution" phase="Design" />
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mb-14 items-end">
+            <div className="lg:col-span-8">
+              <Reveal>
+                <h2 style={{ ...t.h2Section, marginBottom: 18 }}>
+                  One flow.
+                  <span style={{ fontStyle: "italic", color: ll.primary }}> Four features that keep answering to it.</span>
+                </h2>
+              </Reveal>
+              <Reveal delay={0.1}>
+                <p style={{ ...t.bodyLg, maxWidth: 640 }}>
+                  The platform is built around a single spine: onboard, match, learn, apply. Four feature areas
+                  — digital presence, mentorship, community, tools — each earn their place only if they serve
+                  that spine end-to-end.
+                </p>
+              </Reveal>
+            </div>
+          </div>
+
+          {/* User flow */}
+          <Reveal>
+            <div style={{ marginBottom: "clamp(48px, 5vw, 72px)" }}>
+              <Plate
+                src={`${IMG}/user-flow.png`}
+                alt="Primary user flow from onboarding through mentorship match."
+                caption="FIG · 03 / PRIMARY USER FLOW — ONBOARD → MATCH → LEARN → APPLY"
+                tag="FLOW"
+                aspect="16 / 8"
+                bg="#FFFFFF"
+              />
+            </div>
+          </Reveal>
+
+          {/* Four feature cards */}
+          <Reveal>
+            <p style={{ ...mono, fontSize: 11, letterSpacing: "0.22em", color: ll.primary, fontWeight: 700, marginBottom: 18 }}>
+              04 CORE FEATURES
+            </p>
+          </Reveal>
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+            gap: "clamp(16px, 1.6vw, 24px)",
+          }}>
+            {([
+              {
+                num: "F·01",
+                img: `${IMG}/feature-digital-presence.png`,
+                title: "Digital presence",
+                body: "A guided setup for the owner's first real storefront online — name, hours, story, pricing — scoped to the platform they'll actually use next.",
+              },
+              {
+                num: "F·02",
+                img: `${IMG}/feature-mentorship.png`,
+                title: "Mentorship",
+                body: "Industry-matched mentors who've built a comparable business. Sessions, feedback, and a shared space for small questions that aren't worth a call.",
+              },
+              {
+                num: "F·03",
+                img: `${IMG}/feature-community.png`,
+                title: "Community",
+                body: "Owner-to-owner threads by industry and city. Peer wins, peer warnings, and a place to check assumptions before spending money on them.",
+              },
+              {
+                num: "F·04",
+                img: `${IMG}/feature-tools.png`,
+                title: "Tools",
+                body: "A curated kit — invoicing, scheduling, analytics — pre-picked for the owner's stage, so the first tool they touch is the right one.",
+              },
+            ] as { num: string; img: string; title: string; body: string }[]).map((f, i) => (
+              <Reveal key={i} delay={0.05 + i * 0.05}>
+                <div style={{
+                  background: "var(--bg-elevated)",
+                  border: `1px solid ${ll.subtle}`,
+                  display: "flex", flexDirection: "column",
+                  height: "100%",
+                }}>
+                  <div style={{
+                    background: ll.surface,
+                    aspectRatio: "4 / 3",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    overflow: "hidden",
+                    borderBottom: `1px solid ${ll.subtle}`,
+                  }}>
+                    <img
+                      src={f.img}
+                      alt={`${f.title} feature card`}
+                      loading="lazy"
+                      style={{ width: "100%", height: "100%", objectFit: "contain", padding: "clamp(14px, 2vw, 20px)" }}
+                    />
+                  </div>
+                  <div style={{ padding: "22px 22px 20px", display: "flex", flexDirection: "column", gap: 12 }}>
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                      <span style={{ ...mono, fontSize: 11, color: ll.primary, letterSpacing: "0.22em", fontWeight: 700 }}>
+                        {f.num}
+                      </span>
+                    </div>
+                    <h3 style={{
+                      fontFamily: serif, fontWeight: 700,
+                      fontSize: "clamp(20px, 1.7vw, 24px)",
+                      color: "var(--text-primary)",
+                      letterSpacing: "-0.02em", lineHeight: 1.2,
+                    }}>
+                      {f.title}
+                    </h3>
+                    <p style={{ ...t.bodySm, fontSize: 15, lineHeight: 1.6 }}>
+                      {f.body}
+                    </p>
+                  </div>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+
+          {/* Hi-fi screen sampler */}
+          <div style={{ marginTop: "clamp(56px, 6vw, 88px)" }}>
+            <Reveal>
+              <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 22, flexWrap: "wrap", gap: 10 }}>
+                <p style={{ ...mono, fontSize: 11, letterSpacing: "0.22em", color: ll.primary, fontWeight: 700 }}>
+                  HI-FI · SELECTED SCREENS
+                </p>
+                <p style={{ ...mono, fontSize: 10, letterSpacing: "0.2em", color: ll.muted, fontWeight: 700 }}>
+                  SET · 06
+                </p>
+              </div>
+            </Reveal>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+                gap: "clamp(12px, 1.4vw, 20px)",
+              }}
+            >
+              {[
+                { src: `${IMG}/hifi-splash.png`,     label: "Splash" },
+                { src: `${IMG}/hifi-onboarding.png`, label: "Onboarding" },
+                { src: `${IMG}/hifi-explore.png`,    label: "Explore" },
+                { src: `${IMG}/hifi-search.png`,     label: "Search" },
+                { src: `${IMG}/hifi-community.png`,  label: "Community" },
+                { src: `${IMG}/hifi-session.png`,    label: "Mentor session" },
+              ].map((s, i) => (
+                <Reveal key={i} delay={0.04 + i * 0.04}>
+                  <figure style={{ margin: 0 }}>
+                    <div style={{
+                      aspectRatio: "9 / 18",
+                      background: ll.surface,
+                      border: `1px solid ${ll.subtle}`,
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      overflow: "hidden",
+                    }}>
+                      <img
+                        src={s.src}
+                        alt={`LocalLift ${s.label} screen`}
+                        loading="lazy"
+                        style={{ width: "100%", height: "100%", objectFit: "contain" }}
+                      />
+                    </div>
+                    <figcaption style={{
+                      ...mono, fontSize: 9, letterSpacing: "0.2em",
+                      color: ll.muted, fontWeight: 700,
+                      marginTop: 10, textAlign: "center",
+                    }}>
+                      {s.label.toUpperCase()}
+                    </figcaption>
+                  </figure>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── 06 ITERATIONS ────────────────────────────────────── */}
+      <section style={{
+        padding: SECTION_PAD,
+        background: ll.surface,
+        borderTop: "1px solid var(--border)",
+        borderBottom: "1px solid var(--border)",
+      }}>
+        <div className="max-w-7xl mx-auto px-6 md:px-10">
+          <SectionHeader num="06" title="Iterations" phase="Usability rounds" />
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mb-14 items-end">
+            <div className="lg:col-span-8">
+              <Reveal>
+                <h2 style={{ ...t.h2Section, marginBottom: 18 }}>
+                  Three rounds, three
                   <span style={{ fontStyle: "italic", color: ll.primary }}> targeted changes.</span>
                 </h2>
               </Reveal>
@@ -976,76 +1394,77 @@ export default function LocalLiftCase() {
                   ...mono, fontSize: 11, letterSpacing: "0.22em",
                   color: ll.muted, fontWeight: 700, textAlign: "right",
                 }}>
-                  03 MOVES<br />THREE ROUNDS
+                  03 MOVES<br />BEFORE · AFTER
                 </p>
               </Reveal>
             </div>
           </div>
 
-          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "clamp(28px, 3vw, 44px)" }}>
             {([
               {
                 num: "01",
                 icon: Layout,
                 friction: "Dense cards slowed scanning",
                 move: "Reduced card hierarchy from five fields to three; separated primary action from metadata.",
-                principle: "Visual hierarchy · Information density",
+                principle: "Visual hierarchy",
                 result: "20% faster information absorption",
+                img: `${IMG}/improvement-card-design.png`,
+                tag: "ITER · 01",
               },
               {
                 num: "02",
-                icon: Compass,
+                icon: Path,
                 friction: "Users unsure where they were in a task",
                 move: "Added a persistent progress bar across onboarding and mentor-match flows, with explicit step counts.",
-                principle: "Feedback · Visibility of system status",
+                principle: "Visibility of status",
                 result: "20% less reported confusion",
+                img: `${IMG}/improvement-progress-bar.png`,
+                tag: "ITER · 02",
               },
               {
                 num: "03",
                 icon: MagnifyingGlass,
                 friction: "Generic search buried the local answer",
                 move: "Restructured search around industry + city as first-class filters, with recency and proximity as signals.",
-                principle: "Mental models · Recognition over recall",
+                principle: "Recognition over recall",
                 result: "40% faster time-to-relevant-result",
+                img: `${IMG}/improvement-search-filter.png`,
+                tag: "ITER · 03",
               },
-            ] as { num: string; icon: Icon; friction: string; move: string; principle: string; result: string }[]).map((m, i) => {
+            ] as { num: string; icon: Icon; friction: string; move: string; principle: string; result: string; img: string; tag: string }[]).map((m, i) => {
               const I = m.icon;
               return (
-                <Reveal key={i} delay={0.05 + i * 0.06}>
-                  <motion.div
-                    whileHover={{ x: 2 }}
-                    transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                <Reveal key={i} delay={0.05 + i * 0.05}>
+                  <div
+                    className="iteration-card"
                     style={{
                       background: "var(--bg-elevated)",
                       border: `1px solid ${ll.subtle}`,
                       display: "grid",
-                      gridTemplateColumns: "auto 1fr",
-                      gap: "clamp(20px, 2.5vw, 40px)",
-                      padding: "clamp(24px, 2.4vw, 36px)",
-                      alignItems: "center",
+                      gridTemplateColumns: "minmax(280px, 1fr) minmax(0, 1.3fr)",
+                      gap: 0,
+                      alignItems: "stretch",
+                      overflow: "hidden",
                     }}
                   >
-                    {/* Left: number + icon */}
+                    {/* LEFT — narrative */}
                     <div style={{
-                      display: "flex", flexDirection: "column",
-                      alignItems: "center", justifyContent: "center",
-                      gap: 14,
-                      padding: "8px 20px 8px 0",
+                      padding: "clamp(28px, 3vw, 40px)",
+                      display: "flex", flexDirection: "column", gap: 16,
                       borderRight: `1px solid ${ll.subtle}`,
-                      minWidth: 100,
                     }}>
-                      <span style={{
-                        fontFamily: serif, fontWeight: 700,
-                        fontSize: 52, color: ll.primary,
-                        letterSpacing: "-0.04em", lineHeight: 1,
-                      }}>
-                        {m.num}
-                      </span>
-                      <I size={24} color={ll.primary} weight="regular" />
-                    </div>
+                      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                        <span style={{
+                          fontFamily: serif, fontWeight: 700,
+                          fontSize: 52, color: ll.primary,
+                          letterSpacing: "-0.04em", lineHeight: 1,
+                        }}>
+                          {m.num}
+                        </span>
+                        <I size={24} color={ll.primary} weight="regular" />
+                      </div>
 
-                    {/* Right: content */}
-                    <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
                       <div>
                         <p style={{ ...mono, fontSize: 10, color: ll.muted, letterSpacing: "0.22em", fontWeight: 700, marginBottom: 6 }}>
                           FRICTION
@@ -1059,43 +1478,79 @@ export default function LocalLiftCase() {
                           {m.friction}
                         </p>
                       </div>
+
                       <div style={{ borderTop: `1px solid ${ll.subtle}`, paddingTop: 14 }}>
                         <p style={{ ...mono, fontSize: 10, color: ll.muted, letterSpacing: "0.22em", fontWeight: 700, marginBottom: 6 }}>
                           MOVE
                         </p>
-                        <p style={{ ...t.bodySm, fontSize: 16, lineHeight: 1.65 }}>
+                        <p style={{ ...t.bodySm, fontSize: 15, lineHeight: 1.65 }}>
                           {m.move}
                         </p>
                       </div>
-                      <div style={{
-                        display: "flex", flexWrap: "wrap", alignItems: "center",
-                        gap: 14, marginTop: 4,
-                      }}>
+
+                      <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 12, marginTop: 2 }}>
                         <span style={{
                           ...mono, fontSize: 10, letterSpacing: "0.22em",
                           color: ll.primary, fontWeight: 700,
-                          padding: "6px 12px", border: `1px solid ${ll.primary}`,
+                          padding: "5px 10px", border: `1px solid ${ll.primary}`,
                         }}>
                           {m.principle}
                         </span>
                         <span style={{
                           fontFamily: serif, fontStyle: "italic", fontWeight: 700,
-                          fontSize: 18, color: ll.primary,
+                          fontSize: 17, color: ll.primary,
                           letterSpacing: "-0.01em",
                         }}>
                           → {m.result}
                         </span>
                       </div>
                     </div>
-                  </motion.div>
+
+                    {/* RIGHT — before/after image */}
+                    <div style={{
+                      background: ll.surface,
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      padding: "clamp(20px, 2.4vw, 32px)",
+                      position: "relative",
+                      minHeight: 320,
+                    }}>
+                      <span style={{
+                        position: "absolute", top: 14, left: 14,
+                        ...mono, fontSize: 9, color: ll.primary,
+                        letterSpacing: "0.22em", fontWeight: 700,
+                        background: "rgba(255,255,255,0.85)",
+                        padding: "4px 8px",
+                      }}>
+                        {m.tag}
+                      </span>
+                      <img
+                        src={m.img}
+                        alt={`Before and after for ${m.friction}`}
+                        loading="lazy"
+                        style={{ maxWidth: "100%", maxHeight: 420, objectFit: "contain" }}
+                      />
+                    </div>
+                  </div>
                 </Reveal>
               );
             })}
           </div>
+
+          <style>{`
+            @media (max-width: 900px) {
+              .iteration-card {
+                grid-template-columns: minmax(0, 1fr) !important;
+              }
+              .iteration-card > div:first-child {
+                border-right: none !important;
+                border-bottom: 1px solid ${ll.subtle} !important;
+              }
+            }
+          `}</style>
         </div>
       </section>
 
-      {/* ─── 05 OUTCOMES ──────────────────────────────────────── */}
+      {/* ─── 07 OUTCOMES ──────────────────────────────────────── */}
       <section style={{
         padding: SECTION_PAD,
         background: ll.dark,
@@ -1112,7 +1567,7 @@ export default function LocalLiftCase() {
                 ...mono, fontSize: 14, color: "#FFFFFF",
                 letterSpacing: "0.22em", fontWeight: 700,
               }}>
-                05 <span style={{ color: "rgba(255,255,255,0.5)", fontWeight: 400 }}>/ {TOTAL}</span>
+                07 <span style={{ color: "rgba(255,255,255,0.5)", fontWeight: 400 }}>/ {TOTAL}</span>
               </span>
               <span style={{
                 ...mono, fontSize: 14, color: "#FFFFFF",
@@ -1166,7 +1621,7 @@ export default function LocalLiftCase() {
           }}>
             {[
               { stat: 20, suffix: "%", label: "faster information absorption", source: "Usability Round · Cleaner cards", tag: "R·01" },
-              { stat: 20, suffix: "%", label: "less reported confusion", source: "Usability Round · Progress bar", tag: "R·02" },
+              { stat: 20, suffix: "%", label: "less reported confusion",        source: "Usability Round · Progress bar",  tag: "R·02" },
               { stat: 40, suffix: "%", label: "faster time-to-relevant-result", source: "Usability Round · Localised search", tag: "R·03" },
             ].map((s, i) => (
               <Reveal key={i} delay={0.05 + i * 0.05}>
@@ -1218,10 +1673,10 @@ export default function LocalLiftCase() {
         </div>
       </section>
 
-      {/* ─── 06 TAKEAWAYS ────────────────────────────────────── */}
+      {/* ─── 08 REFLECTION ────────────────────────────────────── */}
       <section style={{ padding: SECTION_PAD, background: "var(--bg-primary)" }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
-          <SectionHeader num="06" title="What the work left me with" phase="Reflection" />
+          <SectionHeader num="08" title="Reflection" phase="Takeaways" />
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mb-14 items-end">
             <div className="lg:col-span-9">
@@ -1250,7 +1705,6 @@ export default function LocalLiftCase() {
             </div>
           </div>
 
-          {/* Takeaways list */}
           <div style={{
             display: "grid",
             gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
