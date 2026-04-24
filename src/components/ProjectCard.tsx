@@ -415,9 +415,10 @@ function VeriflowComposition({ accent }: { accent: ProjectAccent }) {
   );
 }
 
-/* ── LocalLift: 3-phone fan — mirrors case-study hero proportions ── */
+/* ── LocalLift: 3 phones side-by-side with perspective, outer phones toed-in ── */
 function LocalLiftComposition({ accent }: { accent: ProjectAccent }) {
   const phoneShadow = `drop-shadow(0 16px 28px ${accent.primary}3a) drop-shadow(0 6px 12px rgba(0,0,0,0.16))`;
+  const phoneW = "23%";
 
   return (
     <div
@@ -427,9 +428,11 @@ function LocalLiftComposition({ accent }: { accent: ProjectAccent }) {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
+        gap: "0.5%",
+        perspective: "1600px",
       }}
     >
-      {/* Back-left phone — mentor session, sits behind center */}
+      {/* Left — mentor session, rotated so right side faces viewer */}
       <motion.img
         src="/locallift/hifi/hifi-session.png"
         alt="LocalLift live mentor session"
@@ -437,19 +440,16 @@ function LocalLiftComposition({ accent }: { accent: ProjectAccent }) {
         animate={{ y: [0, -5, 0] }}
         transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
         style={{
-          position: "absolute",
-          left: "50%",
-          top: "50%",
-          width: "26%",
-          transform: "translate(-115%, -50%) scale(0.88)",
-          transformOrigin: "center center",
-          filter: `${phoneShadow} brightness(0.96) saturate(0.92)`,
+          width: phoneW,
+          rotateY: 22,
+          transformOrigin: "right center",
+          filter: `${phoneShadow} brightness(0.97)`,
           zIndex: 1,
           display: "block",
-        }}
+        } as React.CSSProperties}
       />
 
-      {/* Center phone — Explore feed, front-most */}
+      {/* Center — Explore feed, straight on, front-most */}
       <motion.img
         src="/locallift/hifi/hifi-explore.png"
         alt="LocalLift course browse feed"
@@ -457,17 +457,15 @@ function LocalLiftComposition({ accent }: { accent: ProjectAccent }) {
         animate={{ y: [0, -6, 0] }}
         transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
         style={{
-          position: "relative",
-          width: "28%",
+          width: phoneW,
           filter: phoneShadow,
           zIndex: 3,
           display: "block",
-          maxHeight: "96%",
           objectFit: "contain",
         }}
       />
 
-      {/* Back-right phone — founder profile, sits behind center */}
+      {/* Right — founder profile, rotated so left side faces viewer */}
       <motion.img
         src="/locallift/hifi/hifi-profile-founder.png"
         alt="LocalLift founder profile"
@@ -475,16 +473,13 @@ function LocalLiftComposition({ accent }: { accent: ProjectAccent }) {
         animate={{ y: [0, -5, 0] }}
         transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1.4 }}
         style={{
-          position: "absolute",
-          left: "50%",
-          top: "50%",
-          width: "26%",
-          transform: "translate(15%, -50%) scale(0.88)",
-          transformOrigin: "center center",
-          filter: `${phoneShadow} brightness(0.96) saturate(0.92)`,
+          width: phoneW,
+          rotateY: -22,
+          transformOrigin: "left center",
+          filter: `${phoneShadow} brightness(0.97)`,
           zIndex: 1,
           display: "block",
-        }}
+        } as React.CSSProperties}
       />
     </div>
   );
