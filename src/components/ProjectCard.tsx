@@ -429,27 +429,27 @@ function LocalLiftComposition({ accent }: { accent: ProjectAccent }) {
         justifyContent: "center",
       }}
     >
-      {/* Back-left phone — mentor session */}
+      {/* Back-left phone — mentor session, sits behind center */}
       <motion.img
         src="/locallift/hifi/hifi-session.png"
         alt="LocalLift live mentor session"
         loading="lazy"
-        animate={{ y: [0, -6, 0] }}
+        animate={{ y: [0, -5, 0] }}
         transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
         style={{
           position: "absolute",
-          left: "10%",
+          left: "50%",
           top: "50%",
-          width: "22%",
-          transform: "translateY(-50%) rotate(-6deg)",
+          width: "26%",
+          transform: "translate(-115%, -50%) scale(0.88)",
           transformOrigin: "center center",
-          filter: `${phoneShadow} saturate(0.92)`,
+          filter: `${phoneShadow} brightness(0.96) saturate(0.92)`,
           zIndex: 1,
           display: "block",
         }}
       />
 
-      {/* Center phone — Explore feed (most product-iconic) */}
+      {/* Center phone — Explore feed, front-most */}
       <motion.img
         src="/locallift/hifi/hifi-explore.png"
         alt="LocalLift course browse feed"
@@ -458,30 +458,30 @@ function LocalLiftComposition({ accent }: { accent: ProjectAccent }) {
         transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
         style={{
           position: "relative",
-          width: "26%",
+          width: "28%",
           filter: phoneShadow,
           zIndex: 3,
           display: "block",
-          maxHeight: "94%",
+          maxHeight: "96%",
           objectFit: "contain",
         }}
       />
 
-      {/* Back-right phone — founder profile */}
+      {/* Back-right phone — founder profile, sits behind center */}
       <motion.img
         src="/locallift/hifi/hifi-profile-founder.png"
         alt="LocalLift founder profile"
         loading="lazy"
-        animate={{ y: [0, -6, 0] }}
+        animate={{ y: [0, -5, 0] }}
         transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1.4 }}
         style={{
           position: "absolute",
-          right: "10%",
+          left: "50%",
           top: "50%",
-          width: "22%",
-          transform: "translateY(-50%) rotate(6deg)",
+          width: "26%",
+          transform: "translate(15%, -50%) scale(0.88)",
           transformOrigin: "center center",
-          filter: `${phoneShadow} saturate(0.92)`,
+          filter: `${phoneShadow} brightness(0.96) saturate(0.92)`,
           zIndex: 1,
           display: "block",
         }}
