@@ -3,6 +3,13 @@ export interface ResearchHighlight {
   quote: string;
 }
 
+export interface ProjectAccent {
+  primary: string;
+  light: string;
+  dark: string;
+  surface: string;
+}
+
 export interface Project {
   slug: string;
   title: string;
@@ -15,6 +22,7 @@ export interface Project {
   tools: string[];
   tags: string[];
   tagline: string; // for cards
+  discipline: string; // short card eyebrow (e.g. "PRODUCT DESIGN")
   overview: string;
   problem: string;
   problemStats?: string[];
@@ -23,16 +31,71 @@ export interface Project {
   outcome: string;
   keyTakeaways: string[];
   accentHue: string;
-  gradient: string; // for card thumbnail
+  gradient: string; // card thumbnail fallback
+  heroImage: string; // card mockup path (under /public)
+  heroMockupKind: "laptop" | "tablet" | "phone" | "photo"; // framing
+  accent: ProjectAccent; // per-project palette pulled from case-study page
 }
 
 export const projects: Project[] = [
+  {
+    slug: "arko",
+    title: "Arko",
+    subtitle: "Spatial design platform for interior design firms",
+    description: "B2B SaaS consolidating AR space scanning, interior design, and client approval into one platform — eliminating the revision cycles that cost design firms 6–8 hours per project.",
+    tagline: "Spatial design platform · B2B SaaS · Web + iOS",
+    discipline: "PRODUCT DESIGN",
+    year: "2025",
+    role: "Product Designer (End-to-end)",
+    team: "Individual project",
+    duration: "14 weeks",
+    tools: ["Figma", "Framer", "Protopie"],
+    tags: ["PRODUCT DESIGN", "B2B SAAS", "AR / SPATIAL", "WEB + IOS"],
+    accentHue: "130",
+    gradient: "linear-gradient(135deg, #1C2B1C 0%, #243824 50%, #2D4A2D 100%)",
+    heroImage: "/arko/web-1.png",
+    heroMockupKind: "laptop",
+    accent: {
+      primary: "#6E8F4E",
+      light:   "#8BAD6A",
+      dark:    "#4F6B35",
+      surface: "#F0F4E8",
+    },
+    overview: "Interior designers spend hours chasing client approvals over email and WhatsApp that still end in miscommunication. Arko is a B2B SaaS platform that lets design teams scan physical spaces in AR, furnish and finish them digitally, and share interactive walkthroughs with clients for remote review and one-click approval.",
+    problem: "Design firms lose an average of 6–8 hours per project on revision cycles caused by one root problem — clients cannot visualize a space from a floor plan or mood board alone. They say yes in the meeting and change their mind when they see it built. By then, it's expensive.",
+    problemStats: [
+      "6–8 hours lost per project to revision cycles caused by client miscommunication",
+      "Existing tools — AutoCAD exports, PDFs, walkthroughs — are either too technical or too costly to arrange repeatedly",
+      "Clients say yes in the meeting and change their mind when they see it built. By then, it's expensive.",
+    ],
+    process: [
+      "Problem Framing: Mapped the client approval workflow across 5 interior design studios to identify the highest-friction moments",
+      "User Research: Interviewed 8 project leads and 6 clients to understand how each side experiences the approval loop",
+      "Persona Definition: Defined two primary archetypes — the Studio Designer (power user, daily use) and the Client (occasional, non-design-literate)",
+      "Key Insight: Reframed the product from 'better design tool' to 'better communication tool powered by design'",
+      "Information Architecture: Mapped two parallel experience trees — designer web app and client mobile view — to ensure neither compromised the other",
+      "Design System: Built a component library spanning both surfaces before any screens, ensuring consistency across web and iOS",
+      "AR Editor Design: Designed the room editor with canvas-first priority — collapsible panels, progressive disclosure, minimal chrome",
+      "Approval Flow: Designed share modal → client walkthrough → pinned comments → one-tap approval as a single seamless loop",
+      "Empty State Design: Fully designed empty states for dashboard and project detail to guide users to their first action",
+      "Prototype & Review: Built interactive prototypes in Framer and Protopie for stakeholder walkthroughs and design critique",
+    ],
+    outcome: "Arko consolidates three disconnected workflows — space scanning, interior design, and client approval — into one platform. The result is a product that serves two very different users without compromising either experience.",
+    keyTakeaways: [
+      "The best B2B products make the professional look good in front of their client — every Arko decision was made with that lens",
+      "Designing for two radically different users on one platform requires explicit product architecture, not just UI variation",
+      "The approval flow is the product's core value proposition — making it first-class was the right call",
+      "Empty states are onboarding — for B2B tools where adoption depends on the first session, they cannot be an afterthought",
+      "Communication is the hardest UX problem in professional services — and the most valuable one to solve",
+    ],
+  },
   {
     slug: "veriflow",
     title: "Veriflow",
     subtitle: "Specimen chain-of-custody for hospitals",
     description: "An end-to-end specimen tracking platform — a clinic tablet, a pickup flow, a web control tower, and an ambient TV — replacing handwritten logs with verified taps at every handoff.",
     tagline: "Specimen chain-of-custody for hospitals",
+    discipline: "ENTERPRISE · HEALTHCARE",
     year: "2024",
     role: "Product Designer",
     team: "Design + Engineering (Enterprise Healthcare)",
@@ -41,6 +104,14 @@ export const projects: Project[] = [
     tags: ["ENTERPRISE", "HEALTHCARE", "UI DESIGN", "DESIGN SYSTEMS"],
     accentHue: "220",
     gradient: "linear-gradient(135deg, #EFF4FD 0%, #C9DAFA 100%)",
+    heroImage: "/veriflow/dashboard.png",
+    heroMockupKind: "tablet",
+    accent: {
+      primary: "#1E40AF",
+      light:   "#3B82F6",
+      dark:    "#0F2A78",
+      surface: "#EFF4FD",
+    },
     overview: "Veriflow is an enterprise specimen tracking platform used by lab technicians and clinical staff at a major healthcare network. The existing system suffered from ambiguous status indicators, high error rates during specimen handoff, and a UI designed for desktop that was being used on tablets in the field. I led the redesign from discovery to design system.",
     problem: "Lab technicians were experiencing critical specimen mismatches and status confusion — directly impacting patient safety. The legacy system had been built incrementally over 8 years with inconsistent patterns, no design system, and zero mobile consideration despite 70% of usage happening on tablets.",
     problemStats: [
@@ -78,6 +149,7 @@ export const projects: Project[] = [
     subtitle: "A mentorship platform for small business owners",
     description: "A research-led mentorship and digital-tools platform closing the gap between small business owners and the digital economy — 40% faster search, 20% faster information absorption.",
     tagline: "Mentorship platform · Cross-cultural UX research",
+    discipline: "UX RESEARCH · SERVICE DESIGN",
     year: "2024",
     role: "UX Researcher / Designer",
     team: "5 members",
@@ -86,6 +158,14 @@ export const projects: Project[] = [
     tags: ["UX RESEARCH", "SERVICE DESIGN", "SMB", "CROSS-CULTURAL"],
     accentHue: "222",
     gradient: "linear-gradient(135deg, #EDF0F7 0%, #B9C4DC 100%)",
+    heroImage: "/locallift/hifi-explore.png",
+    heroMockupKind: "phone",
+    accent: {
+      primary: "#3B4F7B",
+      light:   "#6577A0",
+      dark:    "#1E2A45",
+      surface: "#EDF0F7",
+    },
     overview: "LocalLift is a mentorship and digital-tools platform for small business owners. It connects them with industry-specific mentors, peer networks, and localised resources — reframing digital adoption as a supported, social act rather than a solo one.",
     problem: "Most SMB-facing platforms are either too technical, too abstract, or too generic to help a specific owner in a specific market make a specific decision. Small business owners need mentorship grounded in their industry and geography, not enterprise software retrofitted for them.",
     problemStats: [
@@ -123,6 +203,7 @@ export const projects: Project[] = [
     subtitle: "Redesigning the most ignored text on a grocery shelf",
     description: "A field study into why consumers misread expiration dates — and a set of label and tool concepts that close the gap between what packaging says and what people understand.",
     tagline: "Mixed-methods UX research on expiration date comprehension",
+    discipline: "UX RESEARCH · FIELD STUDY",
     year: "2023",
     role: "UX Researcher",
     team: "5-person research team",
@@ -131,6 +212,14 @@ export const projects: Project[] = [
     tags: ["UX RESEARCH", "FIELD STUDY", "PACKAGING DESIGN", "CONSUMER"],
     accentHue: "12",
     gradient: "linear-gradient(135deg, #FBEDE6 0%, #E8B5A1 100%)",
+    heroImage: "/shelfie/shopper-aisle.jpg",
+    heroMockupKind: "photo",
+    accent: {
+      primary: "#1F5F5C",
+      light:   "#4A8985",
+      dark:    "#143F3D",
+      surface: "#E8F1EF",
+    },
     overview: "Expiration dates are arguably the most-read line of text in a grocery aisle — and one of the most consistently misread. Shelfie is a 12-week mixed-methods research project investigating why a single line of safety information drives roughly 30% of household food waste and a measurable share of foodborne illness, and what better label systems and consumer tools could look like.",
     problem: "Expiration dates are read by nearly every shopper, yet only ~32% interpret them correctly. Confusing terminology (\"sell by,\" \"use by,\" \"best before\"), random placement, and low-contrast printing turn a safety signal into a guessing game — leading to both unnecessary waste and avoidable illness.",
     problemStats: [
@@ -159,48 +248,6 @@ export const projects: Project[] = [
       "Vulnerable users set the floor — designing for tired eyes and bad lighting raises the floor for everyone",
       "Fixes have to live on both sides of the package — better printing helps the aisle, better tools help the pantry",
       "Behind every \"obvious\" interface decision sits a cognitive principle worth naming — making them explicit makes the case defensible",
-    ],
-  },
-  {
-    slug: "arko",
-    title: "Arko",
-    subtitle: "Spatial design platform for interior design firms",
-    description: "B2B SaaS consolidating AR space scanning, interior design, and client approval into one platform — eliminating the revision cycles that cost design firms 6–8 hours per project.",
-    tagline: "Spatial design platform · B2B SaaS · Web + iOS",
-    year: "2025",
-    role: "Product Designer (End-to-end)",
-    team: "Individual project",
-    duration: "14 weeks",
-    tools: ["Figma", "Framer", "Protopie"],
-    tags: ["PRODUCT DESIGN", "B2B SAAS", "AR / SPATIAL", "WEB + IOS"],
-    accentHue: "130",
-    gradient: "linear-gradient(135deg, #1C2B1C 0%, #243824 50%, #2D4A2D 100%)",
-    overview: "Interior designers spend hours chasing client approvals over email and WhatsApp that still end in miscommunication. Arko is a B2B SaaS platform that lets design teams scan physical spaces in AR, furnish and finish them digitally, and share interactive walkthroughs with clients for remote review and one-click approval.",
-    problem: "Design firms lose an average of 6–8 hours per project on revision cycles caused by one root problem — clients cannot visualize a space from a floor plan or mood board alone. They say yes in the meeting and change their mind when they see it built. By then, it's expensive.",
-    problemStats: [
-      "6–8 hours lost per project to revision cycles caused by client miscommunication",
-      "Existing tools — AutoCAD exports, PDFs, walkthroughs — are either too technical or too costly to arrange repeatedly",
-      "Clients say yes in the meeting and change their mind when they see it built. By then, it's expensive.",
-    ],
-    process: [
-      "Problem Framing: Mapped the client approval workflow across 5 interior design studios to identify the highest-friction moments",
-      "User Research: Interviewed 8 project leads and 6 clients to understand how each side experiences the approval loop",
-      "Persona Definition: Defined two primary archetypes — the Studio Designer (power user, daily use) and the Client (occasional, non-design-literate)",
-      "Key Insight: Reframed the product from 'better design tool' to 'better communication tool powered by design'",
-      "Information Architecture: Mapped two parallel experience trees — designer web app and client mobile view — to ensure neither compromised the other",
-      "Design System: Built a component library spanning both surfaces before any screens, ensuring consistency across web and iOS",
-      "AR Editor Design: Designed the room editor with canvas-first priority — collapsible panels, progressive disclosure, minimal chrome",
-      "Approval Flow: Designed share modal → client walkthrough → pinned comments → one-tap approval as a single seamless loop",
-      "Empty State Design: Fully designed empty states for dashboard and project detail to guide users to their first action",
-      "Prototype & Review: Built interactive prototypes in Framer and Protopie for stakeholder walkthroughs and design critique",
-    ],
-    outcome: "Arko consolidates three disconnected workflows — space scanning, interior design, and client approval — into one platform. The result is a product that serves two very different users without compromising either experience.",
-    keyTakeaways: [
-      "The best B2B products make the professional look good in front of their client — every Arko decision was made with that lens",
-      "Designing for two radically different users on one platform requires explicit product architecture, not just UI variation",
-      "The approval flow is the product's core value proposition — making it first-class was the right call",
-      "Empty states are onboarding — for B2B tools where adoption depends on the first session, they cannot be an afterthought",
-      "Communication is the hardest UX problem in professional services — and the most valuable one to solve",
     ],
   },
 ];
