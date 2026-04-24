@@ -745,7 +745,7 @@ function VoicesPanel({ voices }: { voices: Voice[] }) {
               )}
 
               <p style={{
-                ...mono, fontSize: 11, letterSpacing: "0.22em",
+                ...mono, fontSize: 13, letterSpacing: "0.22em",
                 color: isActive ? sh.primary : sh.muted,
                 fontWeight: 700,
                 margin: 0,
