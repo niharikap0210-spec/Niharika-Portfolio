@@ -4,6 +4,7 @@ import { useState, useCallback } from "react";
 import Nav from "./components/Nav";
 import Footer from "./components/Footer";
 import SplashScreen from "./components/SplashScreen";
+import ScrollManager from "./components/ScrollManager";
 import Home from "./pages/Home";
 import About from "./pages/About";
 import CaseStudy from "./pages/CaseStudy";
@@ -36,6 +37,7 @@ function AnimatedRoutes() {
 function AppShell() {
   return (
     <>
+      <ScrollManager />
       <Nav />
       <main className="min-h-screen" id="main-content">
         <AnimatedRoutes />

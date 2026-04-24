@@ -23,7 +23,7 @@ export default function Home() {
       <HeroSection />
 
       {/* Projects Grid */}
-      <section className="max-w-6xl mx-auto px-6 md:px-10 py-20">
+      <section id="projects" className="max-w-6xl mx-auto px-6 md:px-10 py-20" style={{ scrollMarginTop: 96 }}>
         {/* Section header */}
         <div className="mb-14">
           <div
