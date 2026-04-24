@@ -32,7 +32,8 @@ export interface Project {
   keyTakeaways: string[];
   accentHue: string;
   gradient: string; // card thumbnail fallback
-  heroImage: string; // card mockup path (under /public)
+  heroImage: string; // primary card mockup (first frame / fallback)
+  heroScreens: string[]; // ordered screens to cycle through on the card
   heroMockupKind: "laptop" | "tablet" | "phone" | "photo"; // framing
   accent: ProjectAccent; // per-project palette pulled from case-study page
 }
@@ -54,6 +55,7 @@ export const projects: Project[] = [
     accentHue: "130",
     gradient: "linear-gradient(135deg, #1C2B1C 0%, #243824 50%, #2D4A2D 100%)",
     heroImage: "/arko/web-1.png",
+    heroScreens: ["/arko/web-1.png", "/arko/web-2.png", "/arko/web-3.png", "/arko/web-4.png"],
     heroMockupKind: "laptop",
     accent: {
       primary: "#6E8F4E",
@@ -105,6 +107,12 @@ export const projects: Project[] = [
     accentHue: "220",
     gradient: "linear-gradient(135deg, #EFF4FD 0%, #C9DAFA 100%)",
     heroImage: "/veriflow/dashboard.png",
+    heroScreens: [
+      "/veriflow/dashboard.png",
+      "/veriflow/container-assignment.png",
+      "/veriflow/cooler-assignment.png",
+      "/veriflow/collect-container.png",
+    ],
     heroMockupKind: "tablet",
     accent: {
       primary: "#1E40AF",
@@ -159,6 +167,12 @@ export const projects: Project[] = [
     accentHue: "222",
     gradient: "linear-gradient(135deg, #EDF0F7 0%, #B9C4DC 100%)",
     heroImage: "/locallift/hifi-explore.png",
+    heroScreens: [
+      "/locallift/hifi-explore.png",
+      "/locallift/hifi-community.png",
+      "/locallift/hifi-profile.png",
+      "/locallift/hifi-session.png",
+    ],
     heroMockupKind: "phone",
     accent: {
       primary: "#3B4F7B",
@@ -213,6 +227,12 @@ export const projects: Project[] = [
     accentHue: "12",
     gradient: "linear-gradient(135deg, #FBEDE6 0%, #E8B5A1 100%)",
     heroImage: "/shelfie/shopper-aisle.jpg",
+    heroScreens: [
+      "/shelfie/shopper-aisle.jpg",
+      "/shelfie/shopper-confused.png",
+      "/shelfie/best-before-bag.jpg",
+      "/shelfie/decoding-mfg-code.jpg",
+    ],
     heroMockupKind: "photo",
     accent: {
       primary: "#1F5F5C",

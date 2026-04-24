@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { motion, useInView } from "framer-motion";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Project } from "../data/projects";
 
 interface ProjectCardProps {
@@ -16,6 +16,19 @@ const mono: React.CSSProperties = {
 
 const SPRING = { type: "spring" as const, stiffness: 260, damping: 26, mass: 0.6 };
 const EASE = [0.16, 1, 0.3, 1] as const;
+
+/** Respect reduced-motion preference. */
+function usePrefersReducedMotion() {
+  const [reduced, setReduced] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setReduced(mq.matches);
+    const handler = () => setReduced(mq.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
+  return reduced;
+}
 
 export default function ProjectCard({ project, index }: ProjectCardProps) {
   const ref = useRef<HTMLDivElement>(null);
@@ -57,7 +70,7 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
             borderColor: hovered ? `${accent.primary}55` : "var(--border)",
           }}
         >
-          {/* ── Inset dashed construction border ─────────────────── */}
+          {/* Inset dashed construction border */}
           <div
             aria-hidden
             style={{
@@ -71,12 +84,11 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
             }}
           />
 
-          {/* ── Corner ticks (architectural drawing marks) ───────── */}
+          {/* Corner construction ticks */}
           <CornerTicks hovered={hovered} color={accent.primary} />
 
-          {/* ── Content wrapper (above border) ───────────────────── */}
           <div style={{ position: "relative", zIndex: 2 }}>
-            {/* ── Eyebrow row: index · discipline · year ────────── */}
+            {/* Eyebrow row */}
             <div
               className="flex items-center justify-between"
               style={{ marginBottom: 14, gap: 12 }}
@@ -111,18 +123,12 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
                 {project.discipline}
               </span>
 
-              <span
-                style={{
-                  ...mono,
-                  fontSize: 10,
-                  color: "var(--text-muted)",
-                }}
-              >
+              <span style={{ ...mono, fontSize: 10, color: "var(--text-muted)" }}>
                 {project.year}
               </span>
             </div>
 
-            {/* ── Drafting line ──────────────────────────────────── */}
+            {/* Drafting line */}
             <div
               aria-hidden
               style={{
@@ -132,37 +138,14 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
                 position: "relative",
               }}
             >
-              {/* tick marks */}
-              <span
-                style={{
-                  position: "absolute",
-                  top: -3,
-                  left: 0,
-                  width: 1,
-                  height: 6,
-                  backgroundColor: "var(--construction)",
-                }}
-              />
-              <span
-                style={{
-                  position: "absolute",
-                  top: -3,
-                  right: 0,
-                  width: 1,
-                  height: 6,
-                  backgroundColor: "var(--construction)",
-                }}
-              />
+              <span style={{ position: "absolute", top: -3, left: 0, width: 1, height: 6, backgroundColor: "var(--construction)" }} />
+              <span style={{ position: "absolute", top: -3, right: 0, width: 1, height: 6, backgroundColor: "var(--construction)" }} />
             </div>
 
-            {/* ── Hero mockup stage ──────────────────────────────── */}
-            <MockupStage
-              project={project}
-              hovered={hovered}
-              isPhone={isPhone}
-            />
+            {/* Hero stage with cycling screens */}
+            <MockupStage project={project} hovered={hovered} isPhone={isPhone} />
 
-            {/* ── Title + subtitle ───────────────────────────────── */}
+            {/* Title + subtitle */}
             <div style={{ marginTop: 24 }}>
               <div className="flex items-baseline gap-3 mb-3">
                 <h3
@@ -178,7 +161,6 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
                 >
                   {project.title}
                 </h3>
-                {/* pulse dot in project accent */}
                 <motion.span
                   aria-hidden
                   animate={{ scale: hovered ? [1, 1.25, 1] : 1 }}
@@ -208,11 +190,8 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
                 {project.subtitle}
               </p>
 
-              {/* ── CTA: arrow with line-draw animation ───────── */}
-              <div
-                className="flex items-center justify-between"
-                style={{ marginTop: 8 }}
-              >
+              {/* CTA */}
+              <div className="flex items-center justify-between" style={{ marginTop: 8 }}>
                 <div
                   className="flex items-center"
                   style={{
@@ -225,17 +204,7 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
                   }}
                 >
                   <span>View Case Study</span>
-                  {/* animated line */}
-                  <span
-                    aria-hidden
-                    style={{
-                      position: "relative",
-                      display: "inline-block",
-                      width: 48,
-                      height: 1,
-                      overflow: "hidden",
-                    }}
-                  >
+                  <span aria-hidden style={{ position: "relative", display: "inline-block", width: 48, height: 1, overflow: "hidden" }}>
                     <motion.span
                       initial={false}
                       animate={{ scaleX: hovered ? 1 : 0.25 }}
@@ -266,7 +235,6 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
                   </motion.svg>
                 </div>
 
-                {/* tiny tag preview — minimal */}
                 <div className="hidden sm:flex" style={{ gap: 6 }}>
                   {project.tags.slice(0, 2).map((tag) => (
                     <span
@@ -293,7 +261,11 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
   );
 }
 
-/* ── Mockup stage: blueprint-tinted canvas with hovering mockup ───── */
+/* ══════════════════════════════════════════════════════════════════
+   Mockup stage — auto-cycles through project.heroScreens with
+   architectural progress ticks. Pauses on hover so the viewer can
+   inspect the current frame.
+══════════════════════════════════════════════════════════════════ */
 function MockupStage({
   project,
   hovered,
@@ -303,7 +275,27 @@ function MockupStage({
   hovered: boolean;
   isPhone: boolean;
 }) {
-  const { accent } = project;
+  const { accent, heroScreens } = project;
+  const [active, setActive] = useState(0);
+  const reducedMotion = usePrefersReducedMotion();
+
+  // Auto-cycle every 2.8s. Pauses when hovered (reader wants to look)
+  // or when user prefers reduced motion.
+  useEffect(() => {
+    if (reducedMotion || hovered || heroScreens.length <= 1) return;
+    const id = window.setInterval(() => {
+      setActive((i) => (i + 1) % heroScreens.length);
+    }, 2800);
+    return () => window.clearInterval(id);
+  }, [hovered, heroScreens.length, reducedMotion]);
+
+  // Preload subsequent screens (first frame already in DOM as <img>).
+  useEffect(() => {
+    heroScreens.slice(1).forEach((src) => {
+      const img = new Image();
+      img.src = src;
+    });
+  }, [heroScreens]);
 
   return (
     <div
@@ -316,7 +308,7 @@ function MockupStage({
         border: `0.75px solid ${accent.primary}22`,
       }}
     >
-      {/* Blueprint grid tinted to project accent */}
+      {/* Blueprint grid tinted to accent */}
       <div
         aria-hidden
         style={{
@@ -334,8 +326,12 @@ function MockupStage({
         }}
       />
 
-      {/* Top-left annotation */}
-      <span
+      {/* FIG label */}
+      <motion.span
+        key={active}
+        initial={{ opacity: 0, y: -4 }}
+        animate={{ opacity: 0.65, y: 0 }}
+        transition={{ duration: 0.4, ease: EASE }}
         style={{
           ...mono,
           position: "absolute",
@@ -343,15 +339,14 @@ function MockupStage({
           left: 14,
           fontSize: 8,
           color: accent.dark,
-          opacity: 0.6,
           letterSpacing: "0.18em",
           zIndex: 3,
         }}
       >
-        FIG. {String(project.slug).slice(0, 3).toUpperCase()}-01
-      </span>
+        FIG. {project.slug.slice(0, 3).toUpperCase()}-{String(active + 1).padStart(2, "0")}
+      </motion.span>
 
-      {/* Top-right kind label */}
+      {/* Kind label */}
       <span
         style={{
           ...mono,
@@ -368,12 +363,9 @@ function MockupStage({
         {project.heroMockupKind === "photo" ? "FIELD" : project.heroMockupKind.toUpperCase()}
       </span>
 
-      {/* Mockup image with parallax-ish float */}
+      {/* Mockup frame — screens stacked, crossfaded */}
       <motion.div
-        animate={{
-          scale: hovered ? 1.04 : 1,
-          y: hovered ? -4 : 0,
-        }}
+        animate={{ scale: hovered ? 1.04 : 1, y: hovered ? -4 : 0 }}
         transition={{ type: "spring", stiffness: 180, damping: 22, mass: 0.7 }}
         style={{
           position: "absolute",
@@ -386,26 +378,18 @@ function MockupStage({
         }}
       >
         {isPhone ? (
-          <PhoneFrame src={project.heroImage} accent={accent.primary} alt={project.title} />
+          <PhoneFrame screens={heroScreens} active={active} accent={accent.primary} title={project.title} />
         ) : (
-          <img
-            src={project.heroImage}
-            alt={`${project.title} mockup`}
-            style={{
-              maxWidth: "100%",
-              maxHeight: "100%",
-              width: "auto",
-              height: "auto",
-              objectFit: "contain",
-              borderRadius: 4,
-              boxShadow: `0 10px 30px ${accent.dark}33, 0 2px 6px rgba(0,0,0,0.08)`,
-            }}
-            loading="lazy"
+          <ScreenStack
+            screens={heroScreens}
+            active={active}
+            shadow={`0 10px 30px ${accent.dark}33, 0 2px 6px rgba(0,0,0,0.08)`}
+            alt={project.title}
           />
         )}
       </motion.div>
 
-      {/* Soft bottom vignette */}
+      {/* Bottom vignette */}
       <div
         aria-hidden
         style={{
@@ -417,12 +401,100 @@ function MockupStage({
           pointerEvents: "none",
         }}
       />
+
+      {/* Progress ticks (architectural) */}
+      <ProgressTicks
+        count={heroScreens.length}
+        active={active}
+        color={accent.primary}
+      />
+
+      {/* Frame counter */}
+      <span
+        style={{
+          ...mono,
+          position: "absolute",
+          bottom: 12,
+          right: 14,
+          fontSize: 8,
+          color: accent.dark,
+          opacity: 0.6,
+          letterSpacing: "0.18em",
+          zIndex: 3,
+        }}
+      >
+        {String(active + 1).padStart(2, "0")} / {String(heroScreens.length).padStart(2, "0")}
+      </span>
     </div>
   );
 }
 
-/* ── Minimal phone frame wrapper ───────────────────────────────────── */
-function PhoneFrame({ src, accent, alt }: { src: string; accent: string; alt: string }) {
+/* ── Stacked screen crossfade (non-phone) ──────────────────────────── */
+function ScreenStack({
+  screens,
+  active,
+  shadow,
+  alt,
+}: {
+  screens: string[];
+  active: number;
+  shadow: string;
+  alt: string;
+}) {
+  return (
+    <div
+      style={{
+        position: "relative",
+        width: "100%",
+        height: "100%",
+        maxWidth: "100%",
+        maxHeight: "100%",
+      }}
+    >
+      {screens.map((src, i) => (
+        <motion.img
+          key={src}
+          src={src}
+          alt={i === 0 ? `${alt} mockup` : ""}
+          aria-hidden={i !== active}
+          initial={false}
+          animate={{
+            opacity: i === active ? 1 : 0,
+            scale: i === active ? 1 : 1.02,
+          }}
+          transition={{ duration: 0.7, ease: EASE }}
+          style={{
+            position: "absolute",
+            inset: 0,
+            margin: "auto",
+            maxWidth: "100%",
+            maxHeight: "100%",
+            width: "auto",
+            height: "auto",
+            objectFit: "contain",
+            borderRadius: 4,
+            boxShadow: shadow,
+            pointerEvents: "none",
+          }}
+          loading={i === 0 ? "eager" : "lazy"}
+        />
+      ))}
+    </div>
+  );
+}
+
+/* ── Phone frame with stacked + crossfaded screens ────────────────── */
+function PhoneFrame({
+  screens,
+  active,
+  accent,
+  title,
+}: {
+  screens: string[];
+  active: number;
+  accent: string;
+  title: string;
+}) {
   return (
     <div
       style={{
@@ -435,19 +507,41 @@ function PhoneFrame({ src, accent, alt }: { src: string; accent: string; alt: st
         boxShadow: `0 20px 50px ${accent}33, 0 4px 12px rgba(0,0,0,0.18)`,
       }}
     >
-      <img
-        src={src}
-        alt={alt}
+      <div
         style={{
+          position: "relative",
           width: "100%",
           height: "100%",
-          objectFit: "cover",
           borderRadius: 18,
-          display: "block",
+          overflow: "hidden",
+          backgroundColor: "#000",
         }}
-        loading="lazy"
-      />
-      {/* notch */}
+      >
+        {screens.map((src, i) => (
+          <motion.img
+            key={src}
+            src={src}
+            alt={i === 0 ? `${title} screen` : ""}
+            aria-hidden={i !== active}
+            initial={false}
+            animate={{
+              opacity: i === active ? 1 : 0,
+              y: i === active ? 0 : 12,
+            }}
+            transition={{ duration: 0.7, ease: EASE }}
+            style={{
+              position: "absolute",
+              inset: 0,
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              display: "block",
+            }}
+            loading={i === 0 ? "eager" : "lazy"}
+          />
+        ))}
+      </div>
+      {/* Notch */}
       <span
         aria-hidden
         style={{
@@ -466,7 +560,57 @@ function PhoneFrame({ src, accent, alt }: { src: string; accent: string; alt: st
   );
 }
 
-/* ── Corner construction ticks (fade in on hover) ─────────────────── */
+/* ── Progress ticks ─────────────────────────────────────────────────
+   Minimal row of ticks at the bottom of the stage. Active tick is
+   long + solid in the accent color; inactive ticks are short +
+   muted. Mirrors the drafting-line tick aesthetic.
+────────────────────────────────────────────────────────────────── */
+function ProgressTicks({
+  count,
+  active,
+  color,
+}: {
+  count: number;
+  active: number;
+  color: string;
+}) {
+  return (
+    <div
+      style={{
+        position: "absolute",
+        bottom: 12,
+        left: 14,
+        display: "flex",
+        alignItems: "center",
+        gap: 6,
+        zIndex: 3,
+      }}
+    >
+      {Array.from({ length: count }).map((_, i) => {
+        const isActive = i === active;
+        return (
+          <motion.span
+            key={i}
+            aria-hidden
+            animate={{
+              width: isActive ? 18 : 6,
+              opacity: isActive ? 1 : 0.35,
+            }}
+            transition={{ duration: 0.5, ease: EASE }}
+            style={{
+              height: 2,
+              backgroundColor: isActive ? color : "currentColor",
+              color: color,
+              display: "inline-block",
+            }}
+          />
+        );
+      })}
+    </div>
+  );
+}
+
+/* ── Corner construction ticks ─────────────────────────────────────── */
 function CornerTicks({ hovered, color }: { hovered: boolean; color: string }) {
   const base: React.CSSProperties = {
     position: "absolute",
