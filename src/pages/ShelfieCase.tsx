@@ -77,7 +77,7 @@ const t = {
     color: "var(--text-primary)",
   } as React.CSSProperties,
   bodyLg: {
-    fontFamily: sans, fontSize: "clamp(20px, 1.55vw, 23px)",
+    fontFamily: sans, fontSize: "clamp(18px, 1.4vw, 21px)",
     lineHeight: 1.75, color: "var(--text-secondary)",
   } as React.CSSProperties,
   body: {
@@ -85,7 +85,7 @@ const t = {
     color: "var(--text-secondary)",
   } as React.CSSProperties,
   bodySm: {
-    fontFamily: sans, fontSize: 14.5, lineHeight: 1.7,
+    fontFamily: sans, fontSize: 14, lineHeight: 1.7,
     color: "var(--text-secondary)",
   } as React.CSSProperties,
 };
