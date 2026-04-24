@@ -1482,7 +1482,6 @@ type FailureSpec = {
   title: string;
   body: string;
   time: number;
-  hits: string;
   illus?: React.ReactNode;
   image?: string;
   alt?: string;
@@ -1499,7 +1498,6 @@ function FailureExplorer() {
       title: "Same color as the product.",
       body: "A yellow stamp on yellow oil. Printed, but functionally invisible.",
       time: 8.9,
-      hits: "3 of 25 located it under 5 s",
       illus: <OilBottleIllustration />,
     },
     {
@@ -1507,7 +1505,6 @@ function FailureExplorer() {
       title: "Somewhere on the bag.",
       body: "Loose placement turns every scan into a scavenger hunt.",
       time: 7.6,
-      hits: "11 of 25 flipped the bag",
       illus: <BreadBagIllustration />,
     },
     {
@@ -1515,7 +1512,6 @@ function FailureExplorer() {
       title: "Coded, not communicated.",
       body: "Manufacture codes (\u201Cmfg 213\u201D) demand a decoder ring. Useless at a glance.",
       time: 6.4,
-      hits: "9 of 25 read the wrong number",
       illus: <CodedDateIllustration />,
     },
     {
@@ -1523,7 +1519,6 @@ function FailureExplorer() {
       title: "Smaller than the lot code.",
       body: "3.4 pt on a foil rim. Below the comfortable reading threshold.",
       time: 9.2,
-      hits: "5 of 25 needed it closer",
       illus: <YogurtCupIllustration />,
     },
   ];
@@ -1722,9 +1717,9 @@ function FailureExplorer() {
             >
               <div style={{
                 background: sh.surface,
-                padding: "32px 36px",
-                marginBottom: 20,
-                minHeight: 360,
+                padding: "24px 28px",
+                marginBottom: 16,
+                minHeight: 280,
                 display: "flex", alignItems: "center", justifyContent: "center",
                 position: "relative", overflow: "hidden",
               }}>
@@ -1744,66 +1739,24 @@ function FailureExplorer() {
                     src={current.image}
                     alt={current.alt ?? ""}
                     style={{
-                      maxWidth: "100%", maxHeight: 320,
+                      maxWidth: "100%", maxHeight: 240,
                       objectFit: "contain",
                       mixBlendMode: "multiply",
                     }}
                   />
                 ) : (
-                  <div style={{ width: "100%", maxWidth: 560 }}>
+                  <div style={{ width: "100%", maxWidth: 480 }}>
                     {current.illus}
                   </div>
                 )}
               </div>
 
-              <h3 style={{ ...t.h3Lede, fontSize: 24, marginBottom: 10 }}>
+              <h3 style={{ ...t.h3Lede, fontSize: 22, marginBottom: 8 }}>
                 {current.title}
               </h3>
-              <p style={{ ...t.bodyLg, marginBottom: "auto" }}>
+              <p style={{ ...t.bodyLg, margin: 0 }}>
                 {current.body}
               </p>
-
-              <div style={{
-                display: "grid", gridTemplateColumns: "auto 1fr",
-                gap: 28,
-                marginTop: 22, paddingTop: 16,
-                borderTop: `1px solid ${sh.subtle}`,
-                alignItems: "end",
-              }}>
-                <div>
-                  <p style={{
-                    ...mono, fontSize: 9, color: "var(--text-muted)",
-                    letterSpacing: "0.2em", marginBottom: 4,
-                  }}>
-                    AVG · LOCATE TIME
-                  </p>
-                  <p style={{
-                    fontFamily: serif, fontWeight: 700,
-                    fontSize: 32, color: sh.primary,
-                    letterSpacing: "-0.02em", lineHeight: 1, margin: 0,
-                  }}>
-                    {current.time.toFixed(1)}
-                    <span style={{
-                      fontSize: 17, color: sh.muted, marginLeft: 4,
-                      fontWeight: 400,
-                    }}>s</span>
-                  </p>
-                </div>
-                <div>
-                  <p style={{
-                    ...mono, fontSize: 9, color: "var(--text-muted)",
-                    letterSpacing: "0.2em", marginBottom: 4,
-                  }}>
-                    OBSERVATION
-                  </p>
-                  <p style={{
-                    ...t.bodySm, fontSize: 14,
-                    color: "var(--text-primary)", margin: 0, lineHeight: 1.45,
-                  }}>
-                    {current.hits}
-                  </p>
-                </div>
-              </div>
             </motion.div>
           </AnimatePresence>
         </div>
