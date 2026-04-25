@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { ArrowLeftIcon as ArrowLeft, ArrowRightIcon as ArrowRight } from "@phosphor-icons/react";
 import SectionMarker from "../components/SectionMarker";
 import DrawingSheetBorder from "../components/DrawingSheetBorder";
+import ArchitectureCard from "../components/ArchitectureCard";
 
 const mono: React.CSSProperties = {
   fontFamily: "'Space Mono', monospace",
@@ -12,47 +13,37 @@ const mono: React.CSSProperties = {
 const serif = "'Playfair Display', Georgia, serif";
 const sans  = "'Inter', system-ui, sans-serif";
 
-const containerVariants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.08 } },
-};
-const itemVariants = {
-  hidden: { opacity: 0, y: 18 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.55, ease: [0.25, 1, 0.4, 1] as const } },
-};
 
-const projects = [
+const archProjects = [
   {
-    id: "01",
-    title: "Transit Hub, Indore",
-    year: "2023",
-    type: "Public Infrastructure",
-    desc: "A multi-modal transit interchange designed around pedestrian flow and legibility at scale. The program resolved a 4-level grade change across a 1.2-hectare site.",
-    tags: ["Infrastructure", "Urban Design", "Public Space"],
+    title: "Public Realm: Beyond the Streets",
+    subtitle: "Redefining public spaces, reviving community life",
+    type: "Architectural Thesis · Urban Design",
+    year: "2024",
+    tags: ["URBAN DESIGN", "ARCH PLANNING"],
+    href: "https://uxniharika.framer.website/projects/thesis",
+    accent: {
+      primary: "#9B7A52",
+      light: "#B8966D",
+      dark: "#6B5238",
+      surface: "#F6EEE5",
+    },
+    visualKind: "thesis" as const,
   },
   {
-    id: "02",
-    title: "Community Centre, Bhopal",
-    year: "2022",
-    type: "Civic Architecture",
-    desc: "A flexible community anchor built around a central courtyard. The section plays with natural light to eliminate the need for artificial lighting during daytime hours.",
-    tags: ["Civic", "Passive Design", "Community"],
-  },
-  {
-    id: "03",
-    title: "Rural Housing Prototype",
-    year: "2022",
-    type: "Housing",
-    desc: "A low-cost, self-buildable housing typology for semi-arid climates. Developed in collaboration with a local NGO; prototyped at 1:1 in Rajasthan.",
-    tags: ["Housing", "Self-Build", "Climate"],
-  },
-  {
-    id: "04",
-    title: "Adaptive Reuse, Old Mill",
-    year: "2021",
-    type: "Heritage + Reuse",
-    desc: "Conversion of a decommissioned textile mill into a mixed-use cultural campus. Structural expression and material memory were central to the design argument.",
-    tags: ["Heritage", "Adaptive Reuse", "Mixed-Use"],
+    title: "Rendered Realities",
+    subtitle: "3D modeling and visualization in architecture",
+    type: "Architectural Visualization",
+    year: "2024",
+    tags: ["3D MODELLING", "RENDERING"],
+    href: "https://uxniharika.framer.website/projects/renders",
+    accent: {
+      primary: "#4E7396",
+      light: "#6B90B3",
+      dark: "#2E4F6A",
+      surface: "#EBF1F8",
+    },
+    visualKind: "renders" as const,
   },
 ];
 
@@ -180,122 +171,44 @@ export default function Architecture() {
         style={{ padding: "clamp(64px, 9vw, 112px) 0" }}
         className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10"
       >
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-48px" }}
+        {/* Section header */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "baseline",
+            justifyContent: "space-between",
+            borderTop: "1px solid var(--border)",
+            paddingTop: 14,
+            marginBottom: "clamp(40px, 5vw, 64px)",
+            flexWrap: "wrap",
+            gap: 12,
+          }}
         >
-          <motion.div
-            variants={itemVariants}
-            style={{
-              display: "flex",
-              alignItems: "baseline",
-              justifyContent: "space-between",
-              borderTop: "1px solid var(--border)",
-              paddingTop: 14,
-              marginBottom: "clamp(40px, 5vw, 64px)",
-              flexWrap: "wrap",
-              gap: 12,
-            }}
-          >
-            <span style={{ ...mono, fontSize: 11, color: "var(--accent)", letterSpacing: "0.22em", fontWeight: 700 }}>
-              Selected Work
-            </span>
-            <span style={{ ...mono, fontSize: 11, color: "var(--text-muted)", letterSpacing: "0.16em" }}>
-              2019 – 2024
-            </span>
-          </motion.div>
+          <span style={{ ...mono, fontSize: 11, color: "var(--accent)", letterSpacing: "0.22em", fontWeight: 700 }}>
+            Selected Work
+          </span>
+          <span style={{ ...mono, fontSize: 11, color: "var(--text-muted)", letterSpacing: "0.16em" }}>
+            2019 – 2024
+          </span>
+        </div>
 
-          <div style={{ display: "flex", flexDirection: "column", gap: "clamp(0px, 0vw, 0px)" }}>
-            {projects.map((p, i) => (
-              <motion.div
-                key={p.id}
-                variants={itemVariants}
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "48px 1fr auto",
-                  gap: "clamp(16px, 3vw, 40px)",
-                  alignItems: "start",
-                  padding: "clamp(24px, 3vw, 36px) 0",
-                  borderBottom: "1px solid var(--border)",
-                  borderTop: i === 0 ? "none" : undefined,
-                }}
-              >
-                {/* Number */}
-                <div style={{ ...mono, fontSize: 11, color: "var(--text-muted)", letterSpacing: "0.22em", paddingTop: 4 }}>
-                  {p.id}
-                </div>
-
-                {/* Content */}
-                <div>
-                  <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 10, flexWrap: "wrap" }}>
-                    <h2
-                      style={{
-                        fontFamily: serif,
-                        fontWeight: 700,
-                        fontSize: "clamp(20px, 2.4vw, 28px)",
-                        letterSpacing: "-0.02em",
-                        lineHeight: 1.15,
-                        color: "var(--text-primary)",
-                        margin: 0,
-                      }}
-                    >
-                      {p.title}
-                    </h2>
-                    <span style={{ ...mono, fontSize: 9, color: "var(--text-muted)", letterSpacing: "0.2em" }}>
-                      {p.type}
-                    </span>
-                  </div>
-                  <p
-                    style={{
-                      fontFamily: sans,
-                      fontSize: 18,
-                      color: "var(--text-secondary)",
-                      lineHeight: 1.75,
-                      margin: 0,
-                      maxWidth: 540,
-                    }}
-                  >
-                    {p.desc}
-                  </p>
-                  <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 16 }}>
-                    {p.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        style={{
-                          ...mono,
-                          fontSize: 8,
-                          letterSpacing: "0.18em",
-                          color: "var(--text-muted)",
-                          border: "0.75px solid var(--border)",
-                          padding: "4px 10px",
-                        }}
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Year */}
-                <div
-                  style={{
-                    ...mono,
-                    fontSize: 11,
-                    color: "var(--text-muted)",
-                    letterSpacing: "0.16em",
-                    paddingTop: 4,
-                    textAlign: "right",
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  {p.year}
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
+        {/* 2-col card grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {archProjects.map((project, i) => (
+            <ArchitectureCard
+              key={project.title}
+              index={i}
+              title={project.title}
+              subtitle={project.subtitle}
+              type={project.type}
+              year={project.year}
+              tags={project.tags}
+              href={project.href}
+              accent={project.accent}
+              visualKind={project.visualKind}
+            />
+          ))}
+        </div>
       </section>
 
       {/* ── Note strip ───────────────────────────────────────────── */}
