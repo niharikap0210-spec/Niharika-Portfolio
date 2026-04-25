@@ -720,6 +720,7 @@ function WebGallery({
 ══════════════════════════════════════════════════════════════════ */
 function UserTabs() {
   const [tab, setTab] = useState<0 | 1>(0);
+  const isMobile = useIsMobile();
   const tabs = [
     {
       label: "Primary",
@@ -761,7 +762,7 @@ function UserTabs() {
             </span>
             <span style={{ display: "inline-flex", alignItems: "center", gap: 12 }}>
               <x.Icon size={22} color={tab === i ? arko.primary : "var(--text-secondary)"} weight={tab === i ? "duotone" : "regular"} />
-              <span style={{ fontFamily: serif, fontWeight: 700, fontSize: 24, color: tab === i ? "var(--text-primary)" : "var(--text-secondary)", letterSpacing: "-0.02em" }}>
+              <span style={{ fontFamily: serif, fontWeight: 700, fontSize: isMobile ? 19 : 24, color: tab === i ? "var(--text-primary)" : "var(--text-secondary)", letterSpacing: "-0.02em" }}>
                 {x.heading}
               </span>
             </span>
@@ -1013,6 +1014,7 @@ function ResearchLedger() {
 ══════════════════════════════════════════════════════════════════ */
 function DecisionStepper() {
   const [active, setActive] = useState(0);
+  const isMobile = useIsMobile();
   const decisions = [
     {
       num: "01", short: "Two separate\nexperiences",
@@ -1120,7 +1122,7 @@ function DecisionStepper() {
                 <span
                   style={{
                     fontFamily: serif,
-                    fontSize: 22,
+                    fontSize: isMobile ? 17 : 22,
                     fontWeight: 700,
                     color: isActive ? "var(--text-primary)" : "var(--text-secondary)",
                     letterSpacing: "-0.015em",
