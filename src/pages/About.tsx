@@ -1167,13 +1167,62 @@ function Toolbox() {
   );
 }
 
-/* ─── Off-Duty — chips with reveal ──────────────────────────────── */
+/* ─── Off-Duty — interest panels ────────────────────────────────── */
 const loves = [
-  { icon: ForkKnifeIcon, word: "spice", note: "the hotter the better" },
-  { icon: MusicNotesIcon, word: "dance", note: "movement is medicine" },
-  { icon: AirplaneIcon, word: "travel", note: "for the street food, mostly" },
-  { icon: PencilSimpleLineIcon, word: "sketches", note: "plans I'll never build" },
+  {
+    icon: ForkKnifeIcon,
+    word: "Spice",
+    label: "Cuisine",
+    note: "the hotter the better",
+    num: "01",
+  },
+  {
+    icon: MusicNotesIcon,
+    word: "Dance",
+    label: "Movement",
+    note: "movement is medicine",
+    num: "02",
+  },
+  {
+    icon: AirplaneIcon,
+    word: "Travel",
+    label: "Wander",
+    note: "for the street food, mostly",
+    num: "03",
+  },
+  {
+    icon: PencilSimpleLineIcon,
+    word: "Sketches",
+    label: "Making",
+    note: "plans I'll never build",
+    num: "04",
+  },
 ];
+
+/* corner tick helper */
+function Tick({ top, right, bottom, left }: { top?: number; right?: number; bottom?: number; left?: number }) {
+  const isTop = top !== undefined;
+  const isLeft = left !== undefined;
+  return (
+    <span
+      aria-hidden
+      style={{
+        position: "absolute",
+        top: isTop ? top : undefined,
+        bottom: !isTop ? bottom : undefined,
+        left: isLeft ? left : undefined,
+        right: !isLeft ? right : undefined,
+        width: 8,
+        height: 8,
+        borderTop: isTop ? "0.75px solid var(--construction)" : "none",
+        borderBottom: !isTop ? "0.75px solid var(--construction)" : "none",
+        borderLeft: isLeft ? "0.75px solid var(--construction)" : "none",
+        borderRight: !isLeft ? "0.75px solid var(--construction)" : "none",
+        pointerEvents: "none",
+      }}
+    />
+  );
+}
 
 function OffDuty() {
   const [active, setActive] = useState<number | null>(null);
@@ -1197,74 +1246,129 @@ function OffDuty() {
           italic="chasing something"
         />
 
-        <div className="flex flex-wrap items-center gap-x-2 gap-y-3 mt-2">
+        {/* Panel grid */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-0"
+          style={{ borderTop: "0.75px solid var(--border)", marginTop: 8 }}
+        >
           {loves.map((l, i) => {
             const Icon = l.icon;
             const isActive = active === i;
             return (
-              <motion.button
+              <motion.div
                 key={l.word}
-                type="button"
-                onMouseEnter={() => setActive(i)}
-                onMouseLeave={() => setActive(null)}
-                onFocus={() => setActive(i)}
-                onBlur={() => setActive(null)}
-                initial={{ opacity: 0, y: 10 }}
+                initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-40px" }}
-                transition={{ duration: 0.45, delay: i * 0.07 }}
-                className="inline-flex items-center gap-2.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+                transition={{ duration: 0.5, delay: i * 0.08 }}
+                onMouseEnter={() => setActive(i)}
+                onMouseLeave={() => setActive(null)}
                 style={{
-                  padding: "10px 18px 12px",
-                  border: "0.75px solid",
-                  borderColor: isActive ? "var(--accent)" : "var(--border)",
-                  background: isActive ? "var(--accent-subtle)" : "var(--bg-elevated)",
+                  position: "relative",
+                  padding: "28px 24px 32px",
+                  borderRight: i < loves.length - 1 ? "0.75px solid var(--border)" : "none",
+                  overflow: "hidden",
                   cursor: "default",
-                  borderRadius: 999,
-                  transitionProperty: "border-color, background-color, transform",
-                  transitionDuration: "200ms",
-                  transform: isActive ? "translateY(-2px) rotate(-1deg)" : "translateY(0)",
+                  minHeight: 220,
+                  background: isActive ? "var(--accent-subtle)" : "transparent",
+                  transitionProperty: "background-color",
+                  transitionDuration: "240ms",
                 }}
               >
-                <Icon
-                  size={16}
-                  weight={isActive ? "bold" : "regular"}
-                  color={isActive ? "var(--accent)" : "var(--text-secondary)"}
-                />
+                {/* Corner ticks */}
+                <Tick top={10} left={10} />
+                <Tick top={10} right={10} />
+                <Tick bottom={10} left={10} />
+                <Tick bottom={10} right={10} />
+
+                {/* Ghost background icon */}
+                <div
+                  aria-hidden
+                  style={{
+                    position: "absolute",
+                    bottom: -10,
+                    right: -10,
+                    opacity: isActive ? 0.13 : 0.06,
+                    transitionProperty: "opacity, transform",
+                    transitionDuration: "300ms",
+                    transform: isActive ? "scale(1.06) rotate(-4deg)" : "scale(1) rotate(0deg)",
+                    pointerEvents: "none",
+                  }}
+                >
+                  <Icon size={130} weight="thin" color="var(--accent)" />
+                </div>
+
+                {/* Number annotation */}
                 <span
+                  style={{
+                    ...mono,
+                    fontSize: 9,
+                    color: "var(--text-muted)",
+                    letterSpacing: "0.22em",
+                    opacity: 0.6,
+                    display: "block",
+                    marginBottom: 32,
+                  }}
+                >
+                  {l.num}
+                </span>
+
+                {/* Category label */}
+                <span
+                  style={{
+                    ...mono,
+                    fontSize: 9,
+                    color: isActive ? "var(--accent)" : "var(--text-muted)",
+                    letterSpacing: "0.18em",
+                    display: "block",
+                    marginBottom: 8,
+                    transitionProperty: "color",
+                    transitionDuration: "200ms",
+                  }}
+                >
+                  {l.label}
+                </span>
+
+                {/* Word */}
+                <h3
                   style={{
                     fontFamily: serif,
                     fontStyle: "italic",
-                    fontWeight: 600,
-                    fontSize: 22,
-                    letterSpacing: "-0.01em",
+                    fontWeight: 700,
+                    fontSize: "clamp(26px, 2.8vw, 36px)",
+                    letterSpacing: "-0.02em",
                     color: "var(--text-primary)",
-                    lineHeight: 1,
+                    lineHeight: 1.05,
+                    margin: 0,
                   }}
                 >
                   {l.word}
-                </span>
-              </motion.button>
+                </h3>
+
+                {/* Note — reveals on hover */}
+                <AnimatePresence>
+                  {isActive && (
+                    <motion.span
+                      key="note"
+                      initial={{ opacity: 0, y: 6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 4 }}
+                      transition={{ duration: 0.22 }}
+                      style={{
+                        ...caveat,
+                        fontSize: 18,
+                        color: "var(--accent)",
+                        display: "block",
+                        marginTop: 10,
+                        lineHeight: 1.3,
+                      }}
+                    >
+                      ↗ {l.note}
+                    </motion.span>
+                  )}
+                </AnimatePresence>
+              </motion.div>
             );
           })}
-        </div>
-
-        <div style={{ marginTop: 20, minHeight: 28 }}>
-          <motion.span
-            key={active ?? "default"}
-            initial={{ opacity: 0, y: 4 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
-            style={{
-              ...caveat,
-              fontSize: 22,
-              color: "var(--text-secondary)",
-              opacity: 0.75,
-              display: "inline-block",
-            }}
-          >
-            {active !== null ? `↗ ${loves[active].note}` : "hover any word ✦"}
-          </motion.span>
         </div>
       </div>
     </section>
