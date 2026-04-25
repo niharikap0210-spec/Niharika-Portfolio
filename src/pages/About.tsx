@@ -723,18 +723,18 @@ function MyApproach() {
 /* ─── Experience — vertical list ────────────────────────────────── */
 const stops = [
   {
-    role: "Product Designer",
-    company: "Mercor",
-    period: "2025 – Now",
-    blurb:
-      "AI-driven flows for the talent marketplace, connecting candidates and companies through smart matching and review.",
-  },
-  {
     role: "UX/UI Designer",
     company: "PyCube",
     period: "2025 – Now",
     blurb:
       "Healthcare specimen-tracking suite, end-to-end. Reduced lab handoff errors and shipped a clinician-trusted dashboard.",
+  },
+  {
+    role: "Product Designer",
+    company: "Mercor",
+    period: "2025 – Now",
+    blurb:
+      "AI-driven flows for the talent marketplace, connecting candidates and companies through smart matching and review.",
   },
   {
     role: "HCI Org Lead",
