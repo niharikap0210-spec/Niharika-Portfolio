@@ -968,7 +968,7 @@ function LaptopSpread({
       alignItems: "center",
       direction: reverse ? "rtl" : "ltr",
     }}>
-      <div style={{ direction: "ltr", position: "relative" }}>
+      <div className="laptop-spread-img" style={{ direction: "ltr", position: "relative" }}>
         <div aria-hidden style={{
           position: "absolute", inset: "-6% -4%",
           background: `radial-gradient(60% 60% at 50% 50%, ${vf.light} 0%, ${vf.primary} 45%, rgba(30,64,175,0) 75%)`,
@@ -996,6 +996,7 @@ function LaptopSpread({
       <style>{`
         @media (max-width: 900px) {
           .laptop-spread { grid-template-columns: minmax(0, 1fr) !important; direction: ltr !important; }
+          .laptop-spread-img { padding: 0 clamp(12px, 5vw, 32px); }
         }
       `}</style>
     </div>
@@ -1382,6 +1383,7 @@ function HeroMockups() {
 
       {/* Tablet, overlaps bottom-right, larger to feel proportionate to the laptop */}
       <motion.div
+        className="vf-hero-tablet"
         style={{
           position: "absolute",
           right: "-5%", bottom: "-18%",
@@ -1404,6 +1406,12 @@ function HeroMockups() {
           <TabletFrame src="/veriflow/start-scanning.png" alt="Veriflow clinic tablet" />
         </motion.div>
       </motion.div>
+      <style>{`
+        @media (max-width: 767px) {
+          .vf-hero-section { height: auto !important; min-height: calc(100svh - 56px); overflow: visible !important; padding-bottom: 28px; }
+          .vf-hero-tablet { bottom: -4% !important; right: 0% !important; }
+        }
+      `}</style>
     </motion.div>
   );
 }
@@ -1667,7 +1675,7 @@ export default function VeriflowCase() {
       {/* ══════════════════════════════════════════════════════════════
           00 · HERO: laptop (admin web) + tablet overlay
       ══════════════════════════════════════════════════════════════ */}
-      <section className="blueprint-grid" style={{
+      <section className="blueprint-grid vf-hero-section" style={{
         position: "relative",
         height: "calc(100vh - 56px)",
         minHeight: 640,
