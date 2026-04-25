@@ -560,7 +560,7 @@ function WebGallery({
               <span
                 style={{
                   ...mono,
-                  fontSize: 13,
+                  fontSize: isMobile ? 10 : 13,
                   color: isActive ? arko.primary : "var(--text-muted)",
                   letterSpacing: "0.2em",
                   fontWeight: 600,
@@ -581,7 +581,7 @@ function WebGallery({
                   style={{
                     fontFamily: serif,
                     fontWeight: 700,
-                    fontSize: isMobile ? 14 : 20,
+                    fontSize: isMobile ? 18 : 20,
                     lineHeight: 1.2,
                     letterSpacing: "-0.015em",
                     color: isActive ? "var(--text-primary)" : "var(--text-secondary)",
