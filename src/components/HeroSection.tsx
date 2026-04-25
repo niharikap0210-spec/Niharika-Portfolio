@@ -587,10 +587,10 @@ export default function HeroSection() {
                   fontSize: 9,
                   color: "var(--text-secondary)",
                   letterSpacing: "0.18em",
-                  border: "0.75px solid rgba(181,146,76,0.22)",
+                  border: "1px solid rgba(107,107,107,0.3)",
                   borderRadius: 20,
                   padding: "6px 14px",
-                  backgroundColor: "rgba(181,146,76,0.06)",
+                  backgroundColor: "var(--bg-elevated)",
                 }}
               >
                 {tag}
