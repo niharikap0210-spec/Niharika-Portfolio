@@ -873,7 +873,7 @@ const educations = [
   },
   {
     degree: "B.Arch. Architecture",
-    school: "Padmashree Inst. of Architecture",
+    school: "Priyadarshini Inst. of Architecture and Design Studies",
     period: "2018 – 2023",
     note: "where it started ✿",
     abbr: "B.Arch",
