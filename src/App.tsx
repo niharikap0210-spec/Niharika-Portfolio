@@ -13,6 +13,7 @@ import VeriflowCase from "./pages/VeriflowCase";
 import ShelfieCase from "./pages/ShelfieCase";
 import LocalLiftCase from "./pages/LocalLiftCase";
 import Resume from "./pages/Resume";
+import Architecture from "./pages/Architecture";
 import NotFound from "./pages/NotFound";
 
 function AnimatedRoutes() {
@@ -28,6 +29,7 @@ function AnimatedRoutes() {
         <Route path="/work/locallift" element={<LocalLiftCase />} />
         <Route path="/work/:slug" element={<CaseStudy />} />
         <Route path="/resume" element={<Resume />} />
+        <Route path="/architecture" element={<Architecture />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </AnimatePresence>

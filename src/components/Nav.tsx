@@ -1,7 +1,8 @@
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion";
 import { useState, useEffect, useRef } from "react";
-import { List, X } from "@phosphor-icons/react";
+import { createPortal } from "react-dom";
+import { List, X, CaretDown } from "@phosphor-icons/react";
 
 /* ─── Types ──────────────────────────────────────────────────────── */
 interface NavItem {
@@ -20,10 +21,16 @@ const navItems: NavItem[] = [
   { label: "LinkedIn", href: "https://linkedin.com/in/niharika-pundlik", external: true },
 ];
 
+/* Work sub-items */
+const workSubItems = [
+  { label: "Product Design", href: "/#projects",    desc: "Case studies" },
+  { label: "Architecture",   href: "/architecture", desc: "Buildings & space" },
+];
+
 /* ─── Color tokens ───────────────────────────────────────────────── */
-const C_DEFAULT = "#6B6B6B";  // text-secondary
-const C_ACTIVE  = "#1A1A1A";  // text-primary
-const C_HOVER   = "#B5924C";  // warm gold accent
+const C_DEFAULT = "#6B6B6B";
+const C_ACTIVE  = "#1A1A1A";
+const C_HOVER   = "#B5924C";
 
 /* ─── Scroll thresholds ─────────────────────────────────────────── */
 const COLLAPSE_AT  = 150;
@@ -65,12 +72,125 @@ const menuIconVar = {
   },
 };
 
+const dropdownVariants = {
+  hidden: { opacity: 0, y: -8, scale: 0.97 },
+  visible: {
+    opacity: 1, y: 0, scale: 1,
+    transition: { duration: 0.18, ease: [0.25, 1, 0.4, 1] },
+  },
+  exit: {
+    opacity: 0, y: -6, scale: 0.97,
+    transition: { duration: 0.14, ease: [0.4, 0, 1, 1] },
+  },
+};
+
+/* ─── Work dropdown portal ───────────────────────────────────────── */
+function WorkDropdown({
+  pos,
+  onEnter,
+  onLeave,
+  onSelect,
+  activeHref,
+}: {
+  pos: { x: number; y: number };
+  onEnter: () => void;
+  onLeave: () => void;
+  onSelect: () => void;
+  activeHref: string;
+}) {
+  const [hoveredItem, setHoveredItem] = useState<string | null>(null);
+
+  return createPortal(
+    <motion.div
+      variants={dropdownVariants}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+      onMouseEnter={onEnter}
+      onMouseLeave={onLeave}
+      style={{
+        position: "fixed",
+        left: pos.x,
+        top: pos.y,
+        transform: "translateX(-50%)",
+        zIndex: 9999,
+        backgroundColor: "rgba(250,250,250,0.97)",
+        backdropFilter: "blur(20px)",
+        WebkitBackdropFilter: "blur(20px)",
+        border: "1px solid #E5E5E5",
+        borderRadius: 12,
+        boxShadow: "0 2px 8px rgba(0,0,0,0.04), 0 12px 40px rgba(0,0,0,0.08)",
+        padding: 6,
+        minWidth: 172,
+      }}
+    >
+      {workSubItems.map((sub) => {
+        const isActive = activeHref === sub.href;
+        const isHov = hoveredItem === sub.label;
+        return (
+          <Link
+            key={sub.label}
+            to={sub.href}
+            onClick={onSelect}
+            onMouseEnter={() => setHoveredItem(sub.label)}
+            onMouseLeave={() => setHoveredItem(null)}
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 2,
+              padding: "9px 14px",
+              borderRadius: 8,
+              textDecoration: "none",
+              backgroundColor: isHov ? "rgba(181,146,76,0.06)" : "transparent",
+              transitionProperty: "background-color",
+              transitionDuration: "150ms",
+            }}
+          >
+            <span
+              style={{
+                fontFamily: "'Inter', system-ui, sans-serif",
+                fontSize: 13,
+                fontWeight: isActive ? 500 : 400,
+                color: isActive ? C_ACTIVE : isHov ? C_HOVER : C_DEFAULT,
+                letterSpacing: "0.01em",
+                transitionProperty: "color",
+                transitionDuration: "150ms",
+              }}
+            >
+              {sub.label}
+            </span>
+            <span
+              style={{
+                fontFamily: "'Space Mono', monospace",
+                fontSize: 9,
+                letterSpacing: "0.14em",
+                textTransform: "uppercase",
+                color: isHov ? "rgba(181,146,76,0.7)" : "#9A9A9A",
+                transitionProperty: "color",
+                transitionDuration: "150ms",
+              }}
+            >
+              {sub.desc}
+            </span>
+          </Link>
+        );
+      })}
+    </motion.div>,
+    document.body
+  );
+}
+
 /* ─── Component ──────────────────────────────────────────────────── */
 export default function Nav() {
   const { pathname, hash } = useLocation();
   const [isExpanded, setExpanded] = useState(true);
   const [menuOpen,   setMenuOpen] = useState(false);
   const [hovered,    setHovered]  = useState<string | null>(null);
+  const [workOpen,   setWorkOpen] = useState(false);
+  const [mobileWorkOpen, setMobileWorkOpen] = useState(false);
+  const [dropdownPos, setDropdownPos] = useState({ x: 0, y: 0 });
+  const workRef      = useRef<HTMLLIElement>(null);
+  const leaveTimer   = useRef<ReturnType<typeof setTimeout>>();
 
   /* ── Scroll collapse / expand ── */
   const { scrollY } = useScroll();
@@ -88,18 +208,36 @@ export default function Nav() {
     lastY.current = latest;
   });
 
-  useEffect(() => { setMenuOpen(false); }, [pathname, hash]);
+  useEffect(() => { setMenuOpen(false); setMobileWorkOpen(false); }, [pathname, hash]);
   useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
   }, [menuOpen]);
+
+  /* ── Work dropdown handlers ── */
+  const handleWorkEnter = () => {
+    if (workRef.current) {
+      const rect = workRef.current.getBoundingClientRect();
+      setDropdownPos({ x: rect.left + rect.width / 2, y: rect.bottom + 10 });
+    }
+    clearTimeout(leaveTimer.current);
+    setWorkOpen(true);
+  };
+
+  const handleWorkLeave = () => {
+    leaveTimer.current = setTimeout(() => setWorkOpen(false), 130);
+  };
 
   /* ── Helpers ── */
   const isActive = (item: NavItem) => {
     if (item.external) return false;
     if (item.label === "Home") return false;
     if (item.label === "Work") {
-      return pathname.startsWith("/work/") || (pathname === "/" && hash === "#projects");
+      return (
+        pathname.startsWith("/work/") ||
+        pathname === "/architecture" ||
+        (pathname === "/" && hash === "#projects")
+      );
     }
     return pathname === item.href;
   };
@@ -127,6 +265,12 @@ export default function Nav() {
     transitionDuration: "200ms",
     transitionTimingFunction: "cubic-bezier(0.25, 1, 0.4, 1)",
   };
+
+  const activeHref = pathname === "/" && hash === "#projects"
+    ? "/#projects"
+    : pathname === "/architecture"
+    ? "/architecture"
+    : "";
 
   /* ───────────────────────────────────────────────────────────────── */
   return (
@@ -219,10 +363,44 @@ export default function Nav() {
                 const color   = linkColor(item);
                 const weight  = linkWeight(item);
                 const IconComp = item.icon;
+                const isWork  = item.label === "Work";
 
                 return (
-                  <motion.li key={item.label} variants={itemVar}>
-                    {item.external ? (
+                  <motion.li
+                    key={item.label}
+                    variants={itemVar}
+                    ref={isWork ? workRef : undefined}
+                    style={{ position: "relative" }}
+                    onMouseEnter={isWork ? handleWorkEnter : () => setHovered(item.label)}
+                    onMouseLeave={isWork ? handleWorkLeave : () => setHovered(null)}
+                  >
+                    {isWork ? (
+                      /* Work: button that opens dropdown */
+                      <button
+                        onClick={(e) => { e.stopPropagation(); handleWorkEnter(); }}
+                        aria-haspopup="true"
+                        aria-expanded={workOpen}
+                        style={{
+                          ...linkBase,
+                          color,
+                          fontWeight: weight,
+                          background: "none",
+                          border: "none",
+                          cursor: "pointer",
+                          gap: 4,
+                        }}
+                        className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded"
+                      >
+                        {item.label}
+                        <motion.span
+                          animate={{ rotate: workOpen ? 180 : 0 }}
+                          transition={{ duration: 0.2, ease: [0.25, 1, 0.4, 1] }}
+                          style={{ display: "flex", alignItems: "center" }}
+                        >
+                          <CaretDown size={10} weight="bold" color={color} />
+                        </motion.span>
+                      </button>
+                    ) : item.external ? (
                       <a
                         href={item.href}
                         target="_blank"
@@ -272,6 +450,20 @@ export default function Nav() {
           </motion.nav>
         </motion.div>
       </div>
+
+      {/* ── Work dropdown portal ──────────────────────────────────── */}
+      <AnimatePresence>
+        {workOpen && (
+          <WorkDropdown
+            key="work-dropdown"
+            pos={dropdownPos}
+            onEnter={() => { clearTimeout(leaveTimer.current); setWorkOpen(true); }}
+            onLeave={handleWorkLeave}
+            onSelect={() => setWorkOpen(false)}
+            activeHref={activeHref}
+          />
+        )}
+      </AnimatePresence>
 
       {/* ── Mobile: full-width header ─────────────────────────────── */}
       <motion.header
@@ -341,8 +533,10 @@ export default function Nav() {
 
             <nav className="flex flex-col items-center justify-center flex-1 gap-8">
               {navItems.map((item, i) => {
-                const active = isActive(item);
+                const active  = isActive(item);
                 const IconComp = item.icon;
+                const isWork  = item.label === "Work";
+
                 return (
                   <motion.div
                     key={item.label}
@@ -350,7 +544,70 @@ export default function Nav() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.05 * (i + 1), duration: 0.5, ease: [0.25, 1, 0.4, 1] }}
                   >
-                    {item.external ? (
+                    {isWork ? (
+                      /* Work: expandable with sub-items */
+                      <div className="flex flex-col items-center gap-4">
+                        <button
+                          onClick={() => setMobileWorkOpen((o) => !o)}
+                          style={{
+                            fontFamily: "'Playfair Display', Georgia, serif",
+                            fontSize: 36,
+                            fontWeight: 700,
+                            color: active ? C_ACTIVE : C_DEFAULT,
+                            textDecoration: "none",
+                            letterSpacing: "-0.02em",
+                            background: "none",
+                            border: "none",
+                            cursor: "pointer",
+                            display: "inline-flex",
+                            alignItems: "center",
+                            gap: 10,
+                          }}
+                        >
+                          Work
+                          <motion.span
+                            animate={{ rotate: mobileWorkOpen ? 180 : 0 }}
+                            transition={{ duration: 0.25, ease: [0.25, 1, 0.4, 1] }}
+                            style={{ display: "flex", alignItems: "center", marginTop: 4 }}
+                          >
+                            <CaretDown size={22} weight="bold" color={active ? C_ACTIVE : C_DEFAULT} />
+                          </motion.span>
+                        </button>
+                        <AnimatePresence>
+                          {mobileWorkOpen && (
+                            <motion.div
+                              initial={{ opacity: 0, height: 0 }}
+                              animate={{ opacity: 1, height: "auto" }}
+                              exit={{ opacity: 0, height: 0 }}
+                              transition={{ duration: 0.28, ease: [0.25, 1, 0.4, 1] }}
+                              style={{ overflow: "hidden" }}
+                              className="flex flex-col items-center gap-3"
+                            >
+                              {workSubItems.map((sub) => (
+                                <Link
+                                  key={sub.label}
+                                  to={sub.href}
+                                  style={{
+                                    fontFamily: "'Inter', system-ui, sans-serif",
+                                    fontSize: 18,
+                                    fontWeight: 400,
+                                    color: pathname === sub.href || (sub.href === "/#projects" && pathname === "/" && hash === "#projects") ? C_ACTIVE : C_DEFAULT,
+                                    textDecoration: "none",
+                                    letterSpacing: "0.01em",
+                                    transitionProperty: "color",
+                                    transitionDuration: "150ms",
+                                  }}
+                                  onMouseEnter={(e) => (e.currentTarget.style.color = C_HOVER)}
+                                  onMouseLeave={(e) => (e.currentTarget.style.color = C_DEFAULT)}
+                                >
+                                  {sub.label}
+                                </Link>
+                              ))}
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                    ) : item.external ? (
                       <a
                         href={item.href}
                         target="_blank"
