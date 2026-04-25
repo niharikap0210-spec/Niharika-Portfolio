@@ -1,16 +1,14 @@
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { useRef, useState } from "react";
 import {
-  CoffeeIcon,
   MusicNotesIcon,
   AirplaneIcon,
   PencilSimpleLineIcon,
   ForkKnifeIcon,
-  ArrowRightIcon,
-  ArrowUpRightIcon,
   MapPinIcon,
 } from "@phosphor-icons/react";
 import HandDrawnSketch from "../components/HandDrawnSketch";
+import ConnectSection from "../components/ConnectSection";
 
 const mono: React.CSSProperties = {
   fontFamily: "'Space Mono', monospace",
@@ -1102,147 +1100,6 @@ function OffDuty() {
   );
 }
 
-/* ─── Connect — invitation ──────────────────────────────────────── */
-function Connect() {
-  return (
-    <section
-      id="connect"
-      className="relative"
-      style={{
-        padding: "clamp(72px, 9vw, 120px) 0",
-        scrollMarginTop: 96,
-        borderTop: "0.75px solid var(--border)",
-      }}
-    >
-      <div
-        aria-hidden
-        className="hidden md:block absolute"
-        style={{ bottom: 30, right: "8%", opacity: 0.3, pointerEvents: "none" }}
-      >
-        <HandDrawnSketch type="commentBubble" width={90} height={64} />
-      </div>
-
-      <div className="max-w-6xl mx-auto px-6 md:px-10">
-        <SectionHeader
-          num="07"
-          label="Connect"
-          title="Let's build"
-          italic="something"
-        />
-
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-40px" }}
-          transition={{ duration: 0.55, delay: 0.1 }}
-        >
-          <p
-            style={{
-              fontFamily: sans,
-              fontSize: 20,
-              color: "var(--text-secondary)",
-              lineHeight: 1.75,
-              maxWidth: "52ch",
-              marginBottom: 28,
-            }}
-          >
-            If you're working on something thoughtful (AI, healthcare, consumer, or
-            anything in between), I'd love to hear about it. Coffee chats welcome.
-          </p>
-
-          <div className="flex flex-wrap gap-3">
-            <a
-              href="https://drive.google.com/file/d/1WbopauZ0xwmOnLNuEb1XZX5TmzxQCA6K/view?usp=sharing"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
-              style={{
-                ...mono,
-                fontSize: 10,
-                color: "var(--bg-elevated)",
-                backgroundColor: "var(--text-primary)",
-                padding: "13px 24px",
-                textDecoration: "none",
-                transitionProperty: "background-color, transform",
-                transitionDuration: "180ms",
-              }}
-              onMouseEnter={(e) => {
-                const el = e.currentTarget as HTMLElement;
-                el.style.backgroundColor = "var(--accent)";
-                el.style.transform = "translateY(-2px)";
-              }}
-              onMouseLeave={(e) => {
-                const el = e.currentTarget as HTMLElement;
-                el.style.backgroundColor = "var(--text-primary)";
-                el.style.transform = "translateY(0)";
-              }}
-            >
-              Resume
-              <ArrowRightIcon size={11} weight="bold" />
-            </a>
-            <a
-              href="https://www.linkedin.com/in/niharika-pundlik-63a9a1288/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
-              style={{
-                ...mono,
-                fontSize: 10,
-                color: "var(--text-primary)",
-                border: "0.75px solid var(--text-primary)",
-                padding: "13px 24px",
-                textDecoration: "none",
-                transitionProperty: "color, border-color, transform",
-                transitionDuration: "180ms",
-              }}
-              onMouseEnter={(e) => {
-                const el = e.currentTarget as HTMLElement;
-                el.style.color = "var(--accent)";
-                el.style.borderColor = "var(--accent)";
-                el.style.transform = "translateY(-2px)";
-              }}
-              onMouseLeave={(e) => {
-                const el = e.currentTarget as HTMLElement;
-                el.style.color = "var(--text-primary)";
-                el.style.borderColor = "var(--text-primary)";
-                el.style.transform = "translateY(0)";
-              }}
-            >
-              LinkedIn
-              <ArrowUpRightIcon size={11} weight="bold" />
-            </a>
-            <a
-              href="mailto:niharikap0210@gmail.com"
-              className="inline-flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
-              style={{
-                ...mono,
-                fontSize: 10,
-                color: "var(--text-secondary)",
-                padding: "13px 24px",
-                textDecoration: "none",
-                transitionProperty: "color, transform",
-                transitionDuration: "180ms",
-              }}
-              onMouseEnter={(e) => {
-                const el = e.currentTarget as HTMLElement;
-                el.style.color = "var(--accent)";
-                el.style.transform = "translateY(-2px)";
-              }}
-              onMouseLeave={(e) => {
-                const el = e.currentTarget as HTMLElement;
-                el.style.color = "var(--text-secondary)";
-                el.style.transform = "translateY(0)";
-              }}
-            >
-              <CoffeeIcon size={14} weight="regular" />
-              Email
-            </a>
-          </div>
-        </motion.div>
-      </div>
-    </section>
-  );
-}
 
 /* ─── Page ──────────────────────────────────────────────────────── */
 export default function About() {
@@ -1259,7 +1116,7 @@ export default function About() {
       <MyApproach />
       <Experience />
       <OffDuty />
-      <Connect />
+      <ConnectSection />
     </motion.div>
   );
 }
