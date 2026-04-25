@@ -1,4 +1,4 @@
-import { motion, useInView } from "framer-motion";
+import { motion, useInView, AnimatePresence } from "framer-motion";
 import { useRef, useState } from "react";
 import {
   CoffeeIcon,
@@ -498,141 +498,45 @@ function MyStory() {
   );
 }
 
-/* ─── My Approach — card grid ────────────────────────────────────── */
+/* ─── My Approach — accordion rows ──────────────────────────────── */
 const principles = [
   {
     num: "01",
     title: "Research before pixels",
+    tag: "watch first",
     body: "Every flow starts with a real human problem. If I can't name the user, the pain, and the moment, I'm not ready to draw.",
   },
   {
     num: "02",
     title: "Quiet over clever",
+    tag: "remove, don't add",
     body: "The best UI is the one nobody notices. I'd rather solve a problem invisibly than show off a pattern.",
   },
   {
     num: "03",
     title: "Add a little spice",
+    tag: "delight is data",
     body: "Joy is a function, not a flourish. A small surprise (a soft motion, an honest empty state) turns a tool into a memory.",
   },
   {
     num: "04",
     title: "Measure twice, cut once",
+    tag: "the brief is sacred",
     body: "Architectural rigor on every decision. I sweat the gutters, the type scale, the dead pixels at 11pm, because details compound.",
   },
   {
     num: "05",
     title: "Build in plain sight",
+    tag: "rough draft wins",
     body: "Prototype rough, share early, ship the smallest honest thing. Feedback loops beat pitch decks.",
   },
 ];
 
-function PrincipleCard({
-  p,
-  i,
-  wide = false,
-}: {
-  p: (typeof principles)[0];
-  i: number;
-  wide?: boolean;
-}) {
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-40px" });
-
-  return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 16 }}
-      animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
-      transition={{ duration: 0.55, delay: i * 0.07, ease: [0.16, 1, 0.3, 1] }}
-      className="group relative"
-      style={{
-        backgroundColor: "var(--bg-elevated)",
-        border: "0.75px solid var(--border)",
-        padding: "clamp(24px, 3vw, 36px)",
-        transitionProperty: "border-color, transform, box-shadow",
-        transitionDuration: "220ms",
-        gridColumn: wide ? "1 / -1" : undefined,
-      }}
-      onMouseEnter={(e) => {
-        const el = e.currentTarget as HTMLElement;
-        el.style.borderColor = "var(--accent)";
-        el.style.transform = "translateY(-3px)";
-        el.style.boxShadow = "0 8px 24px rgba(0,0,0,0.07), 0 2px 6px rgba(0,0,0,0.04)";
-      }}
-      onMouseLeave={(e) => {
-        const el = e.currentTarget as HTMLElement;
-        el.style.borderColor = "var(--border)";
-        el.style.transform = "translateY(0)";
-        el.style.boxShadow = "none";
-      }}
-    >
-      {/* Corner tick — top left */}
-      <span
-        aria-hidden
-        style={{
-          position: "absolute",
-          top: 8,
-          left: 8,
-          width: 6,
-          height: 6,
-          border: "0.75px solid var(--construction)",
-        }}
-      />
-
-      {/* Large decorative number */}
-      <span
-        style={{
-          fontFamily: serif,
-          fontStyle: "italic",
-          fontWeight: 700,
-          fontSize: "clamp(48px, 5vw, 64px)",
-          lineHeight: 1,
-          color: "var(--accent)",
-          opacity: 0.18,
-          display: "block",
-          letterSpacing: "-0.04em",
-          marginBottom: 20,
-          transitionProperty: "opacity",
-          transitionDuration: "220ms",
-          userSelect: "none",
-        }}
-        className="group-hover:!opacity-35"
-      >
-        {p.num}
-      </span>
-
-      <h3
-        style={{
-          fontFamily: serif,
-          fontWeight: 700,
-          fontSize: "clamp(20px, 2vw, 24px)",
-          letterSpacing: "-0.02em",
-          lineHeight: 1.25,
-          color: "var(--text-primary)",
-          marginBottom: 14,
-        }}
-      >
-        {p.title}.
-      </h3>
-
-      <p
-        style={{
-          fontFamily: sans,
-          fontSize: 18,
-          color: "var(--text-secondary)",
-          lineHeight: 1.75,
-          margin: 0,
-          maxWidth: wide ? "72ch" : undefined,
-        }}
-      >
-        {p.body}
-      </p>
-    </motion.div>
-  );
-}
-
 function MyApproach() {
+  const [open, setOpen] = useState<number | null>(null);
+
+  const toggle = (i: number) => setOpen((prev) => (prev === i ? null : i));
+
   return (
     <section
       id="approach"
@@ -652,14 +556,165 @@ function MyApproach() {
           italic="believe"
         />
 
-        <div
-          className="grid grid-cols-1 md:grid-cols-2 gap-4"
-        >
-          {principles.slice(0, 4).map((p, i) => (
-            <PrincipleCard key={p.num} p={p} i={i} />
-          ))}
-          <PrincipleCard p={principles[4]} i={4} wide />
-        </div>
+        <ol style={{ listStyle: "none", padding: 0, margin: 0 }}>
+          {principles.map((p, i) => {
+            const ref = useRef<HTMLLIElement>(null);
+            const inView = useInView(ref, { once: true, margin: "-40px" });
+            const isOpen = open === i;
+
+            return (
+              <motion.li
+                key={p.num}
+                ref={ref}
+                initial={{ opacity: 0, y: 10 }}
+                animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
+                transition={{ duration: 0.5, delay: i * 0.06, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <button
+                  type="button"
+                  onClick={() => toggle(i)}
+                  aria-expanded={isOpen}
+                  className="group w-full text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "48px 1fr auto",
+                    alignItems: "center",
+                    columnGap: "clamp(16px, 2vw, 32px)",
+                    padding: "clamp(20px, 2.5vw, 28px) 0",
+                    borderTop: i === 0 ? "0.75px solid var(--border)" : "none",
+                    borderBottom: "0.75px solid var(--border)",
+                    background: "transparent",
+                    cursor: "pointer",
+                    width: "100%",
+                    position: "relative",
+                  }}
+                >
+                  {/* Accent left bar on hover/open */}
+                  <span
+                    aria-hidden
+                    style={{
+                      position: "absolute",
+                      left: -16,
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                      width: 2,
+                      height: isOpen ? "60%" : "0%",
+                      backgroundColor: "var(--accent)",
+                      transitionProperty: "height, opacity",
+                      transitionDuration: "300ms",
+                      transitionTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)",
+                      opacity: isOpen ? 1 : 0,
+                    }}
+                    className="hidden lg:block group-hover:!opacity-100 group-hover:!h-[60%]"
+                  />
+
+                  {/* Number */}
+                  <span
+                    style={{
+                      ...mono,
+                      fontSize: 11,
+                      letterSpacing: "0.18em",
+                      color: isOpen ? "var(--accent)" : "var(--text-muted)",
+                      transitionProperty: "color",
+                      transitionDuration: "200ms",
+                    }}
+                    className="group-hover:!text-[var(--accent)]"
+                  >
+                    {p.num}
+                  </span>
+
+                  {/* Title */}
+                  <h3
+                    style={{
+                      fontFamily: serif,
+                      fontWeight: 700,
+                      fontSize: "clamp(22px, 2.8vw, 38px)",
+                      letterSpacing: "-0.025em",
+                      lineHeight: 1.15,
+                      color: isOpen ? "var(--accent)" : "var(--text-primary)",
+                      fontStyle: isOpen ? "italic" : "normal",
+                      transitionProperty: "color, font-style",
+                      transitionDuration: "200ms",
+                      margin: 0,
+                    }}
+                    className={`group-hover:text-[var(--accent)] group-hover:italic`}
+                  >
+                    {p.title}.
+                  </h3>
+
+                  {/* Tag — hides when open */}
+                  <span
+                    style={{
+                      ...mono,
+                      fontSize: 10,
+                      letterSpacing: "0.18em",
+                      color: "var(--text-muted)",
+                      opacity: isOpen ? 0 : 1,
+                      transitionProperty: "opacity",
+                      transitionDuration: "200ms",
+                      whiteSpace: "nowrap",
+                      textAlign: "right",
+                    }}
+                    className="hidden sm:block group-hover:opacity-0"
+                  >
+                    {p.tag}
+                  </span>
+                </button>
+
+                {/* Expandable body */}
+                <AnimatePresence initial={false}>
+                  {isOpen && (
+                    <motion.div
+                      key="body"
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1] }}
+                      style={{ overflow: "hidden" }}
+                    >
+                      <div
+                        style={{
+                          display: "grid",
+                          gridTemplateColumns: "48px 1fr auto",
+                          columnGap: "clamp(16px, 2vw, 32px)",
+                          paddingBottom: "clamp(20px, 2.5vw, 28px)",
+                        }}
+                      >
+                        <span />
+                        <div>
+                          <p
+                            style={{
+                              fontFamily: sans,
+                              fontSize: 18,
+                              color: "var(--text-secondary)",
+                              lineHeight: 1.75,
+                              margin: 0,
+                              maxWidth: "62ch",
+                              paddingTop: 12,
+                            }}
+                          >
+                            {p.body}
+                          </p>
+                          <p
+                            style={{
+                              ...caveat,
+                              fontSize: 18,
+                              color: "var(--accent)",
+                              opacity: 0.8,
+                              marginTop: 10,
+                            }}
+                          >
+                            {p.tag} ✦
+                          </p>
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.li>
+            );
+          })}
+        </ol>
       </div>
     </section>
   );
