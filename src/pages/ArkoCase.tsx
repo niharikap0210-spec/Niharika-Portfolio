@@ -1900,17 +1900,12 @@ function ArEditorStepper({
       <div
         role="tablist"
         aria-label="AR editor steps"
+        className={isMobile ? "grid grid-cols-2" : ""}
         style={{
-          ...(isMobile ? {
-            display: "flex",
-            overflowX: "auto",
-            WebkitOverflowScrolling: "touch",
-            scrollbarWidth: "none",
-            msOverflowStyle: "none",
-          } : {
+          ...(!isMobile ? {
             display: "grid",
             gridTemplateColumns: `repeat(${steps.length}, minmax(0, 1fr))`,
-          }),
+          } : {}),
           borderBottom: "1px solid var(--border)",
           marginBottom: 32,
           position: "relative",
@@ -1919,6 +1914,9 @@ function ArEditorStepper({
         {steps.map((s, i) => {
           const isActive = active === i;
           const StepIcon = s.Icon;
+          const col = 2;
+          const isLastInRow = isMobile ? (i + 1) % col === 0 : i === steps.length - 1;
+          const isLastRow = isMobile ? i >= steps.length - col : true;
           return (
             <button
               key={i}
@@ -1927,9 +1925,11 @@ function ArEditorStepper({
               onClick={() => setActive(i)}
               style={{
                 position: "relative",
-                padding: isMobile ? "16px 18px" : "22px 24px",
+                padding: isMobile ? "20px 18px" : "22px 24px",
                 background: "transparent",
                 border: "none",
+                borderRight: (isMobile && !isLastInRow) ? "1px solid var(--border-light)" : "none",
+                borderBottom: (isMobile && !isLastRow) ? "1px solid var(--border-light)" : "none",
                 cursor: "pointer",
                 textAlign: "left",
                 display: "flex",
@@ -1937,7 +1937,7 @@ function ArEditorStepper({
                 gap: 12,
                 transitionProperty: "color",
                 transitionDuration: "220ms",
-                ...(isMobile ? { flexShrink: 0, minWidth: 110 } : { minWidth: 0 }),
+                minWidth: 0,
               }}
               onFocus={(e) => {
                 (e.currentTarget as HTMLElement).style.outline = `2px solid ${arko.primary}`;
@@ -1971,26 +1971,26 @@ function ArEditorStepper({
               >
                 {s.num}
               </span>
-              <span style={{ display: "inline-flex", alignItems: "center", gap: 14, minWidth: 0 }}>
+              <span style={{ display: "inline-flex", alignItems: isMobile ? "flex-start" : "center", gap: isMobile ? 10 : 14, minWidth: 0 }}>
                 {StepIcon && (
                   <StepIcon
-                    size={24}
+                    size={isMobile ? 20 : 24}
                     color={isActive ? arko.primary : "var(--text-secondary)"}
                     weight={isActive ? "duotone" : "regular"}
-                    style={{ flexShrink: 0 }}
+                    style={{ flexShrink: 0, marginTop: isMobile ? 2 : 0 }}
                   />
                 )}
                 <span
                   style={{
                     fontFamily: serif,
-                    fontSize: isMobile ? 13 : 22,
+                    fontSize: isMobile ? 17 : 22,
                     fontWeight: 700,
                     color: isActive ? "var(--text-primary)" : "var(--text-secondary)",
                     letterSpacing: "-0.015em",
                     lineHeight: 1.3,
-                    whiteSpace: "nowrap",
+                    whiteSpace: isMobile ? "normal" : "nowrap",
                     overflow: "hidden",
-                    textOverflow: "ellipsis",
+                    textOverflow: isMobile ? "unset" : "ellipsis",
                     transitionProperty: "color",
                     transitionDuration: "220ms",
                   }}
