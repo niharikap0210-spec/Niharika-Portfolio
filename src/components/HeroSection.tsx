@@ -782,14 +782,18 @@ export default function HeroSection() {
             zIndex: 10,
           }}
         >
-          <span style={{ ...mono, fontSize: 8, color: "var(--text-muted)", letterSpacing: "0.22em", opacity: 0.6 }}>
+          <span style={{ ...mono, fontSize: 9, color: "var(--text-secondary)", letterSpacing: "0.22em" }}>
             Scroll
           </span>
           <motion.div
-            animate={{ y: [0, 6, 0] }}
+            animate={{ y: [0, 8, 0] }}
             transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
-            style={{ width: 1, height: 28, backgroundColor: "var(--text-muted)", opacity: 0.35 }}
-          />
+          >
+            <svg width="16" height="40" viewBox="0 0 16 40" fill="none">
+              <line x1="8" y1="0" x2="8" y2="30" stroke="var(--text-secondary)" strokeWidth="1" strokeLinecap="round" opacity="0.5" />
+              <path d="M2 24 L8 32 L14 24" stroke="var(--text-secondary)" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" opacity="0.5" fill="none" />
+            </svg>
+          </motion.div>
         </motion.div>
 
       </div>
