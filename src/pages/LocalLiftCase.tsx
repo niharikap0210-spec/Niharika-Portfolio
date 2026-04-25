@@ -910,7 +910,7 @@ function TensionCard({
           {tension.title}
         </h4>
         <p style={{
-          fontFamily: sans, fontSize: 16.5, lineHeight: 1.65,
+          fontFamily: sans, fontSize: 18, lineHeight: 1.75,
           color: "var(--text-secondary)",
         }}>
           {tension.takeaway}
@@ -1915,7 +1915,7 @@ export default function LocalLiftCase() {
                     fontFamily: serif, fontWeight: 700,
                     fontSize: "clamp(60px, 8.5vw, 124px)",
                     color: "var(--text-primary)",
-                    letterSpacing: "-0.055em", lineHeight: 0.92,
+                    letterSpacing: "-0.055em", lineHeight: 0.9,
                     margin: 0,
                   }}
                 >
@@ -1928,9 +1928,9 @@ export default function LocalLiftCase() {
                 transition={{ delay: 0.5, duration: 0.7 }}
                 style={{
                   fontFamily: serif, fontStyle: "italic",
-                  fontSize: "clamp(19px, 1.7vw, 25px)",
-                  color: "var(--text-primary)",
-                  lineHeight: 1.45, maxWidth: 520,
+                  fontSize: "clamp(21px, 1.9vw, 28px)",
+                  color: "var(--text-secondary)",
+                  lineHeight: 1.5, maxWidth: 520,
                   marginBottom: "clamp(28px, 3vw, 40px)",
                   letterSpacing: "-0.01em",
                 }}
@@ -1960,10 +1960,10 @@ export default function LocalLiftCase() {
                   { label: "Team",     value: "5 members" },
                 ] as { label: string; value: string }[]).map((m) => (
                   <div key={m.label} style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                    <span style={{ ...mono, fontSize: 11, color: ll.muted, letterSpacing: "0.22em", fontWeight: 700 }}>
+                    <span style={{ ...mono, fontSize: 13, color: "var(--text-secondary)", letterSpacing: "0.2em", fontWeight: 600 }}>
                       {m.label}
                     </span>
-                    <span style={{ fontFamily: sans, fontSize: 16, fontWeight: 500, color: "var(--text-primary)" }}>
+                    <span style={{ fontFamily: sans, fontSize: 19, fontWeight: 500, color: "var(--text-primary)" }}>
                       {m.value}
                     </span>
                   </div>
