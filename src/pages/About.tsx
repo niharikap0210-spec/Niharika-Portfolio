@@ -436,7 +436,7 @@ function MyStory() {
             <p
               style={{
                 fontFamily: sans,
-                fontSize: 20,
+                fontSize: 18,
                 color: "var(--text-secondary)",
                 lineHeight: 1.75,
               }}
@@ -449,7 +449,7 @@ function MyStory() {
             <p
               style={{
                 fontFamily: sans,
-                fontSize: 20,
+                fontSize: 18,
                 color: "var(--text-secondary)",
                 lineHeight: 1.75,
               }}
@@ -464,7 +464,7 @@ function MyStory() {
             <p
               style={{
                 fontFamily: sans,
-                fontSize: 20,
+                fontSize: 18,
                 color: "var(--text-secondary)",
                 lineHeight: 1.75,
               }}
@@ -699,7 +699,7 @@ function MyApproach() {
                           <p
                             style={{
                               fontFamily: sans,
-                              fontSize: 20,
+                              fontSize: 18,
                               color: "var(--text-secondary)",
                               lineHeight: 1.75,
                               margin: 0,
@@ -837,7 +837,7 @@ function Experience() {
                     <p
                       style={{
                         fontFamily: sans,
-                        fontSize: 20,
+                        fontSize: 18,
                         color: "var(--text-secondary)",
                         lineHeight: 1.75,
                         margin: 0,
