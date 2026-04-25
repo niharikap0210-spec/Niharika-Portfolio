@@ -1,5 +1,5 @@
 import { motion, useInView } from "framer-motion";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState } from "react";
 import {
   CoffeeIcon,
   MusicNotesIcon,
@@ -320,108 +320,6 @@ function Hero() {
             </div>
           </motion.div>
         </div>
-      </div>
-    </section>
-  );
-}
-
-/* ─── Section Index — interactive scroll-spy anchor list ────────── */
-const SECTIONS = [
-  { num: "01", label: "My Story", id: "story" },
-  { num: "02", label: "Approach", id: "approach" },
-  { num: "03", label: "Experience", id: "experience" },
-  { num: "04", label: "Education", id: "education" },
-  { num: "05", label: "Toolbox", id: "toolbox" },
-  { num: "06", label: "Off-Duty", id: "off-duty" },
-  { num: "07", label: "Connect", id: "connect" },
-];
-
-function SectionIndex() {
-  const [active, setActive] = useState<string>("story");
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActive(entry.target.id);
-          }
-        });
-      },
-      { rootMargin: "-30% 0px -60% 0px", threshold: 0 }
-    );
-    SECTIONS.forEach((s) => {
-      const el = document.getElementById(s.id);
-      if (el) observer.observe(el);
-    });
-    return () => observer.disconnect();
-  }, []);
-
-  return (
-    <section
-      style={{
-        padding: "clamp(40px, 5vw, 64px) 0 clamp(8px, 1vw, 16px)",
-      }}
-    >
-      <div className="max-w-3xl mx-auto px-6 md:px-10">
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-40px" }}
-          transition={{ duration: 0.5 }}
-          style={{
-            borderTop: "0.75px solid var(--border)",
-            borderBottom: "0.75px solid var(--border)",
-            padding: "16px 0",
-          }}
-        >
-          <p
-            style={{
-              ...mono,
-              fontSize: 9,
-              color: "var(--text-muted)",
-              marginBottom: 12,
-            }}
-          >
-            ✦ Index · {SECTIONS.length} sections
-          </p>
-          <ul className="flex flex-wrap gap-x-5 gap-y-2">
-            {SECTIONS.map((s) => {
-              const isActive = active === s.id;
-              return (
-                <li key={s.id}>
-                  <a
-                    href={`#${s.id}`}
-                    className="group inline-flex items-baseline gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
-                    style={{
-                      ...mono,
-                      fontSize: 10,
-                      letterSpacing: "0.18em",
-                      color: isActive ? "var(--accent)" : "var(--text-secondary)",
-                      textDecoration: "none",
-                      transitionProperty: "color",
-                      transitionDuration: "200ms",
-                    }}
-                  >
-                    <span
-                      style={{
-                        color: isActive ? "var(--accent)" : "var(--text-muted)",
-                        transitionProperty: "color",
-                        transitionDuration: "200ms",
-                      }}
-                      className="group-hover:text-[var(--accent)]"
-                    >
-                      {s.num}
-                    </span>
-                    <span className="group-hover:text-[var(--accent)]">
-                      {s.label}
-                    </span>
-                  </a>
-                </li>
-              );
-            })}
-          </ul>
-        </motion.div>
       </div>
     </section>
   );
@@ -1322,7 +1220,6 @@ export default function About() {
       className="pt-14"
     >
       <Hero />
-      <SectionIndex />
       <MyStory />
       <MyApproach />
       <Experience />
