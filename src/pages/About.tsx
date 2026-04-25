@@ -781,83 +781,45 @@ function Experience() {
               <motion.li
                 key={`${s.role}-${s.company}`}
                 ref={ref}
-                initial={{ opacity: 0, y: 18 }}
-                animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 18 }}
-                transition={{ duration: 0.6, delay: i * 0.07, ease: [0.16, 1, 0.3, 1] }}
+                initial={{ opacity: 0, y: 12 }}
+                animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
+                transition={{ duration: 0.5, delay: i * 0.06, ease: [0.16, 1, 0.3, 1] }}
                 className="group"
                 style={{
                   borderTop: "0.75px solid var(--border)",
-                  padding: "clamp(32px, 4vw, 52px) 0",
+                  padding: "24px 0",
                 }}
               >
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-16 items-start">
+                <div className="grid grid-cols-1 lg:grid-cols-[180px_1fr] gap-3 lg:gap-12">
 
-                  {/* Left — large company name */}
-                  <div>
-                    <span
-                      style={{
-                        ...mono,
-                        fontSize: 11,
-                        color: "var(--text-muted)",
-                        letterSpacing: "0.2em",
-                        display: "block",
-                        marginBottom: 14,
-                      }}
-                    >
-                      {String(i + 1).padStart(2, "0")} &nbsp;·&nbsp; {s.period}
+                  {/* Left — period */}
+                  <div className="flex lg:flex-col gap-2 lg:gap-1 pt-1">
+                    <span style={{ ...mono, fontSize: 11, color: "var(--text-muted)", letterSpacing: "0.18em" }}>
+                      {s.period}
                     </span>
-
-                    <div style={{ position: "relative", display: "inline-block" }}>
-                      <h3
-                        style={{
-                          fontFamily: serif,
-                          fontWeight: 700,
-                          fontSize: "clamp(36px, 4.5vw, 60px)",
-                          letterSpacing: "-0.03em",
-                          lineHeight: 1.05,
-                          color: "var(--text-primary)",
-                          margin: 0,
-                          transitionProperty: "color, font-style",
-                          transitionDuration: "250ms",
-                        }}
-                        className="group-hover:text-[var(--accent)] group-hover:italic"
-                      >
-                        {s.company}
-                      </h3>
-                      {/* Growing underline */}
-                      <span
-                        aria-hidden
-                        style={{
-                          position: "absolute",
-                          bottom: -4,
-                          left: 0,
-                          height: "1.5px",
-                          width: "0%",
-                          backgroundColor: "var(--accent)",
-                          transitionProperty: "width",
-                          transitionDuration: "350ms",
-                          transitionTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)",
-                        }}
-                        className="group-hover:!w-full"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Right — role + blurb */}
-                  <div
-                    className="flex flex-col justify-start"
-                    style={{ paddingTop: "clamp(0px, 1vw, 32px)", gap: 12 }}
-                  >
-                    <span
-                      style={{
-                        ...mono,
-                        fontSize: 11,
-                        color: "var(--accent)",
-                        letterSpacing: "0.2em",
-                      }}
-                    >
+                    <span style={{ ...mono, fontSize: 11, color: "var(--accent)", letterSpacing: "0.18em" }}>
                       {s.role}
                     </span>
+                  </div>
+
+                  {/* Right — company + blurb */}
+                  <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                    <h3
+                      style={{
+                        fontFamily: serif,
+                        fontWeight: 600,
+                        fontSize: "clamp(20px, 2vw, 24px)",
+                        letterSpacing: "-0.018em",
+                        lineHeight: 1.2,
+                        color: "var(--text-primary)",
+                        margin: 0,
+                        transitionProperty: "color",
+                        transitionDuration: "200ms",
+                      }}
+                      className="group-hover:text-[var(--accent)]"
+                    >
+                      {s.company}
+                    </h3>
                     <p
                       style={{
                         fontFamily: sans,
