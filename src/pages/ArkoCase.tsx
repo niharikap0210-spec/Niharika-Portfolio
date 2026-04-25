@@ -31,6 +31,19 @@ const caption: React.CSSProperties = {
   lineHeight: 1.5,
 };
 
+/* ── Mobile breakpoint hook ──────────────────────────────────────── */
+function useIsMobile(bp = 768) {
+  const [mobile, setMobile] = useState(() =>
+    typeof window !== "undefined" ? window.innerWidth < bp : false
+  );
+  useEffect(() => {
+    const fn = () => setMobile(window.innerWidth < bp);
+    window.addEventListener("resize", fn, { passive: true });
+    return () => window.removeEventListener("resize", fn);
+  }, [bp]);
+  return mobile;
+}
+
 /* ── Unified type scale - single source of truth ─────────────────── */
 const t = {
   eyebrow: {
@@ -102,7 +115,7 @@ function Reveal({
   const inView = useInView(ref, { once: true, margin: "-50px" });
   return (
     <motion.div ref={ref} initial={{ opacity: 0, y }} animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.65, delay, ease: [0.16, 1, 0.3, 1] }} className={className}>
+      transition={{ duration: 0.65, delay, ease: [0.25, 1, 0.4, 1] }} className={className}>
       {children}
     </motion.div>
   );
@@ -121,7 +134,7 @@ function CountUp({
   useEffect(() => {
     if (!inView) return;
     const controls = animate(mv, value, {
-      duration, ease: [0.16, 1, 0.3, 1],
+      duration, ease: [0.25, 1, 0.4, 1],
       onUpdate: (v) => setDisplay(v.toFixed(decimals)),
     });
     return () => controls.stop();
@@ -153,7 +166,7 @@ function SectionHeader({
         <motion.span
           initial={{ opacity: 0, y: 8 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.55, ease: [0.25, 1, 0.4, 1] }}
           style={{
             ...mono, fontSize: 14, color: arko.primary,
             letterSpacing: "0.22em", fontWeight: 700,
@@ -163,7 +176,7 @@ function SectionHeader({
         <motion.span
           initial={{ opacity: 0, y: 8 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.08, duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ delay: 0.08, duration: 0.55, ease: [0.25, 1, 0.4, 1] }}
           style={{
             ...mono, fontSize: 14, color: "var(--text-primary)",
             letterSpacing: "0.22em", fontWeight: 600,
@@ -184,7 +197,7 @@ function SectionHeader({
       <motion.div
         initial={{ scaleX: 0 }}
         animate={inView ? { scaleX: 1 } : {}}
-        transition={{ delay: 0.15, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ delay: 0.15, duration: 0.9, ease: [0.25, 1, 0.4, 1] }}
         style={{
           height: 1, background: arko.primary, transformOrigin: "left",
           opacity: 0.6,
@@ -300,6 +313,7 @@ function LaptopMockup({ src, alt }: { src: string; alt: string }) {
 ══════════════════════════════════════════════════════════════════ */
 function LoopCard() {
   const [active, setActive] = useState(0);
+  const isMobile = useIsMobile();
 
   const stages = [
     {
@@ -329,13 +343,12 @@ function LoopCard() {
       overflow: "hidden",
     }}>
       {/* Four-stage flow - the focal object */}
-      <div style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(4, 1fr)",
-        position: "relative",
-      }}>
+      <div className="grid grid-cols-2 md:grid-cols-4" style={{ position: "relative" }}>
         {stages.map((s, i) => {
           const isActive = active === i;
+          const col = isMobile ? 2 : 4;
+          const isLastInRow = (i + 1) % col === 0;
+          const isLastRow = isMobile ? i >= stages.length - 2 : i >= stages.length - col;
           return (
             <motion.div
               key={s.marker}
@@ -345,8 +358,9 @@ function LoopCard() {
               viewport={{ once: true, margin: "-40px" }}
               transition={{ delay: 0.08 + i * 0.07, duration: 0.5 }}
               style={{
-                padding: "40px 28px 36px",
-                borderRight: i < stages.length - 1 ? "1px solid var(--border-light)" : "none",
+                padding: isMobile ? "24px 16px 20px" : "40px 28px 36px",
+                borderRight: !isLastInRow ? "1px solid var(--border-light)" : "none",
+                borderBottom: !isLastRow ? "1px solid var(--border-light)" : "none",
                 background: isActive ? arko.subtle : "transparent",
                 cursor: "default",
                 position: "relative",
@@ -412,7 +426,7 @@ function LoopCard() {
               initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -6 }}
-              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.3, ease: [0.25, 1, 0.4, 1] }}
             >
               <p style={{
                 fontFamily: serif, fontWeight: 700,
@@ -466,6 +480,7 @@ function WebGallery({
   screens: { src: string; label: string; Icon?: typeof SquaresFour }[];
 }) {
   const [active, setActive] = useState(0);
+  const isMobile = useIsMobile();
 
   const tabs = screens.map((s) => {
     const parts = s.label.split(" · ");
@@ -484,8 +499,16 @@ function WebGallery({
         aria-label="Workspace screens"
         style={{
           position: "relative",
-          display: "grid",
-          gridTemplateColumns: `repeat(${tabs.length}, minmax(0, 1fr))`,
+          ...(isMobile ? {
+            display: "flex",
+            overflowX: "auto",
+            WebkitOverflowScrolling: "touch",
+            scrollbarWidth: "none",
+            msOverflowStyle: "none",
+          } : {
+            display: "grid",
+            gridTemplateColumns: `repeat(${tabs.length}, minmax(0, 1fr))`,
+          }),
           borderBottom: "1px solid var(--border)",
           marginBottom: 32,
         }}
@@ -506,7 +529,7 @@ function WebGallery({
               onBlur={(e) => { (e.currentTarget as HTMLElement).style.outline = "none"; }}
               style={{
                 position: "relative",
-                padding: "18px 20px",
+                padding: isMobile ? "14px 16px" : "18px 20px",
                 background: "transparent",
                 border: "none",
                 cursor: "pointer",
@@ -516,7 +539,7 @@ function WebGallery({
                 gap: 10,
                 transitionProperty: "color",
                 transitionDuration: "220ms",
-                minWidth: 0,
+                ...(isMobile ? { flexShrink: 0, minWidth: 120 } : { minWidth: 0 }),
               }}
             >
               {isActive && (
@@ -531,7 +554,7 @@ function WebGallery({
                     height: 2,
                     background: arko.primary,
                   }}
-                  transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                  transition={{ duration: 0.4, ease: [0.25, 1, 0.4, 1] }}
                 />
               )}
               <span
@@ -545,10 +568,10 @@ function WebGallery({
               >
                 {tab.fig}
               </span>
-              <span style={{ display: "inline-flex", alignItems: "center", gap: 12, minWidth: 0 }}>
+              <span style={{ display: "inline-flex", alignItems: "center", gap: isMobile ? 8 : 12, minWidth: 0 }}>
                 {TabIcon && (
                   <TabIcon
-                    size={20}
+                    size={isMobile ? 16 : 20}
                     color={isActive ? arko.primary : "var(--text-muted)"}
                     weight={isActive ? "duotone" : "regular"}
                     style={{ flexShrink: 0 }}
@@ -558,7 +581,7 @@ function WebGallery({
                   style={{
                     fontFamily: serif,
                     fontWeight: 700,
-                    fontSize: 20,
+                    fontSize: isMobile ? 14 : 20,
                     lineHeight: 1.2,
                     letterSpacing: "-0.015em",
                     color: isActive ? "var(--text-primary)" : "var(--text-secondary)",
@@ -668,7 +691,7 @@ function WebGallery({
               initial={{ opacity: 0, scale: 1.015 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.45, ease: [0.25, 1, 0.4, 1] }}
               style={{ width: "100%", display: "block" }}
             />
           </AnimatePresence>
@@ -682,7 +705,7 @@ function WebGallery({
           initial={{ opacity: 0, y: 4 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.25, ease: [0.25, 1, 0.4, 1] }}
           style={{ ...caption, fontSize: "clamp(16px, 1.2vw, 19px)", textAlign: "center", marginTop: 22 }}
         >
           {current.label}
@@ -747,7 +770,7 @@ function UserTabs() {
       </div>
       <AnimatePresence mode="wait">
         <motion.div key={tab} initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1] }}>
+          exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.38, ease: [0.25, 1, 0.4, 1] }}>
           <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-14 items-center">
             <div className="md:col-span-6">
               <p style={{ ...t.bodyLg, marginBottom: 30 }}>
@@ -907,7 +930,7 @@ function ResearchLedger() {
               initial={{ opacity: 0, y: 12 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-40px" }}
-              transition={{ delay: i * 0.08, duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ delay: i * 0.08, duration: 0.55, ease: [0.25, 1, 0.4, 1] }}
               whileHover={{ y: -4 }}
               style={{
                 padding: "32px 28px 30px",
@@ -1073,7 +1096,7 @@ function DecisionStepper() {
                     height: 2,
                     background: arko.primary,
                   }}
-                  transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                  transition={{ duration: 0.4, ease: [0.25, 1, 0.4, 1] }}
                 />
               )}
               <span
@@ -1116,7 +1139,7 @@ function DecisionStepper() {
       </div>
       <AnimatePresence mode="wait">
         <motion.div key={active} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+          exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.4, ease: [0.25, 1, 0.4, 1] }}
           style={{ padding: "44px 0", borderBottom: "1px solid var(--border)", minHeight: "clamp(380px, 45vw, 500px)", display: "flex", alignItems: "center" }}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-14 items-center" style={{ width: "100%" }}>
             <div>
@@ -1128,7 +1151,7 @@ function DecisionStepper() {
               </p>
             </div>
             <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}>
+              transition={{ delay: 0.1, duration: 0.5, ease: [0.25, 1, 0.4, 1] }}>
               {decisions[active].img.includes("web-") ? (
                 <LaptopMockup src={decisions[active].img} alt={decisions[active].title} />
               ) : decisions[active].landscape ? (
@@ -1167,6 +1190,7 @@ function ScanFlowStepper({
 }) {
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
+  const isMobile = useIsMobile();
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { margin: "-80px" });
 
@@ -1204,7 +1228,7 @@ function ScanFlowStepper({
                 transformOrigin: "left center",
               }}
               animate={{ scaleX: progress / 100 }}
-              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.6, ease: [0.25, 1, 0.4, 1] }}
             />
           </div>
           <span style={{ ...mono, fontSize: 10, color: "var(--text-muted)", letterSpacing: "0.2em" }}>
@@ -1239,7 +1263,7 @@ function ScanFlowStepper({
               height: "calc(100% - 64px)",
             }}
             animate={{ scaleY: stages.length > 1 ? active / (stages.length - 1) : 0 }}
-            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.5, ease: [0.25, 1, 0.4, 1] }}
           />
 
           {stages.map((s, i) => {
@@ -1279,7 +1303,7 @@ function ScanFlowStepper({
                       backgroundColor: isActive || isDone ? arko.primary : "var(--bg-elevated)",
                       borderColor: isActive || isDone ? arko.primary : "var(--border)",
                     }}
-                    transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                    transition={{ duration: 0.3, ease: [0.25, 1, 0.4, 1] }}
                     style={{
                       position: "relative",
                       zIndex: 1,
@@ -1350,7 +1374,7 @@ function ScanFlowStepper({
                           initial={{ opacity: 0, height: 0 }}
                           animate={{ opacity: 1, height: "auto" }}
                           exit={{ opacity: 0, height: 0 }}
-                          transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1] }}
+                          transition={{ duration: 0.38, ease: [0.25, 1, 0.4, 1] }}
                           style={{ overflow: "hidden" }}
                         >
                           <p
@@ -1381,7 +1405,7 @@ function ScanFlowStepper({
         className="md:col-span-6"
         style={{
           position: "relative",
-          minHeight: 620,
+          minHeight: isMobile ? 0 : 620,
           display: "flex",
           flexDirection: "column",
           alignItems: "stretch",
@@ -1394,13 +1418,14 @@ function ScanFlowStepper({
             position: "relative",
             flex: 1,
             display: "grid",
-            gridTemplateColumns: "1fr auto 1fr",
+            gridTemplateColumns: isMobile ? "1fr" : "1fr auto 1fr",
             alignItems: "center",
             gap: 16,
-            minHeight: 440,
+            minHeight: isMobile ? 0 : 440,
           }}
         >
-          {/* LEFT gutter · STAGE pill */}
+          {/* LEFT gutter · STAGE pill — hidden on mobile */}
+          {!isMobile && (
           <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "flex-end", height: "100%", paddingBottom: "18%" }}>
             <AnimatePresence mode="wait">
               <motion.div
@@ -1408,7 +1433,7 @@ function ScanFlowStepper({
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -10 }}
-                transition={{ duration: 0.42, ease: [0.16, 1, 0.3, 1], delay: 0.12 }}
+                transition={{ duration: 0.42, ease: [0.25, 1, 0.4, 1], delay: 0.12 }}
                 style={{
                   background: arko.primary,
                   padding: "10px 14px",
@@ -1436,9 +1461,10 @@ function ScanFlowStepper({
               </motion.div>
             </AnimatePresence>
           </div>
+          )}
 
           {/* CENTER · phone with crosshair brackets */}
-          <div style={{ position: "relative", width: "clamp(220px, 30vw, 280px)", margin: "0 auto" }}>
+          <div style={{ position: "relative", width: isMobile ? "clamp(180px, 55vw, 260px)" : "clamp(220px, 30vw, 280px)", margin: "0 auto" }}>
             {/* Soft radial halo */}
             <div
               aria-hidden
@@ -1490,7 +1516,7 @@ function ScanFlowStepper({
                 initial={{ opacity: 0, y: 20, scale: 0.985 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: -14, scale: 0.99 }}
-                transition={{ duration: 0.46, ease: [0.16, 1, 0.3, 1] }}
+                transition={{ duration: 0.46, ease: [0.25, 1, 0.4, 1] }}
                 style={{
                   width: "100%",
                   display: "block",
@@ -1501,15 +1527,15 @@ function ScanFlowStepper({
             </AnimatePresence>
           </div>
 
-          {/* RIGHT gutter · LIVE metric chip */}
-          <div style={{ display: "flex", justifyContent: "flex-start", alignItems: "flex-start", height: "100%", paddingTop: "18%" }}>
+          {/* RIGHT gutter · LIVE metric chip — hidden on mobile */}
+          {!isMobile && <div style={{ display: "flex", justifyContent: "flex-start", alignItems: "flex-start", height: "100%", paddingTop: "18%" }}>
             <AnimatePresence mode="wait">
               <motion.div
                 key={`metric-${active}`}
                 initial={{ opacity: 0, x: 10 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 10 }}
-                transition={{ duration: 0.42, ease: [0.16, 1, 0.3, 1], delay: 0.08 }}
+                transition={{ duration: 0.42, ease: [0.25, 1, 0.4, 1], delay: 0.08 }}
                 style={{
                   background: "var(--bg-elevated)",
                   border: "1px solid var(--border)",
@@ -1547,7 +1573,7 @@ function ScanFlowStepper({
                 </span>
               </motion.div>
             </AnimatePresence>
-          </div>
+          </div>}
         </div>
 
         {/* Bottom · viewfinder label strip */}
@@ -1671,7 +1697,7 @@ function ClientJourneyReel() {
               transformOrigin: "left center",
             }}
             animate={{ scaleX: progress / 100 }}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.6, ease: [0.25, 1, 0.4, 1] }}
           />
         </div>
         <span style={{ ...mono, fontSize: 10, color: "rgba(250,250,250,0.55)", letterSpacing: "0.22em" }}>
@@ -1728,7 +1754,7 @@ function ClientJourneyReel() {
                     transformOrigin: "left center",
                   }}
                   animate={{ scaleX: isActive ? 1 : 0 }}
-                  transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                  transition={{ duration: 0.4, ease: [0.25, 1, 0.4, 1] }}
                 />
               </div>
 
@@ -1737,7 +1763,7 @@ function ClientJourneyReel() {
                 <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
                   <motion.span
                     animate={{ scale: isActive ? 1.08 : 1 }}
-                    transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                    transition={{ duration: 0.3, ease: [0.25, 1, 0.4, 1] }}
                     style={{ display: "inline-flex" }}
                   >
                     <StageIcon
@@ -1789,7 +1815,7 @@ function ClientJourneyReel() {
                 <motion.div
                   aria-hidden
                   animate={{ opacity: isActive ? 1 : 0 }}
-                  transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                  transition={{ duration: 0.5, ease: [0.25, 1, 0.4, 1] }}
                   style={{
                     position: "absolute",
                     inset: "-8% -14%",
@@ -1805,7 +1831,7 @@ function ClientJourneyReel() {
                     opacity: isActive ? 1 : 0.58,
                     y: isActive ? -4 : 0,
                   }}
-                  transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                  transition={{ duration: 0.5, ease: [0.25, 1, 0.4, 1] }}
                   style={{
                     width: "100%",
                     maxWidth: 260,
@@ -1838,7 +1864,7 @@ function ClientJourneyReel() {
                       initial={{ opacity: 0, height: 0 }}
                       animate={{ opacity: 1, height: "auto" }}
                       exit={{ opacity: 0, height: 0 }}
-                      transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1] }}
+                      transition={{ duration: 0.38, ease: [0.25, 1, 0.4, 1] }}
                       style={{
                         fontFamily: sans,
                         fontSize: 16.5,
@@ -1866,14 +1892,23 @@ function ArEditorStepper({
   steps: { src: string; num: string; label: string; desc: string; Icon?: typeof Compass }[];
 }) {
   const [active, setActive] = useState(0);
+  const isMobile = useIsMobile();
   return (
     <div>
       <div
         role="tablist"
         aria-label="AR editor steps"
         style={{
-          display: "grid",
-          gridTemplateColumns: `repeat(${steps.length}, minmax(0, 1fr))`,
+          ...(isMobile ? {
+            display: "flex",
+            overflowX: "auto",
+            WebkitOverflowScrolling: "touch",
+            scrollbarWidth: "none",
+            msOverflowStyle: "none",
+          } : {
+            display: "grid",
+            gridTemplateColumns: `repeat(${steps.length}, minmax(0, 1fr))`,
+          }),
           borderBottom: "1px solid var(--border)",
           marginBottom: 32,
           position: "relative",
@@ -1890,7 +1925,7 @@ function ArEditorStepper({
               onClick={() => setActive(i)}
               style={{
                 position: "relative",
-                padding: "22px 24px",
+                padding: isMobile ? "16px 18px" : "22px 24px",
                 background: "transparent",
                 border: "none",
                 cursor: "pointer",
@@ -1900,7 +1935,7 @@ function ArEditorStepper({
                 gap: 12,
                 transitionProperty: "color",
                 transitionDuration: "220ms",
-                minWidth: 0,
+                ...(isMobile ? { flexShrink: 0, minWidth: 90 } : { minWidth: 0 }),
               }}
               onFocus={(e) => {
                 (e.currentTarget as HTMLElement).style.outline = `2px solid ${arko.primary}`;
@@ -1920,7 +1955,7 @@ function ArEditorStepper({
                     height: 2,
                     background: arko.primary,
                   }}
-                  transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                  transition={{ duration: 0.4, ease: [0.25, 1, 0.4, 1] }}
                 />
               )}
               <span
@@ -1972,13 +2007,13 @@ function ArEditorStepper({
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -8 }}
-          transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.38, ease: [0.25, 1, 0.4, 1] }}
         >
           <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-center">
             <motion.div
               className="md:col-span-7"
               whileHover={{ y: -3 }}
-              transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.25, ease: [0.25, 1, 0.4, 1] }}
             >
               <img
                 src={steps[active].src}
@@ -2114,6 +2149,7 @@ export default function ArkoCase() {
   const otherProjects = projects.filter((p) => p.slug !== "arko").slice(-2);
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, { stiffness: 200, damping: 30 });
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -2155,11 +2191,12 @@ export default function ArkoCase() {
       ══════════════════════════════════════════════════════════════ */}
       <section className="blueprint-grid" style={{
         position: "relative",
-        height: "calc(100vh - 56px)",
-        minHeight: 640,
+        height: isMobile ? "auto" : "calc(100vh - 56px)",
+        minHeight: isMobile ? 0 : 640,
         display: "flex",
         flexDirection: "column",
-        overflow: "hidden",
+        overflow: isMobile ? "visible" : "hidden",
+        paddingBottom: isMobile ? "clamp(40px, 6vw, 64px)" : 0,
       }}>
         {/* Top bar - back link + tag strip */}
         <motion.div
@@ -2235,7 +2272,7 @@ export default function ArkoCase() {
               <div style={{ overflow: "hidden", marginBottom: "clamp(24px, 2.6vw, 36px)" }}>
                 <motion.h1
                   initial={{ y: "110%" }} animate={{ y: 0 }}
-                  transition={{ delay: 0.15, duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
+                  transition={{ delay: 0.15, duration: 1.0, ease: [0.25, 1, 0.4, 1] }}
                   style={{
                     fontFamily: serif, fontWeight: 700,
                     fontSize: "clamp(64px, 9.5vw, 140px)",
@@ -2299,7 +2336,7 @@ export default function ArkoCase() {
             <motion.div
               className="md:col-span-7"
               initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6, duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ delay: 0.6, duration: 1.0, ease: [0.25, 1, 0.4, 1] }}
               style={{ position: "relative", width: "100%", minWidth: 0 }}
             >
               {/* Olive radial blur - sits behind the mockups */}
@@ -2656,7 +2693,7 @@ export default function ArkoCase() {
             initial={{ opacity: 0, y: 14 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.5, ease: [0.25, 1, 0.4, 1] }}
             style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 40 }}
           >
             <Quotes size={30} color={arko.light} opacity={0.7} weight="duotone" />
@@ -2669,7 +2706,7 @@ export default function ArkoCase() {
             initial={{ opacity: 0, y: 14 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.5, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.5, delay: 0.15, ease: [0.25, 1, 0.4, 1] }}
             style={{ ...t.bodyLg, color: "rgba(250,250,250,0.72)", maxWidth: 620 }}
           >
             This reframed the entire design direction. The goal was never to build a better
@@ -3037,9 +3074,8 @@ export default function ArkoCase() {
 
               {/* Metrics row */}
               <div
+                className="grid grid-cols-2 lg:grid-cols-4"
                 style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
                   borderTop: `1px solid ${arko.primary}`,
                   borderBottom: `1px solid ${arko.primary}`,
                 }}
@@ -3049,16 +3085,20 @@ export default function ArkoCase() {
                   { label: "Revision cycles",  num: 1.2,  decimals: 1, prefix: "",  unit: "avg", delta: "↓ 72%",      tone: "down" as const, note: "from 4+ rounds" },
                   { label: "Spatial accuracy", num: 92,   decimals: 0, prefix: "",  unit: "%",   delta: "→ target",   tone: "flat" as const, note: "90% threshold" },
                   { label: "Client NPS",       num: 38,   decimals: 0, prefix: "+", unit: "pts", delta: "↑ 24 pts",   tone: "up"   as const, note: "baseline +14" },
-                ] as { label: string; num: number; decimals: number; prefix: string; unit: string; delta: string; tone: "up" | "down" | "flat"; note: string }[]).map((k, i) => (
+                ] as { label: string; num: number; decimals: number; prefix: string; unit: string; delta: string; tone: "up" | "down" | "flat"; note: string }[]).map((k, i) => {
+                  const isRightCol = i % 2 === 1;
+                  const isFirstRow = i < 2;
+                  return (
                   <motion.div
                     key={k.label}
                     initial={{ opacity: 0, y: 14 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, margin: "-40px" }}
-                    transition={{ delay: i * 0.08, duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+                    transition={{ delay: i * 0.08, duration: 0.55, ease: [0.25, 1, 0.4, 1] }}
                     style={{
-                      padding: "40px 28px 36px",
-                      borderLeft: i === 0 ? "none" : "1px solid var(--border-light)",
+                      padding: isMobile ? "28px 18px 24px" : "40px 28px 36px",
+                      borderLeft: (isMobile ? isRightCol : i > 0) ? "1px solid var(--border-light)" : "none",
+                      borderBottom: (isMobile && isFirstRow) ? "1px solid var(--border-light)" : "none",
                       position: "relative",
                     }}
                   >
@@ -3094,7 +3134,8 @@ export default function ArkoCase() {
                       </span>
                     </div>
                   </motion.div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           </Reveal>
@@ -3121,7 +3162,7 @@ export default function ArkoCase() {
                   initial={{ opacity: 0, y: 14 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: "-40px" }}
-                  transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+                  transition={{ duration: 0.55, ease: [0.25, 1, 0.4, 1] }}
                   style={{
                     position: "relative",
                     padding: "44px 36px 40px",
@@ -3263,7 +3304,7 @@ export default function ArkoCase() {
             initial={{ opacity: 0, y: 12, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 12, scale: 0.9 }}
-            transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.28, ease: [0.25, 1, 0.4, 1] }}
             whileHover={{ y: -3 }}
             whileTap={{ scale: 0.94 }}
             style={{
