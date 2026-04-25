@@ -58,7 +58,7 @@ function SectionHeader({
           <span
             style={{
               ...mono,
-              fontSize: 10,
+              fontSize: 13,
               color: "var(--accent)",
               letterSpacing: "0.22em",
             }}
@@ -68,7 +68,7 @@ function SectionHeader({
           <span
             style={{
               ...mono,
-              fontSize: 10,
+              fontSize: 13,
               color: "var(--text-muted)",
               letterSpacing: "0.22em",
             }}
