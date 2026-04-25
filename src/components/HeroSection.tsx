@@ -572,6 +572,37 @@ export default function HeroSection() {
           className="relative z-10 flex flex-col justify-center items-center text-center px-8 md:px-16 lg:px-24"
           style={{ minHeight: "100svh", paddingTop: 96, paddingBottom: 96 }}
         >
+          {/* Availability badge */}
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1, duration: 0.45, ease: [0.25, 1, 0.4, 1] }}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+              border: "0.75px solid var(--border)",
+              borderRadius: 2,
+              padding: "6px 14px",
+              marginBottom: 20,
+              backgroundColor: "var(--bg-elevated)",
+            }}
+          >
+            <span
+              className="status-pulse"
+              style={{
+                width: 6,
+                height: 6,
+                borderRadius: "50%",
+                backgroundColor: "var(--status-green)",
+                flexShrink: 0,
+              }}
+            />
+            <span style={{ ...mono, fontSize: 10, color: "var(--text-secondary)", letterSpacing: "0.18em" }}>
+              Available for new opportunities
+            </span>
+          </motion.div>
+
           {/* Name label */}
           <motion.p
             initial={{ opacity: 0 }}
