@@ -577,7 +577,7 @@ function MyApproach() {
                   className="group w-full text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
                   style={{
                     display: "grid",
-                    gridTemplateColumns: "48px 1fr auto",
+                    gridTemplateColumns: "48px 1fr auto 28px",
                     alignItems: "center",
                     columnGap: "clamp(16px, 2vw, 32px)",
                     padding: "clamp(20px, 2.5vw, 28px) 0",
@@ -628,7 +628,7 @@ function MyApproach() {
                     style={{
                       fontFamily: serif,
                       fontWeight: 700,
-                      fontSize: "clamp(22px, 2.8vw, 38px)",
+                      fontSize: "clamp(18px, 2vw, 28px)",
                       letterSpacing: "-0.025em",
                       lineHeight: 1.15,
                       color: isOpen ? "var(--accent)" : "var(--text-primary)",
@@ -659,6 +659,25 @@ function MyApproach() {
                   >
                     {p.tag}
                   </span>
+
+                  {/* +/− indicator */}
+                  <span
+                    aria-hidden
+                    style={{
+                      ...mono,
+                      fontSize: 16,
+                      color: isOpen ? "var(--accent)" : "var(--text-muted)",
+                      lineHeight: 1,
+                      textAlign: "center",
+                      transitionProperty: "color, transform",
+                      transitionDuration: "220ms",
+                      transform: isOpen ? "rotate(45deg)" : "rotate(0deg)",
+                      display: "inline-block",
+                    }}
+                    className="group-hover:!text-[var(--accent)]"
+                  >
+                    +
+                  </span>
                 </button>
 
                 {/* Expandable body */}
@@ -675,7 +694,7 @@ function MyApproach() {
                       <div
                         style={{
                           display: "grid",
-                          gridTemplateColumns: "48px 1fr auto",
+                          gridTemplateColumns: "48px 1fr auto 28px",
                           columnGap: "clamp(16px, 2vw, 32px)",
                           paddingBottom: "clamp(20px, 2.5vw, 28px)",
                         }}
