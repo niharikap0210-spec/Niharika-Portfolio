@@ -55,15 +55,15 @@ const t = {
     color: "var(--text-primary)",
   } as React.CSSProperties,
   bodyLg: {
-    fontFamily: sans, fontSize: "clamp(19px, 1.5vw, 23px)",
+    fontFamily: sans, fontSize: "clamp(18px, 1.4vw, 21px)",
     lineHeight: 1.75, color: "var(--text-secondary)",
   } as React.CSSProperties,
   body: {
-    fontFamily: sans, fontSize: 19, lineHeight: 1.75,
+    fontFamily: sans, fontSize: 18, lineHeight: 1.75,
     color: "var(--text-secondary)",
   } as React.CSSProperties,
   bodySm: {
-    fontFamily: sans, fontSize: 15.5, lineHeight: 1.7,
+    fontFamily: sans, fontSize: 14, lineHeight: 1.7,
     color: "var(--text-secondary)",
   } as React.CSSProperties,
 };
@@ -844,7 +844,7 @@ function LessonCard({ index, title, body, tag }: { index: number; title: string;
         {title}
       </div>
       <p style={{
-        fontFamily: sans, fontSize: 17, lineHeight: 1.65,
+        fontFamily: sans, fontSize: 18, lineHeight: 1.75,
         color: "var(--text-secondary)", margin: 0,
       }}>
         {body}
@@ -920,7 +920,7 @@ function SystemDiagram() {
                 {n.label}
               </div>
               <div style={{
-                fontFamily: sans, fontSize: 17, color: "var(--text-secondary)", lineHeight: 1.65,
+                fontFamily: sans, fontSize: 18, color: "var(--text-secondary)", lineHeight: 1.75,
                 marginBottom: 16,
               }}>
                 {n.role}
@@ -1054,7 +1054,7 @@ function PrincipleCard({
         {title}
       </div>
       <div style={{
-        fontFamily: sans, fontSize: 17, color: "var(--text-secondary)", lineHeight: 1.65,
+        fontFamily: sans, fontSize: 18, color: "var(--text-secondary)", lineHeight: 1.75,
       }}>
         {description}
       </div>
@@ -1772,7 +1772,7 @@ export default function VeriflowCase() {
                 transition={{ delay: 0.5, duration: 0.7 }}
                 style={{
                   fontFamily: serif, fontStyle: "italic",
-                  fontSize: "clamp(20px, 1.8vw, 26px)",
+                  fontSize: "clamp(21px, 1.9vw, 28px)",
                   color: "var(--text-secondary)",
                   lineHeight: 1.5, maxWidth: 520,
                   marginBottom: "clamp(28px, 3vw, 42px)",
@@ -2229,7 +2229,7 @@ export default function VeriflowCase() {
                 }}>
                   Glance, don't click.
                 </h3>
-                <p style={{ fontFamily: sans, fontSize: 19, lineHeight: 1.7, color: "rgba(255,255,255,0.82)", marginBottom: 20 }}>
+                <p style={{ fontFamily: sans, fontSize: 18, lineHeight: 1.75, color: "rgba(255,255,255,0.82)", marginBottom: 20 }}>
                   Break room, specimen receiving, the corridor outside the analyzer bay. No login, no filter.
                 </p>
                 <p style={{ fontFamily: sans, fontSize: 17, lineHeight: 1.7, color: "rgba(255,255,255,0.68)", marginBottom: 28 }}>
