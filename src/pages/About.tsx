@@ -340,7 +340,7 @@ function MyStory() {
           italic="to flows"
         />
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-[auto_1fr] gap-10 lg:gap-16 items-start">
           {/* Left — image */}
           <motion.div
             initial={{ opacity: 0, y: 14 }}
@@ -381,7 +381,7 @@ function MyStory() {
 
             <div
               style={{
-                width: "100%",
+                width: "min(360px, 78vw)",
                 aspectRatio: "564 / 1055",
                 overflow: "hidden",
                 boxShadow: "0 4px 14px rgba(0,0,0,0.07), 0 20px 48px rgba(0,0,0,0.07)",
