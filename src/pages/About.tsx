@@ -781,21 +781,18 @@ function Experience() {
               <motion.li
                 key={`${s.role}-${s.company}`}
                 ref={ref}
-                initial={{ opacity: 0, y: 16 }}
-                animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
-                transition={{ duration: 0.55, delay: i * 0.07, ease: [0.16, 1, 0.3, 1] }}
+                initial={{ opacity: 0, y: 18 }}
+                animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 18 }}
+                transition={{ duration: 0.6, delay: i * 0.07, ease: [0.16, 1, 0.3, 1] }}
                 className="group"
                 style={{
-                  display: "grid",
-                  gridTemplateColumns: "1fr",
                   borderTop: "0.75px solid var(--border)",
-                  padding: "clamp(24px, 3vw, 36px) 0",
+                  padding: "clamp(32px, 4vw, 52px) 0",
                 }}
               >
-                {/* Inner two-col grid */}
-                <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.4fr] gap-6 lg:gap-12">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-16 items-start">
 
-                  {/* Left — index + period + company */}
+                  {/* Left — large company name */}
                   <div>
                     <span
                       style={{
@@ -804,31 +801,53 @@ function Experience() {
                         color: "var(--text-muted)",
                         letterSpacing: "0.2em",
                         display: "block",
-                        marginBottom: 10,
+                        marginBottom: 14,
                       }}
                     >
-                      {String(i + 1).padStart(2, "0")} / {s.period}
+                      {String(i + 1).padStart(2, "0")} &nbsp;·&nbsp; {s.period}
                     </span>
-                    <h3
-                      style={{
-                        fontFamily: serif,
-                        fontWeight: 700,
-                        fontSize: "clamp(28px, 3.2vw, 42px)",
-                        letterSpacing: "-0.025em",
-                        lineHeight: 1.1,
-                        color: "var(--text-primary)",
-                        margin: 0,
-                        transitionProperty: "color, font-style",
-                        transitionDuration: "220ms",
-                      }}
-                      className="group-hover:text-[var(--accent)] group-hover:italic"
-                    >
-                      {s.company}
-                    </h3>
+
+                    <div style={{ position: "relative", display: "inline-block" }}>
+                      <h3
+                        style={{
+                          fontFamily: serif,
+                          fontWeight: 700,
+                          fontSize: "clamp(36px, 4.5vw, 60px)",
+                          letterSpacing: "-0.03em",
+                          lineHeight: 1.05,
+                          color: "var(--text-primary)",
+                          margin: 0,
+                          transitionProperty: "color, font-style",
+                          transitionDuration: "250ms",
+                        }}
+                        className="group-hover:text-[var(--accent)] group-hover:italic"
+                      >
+                        {s.company}
+                      </h3>
+                      {/* Growing underline */}
+                      <span
+                        aria-hidden
+                        style={{
+                          position: "absolute",
+                          bottom: -4,
+                          left: 0,
+                          height: "1.5px",
+                          width: "0%",
+                          backgroundColor: "var(--accent)",
+                          transitionProperty: "width",
+                          transitionDuration: "350ms",
+                          transitionTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)",
+                        }}
+                        className="group-hover:!w-full"
+                      />
+                    </div>
                   </div>
 
                   {/* Right — role + blurb */}
-                  <div className="flex flex-col justify-center gap-3">
+                  <div
+                    className="flex flex-col justify-start"
+                    style={{ paddingTop: "clamp(0px, 1vw, 32px)", gap: 12 }}
+                  >
                     <span
                       style={{
                         ...mono,
@@ -855,7 +874,6 @@ function Experience() {
               </motion.li>
             );
           })}
-          {/* closing rule */}
           <li style={{ borderTop: "0.75px solid var(--border)" }} aria-hidden />
         </ul>
       </div>
