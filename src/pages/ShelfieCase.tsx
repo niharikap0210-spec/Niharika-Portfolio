@@ -1773,7 +1773,7 @@ export default function ShelfieCase() {
                 transition={{ delay: 0.5, duration: 0.7 }}
                 style={{
                   fontFamily: serif, fontStyle: "italic",
-                  fontSize: "clamp(20px, 1.8vw, 26px)",
+                  fontSize: "clamp(21px, 1.9vw, 28px)",
                   color: "var(--text-secondary)",
                   lineHeight: 1.5, maxWidth: 520,
                   marginBottom: "clamp(28px, 3vw, 42px)",
@@ -1972,7 +1972,7 @@ export default function ShelfieCase() {
                           <p style={{ ...mono, fontSize: 18, letterSpacing: "0.18em", color: "var(--text-primary)", fontWeight: 700, margin: 0, marginBottom: 8 }}>
                             {row.term}
                           </p>
-                          <p style={{ ...t.bodySm, fontSize: 17, color: sh.muted, margin: 0, lineHeight: 1.55 }}>
+                          <p style={{ ...t.bodySm, fontSize: 18, color: "var(--text-secondary)", margin: 0, lineHeight: 1.75 }}>
                             {row.note}
                           </p>
                         </div>
