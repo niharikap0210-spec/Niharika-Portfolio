@@ -325,7 +325,7 @@ function Hero() {
   );
 }
 
-/* ─── My Story — long-form bio ──────────────────────────────────── */
+/* ─── My Story — two-col: image left, text right ────────────────── */
 function MyStory() {
   return (
     <section
@@ -340,86 +340,161 @@ function MyStory() {
           italic="to flows"
         />
 
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-40px" }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: 22,
-          }}
-        >
-          <p
-            style={{
-              fontFamily: serif,
-              fontStyle: "italic",
-              fontWeight: 500,
-              fontSize: "clamp(20px, 1.8vw, 24px)",
-              lineHeight: 1.5,
-              color: "var(--text-primary)",
-              letterSpacing: "-0.005em",
-              maxWidth: "44ch",
-            }}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-start">
+          {/* Left — image */}
+          <motion.div
+            initial={{ opacity: 0, y: 14 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+            className="relative"
           >
-            I started in architecture, drawing buildings before screens.
-          </p>
+            {/* Construction frame */}
+            <div
+              aria-hidden
+              style={{
+                position: "absolute",
+                inset: -10,
+                border: "0.75px solid var(--construction)",
+                pointerEvents: "none",
+              }}
+            />
+            {/* Corner ticks */}
+            {[
+              { top: -14, left: -14 },
+              { top: -14, right: -14 },
+              { bottom: -14, left: -14 },
+              { bottom: -14, right: -14 },
+            ].map((pos, i) => (
+              <span
+                key={i}
+                aria-hidden
+                style={{
+                  position: "absolute",
+                  width: 8,
+                  height: 8,
+                  border: "0.75px solid var(--accent)",
+                  ...pos,
+                }}
+              />
+            ))}
 
-          <p
-            style={{
-              fontFamily: sans,
-              fontSize: "clamp(15px, 1.2vw, 17px)",
-              color: "var(--text-secondary)",
-              lineHeight: 1.8,
-            }}
-          >
-            Five years of B.Arch in Indore taught me to think in systems, light, and
-            human scale. Along the way, I realized the same care I put into a corridor,
-            I wanted to put into a tap. The materials changed; the discipline didn't.
-          </p>
+            <div
+              style={{
+                width: "100%",
+                aspectRatio: "564 / 1055",
+                overflow: "hidden",
+                boxShadow: "0 4px 14px rgba(0,0,0,0.07), 0 20px 48px rgba(0,0,0,0.07)",
+              }}
+            >
+              <img
+                src="/about/niharika-arch.jpg"
+                alt="Niharika presenting architecture work"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  objectPosition: "center top",
+                  display: "block",
+                }}
+              />
+            </div>
 
-          <p
-            style={{
-              fontFamily: sans,
-              fontSize: "clamp(15px, 1.2vw, 17px)",
-              color: "var(--text-secondary)",
-              lineHeight: 1.8,
-            }}
-          >
-            I moved to Iowa for an M.S. in Human-Computer Interaction at Iowa State,
-            and the pivot stuck. The vocabulary swapped (pixels for stone, frames for
-            plans), but I still measure twice, still sweat the gutters, still draw on
-            paper before opening Figma. Architecture school left me with a suspicion of
-            ornament and a respect for constraints; both translate well.
-          </p>
+            <span
+              aria-hidden
+              style={{
+                ...caveat,
+                position: "absolute",
+                bottom: -32,
+                left: 4,
+                fontSize: 17,
+                color: "var(--text-secondary)",
+                opacity: 0.65,
+                transform: "rotate(-2deg)",
+                whiteSpace: "nowrap",
+              }}
+            >
+              architecture thesis presentation ✿
+            </span>
+          </motion.div>
 
-          <p
-            style={{
-              fontFamily: sans,
-              fontSize: "clamp(15px, 1.2vw, 17px)",
-              color: "var(--text-secondary)",
-              lineHeight: 1.8,
-            }}
+          {/* Right — text */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{ duration: 0.6, delay: 0.15 }}
+            style={{ display: "flex", flexDirection: "column", gap: 22 }}
           >
-            Today I'm a Product Designer working across AI, healthcare,
-            and consumer flows. I care about the spaces between taps: the quiet
-            moments where a product proves it understood you. If you're building
-            something thoughtful, I'd love to hear about it.
-          </p>
+            <p
+              style={{
+                fontFamily: serif,
+                fontStyle: "italic",
+                fontWeight: 500,
+                fontSize: "clamp(20px, 1.8vw, 24px)",
+                lineHeight: 1.5,
+                color: "var(--text-primary)",
+                letterSpacing: "-0.005em",
+              }}
+            >
+              I started in architecture, drawing buildings before screens.
+            </p>
 
-          <p
-            style={{
-              ...caveat,
-              fontSize: 22,
-              color: "var(--accent)",
-              opacity: 0.85,
-              marginTop: 8,
-            }}
-          >
-            same hands, new tools ✦
-          </p>
-        </motion.div>
+            <p
+              style={{
+                fontFamily: sans,
+                fontSize: "clamp(15px, 1.2vw, 17px)",
+                color: "var(--text-secondary)",
+                lineHeight: 1.8,
+              }}
+            >
+              Five years of B.Arch in Indore taught me to think in systems, light, and
+              human scale. Along the way, I realized the same care I put into a corridor,
+              I wanted to put into a tap. The materials changed; the discipline didn't.
+            </p>
+
+            <p
+              style={{
+                fontFamily: sans,
+                fontSize: "clamp(15px, 1.2vw, 17px)",
+                color: "var(--text-secondary)",
+                lineHeight: 1.8,
+              }}
+            >
+              I moved to Iowa for an M.S. in Human-Computer Interaction at Iowa State,
+              and the pivot stuck. The vocabulary swapped (pixels for stone, frames for
+              plans), but I still measure twice, still sweat the gutters, still draw on
+              paper before opening Figma. Architecture school left me with a suspicion of
+              ornament and a respect for constraints; both translate well.
+            </p>
+
+            <p
+              style={{
+                fontFamily: sans,
+                fontSize: "clamp(15px, 1.2vw, 17px)",
+                color: "var(--text-secondary)",
+                lineHeight: 1.8,
+              }}
+            >
+              Today I'm a Product Designer working across AI, healthcare,
+              and consumer flows. I care about the spaces between taps: the quiet
+              moments where a product proves it understood you. If you're building
+              something thoughtful, I'd love to hear about it.
+            </p>
+
+            <p
+              style={{
+                ...caveat,
+                fontSize: 22,
+                color: "var(--accent)",
+                opacity: 0.85,
+                marginTop: 8,
+              }}
+            >
+              same hands, new tools ✦
+            </p>
+          </motion.div>
+        </div>
       </div>
     </section>
   );
