@@ -375,9 +375,8 @@ function MyStory() {
             }}
           >
             Five years of B.Arch in Indore taught me to think in systems, light, and
-            human scale. Then a thesis on hospital wayfinding made me realize the same
-            care I put into a corridor, I wanted to put into a tap. The materials
-            changed; the discipline didn't.
+            human scale. Along the way, I realized the same care I put into a corridor,
+            I wanted to put into a tap. The materials changed; the discipline didn't.
           </p>
 
           <p
@@ -403,7 +402,7 @@ function MyStory() {
               lineHeight: 1.8,
             }}
           >
-            Today I'm a Product Designer in Virginia, working across AI, healthcare,
+            Today I'm a Product Designer working across AI, healthcare,
             and consumer flows. I care about the spaces between taps: the quiet
             moments where a product proves it understood you. If you're building
             something thoughtful, I'd love to hear about it.
