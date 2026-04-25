@@ -612,7 +612,7 @@ function MyApproach() {
                   <span
                     style={{
                       ...mono,
-                      fontSize: 11,
+                      fontSize: "clamp(22px, 2.8vw, 38px)",
                       letterSpacing: "0.18em",
                       color: isOpen ? "var(--accent)" : "var(--text-muted)",
                       transitionProperty: "color",
