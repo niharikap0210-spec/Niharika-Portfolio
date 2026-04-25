@@ -443,9 +443,9 @@ function MyStory() {
             <p
               style={{
                 fontFamily: sans,
-                fontSize: "clamp(15px, 1.2vw, 17px)",
+                fontSize: 18,
                 color: "var(--text-secondary)",
-                lineHeight: 1.8,
+                lineHeight: 1.75,
               }}
             >
               Five years of B.Arch in Indore taught me to think in systems, light, and
@@ -456,9 +456,9 @@ function MyStory() {
             <p
               style={{
                 fontFamily: sans,
-                fontSize: "clamp(15px, 1.2vw, 17px)",
+                fontSize: 18,
                 color: "var(--text-secondary)",
-                lineHeight: 1.8,
+                lineHeight: 1.75,
               }}
             >
               I moved to Iowa for an M.S. in Human-Computer Interaction at Iowa State,
@@ -471,9 +471,9 @@ function MyStory() {
             <p
               style={{
                 fontFamily: sans,
-                fontSize: "clamp(15px, 1.2vw, 17px)",
+                fontSize: 18,
                 color: "var(--text-secondary)",
-                lineHeight: 1.8,
+                lineHeight: 1.75,
               }}
             >
               Today I'm a Product Designer working across AI, healthcare,
@@ -1178,7 +1178,7 @@ function Connect() {
           <p
             style={{
               fontFamily: sans,
-              fontSize: "clamp(15px, 1.2vw, 17px)",
+              fontSize: 18,
               color: "var(--text-secondary)",
               lineHeight: 1.75,
               maxWidth: "52ch",
