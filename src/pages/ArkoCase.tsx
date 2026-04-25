@@ -3280,6 +3280,7 @@ export default function ArkoCase() {
           </div>
 
           <div
+            className="more-cases-grid"
             style={{
               display: "grid",
               gridTemplateColumns: otherProjects.length > 1 ? "1fr 1fr" : "1fr",
@@ -3290,6 +3291,11 @@ export default function ArkoCase() {
               <NavCard key={p.slug} project={p} />
             ))}
           </div>
+          <style>{`
+            @media (max-width: 720px) {
+              .more-cases-grid { grid-template-columns: minmax(0, 1fr) !important; }
+            }
+          `}</style>
         </div>
       </section>
 
