@@ -577,7 +577,7 @@ export default function HeroSection() {
             initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.08, duration: 0.5, ease: [0.25, 1, 0.4, 1] }}
-            style={{ display: "flex", gap: 8, marginBottom: 20, flexWrap: "wrap", justifyContent: "center" }}
+            style={{ display: "flex", gap: 10, marginBottom: 32, flexWrap: "wrap", justifyContent: "center" }}
           >
             {["Product Design", "UX Research", "Systems Thinking"].map((tag) => (
               <span
@@ -585,12 +585,12 @@ export default function HeroSection() {
                 style={{
                   ...mono,
                   fontSize: 9,
-                  color: "var(--text-muted)",
-                  letterSpacing: "0.2em",
-                  border: "0.75px solid var(--border)",
-                  borderRadius: 2,
-                  padding: "5px 11px",
-                  backgroundColor: "var(--bg-elevated)",
+                  color: "var(--text-secondary)",
+                  letterSpacing: "0.18em",
+                  border: "0.75px solid rgba(181,146,76,0.22)",
+                  borderRadius: 20,
+                  padding: "6px 14px",
+                  backgroundColor: "rgba(181,146,76,0.06)",
                 }}
               >
                 {tag}
