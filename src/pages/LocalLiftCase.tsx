@@ -621,7 +621,7 @@ function LofiFilmstrip({
 function HeroMockup() {
   return (
     <div
-      className="md:col-span-7"
+      className="md:col-span-7 ll-hero-mockup"
       style={{
         position: "relative",
         width: "100%",
@@ -702,6 +702,11 @@ function HeroMockup() {
       >
         <PhoneFrame src={`${HIFI}/hifi-community.png`} alt="Community" tilt={6} floatDelay={1.4} />
       </motion.div>
+      <style>{`
+        @media (max-width: 767px) {
+          .ll-hero-mockup { min-height: clamp(260px, 72vw, 320px) !important; }
+        }
+      `}</style>
     </div>
   );
 }
