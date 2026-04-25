@@ -566,7 +566,13 @@ function MyApproach() {
   return (
     <section
       id="approach"
-      style={{ padding: "clamp(56px, 7vw, 96px) 0", scrollMarginTop: 96 }}
+      className="blueprint-grid-subtle"
+      style={{
+        padding: "clamp(56px, 7vw, 96px) 0",
+        scrollMarginTop: 96,
+        borderTop: "0.75px solid var(--border)",
+        borderBottom: "0.75px solid var(--border)",
+      }}
     >
       <div className="max-w-3xl mx-auto px-6 md:px-10">
         <SectionHeader
@@ -833,7 +839,13 @@ function Education() {
   return (
     <section
       id="education"
-      style={{ padding: "clamp(56px, 7vw, 96px) 0", scrollMarginTop: 96 }}
+      className="blueprint-grid-subtle"
+      style={{
+        padding: "clamp(56px, 7vw, 96px) 0",
+        scrollMarginTop: 96,
+        borderTop: "0.75px solid var(--border)",
+        borderBottom: "0.75px solid var(--border)",
+      }}
     >
       <div className="max-w-3xl mx-auto px-6 md:px-10">
         <SectionHeader
@@ -1067,7 +1079,13 @@ function OffDuty() {
   return (
     <section
       id="off-duty"
-      style={{ padding: "clamp(56px, 7vw, 96px) 0", scrollMarginTop: 96 }}
+      className="blueprint-grid-subtle"
+      style={{
+        padding: "clamp(56px, 7vw, 96px) 0",
+        scrollMarginTop: 96,
+        borderTop: "0.75px solid var(--border)",
+        borderBottom: "0.75px solid var(--border)",
+      }}
     >
       <div className="max-w-3xl mx-auto px-6 md:px-10">
         <SectionHeader
