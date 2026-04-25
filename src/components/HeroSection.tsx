@@ -722,7 +722,7 @@ export default function HeroSection() {
               }}
               style={{
                 fontFamily: "'Inter', system-ui, sans-serif",
-                fontSize: "clamp(15px, 1.4vw, 18px)",
+                fontSize: "clamp(17px, 1.65vw, 21px)",
                 color: "#6B6B6B",
                 lineHeight: 1.65,
                 position: "relative",
