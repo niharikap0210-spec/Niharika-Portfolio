@@ -1935,7 +1935,7 @@ function ArEditorStepper({
                 gap: 12,
                 transitionProperty: "color",
                 transitionDuration: "220ms",
-                ...(isMobile ? { flexShrink: 0, minWidth: 90 } : { minWidth: 0 }),
+                ...(isMobile ? { flexShrink: 0, minWidth: 110 } : { minWidth: 0 }),
               }}
               onFocus={(e) => {
                 (e.currentTarget as HTMLElement).style.outline = `2px solid ${arko.primary}`;
@@ -1979,10 +1979,9 @@ function ArEditorStepper({
                   />
                 )}
                 <span
-                  className="hidden md:inline"
                   style={{
                     fontFamily: serif,
-                    fontSize: 22,
+                    fontSize: isMobile ? 13 : 22,
                     fontWeight: 700,
                     color: isActive ? "var(--text-primary)" : "var(--text-secondary)",
                     letterSpacing: "-0.015em",
