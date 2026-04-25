@@ -176,7 +176,7 @@ function Hero() {
                 marginTop: 6,
               }}
             >
-              — pronounced nih-har-ee-kah ✦
+              — pronounced ni-ha-ree-ka ✦
             </motion.p>
 
             <motion.p
