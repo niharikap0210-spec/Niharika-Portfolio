@@ -381,8 +381,8 @@ function MyStory() {
 
             <div
               style={{
-                width: "min(360px, 78vw)",
-                aspectRatio: "564 / 1055",
+                width: "min(320px, 78vw)",
+                aspectRatio: "10 / 19",
                 overflow: "hidden",
                 boxShadow: "0 4px 14px rgba(0,0,0,0.07), 0 20px 48px rgba(0,0,0,0.07)",
               }}
