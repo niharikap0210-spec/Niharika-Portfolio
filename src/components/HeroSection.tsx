@@ -243,6 +243,7 @@ export default function HeroSection() {
   const [displayWord, setDisplayWord] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
   const [showRotatingWord, setShowRotatingWord] = useState(false);
+  const [showCTA, setShowCTA] = useState(false);
 
   useEffect(() => {
     const ids: ReturnType<typeof setTimeout>[] = [];
@@ -256,6 +257,7 @@ export default function HeroSection() {
     q(() => { setSubtextState("placed"); setShowSelBox(true); }, (SUBTEXT_START + 1.2) * 1000);
     q(() => setSubtextState("done"), (SUBTEXT_START + 1.5) * 1000);
     q(() => setSelBoxFaded(true), (SUBTEXT_START + 3.2) * 1000);
+    q(() => setShowCTA(true), (SUBTEXT_START + 1.9) * 1000);
 
     return () => ids.forEach(clearTimeout);
   }, []);
@@ -572,6 +574,32 @@ export default function HeroSection() {
           className="relative z-10 flex flex-col justify-center items-center text-center px-8 md:px-16 lg:px-24"
           style={{ minHeight: "100svh", paddingTop: 96, paddingBottom: 96 }}
         >
+          {/* Discipline tags */}
+          <motion.div
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.08, duration: 0.5, ease: [0.25, 1, 0.4, 1] }}
+            style={{ display: "flex", gap: 8, marginBottom: 20, flexWrap: "wrap", justifyContent: "center" }}
+          >
+            {["Product Design", "UX Research", "Systems Thinking"].map((tag) => (
+              <span
+                key={tag}
+                style={{
+                  ...mono,
+                  fontSize: 9,
+                  color: "var(--text-muted)",
+                  letterSpacing: "0.2em",
+                  border: "0.75px solid var(--border)",
+                  borderRadius: 2,
+                  padding: "5px 11px",
+                  backgroundColor: "var(--bg-elevated)",
+                }}
+              >
+                {tag}
+              </span>
+            ))}
+          </motion.div>
+
           {/* Name label */}
           <motion.p
             initial={{ opacity: 0 }}
@@ -735,7 +763,97 @@ export default function HeroSection() {
             </motion.p>
           </div>
 
+          {/* CTA row */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={showCTA ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
+            transition={{ duration: 0.5, ease: [0.25, 1, 0.4, 1] }}
+            style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 36, flexWrap: "wrap", justifyContent: "center" }}
+          >
+            <a
+              href="#projects"
+              onClick={(e) => { e.preventDefault(); document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" }); }}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 8,
+                padding: "12px 24px",
+                backgroundColor: "var(--text-primary)",
+                color: "var(--bg-primary)",
+                fontFamily: "'Inter', system-ui, sans-serif",
+                fontSize: 13,
+                fontWeight: 500,
+                letterSpacing: "0.01em",
+                borderRadius: 2,
+                textDecoration: "none",
+                transition: "opacity 180ms ease-out",
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.82")}
+              onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
+            >
+              View Work
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden>
+                <path d="M7 2.5L7 11.5M7 11.5L3 7.5M7 11.5L11 7.5" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </a>
+            <a
+              href="/resume"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 7,
+                padding: "12px 22px",
+                border: "0.75px solid var(--border)",
+                color: "var(--text-secondary)",
+                fontFamily: "'Inter', system-ui, sans-serif",
+                fontSize: 13,
+                letterSpacing: "0.01em",
+                borderRadius: 2,
+                textDecoration: "none",
+                backgroundColor: "var(--bg-elevated)",
+                transition: "border-color 180ms ease-out, color 180ms ease-out",
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.borderColor = "var(--text-muted)"; e.currentTarget.style.color = "var(--text-primary)"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.borderColor = "var(--border)"; e.currentTarget.style.color = "var(--text-secondary)"; }}
+            >
+              Resume
+              <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden>
+                <path d="M3 10L10 3M10 3H5M10 3V8" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </a>
+          </motion.div>
+
         </div>
+
+        {/* Scroll indicator */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: SUBTEXT_START + 2.2, duration: 0.6 }}
+          aria-hidden
+          style={{
+            position: "absolute",
+            bottom: 36,
+            left: "50%",
+            transform: "translateX(-50%)",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: 8,
+            pointerEvents: "none",
+            zIndex: 10,
+          }}
+        >
+          <span style={{ ...mono, fontSize: 8, color: "var(--text-muted)", letterSpacing: "0.22em", opacity: 0.6 }}>
+            Scroll
+          </span>
+          <motion.div
+            animate={{ y: [0, 6, 0] }}
+            transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
+            style={{ width: 1, height: 28, backgroundColor: "var(--text-muted)", opacity: 0.35 }}
+          />
+        </motion.div>
+
       </div>
     </DrawingSheetBorder>
   );
