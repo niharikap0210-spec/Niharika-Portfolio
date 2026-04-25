@@ -288,7 +288,7 @@ function Hero() {
                   position: "absolute",
                   bottom: -34,
                   right: 10,
-                  fontSize: 18,
+                  fontSize: 20,
                   color: "var(--text-secondary)",
                   opacity: 0.7,
                   transform: "rotate(-3deg)",
@@ -441,7 +441,7 @@ function MyStory() {
             <p
               style={{
                 fontFamily: sans,
-                fontSize: 18,
+                fontSize: 20,
                 color: "var(--text-secondary)",
                 lineHeight: 1.75,
               }}
@@ -454,7 +454,7 @@ function MyStory() {
             <p
               style={{
                 fontFamily: sans,
-                fontSize: 18,
+                fontSize: 20,
                 color: "var(--text-secondary)",
                 lineHeight: 1.75,
               }}
@@ -469,7 +469,7 @@ function MyStory() {
             <p
               style={{
                 fontFamily: sans,
-                fontSize: 18,
+                fontSize: 20,
                 color: "var(--text-secondary)",
                 lineHeight: 1.75,
               }}
@@ -704,7 +704,7 @@ function MyApproach() {
                           <p
                             style={{
                               fontFamily: sans,
-                              fontSize: 18,
+                              fontSize: 20,
                               color: "var(--text-secondary)",
                               lineHeight: 1.75,
                               margin: 0,
@@ -717,7 +717,7 @@ function MyApproach() {
                           <p
                             style={{
                               ...caveat,
-                              fontSize: 18,
+                              fontSize: 20,
                               color: "var(--accent)",
                               opacity: 0.8,
                               marginTop: 10,
@@ -842,7 +842,7 @@ function Experience() {
                     <p
                       style={{
                         fontFamily: sans,
-                        fontSize: 18,
+                        fontSize: 20,
                         color: "var(--text-secondary)",
                         lineHeight: 1.75,
                         margin: 0,
@@ -959,7 +959,7 @@ function Education() {
                 <p
                   style={{
                     ...caveat,
-                    fontSize: 18,
+                    fontSize: 20,
                     color: "var(--accent)",
                     opacity: 0.8,
                     marginTop: 8,
@@ -1249,7 +1249,7 @@ function Connect() {
           <p
             style={{
               fontFamily: sans,
-              fontSize: 18,
+              fontSize: 20,
               color: "var(--text-secondary)",
               lineHeight: 1.75,
               maxWidth: "52ch",
