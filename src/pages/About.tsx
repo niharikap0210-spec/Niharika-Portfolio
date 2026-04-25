@@ -503,31 +503,31 @@ const principles = [
   {
     num: "01",
     title: "Research before pixels",
-    tag: "watch first",
+    tag: "listen before you draw",
     body: "Every flow starts with a real human problem. If I can't name the user, the pain, and the moment, I'm not ready to draw.",
   },
   {
     num: "02",
     title: "Quiet over clever",
-    tag: "remove, don't add",
+    tag: "invisible is best",
     body: "The best UI is the one nobody notices. I'd rather solve a problem invisibly than show off a pattern.",
   },
   {
     num: "03",
     title: "Add a little spice",
-    tag: "delight is data",
+    tag: "joy is intentional",
     body: "Joy is a function, not a flourish. A small surprise (a soft motion, an honest empty state) turns a tool into a memory.",
   },
   {
     num: "04",
     title: "Measure twice, cut once",
-    tag: "the brief is sacred",
+    tag: "precision compounds",
     body: "Architectural rigor on every decision. I sweat the gutters, the type scale, the dead pixels at 11pm, because details compound.",
   },
   {
     num: "05",
     title: "Build in plain sight",
-    tag: "rough draft wins",
+    tag: "show your work",
     body: "Prototype rough, share early, ship the smallest honest thing. Feedback loops beat pitch decks.",
   },
 ];
@@ -646,8 +646,8 @@ function MyApproach() {
                   <span
                     style={{
                       ...mono,
-                      fontSize: 10,
-                      letterSpacing: "0.18em",
+                      fontSize: 13,
+                      letterSpacing: "0.16em",
                       color: "var(--text-muted)",
                       opacity: isOpen ? 0 : 1,
                       transitionProperty: "opacity",
