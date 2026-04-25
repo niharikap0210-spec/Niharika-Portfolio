@@ -1,4 +1,4 @@
-import { motion, useInView, useScroll, useTransform } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import { useRef, useState } from "react";
 import {
   CoffeeIcon,
@@ -7,450 +7,354 @@ import {
   PencilSimpleLineIcon,
   ForkKnifeIcon,
   ArrowRightIcon,
+  MapPinIcon,
 } from "@phosphor-icons/react";
 import HandDrawnSketch from "../components/HandDrawnSketch";
 
 const mono: React.CSSProperties = {
   fontFamily: "'Space Mono', monospace",
   textTransform: "uppercase",
-  letterSpacing: "0.14em",
+  letterSpacing: "0.16em",
 };
 const serif = "'Playfair Display', Georgia, serif";
 const sans = "'Inter', system-ui, sans-serif";
 
-/* ─── Hero with editorial split ──────────────────────────────────── */
+/* ─── Hero — centered photo, personal greeting ───────────────────── */
 function Hero() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end start"],
-  });
-  const photoY = useTransform(scrollYProgress, [0, 1], [0, 60]);
+  return (
+    <section
+      className="blueprint-grid relative"
+      style={{
+        paddingTop: "clamp(72px, 9vw, 110px)",
+        paddingBottom: "clamp(40px, 5vw, 60px)",
+      }}
+    >
+      <div className="max-w-3xl mx-auto px-6 flex flex-col items-center text-center">
+        <motion.span
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          style={{ ...mono, fontSize: 10, color: "var(--text-muted)", marginBottom: 28 }}
+        >
+          ✦ Hello ✦
+        </motion.span>
+
+        {/* Photo */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.96 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          className="relative"
+          style={{ marginBottom: 36 }}
+        >
+          {/* construction-line frame */}
+          <div
+            aria-hidden
+            style={{
+              position: "absolute",
+              inset: -12,
+              border: "0.75px solid var(--construction)",
+              pointerEvents: "none",
+            }}
+          />
+          {/* corner ticks */}
+          {[
+            { top: -16, left: -16 },
+            { top: -16, right: -16 },
+            { bottom: -16, left: -16 },
+            { bottom: -16, right: -16 },
+          ].map((pos, i) => (
+            <div
+              key={i}
+              aria-hidden
+              style={{
+                position: "absolute",
+                width: 9,
+                height: 9,
+                border: "0.75px solid var(--accent)",
+                ...pos,
+              }}
+            />
+          ))}
+
+          {/* tape */}
+          <div
+            aria-hidden
+            style={{
+              position: "absolute",
+              top: -10,
+              left: "50%",
+              transform: "translateX(-50%) rotate(-3deg)",
+              width: 72,
+              height: 16,
+              backgroundColor: "rgba(200,200,200,0.55)",
+              zIndex: 3,
+              borderRadius: 2,
+              boxShadow: "0 1px 2px rgba(0,0,0,0.06)",
+            }}
+          />
+
+          <div
+            style={{
+              width: "min(320px, 75vw)",
+              aspectRatio: "1 / 1",
+              overflow: "hidden",
+              position: "relative",
+              boxShadow:
+                "0 4px 14px rgba(0,0,0,0.08), 0 22px 50px rgba(0,0,0,0.08)",
+            }}
+          >
+            <img
+              src="/about/niharika.jpg"
+              alt="Niharika Pundlik"
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                objectPosition: "center 16%",
+                transform: "scale(1.35)",
+                transformOrigin: "center 22%",
+                display: "block",
+              }}
+            />
+          </div>
+
+          {/* Caveat annotation */}
+          <span
+            aria-hidden
+            className="hidden sm:inline-block"
+            style={{
+              position: "absolute",
+              right: -110,
+              top: 28,
+              fontFamily: "'Caveat', cursive",
+              fontSize: 18,
+              color: "var(--text-secondary)",
+              opacity: 0.6,
+              transform: "rotate(-6deg)",
+              whiteSpace: "nowrap",
+            }}
+          >
+            ↙ that's me
+          </span>
+        </motion.div>
+
+        <motion.h1
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+          style={{
+            fontFamily: serif,
+            fontWeight: 700,
+            fontSize: "clamp(40px, 6vw, 72px)",
+            color: "var(--text-primary)",
+            letterSpacing: "-0.03em",
+            lineHeight: 1.02,
+            marginBottom: 18,
+          }}
+        >
+          Hi, I'm{" "}
+          <span style={{ fontStyle: "italic", color: "var(--accent)" }}>
+            Niharika
+          </span>
+          .
+        </motion.h1>
+
+        <motion.p
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.55, delay: 0.25 }}
+          style={{
+            fontFamily: sans,
+            fontSize: "clamp(15px, 1.3vw, 17px)",
+            color: "var(--text-secondary)",
+            lineHeight: 1.65,
+            maxWidth: "44ch",
+          }}
+        >
+          A product designer adding a little spice and a lot of soul to everything I ship.
+        </motion.p>
+
+        {/* Origin · Base inline */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+          className="flex items-center gap-3 mt-6"
+        >
+          <MapPinIcon size={14} weight="regular" color="var(--text-muted)" />
+          <span
+            style={{
+              ...mono,
+              fontSize: 10,
+              color: "var(--text-muted)",
+              letterSpacing: "0.18em",
+            }}
+          >
+            Indore → Iowa → Virginia
+          </span>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
+/* ─── Personality strip — 4 facts ────────────────────────────────── */
+const facts = [
+  {
+    icon: ForkKnifeIcon,
+    label: "Spice lover",
+    detail: "If it doesn't burn, I'm not interested.",
+  },
+  {
+    icon: MusicNotesIcon,
+    label: "Dancer at heart",
+    detail: "Always moving to a beat.",
+  },
+  {
+    icon: AirplaneIcon,
+    label: "Adventure seeker",
+    detail: "Chasing new cities and street food.",
+  },
+  {
+    icon: PencilSimpleLineIcon,
+    label: "Design geek",
+    detail: "Obsessed with intuitive, playful UX.",
+  },
+];
+
+function PersonalityStrip() {
+  const [active, setActive] = useState<number | null>(null);
 
   return (
     <section
-      ref={containerRef}
-      className="blueprint-grid relative"
       style={{
-        paddingTop: "clamp(80px, 11vw, 140px)",
-        paddingBottom: "clamp(60px, 9vw, 110px)",
-        overflow: "hidden",
+        padding: "clamp(48px, 6vw, 80px) 0",
       }}
     >
-      <div className="max-w-7xl mx-auto px-6 md:px-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
-          {/* Text */}
-          <div className="lg:col-span-7 order-2 lg:order-1">
-            <motion.div
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="flex items-center gap-3 mb-8"
-            >
-              <span
-                className="status-pulse"
+      <div className="max-w-5xl mx-auto px-6">
+        <div
+          className="grid grid-cols-2 lg:grid-cols-4 gap-0"
+          style={{ border: "0.75px solid var(--border)" }}
+        >
+          {facts.map((f, i) => {
+            const Icon = f.icon;
+            const isActive = active === i;
+            return (
+              <motion.button
+                key={f.label}
+                type="button"
+                onMouseEnter={() => setActive(i)}
+                onMouseLeave={() => setActive(null)}
+                onFocus={() => setActive(i)}
+                onBlur={() => setActive(null)}
+                initial={{ opacity: 0, y: 14 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-40px" }}
+                transition={{ duration: 0.5, delay: i * 0.07 }}
+                className="text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
                 style={{
-                  width: 8,
-                  height: 8,
-                  borderRadius: "50%",
-                  backgroundColor: "var(--status-green)",
-                  border: "1.5px solid var(--accent)",
-                  display: "inline-block",
-                }}
-                aria-hidden
-              />
-              <span style={{ ...mono, fontSize: 10, color: "var(--text-secondary)" }}>
-                Hello — I'm Niharika
-              </span>
-            </motion.div>
-
-            <motion.h1
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-              style={{
-                fontFamily: serif,
-                fontWeight: 700,
-                fontSize: "clamp(48px, 7.5vw, 104px)",
-                color: "var(--text-primary)",
-                letterSpacing: "-0.035em",
-                lineHeight: 0.98,
-              }}
-            >
-              I design{" "}
-              <span style={{ fontStyle: "italic", color: "var(--accent)" }}>
-                quiet
-              </span>
-              <br />
-              software
-              <br />
-              that{" "}
-              <span style={{ fontStyle: "italic", color: "var(--accent)" }}>
-                feels
-              </span>{" "}
-              loud.
-            </motion.h1>
-
-            <motion.p
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.25 }}
-              style={{
-                fontFamily: sans,
-                fontSize: "clamp(16px, 1.45vw, 19px)",
-                color: "var(--text-secondary)",
-                lineHeight: 1.7,
-                marginTop: 28,
-                maxWidth: "44ch",
-              }}
-            >
-              Architect by training, product designer by practice. I bring an architect's rigor for
-              detail and a researcher's empathy to every flow I touch.
-            </motion.p>
-
-            {/* Inline meta */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.45 }}
-              className="flex flex-wrap items-center gap-x-6 gap-y-3 mt-10"
-            >
-              {[
-                { k: "Now", v: "Mercor + PyCube" },
-                { k: "Base", v: "Virginia, US" },
-                { k: "Origin", v: "Indore, India" },
-              ].map((m) => (
-                <div key={m.k} className="flex items-baseline gap-2">
-                  <span style={{ ...mono, fontSize: 9, color: "var(--text-muted)" }}>
-                    {m.k} /
-                  </span>
-                  <span
-                    style={{
-                      fontFamily: sans,
-                      fontSize: 13,
-                      color: "var(--text-primary)",
-                      fontWeight: 500,
-                    }}
-                  >
-                    {m.v}
-                  </span>
-                </div>
-              ))}
-            </motion.div>
-          </div>
-
-          {/* Photo */}
-          <motion.div
-            className="lg:col-span-5 order-1 lg:order-2 flex justify-center lg:justify-end"
-            initial={{ opacity: 0, scale: 0.96 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-            style={{ y: photoY }}
-          >
-            <div className="relative">
-              {/* construction frame */}
-              <div
-                aria-hidden
-                style={{
-                  position: "absolute",
-                  inset: -14,
-                  border: "0.75px solid var(--construction)",
-                  pointerEvents: "none",
-                }}
-              />
-              {/* corner ticks */}
-              {[
-                { top: -18, left: -18 },
-                { top: -18, right: -18 },
-                { bottom: -18, left: -18 },
-                { bottom: -18, right: -18 },
-              ].map((pos, i) => (
-                <div
-                  key={i}
-                  aria-hidden
-                  style={{
-                    position: "absolute",
-                    width: 10,
-                    height: 10,
-                    border: "0.75px solid var(--accent)",
-                    ...pos,
-                  }}
-                />
-              ))}
-
-              <div
-                style={{
-                  width: "min(440px, 78vw)",
-                  aspectRatio: "4 / 5",
-                  overflow: "hidden",
+                  border: "0.75px solid",
+                  borderColor: isActive ? "var(--accent)" : "var(--border)",
+                  padding: "26px 22px 28px",
+                  background: isActive ? "var(--accent-subtle)" : "var(--bg-elevated)",
+                  cursor: "default",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 14,
+                  transitionProperty: "border-color, background-color, transform",
+                  transitionDuration: "200ms",
+                  transform: isActive ? "translateY(-2px)" : "translateY(0)",
                   position: "relative",
-                  boxShadow:
-                    "0 6px 18px rgba(0,0,0,0.08), 0 24px 56px rgba(0,0,0,0.08)",
-                }}
-              >
-                <img
-                  src="/about/niharika.jpg"
-                  alt="Niharika Pundlik"
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "cover",
-                    objectPosition: "center 14%",
-                    transform: "scale(1.18)",
-                    transformOrigin: "center 22%",
-                    display: "block",
-                  }}
-                />
-              </div>
-
-              {/* hand-written annotation */}
-              <div
-                aria-hidden
-                className="hidden md:flex"
-                style={{
-                  position: "absolute",
-                  top: 32,
-                  left: -120,
-                  alignItems: "center",
-                  gap: 6,
-                  transform: "rotate(-4deg)",
                 }}
               >
                 <span
+                  aria-hidden
                   style={{
-                    fontFamily: "'Caveat', cursive",
-                    fontSize: 17,
-                    color: "var(--text-secondary)",
-                    opacity: 0.65,
-                    whiteSpace: "nowrap",
+                    ...mono,
+                    position: "absolute",
+                    top: 12,
+                    right: 14,
+                    fontSize: 8,
+                    color: "var(--text-muted)",
                   }}
                 >
-                  this is me ↘
+                  0{i + 1}
                 </span>
-              </div>
 
-              {/* dimension tag bottom right */}
-              <div
-                aria-hidden
-                style={{
-                  position: "absolute",
-                  bottom: -32,
-                  right: 0,
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 6,
-                }}
-              >
-                <span style={{ ...mono, fontSize: 8, color: "var(--text-muted)" }}>
-                  N.P · 2026
-                </span>
-              </div>
-            </div>
-          </motion.div>
+                <Icon
+                  size={24}
+                  weight={isActive ? "bold" : "regular"}
+                  color={isActive ? "var(--accent)" : "var(--text-secondary)"}
+                  style={{ transitionProperty: "color", transitionDuration: "200ms" }}
+                />
+
+                <div>
+                  <h3
+                    style={{
+                      fontFamily: serif,
+                      fontWeight: 600,
+                      fontSize: 19,
+                      letterSpacing: "-0.01em",
+                      color: "var(--text-primary)",
+                      lineHeight: 1.2,
+                      marginBottom: 4,
+                    }}
+                  >
+                    {f.label}
+                  </h3>
+                  <p
+                    style={{
+                      fontFamily: sans,
+                      fontSize: 12.5,
+                      color: "var(--text-secondary)",
+                      lineHeight: 1.55,
+                    }}
+                  >
+                    {f.detail}
+                  </p>
+                </div>
+              </motion.button>
+            );
+          })}
         </div>
       </div>
     </section>
   );
 }
 
-/* ─── Editorial bio ──────────────────────────────────────────────── */
-function EditorialBio() {
-  return (
-    <section
-      style={{
-        padding: "clamp(72px, 10vw, 130px) 0",
-      }}
-    >
-      <div className="max-w-3xl mx-auto px-6">
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.7 }}
-          style={{
-            fontFamily: serif,
-            fontWeight: 500,
-            fontStyle: "italic",
-            fontSize: "clamp(24px, 2.6vw, 36px)",
-            lineHeight: 1.4,
-            letterSpacing: "-0.015em",
-            color: "var(--text-primary)",
-            marginBottom: 48,
-          }}
-        >
-          I think in <span style={{ color: "var(--accent)" }}>systems</span>, space, and
-          structure — I just trade walls for wireframes now.
-        </motion.p>
-
-        <div className="space-y-7">
-          {[
-            <>
-              I grew up in Indore drawing floor plans before I knew what to call them. By the
-              time I finished my B.Arch., I'd realized the buildings I cared most about were the
-              ones <em>people forgot they were inside of</em> — the ones that just worked.
-            </>,
-            <>
-              That obsession followed me to Iowa State, where my master's in HCI gave me a new
-              kind of canvas: pixels instead of plans, but the same question — how do people
-              actually move through this thing?
-            </>,
-            <>
-              Today I'm shipping product at <strong>Mercor</strong> and <strong>PyCube</strong>
-              {" "}— turning research into interfaces that feel obvious in hindsight.
-            </>,
-          ].map((para, i) => (
-            <motion.p
-              key={i}
-              initial={{ opacity: 0, y: 12 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-60px" }}
-              transition={{ duration: 0.55, delay: i * 0.1 }}
-              style={{
-                fontFamily: sans,
-                fontSize: "clamp(15px, 1.3vw, 17px)",
-                color: "var(--text-secondary)",
-                lineHeight: 1.85,
-              }}
-            >
-              {para}
-            </motion.p>
-          ))}
-        </div>
-
-        {/* CTAs */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-60px" }}
-          transition={{ duration: 0.55, delay: 0.3 }}
-          className="flex flex-wrap gap-3 mt-12"
-        >
-          <a
-            href="https://drive.google.com/file/d/1WbopauZ0xwmOnLNuEb1XZX5TmzxQCA6K/view?usp=sharing"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
-            style={{
-              ...mono,
-              fontSize: 10,
-              color: "var(--bg-elevated)",
-              backgroundColor: "var(--text-primary)",
-              padding: "13px 22px",
-              textDecoration: "none",
-              transitionProperty: "background-color, transform",
-              transitionDuration: "180ms",
-            }}
-            onMouseEnter={(e) => {
-              const el = e.currentTarget as HTMLElement;
-              el.style.backgroundColor = "var(--accent)";
-              el.style.transform = "translateY(-2px)";
-            }}
-            onMouseLeave={(e) => {
-              const el = e.currentTarget as HTMLElement;
-              el.style.backgroundColor = "var(--text-primary)";
-              el.style.transform = "translateY(0)";
-            }}
-          >
-            View Resume
-            <ArrowRightIcon size={12} weight="bold" />
-          </a>
-          <a
-            href="https://www.linkedin.com/in/niharika-pundlik-63a9a1288/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
-            style={{
-              ...mono,
-              fontSize: 10,
-              color: "var(--text-primary)",
-              backgroundColor: "transparent",
-              border: "0.75px solid var(--text-primary)",
-              padding: "13px 22px",
-              textDecoration: "none",
-              transitionProperty: "color, border-color, transform",
-              transitionDuration: "180ms",
-            }}
-            onMouseEnter={(e) => {
-              const el = e.currentTarget as HTMLElement;
-              el.style.color = "var(--accent)";
-              el.style.borderColor = "var(--accent)";
-              el.style.transform = "translateY(-2px)";
-            }}
-            onMouseLeave={(e) => {
-              const el = e.currentTarget as HTMLElement;
-              el.style.color = "var(--text-primary)";
-              el.style.borderColor = "var(--text-primary)";
-              el.style.transform = "translateY(0)";
-            }}
-          >
-            LinkedIn
-          </a>
-        </motion.div>
-      </div>
-    </section>
-  );
-}
-
-/* ─── The Pivot — flowing horizontal lockup ─────────────────────── */
+/* ─── The Pivot — compact one-liner ─────────────────────────────── */
 function ThePivot() {
   return (
     <section
-      className="relative blueprint-grid-subtle"
+      className="blueprint-grid-subtle"
       style={{
-        padding: "clamp(72px, 10vw, 120px) 0",
+        padding: "clamp(56px, 7vw, 88px) 0",
+        borderTop: "0.75px solid var(--border)",
+        borderBottom: "0.75px solid var(--border)",
       }}
     >
-      <div className="max-w-5xl mx-auto px-6 md:px-10">
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-60px" }}
-          transition={{ duration: 0.6 }}
-          className="text-center"
-        >
-          <p style={{ ...mono, fontSize: 10, color: "var(--text-muted)", marginBottom: 18 }}>
-            ⟶ The pivot
-          </p>
-          <h2
-            style={{
-              fontFamily: serif,
-              fontWeight: 700,
-              fontSize: "clamp(34px, 4vw, 56px)",
-              letterSpacing: "-0.025em",
-              lineHeight: 1.1,
-              color: "var(--text-primary)",
-              maxWidth: "20ch",
-              margin: "0 auto",
-            }}
-          >
-            Same instincts.{" "}
-            <span style={{ fontStyle: "italic", color: "var(--accent)" }}>
-              Different canvas.
-            </span>
-          </h2>
-        </motion.div>
-
-        {/* Horizontal flow */}
-        <div className="mt-20 flex flex-col md:flex-row items-center justify-between gap-12 md:gap-6">
+      <div className="max-w-4xl mx-auto px-6">
+        <div className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-12">
           {/* Built */}
           <motion.div
-            initial={{ opacity: 0, x: -16 }}
+            initial={{ opacity: 0, x: -12 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-50px" }}
-            transition={{ duration: 0.7 }}
-            className="flex-1 text-center md:text-left"
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{ duration: 0.6 }}
+            className="flex-1 text-center md:text-right"
           >
-            <p style={{ ...mono, fontSize: 9, color: "var(--text-muted)", marginBottom: 14 }}>
+            <p style={{ ...mono, fontSize: 9, color: "var(--text-muted)", marginBottom: 8 }}>
               2018 — 2023
             </p>
             <h3
               style={{
                 fontFamily: serif,
-                fontSize: "clamp(28px, 3vw, 40px)",
+                fontSize: "clamp(24px, 2.6vw, 32px)",
                 fontWeight: 600,
                 letterSpacing: "-0.02em",
                 color: "var(--text-primary)",
-                marginBottom: 10,
+                lineHeight: 1.15,
               }}
             >
               Architecture
@@ -458,33 +362,31 @@ function ThePivot() {
             <p
               style={{
                 fontFamily: sans,
-                fontSize: 14,
-                color: "var(--text-secondary)",
-                lineHeight: 1.7,
-                maxWidth: "28ch",
-                margin: "0 auto",
+                fontSize: 13,
+                color: "var(--text-muted)",
+                marginTop: 4,
+                fontStyle: "italic",
               }}
-              className="md:!ml-0"
             >
-              Walls, light, the way bodies bend around a corner.
+              walls + light
             </p>
-            <div className="mt-6 flex justify-center md:justify-start opacity-70">
-              <HandDrawnSketch type="floorPlan" width={130} height={90} />
-            </div>
           </motion.div>
 
-          {/* Arrow */}
+          {/* Arrow + sketch */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.6 }}
+            initial={{ opacity: 0, scale: 0.7 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="flex md:flex-col items-center gap-3"
+            transition={{ duration: 0.5, delay: 0.15 }}
+            className="flex flex-col items-center gap-2"
             aria-hidden
           >
-            <svg width="80" height="44" viewBox="0 0 80 44" fill="none" className="hidden md:block">
+            <span style={{ ...mono, fontSize: 8, color: "var(--accent)" }}>
+              same brain
+            </span>
+            <svg width="80" height="32" viewBox="0 0 80 32" fill="none">
               <path
-                d="M4 22 Q 40 4, 76 22"
+                d="M4 16 Q 40 4, 76 16"
                 stroke="var(--accent)"
                 strokeWidth="1.25"
                 strokeLinecap="round"
@@ -492,25 +394,7 @@ function ThePivot() {
                 strokeDasharray="2 4"
               />
               <path
-                d="M68 16 L76 22 L68 28"
-                stroke="var(--accent)"
-                strokeWidth="1.25"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                fill="none"
-              />
-            </svg>
-            <svg width="44" height="60" viewBox="0 0 44 60" fill="none" className="md:hidden">
-              <path
-                d="M22 4 Q 4 30, 22 56"
-                stroke="var(--accent)"
-                strokeWidth="1.25"
-                strokeLinecap="round"
-                fill="none"
-                strokeDasharray="2 4"
-              />
-              <path
-                d="M16 48 L22 56 L28 48"
+                d="M68 10 L76 16 L68 22"
                 stroke="var(--accent)"
                 strokeWidth="1.25"
                 strokeLinecap="round"
@@ -522,23 +406,23 @@ function ThePivot() {
 
           {/* Digital */}
           <motion.div
-            initial={{ opacity: 0, x: 16 }}
+            initial={{ opacity: 0, x: 12 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-50px" }}
-            transition={{ duration: 0.7, delay: 0.15 }}
-            className="flex-1 text-center md:text-right"
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{ duration: 0.6, delay: 0.15 }}
+            className="flex-1 text-center md:text-left"
           >
-            <p style={{ ...mono, fontSize: 9, color: "var(--text-muted)", marginBottom: 14 }}>
+            <p style={{ ...mono, fontSize: 9, color: "var(--text-muted)", marginBottom: 8 }}>
               2023 — Now
             </p>
             <h3
               style={{
                 fontFamily: serif,
-                fontSize: "clamp(28px, 3vw, 40px)",
+                fontSize: "clamp(24px, 2.6vw, 32px)",
                 fontWeight: 600,
                 letterSpacing: "-0.02em",
                 color: "var(--text-primary)",
-                marginBottom: 10,
+                lineHeight: 1.15,
               }}
             >
               Product Design
@@ -546,19 +430,14 @@ function ThePivot() {
             <p
               style={{
                 fontFamily: sans,
-                fontSize: 14,
-                color: "var(--text-secondary)",
-                lineHeight: 1.7,
-                maxWidth: "28ch",
-                margin: "0 auto",
+                fontSize: 13,
+                color: "var(--text-muted)",
+                marginTop: 4,
+                fontStyle: "italic",
               }}
-              className="md:!mr-0"
             >
-              Flows, friction, the way thumbs scroll past or stop.
+              flows + friction
             </p>
-            <div className="mt-6 flex justify-center md:justify-end opacity-70">
-              <HandDrawnSketch type="wireframe" width={70} height={90} />
-            </div>
           </motion.div>
         </div>
       </div>
@@ -566,110 +445,83 @@ function ThePivot() {
   );
 }
 
-/* ─── Skills — flowing ribbons, not a grid ──────────────────────── */
+/* ─── Toolkit — compact ribbons ─────────────────────────────────── */
 const skillRows = [
   {
     label: "Research",
-    tools: ["Dovetail", "Maze", "UserTesting", "Lookback", "Otter AI", "Optimal Workshop"],
+    tools: ["Dovetail", "Maze", "UserTesting", "Lookback", "Otter AI"],
   },
-  { label: "Design", tools: ["Figma", "FigJam", "Framer", "Protopie", "Adobe XD", "Sketch"] },
+  { label: "Design", tools: ["Figma", "FigJam", "Framer", "Protopie", "Sketch"] },
   { label: "Code", tools: ["HTML/CSS", "JavaScript", "React", "Python"] },
-  { label: "Collaboration", tools: ["Jira", "Slack", "Miro", "Notion", "Confluence"] },
+  { label: "Collab", tools: ["Jira", "Slack", "Miro", "Notion", "Confluence"] },
 ];
 
-function SkillRibbons() {
+function Toolkit() {
   const [active, setActive] = useState<string | null>(null);
 
   return (
-    <section style={{ padding: "clamp(72px, 10vw, 120px) 0" }}>
-      <div className="max-w-5xl mx-auto px-6 md:px-10">
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-60px" }}
-          transition={{ duration: 0.55 }}
-          className="mb-14 flex items-end justify-between gap-6 flex-wrap"
+    <section style={{ padding: "clamp(56px, 7vw, 90px) 0" }}>
+      <div className="max-w-4xl mx-auto px-6">
+        <p
+          style={{
+            ...mono,
+            fontSize: 10,
+            color: "var(--text-muted)",
+            marginBottom: 24,
+            textAlign: "center",
+          }}
         >
-          <h2
-            style={{
-              fontFamily: serif,
-              fontWeight: 700,
-              fontSize: "clamp(32px, 3.6vw, 48px)",
-              letterSpacing: "-0.025em",
-              lineHeight: 1.1,
-              color: "var(--text-primary)",
-              maxWidth: "16ch",
-            }}
-          >
-            Things I{" "}
-            <span style={{ fontStyle: "italic", color: "var(--accent)" }}>reach for</span>{" "}
-            most.
-          </h2>
-          <p style={{ ...mono, fontSize: 10, color: "var(--text-muted)" }}>
-            Toolkit · 04 disciplines
-          </p>
-        </motion.div>
+          ✦ Toolkit ✦
+        </p>
 
-        <div className="space-y-0">
+        <div>
           {skillRows.map((row, i) => {
             const isActive = active === row.label;
             return (
               <motion.div
                 key={row.label}
-                initial={{ opacity: 0, y: 16 }}
+                initial={{ opacity: 0, y: 12 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-40px" }}
-                transition={{ duration: 0.55, delay: i * 0.07 }}
+                transition={{ duration: 0.5, delay: i * 0.06 }}
                 onMouseEnter={() => setActive(row.label)}
                 onMouseLeave={() => setActive(null)}
                 style={{
                   borderTop: "0.75px solid var(--border)",
                   borderBottom:
                     i === skillRows.length - 1 ? "0.75px solid var(--border)" : "none",
-                  padding: "26px 0",
+                  padding: "18px 4px",
                   display: "grid",
-                  gridTemplateColumns: "minmax(140px, 1fr) 3fr",
+                  gridTemplateColumns: "minmax(110px, 1fr) 3fr",
                   alignItems: "center",
-                  gap: 24,
+                  gap: 18,
                   cursor: "default",
+                  background: isActive ? "var(--accent-subtle)" : "transparent",
                   transitionProperty: "background-color",
                   transitionDuration: "200ms",
-                  background: isActive ? "var(--accent-subtle)" : "transparent",
                 }}
               >
-                <div className="flex items-center gap-3">
-                  <span
-                    style={{
-                      ...mono,
-                      fontSize: 9,
-                      color: "var(--text-muted)",
-                      letterSpacing: "0.18em",
-                    }}
-                  >
-                    0{i + 1}
-                  </span>
-                  <h3
-                    style={{
-                      fontFamily: serif,
-                      fontSize: "clamp(20px, 2vw, 26px)",
-                      fontWeight: 500,
-                      letterSpacing: "-0.015em",
-                      color: isActive ? "var(--accent)" : "var(--text-primary)",
-                      transitionProperty: "color",
-                      transitionDuration: "200ms",
-                      fontStyle: isActive ? "italic" : "normal",
-                    }}
-                  >
-                    {row.label}
-                  </h3>
-                </div>
-                <ul className="flex flex-wrap gap-x-5 gap-y-2">
+                <h3
+                  style={{
+                    fontFamily: serif,
+                    fontSize: 19,
+                    fontWeight: 500,
+                    letterSpacing: "-0.01em",
+                    color: isActive ? "var(--accent)" : "var(--text-primary)",
+                    fontStyle: isActive ? "italic" : "normal",
+                    transitionProperty: "color",
+                    transitionDuration: "200ms",
+                  }}
+                >
+                  {row.label}
+                </h3>
+                <ul className="flex flex-wrap gap-x-4 gap-y-1">
                   {row.tools.map((tool) => (
                     <li
                       key={tool}
                       style={{
                         fontFamily: sans,
-                        fontSize: 14,
+                        fontSize: 13,
                         color: isActive ? "var(--text-primary)" : "var(--text-secondary)",
                         transitionProperty: "color",
                         transitionDuration: "200ms",
@@ -688,75 +540,57 @@ function SkillRibbons() {
   );
 }
 
-/* ─── Experience — quiet list ───────────────────────────────────── */
+/* ─── Experience — quiet ledger ─────────────────────────────────── */
 const experiences = [
   {
     role: "Product Designer",
     company: "Mercor",
-    period: "2025 — Now",
-    description: "AI-driven flows for the talent marketplace — match quality, candidate UX.",
+    period: "'25 — Now",
   },
   {
     role: "UX/UI Designer",
     company: "PyCube",
-    period: "2025 — Now",
-    description: "Enterprise specimen-tracking systems for healthcare, end-to-end.",
+    period: "'25 — Now",
   },
   {
-    role: "HCI Student Org",
+    role: "HCI Org",
     company: "Iowa State University",
-    period: "2024 — 2025",
-    description: "Led design workshops; mentored peers on UX research and Figma craft.",
+    period: "'24 — '25",
   },
   {
     role: "UI/UX Designer",
-    company: "Sixth Sense Technologies",
-    period: "2022 — 2023",
-    description: "Consumer interfaces; partnered with engineering on handoff.",
+    company: "Sixth Sense Tech",
+    period: "'22 — '23",
   },
   {
     role: "UX Designer",
     company: "Qnaptics",
-    period: "2022",
-    description: "Built a design system from zero; standardized patterns across surfaces.",
+    period: "'22",
   },
 ];
 
-function ExperienceList() {
+function Experience() {
   return (
     <section
       className="blueprint-grid-subtle"
       style={{
-        padding: "clamp(72px, 10vw, 120px) 0",
+        padding: "clamp(56px, 7vw, 90px) 0",
         borderTop: "0.75px solid var(--border)",
         borderBottom: "0.75px solid var(--border)",
       }}
     >
-      <div className="max-w-5xl mx-auto px-6 md:px-10">
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-60px" }}
-          transition={{ duration: 0.55 }}
-          className="mb-14 flex items-end justify-between gap-6 flex-wrap"
+      <div className="max-w-4xl mx-auto px-6">
+        <p
+          style={{
+            ...mono,
+            fontSize: 10,
+            color: "var(--text-muted)",
+            marginBottom: 24,
+            textAlign: "center",
+          }}
         >
-          <h2
-            style={{
-              fontFamily: serif,
-              fontWeight: 700,
-              fontSize: "clamp(32px, 3.6vw, 48px)",
-              letterSpacing: "-0.025em",
-              lineHeight: 1.1,
-              color: "var(--text-primary)",
-            }}
-          >
-            Where I've{" "}
-            <span style={{ fontStyle: "italic", color: "var(--accent)" }}>built things</span>.
-          </h2>
-          <p style={{ ...mono, fontSize: 10, color: "var(--text-muted)" }}>
-            Experience · 05 chapters
-          </p>
-        </motion.div>
+          ✦ Where I've worked ✦
+        </p>
 
         <div>
           {experiences.map((exp, i) => {
@@ -767,20 +601,19 @@ function ExperienceList() {
               <motion.div
                 key={i}
                 ref={ref}
-                initial={{ opacity: 0, y: 14 }}
-                animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 14 }}
-                transition={{ duration: 0.55, delay: i * 0.07, ease: [0.16, 1, 0.3, 1] }}
-                className="group"
+                initial={{ opacity: 0, y: 10 }}
+                animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
+                transition={{ duration: 0.45, delay: i * 0.06 }}
                 style={{
                   display: "grid",
-                  gridTemplateColumns: "100px 1fr",
-                  gap: 32,
-                  padding: "26px 0",
+                  gridTemplateColumns: "80px 1fr auto",
+                  gap: 20,
+                  padding: "16px 4px",
                   borderTop: i === 0 ? "0.75px solid var(--border)" : "none",
                   borderBottom: "0.75px solid var(--border)",
                   alignItems: "baseline",
                   transitionProperty: "background-color",
-                  transitionDuration: "200ms",
+                  transitionDuration: "180ms",
                 }}
                 onMouseEnter={(e) => {
                   (e.currentTarget as HTMLElement).style.backgroundColor =
@@ -795,48 +628,32 @@ function ExperienceList() {
                     ...mono,
                     fontSize: 10,
                     color: "var(--text-muted)",
-                    letterSpacing: "0.14em",
-                    whiteSpace: "nowrap",
                   }}
                 >
                   {exp.period}
                 </span>
-                <div>
-                  <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 mb-1.5">
-                    <h3
-                      style={{
-                        fontFamily: serif,
-                        fontSize: "clamp(20px, 2vw, 24px)",
-                        fontWeight: 500,
-                        letterSpacing: "-0.015em",
-                        color: "var(--text-primary)",
-                        lineHeight: 1.25,
-                      }}
-                    >
-                      {exp.role}
-                    </h3>
-                    <span
-                      style={{
-                        fontFamily: sans,
-                        fontSize: 14,
-                        color: "var(--text-secondary)",
-                      }}
-                    >
-                      · {exp.company}
-                    </span>
-                  </div>
-                  <p
-                    style={{
-                      fontFamily: sans,
-                      fontSize: 14,
-                      color: "var(--text-secondary)",
-                      lineHeight: 1.7,
-                      maxWidth: "60ch",
-                    }}
-                  >
-                    {exp.description}
-                  </p>
-                </div>
+                <h3
+                  style={{
+                    fontFamily: serif,
+                    fontSize: "clamp(17px, 1.7vw, 20px)",
+                    fontWeight: 500,
+                    letterSpacing: "-0.01em",
+                    color: "var(--text-primary)",
+                    lineHeight: 1.25,
+                  }}
+                >
+                  {exp.role}
+                </h3>
+                <span
+                  style={{
+                    fontFamily: sans,
+                    fontSize: 13,
+                    color: "var(--text-secondary)",
+                    textAlign: "right",
+                  }}
+                >
+                  {exp.company}
+                </span>
               </motion.div>
             );
           })}
@@ -853,63 +670,47 @@ function Education() {
       degree: "M.S. Human-Computer Interaction",
       school: "Iowa State University",
       period: "2023 — 2025",
-      note: "UX Research, Interaction Design, Information Architecture, Cognitive Psychology.",
     },
     {
       degree: "B.Arch. Architecture",
-      school: "Padmashree Inst. of Architecture & Design",
+      school: "Padmashree Inst. of Architecture",
       period: "2018 — 2023",
-      note: "Spatial design, structures, 3D modeling, urban design, placemaking.",
       sketch: true,
     },
   ];
 
   return (
-    <section style={{ padding: "clamp(72px, 10vw, 120px) 0" }}>
-      <div className="max-w-5xl mx-auto px-6 md:px-10">
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-60px" }}
-          transition={{ duration: 0.55 }}
-          className="mb-12"
+    <section style={{ padding: "clamp(56px, 7vw, 90px) 0" }}>
+      <div className="max-w-4xl mx-auto px-6">
+        <p
+          style={{
+            ...mono,
+            fontSize: 10,
+            color: "var(--text-muted)",
+            marginBottom: 28,
+            textAlign: "center",
+          }}
         >
-          <p style={{ ...mono, fontSize: 10, color: "var(--text-muted)", marginBottom: 12 }}>
-            Education
-          </p>
-          <h2
-            style={{
-              fontFamily: serif,
-              fontWeight: 700,
-              fontSize: "clamp(32px, 3.6vw, 48px)",
-              letterSpacing: "-0.025em",
-              lineHeight: 1.1,
-              color: "var(--text-primary)",
-            }}
-          >
-            Two degrees, one{" "}
-            <span style={{ fontStyle: "italic", color: "var(--accent)" }}>throughline</span>.
-          </h2>
-        </motion.div>
+          ✦ Education ✦
+        </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
           {items.map((edu, i) => (
             <motion.div
               key={i}
-              initial={{ opacity: 0, y: 18 }}
+              initial={{ opacity: 0, y: 14 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-40px" }}
-              transition={{ duration: 0.6, delay: i * 0.12 }}
+              transition={{ duration: 0.55, delay: i * 0.1 }}
               className="relative"
-              style={{ paddingTop: 14, borderTop: "0.75px solid var(--border)" }}
+              style={{ paddingTop: 12, borderTop: "0.75px solid var(--border)" }}
             >
               <p
                 style={{
                   ...mono,
                   fontSize: 10,
                   color: "var(--text-muted)",
-                  marginBottom: 12,
-                  letterSpacing: "0.16em",
+                  marginBottom: 10,
                 }}
               >
                 {edu.period}
@@ -917,12 +718,12 @@ function Education() {
               <h3
                 style={{
                   fontFamily: serif,
-                  fontSize: "clamp(22px, 2.2vw, 28px)",
+                  fontSize: "clamp(19px, 2vw, 24px)",
                   fontWeight: 600,
-                  letterSpacing: "-0.02em",
+                  letterSpacing: "-0.018em",
                   color: "var(--text-primary)",
-                  marginBottom: 6,
                   lineHeight: 1.25,
+                  marginBottom: 4,
                 }}
               >
                 {edu.degree}
@@ -930,23 +731,11 @@ function Education() {
               <p
                 style={{
                   fontFamily: sans,
-                  fontSize: 14,
+                  fontSize: 13,
                   color: "var(--text-secondary)",
-                  marginBottom: 12,
                 }}
               >
                 {edu.school}
-              </p>
-              <p
-                style={{
-                  fontFamily: sans,
-                  fontSize: 13,
-                  color: "var(--text-muted)",
-                  lineHeight: 1.7,
-                  maxWidth: "44ch",
-                }}
-              >
-                {edu.note}
               </p>
               {edu.sketch && (
                 <div
@@ -954,13 +743,7 @@ function Education() {
                   style={{ position: "absolute", top: 8, right: 0, opacity: 0.55 }}
                   aria-hidden
                 >
-                  <HandDrawnSketch
-                    type="floorPlan"
-                    width={70}
-                    height={48}
-                    annotation="where it started"
-                    annotationPosition="below"
-                  />
+                  <HandDrawnSketch type="floorPlan" width={56} height={40} />
                 </div>
               )}
             </motion.div>
@@ -971,156 +754,116 @@ function Education() {
   );
 }
 
-/* ─── Off the clock — soft interactive cards ────────────────────── */
-const hobbies = [
-  { icon: ForkKnifeIcon, label: "Spicy food", detail: "The hotter, the better." },
-  { icon: MusicNotesIcon, label: "Dance", detail: "Movement clears the head." },
-  { icon: AirplaneIcon, label: "Travel", detail: "Street food is the brief." },
-  { icon: PencilSimpleLineIcon, label: "Sketching", detail: "Plans I'll never build." },
-];
-
-function OffTheClock() {
-  const [active, setActive] = useState<number | null>(null);
-
+/* ─── Sign-off ──────────────────────────────────────────────────── */
+function SignOff() {
   return (
     <section
       className="blueprint-grid-subtle"
       style={{
-        padding: "clamp(72px, 10vw, 120px) 0 clamp(80px, 10vw, 130px)",
+        padding: "clamp(56px, 7vw, 90px) 0 clamp(64px, 8vw, 100px)",
         borderTop: "0.75px solid var(--border)",
       }}
     >
-      <div className="max-w-5xl mx-auto px-6 md:px-10">
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-60px" }}
-          transition={{ duration: 0.55 }}
-          className="mb-12"
-        >
-          <p style={{ ...mono, fontSize: 10, color: "var(--text-muted)", marginBottom: 12 }}>
-            Off the clock
-          </p>
-          <h2
-            style={{
-              fontFamily: serif,
-              fontWeight: 700,
-              fontSize: "clamp(32px, 3.6vw, 48px)",
-              letterSpacing: "-0.025em",
-              lineHeight: 1.1,
-              color: "var(--text-primary)",
-              maxWidth: "20ch",
-            }}
-          >
-            When I'm not pushing{" "}
-            <span style={{ fontStyle: "italic", color: "var(--accent)" }}>pixels</span>.
-          </h2>
-        </motion.div>
-
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
-          {hobbies.map((h, i) => {
-            const Icon = h.icon;
-            const isActive = active === i;
-            return (
-              <motion.button
-                key={h.label}
-                type="button"
-                onMouseEnter={() => setActive(i)}
-                onMouseLeave={() => setActive(null)}
-                onFocus={() => setActive(i)}
-                onBlur={() => setActive(null)}
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-40px" }}
-                transition={{ duration: 0.5, delay: i * 0.08 }}
-                className="text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
-                style={{
-                  position: "relative",
-                  padding: "26px 22px 28px",
-                  background: "var(--bg-elevated)",
-                  border: "0.75px solid",
-                  borderColor: isActive ? "var(--accent)" : "var(--border)",
-                  cursor: "default",
-                  minHeight: 168,
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "space-between",
-                  transitionProperty: "border-color, transform",
-                  transitionDuration: "200ms",
-                  transform: isActive ? "translateY(-3px)" : "translateY(0)",
-                }}
-              >
-                <span
-                  aria-hidden
-                  style={{
-                    ...mono,
-                    position: "absolute",
-                    top: 12,
-                    right: 14,
-                    fontSize: 8,
-                    color: "var(--text-muted)",
-                    letterSpacing: "0.16em",
-                  }}
-                >
-                  0{i + 1}
-                </span>
-
-                <Icon
-                  size={26}
-                  weight={isActive ? "bold" : "regular"}
-                  color={isActive ? "var(--accent)" : "var(--text-secondary)"}
-                  style={{ transitionProperty: "color", transitionDuration: "200ms" }}
-                />
-
-                <div style={{ marginTop: 24 }}>
-                  <h3
-                    style={{
-                      fontFamily: serif,
-                      fontWeight: 600,
-                      fontSize: 22,
-                      letterSpacing: "-0.015em",
-                      color: "var(--text-primary)",
-                      lineHeight: 1.2,
-                      marginBottom: 4,
-                    }}
-                  >
-                    {h.label}
-                  </h3>
-                  <p
-                    style={{
-                      fontFamily: sans,
-                      fontSize: 13,
-                      color: "var(--text-secondary)",
-                      lineHeight: 1.5,
-                    }}
-                  >
-                    {h.detail}
-                  </p>
-                </div>
-              </motion.button>
-            );
-          })}
-        </div>
-
-        {/* Sign-off */}
+      <div className="max-w-2xl mx-auto px-6 text-center">
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-40px" }}
-          transition={{ duration: 0.55, delay: 0.2 }}
-          className="mt-20 flex items-center justify-center gap-3"
+          transition={{ duration: 0.6 }}
         >
-          <CoffeeIcon size={18} weight="regular" color="var(--text-muted)" />
-          <span
+          <h2
             style={{
-              fontFamily: "'Caveat', cursive",
-              fontSize: 22,
-              color: "var(--text-secondary)",
-              opacity: 0.75,
+              fontFamily: serif,
+              fontWeight: 700,
+              fontSize: "clamp(28px, 3.4vw, 42px)",
+              letterSpacing: "-0.025em",
+              lineHeight: 1.15,
+              color: "var(--text-primary)",
+              marginBottom: 18,
             }}
           >
-            let's grab coffee — virtually or otherwise.
-          </span>
+            Want to{" "}
+            <span style={{ fontStyle: "italic", color: "var(--accent)" }}>
+              build something
+            </span>{" "}
+            together?
+          </h2>
+
+          <div className="flex items-center justify-center gap-3 mb-8">
+            <CoffeeIcon size={16} weight="regular" color="var(--text-muted)" />
+            <span
+              style={{
+                fontFamily: "'Caveat', cursive",
+                fontSize: 20,
+                color: "var(--text-secondary)",
+                opacity: 0.7,
+              }}
+            >
+              coffee — virtually or otherwise.
+            </span>
+          </div>
+
+          <div className="flex flex-wrap justify-center gap-3">
+            <a
+              href="https://drive.google.com/file/d/1WbopauZ0xwmOnLNuEb1XZX5TmzxQCA6K/view?usp=sharing"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+              style={{
+                ...mono,
+                fontSize: 10,
+                color: "var(--bg-elevated)",
+                backgroundColor: "var(--text-primary)",
+                padding: "12px 22px",
+                textDecoration: "none",
+                transitionProperty: "background-color, transform",
+                transitionDuration: "180ms",
+              }}
+              onMouseEnter={(e) => {
+                const el = e.currentTarget as HTMLElement;
+                el.style.backgroundColor = "var(--accent)";
+                el.style.transform = "translateY(-2px)";
+              }}
+              onMouseLeave={(e) => {
+                const el = e.currentTarget as HTMLElement;
+                el.style.backgroundColor = "var(--text-primary)";
+                el.style.transform = "translateY(0)";
+              }}
+            >
+              Resume
+              <ArrowRightIcon size={11} weight="bold" />
+            </a>
+            <a
+              href="https://www.linkedin.com/in/niharika-pundlik-63a9a1288/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+              style={{
+                ...mono,
+                fontSize: 10,
+                color: "var(--text-primary)",
+                border: "0.75px solid var(--text-primary)",
+                padding: "12px 22px",
+                textDecoration: "none",
+                transitionProperty: "color, border-color, transform",
+                transitionDuration: "180ms",
+              }}
+              onMouseEnter={(e) => {
+                const el = e.currentTarget as HTMLElement;
+                el.style.color = "var(--accent)";
+                el.style.borderColor = "var(--accent)";
+                el.style.transform = "translateY(-2px)";
+              }}
+              onMouseLeave={(e) => {
+                const el = e.currentTarget as HTMLElement;
+                el.style.color = "var(--text-primary)";
+                el.style.borderColor = "var(--text-primary)";
+                el.style.transform = "translateY(0)";
+              }}
+            >
+              LinkedIn
+            </a>
+          </div>
         </motion.div>
       </div>
     </section>
@@ -1138,12 +881,12 @@ export default function About() {
       className="pt-14"
     >
       <Hero />
-      <EditorialBio />
+      <PersonalityStrip />
       <ThePivot />
-      <SkillRibbons />
-      <ExperienceList />
+      <Toolkit />
+      <Experience />
       <Education />
-      <OffTheClock />
+      <SignOff />
     </motion.div>
   );
 }
