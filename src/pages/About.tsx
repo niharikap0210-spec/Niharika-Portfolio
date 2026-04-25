@@ -781,94 +781,82 @@ function Experience() {
               <motion.li
                 key={`${s.role}-${s.company}`}
                 ref={ref}
-                initial={{ opacity: 0, y: 14 }}
-                animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 14 }}
-                transition={{ duration: 0.55, delay: i * 0.06 }}
-                className="group relative"
+                initial={{ opacity: 0, y: 16 }}
+                animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
+                transition={{ duration: 0.55, delay: i * 0.07, ease: [0.16, 1, 0.3, 1] }}
+                className="group"
                 style={{
-                  padding: "24px 16px 24px 0",
-                  borderBottom:
-                    i === stops.length - 1 ? "none" : "0.75px solid var(--border)",
-                  transitionProperty: "background-color, padding-left",
-                  transitionDuration: "220ms",
-                  cursor: "default",
-                }}
-                onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLElement).style.paddingLeft = "16px";
-                }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLElement).style.paddingLeft = "0px";
+                  display: "grid",
+                  gridTemplateColumns: "1fr",
+                  borderTop: "0.75px solid var(--border)",
+                  padding: "clamp(24px, 3vw, 36px) 0",
                 }}
               >
-                {/* Accent left rule, reveals on hover */}
-                <span
-                  aria-hidden
-                  className="absolute left-0 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100"
-                  style={{
-                    width: 2,
-                    height: "60%",
-                    backgroundColor: "var(--accent)",
-                    transitionProperty: "opacity",
-                    transitionDuration: "220ms",
-                  }}
-                />
+                {/* Inner two-col grid */}
+                <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.4fr] gap-6 lg:gap-12">
 
-                <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 mb-2">
-                  <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                  {/* Left — index + period + company */}
+                  <div>
+                    <span
+                      style={{
+                        ...mono,
+                        fontSize: 11,
+                        color: "var(--text-muted)",
+                        letterSpacing: "0.2em",
+                        display: "block",
+                        marginBottom: 10,
+                      }}
+                    >
+                      {String(i + 1).padStart(2, "0")} / {s.period}
+                    </span>
                     <h3
                       style={{
                         fontFamily: serif,
-                        fontWeight: 600,
-                        fontSize: "clamp(20px, 2vw, 26px)",
-                        letterSpacing: "-0.018em",
+                        fontWeight: 700,
+                        fontSize: "clamp(28px, 3.2vw, 42px)",
+                        letterSpacing: "-0.025em",
+                        lineHeight: 1.1,
                         color: "var(--text-primary)",
-                        lineHeight: 1.25,
                         margin: 0,
-                        transitionProperty: "color",
+                        transitionProperty: "color, font-style",
                         transitionDuration: "220ms",
                       }}
-                      className="group-hover:text-[var(--accent)]"
+                      className="group-hover:text-[var(--accent)] group-hover:italic"
                     >
                       {s.company}
                     </h3>
+                  </div>
+
+                  {/* Right — role + blurb */}
+                  <div className="flex flex-col justify-center gap-3">
                     <span
                       style={{
-                        fontFamily: sans,
-                        fontSize: 14,
-                        color: "var(--text-secondary)",
-                        fontStyle: "italic",
+                        ...mono,
+                        fontSize: 11,
+                        color: "var(--accent)",
+                        letterSpacing: "0.2em",
                       }}
                     >
-                      · {s.role}
+                      {s.role}
                     </span>
+                    <p
+                      style={{
+                        fontFamily: sans,
+                        fontSize: 18,
+                        color: "var(--text-secondary)",
+                        lineHeight: 1.75,
+                        margin: 0,
+                      }}
+                    >
+                      {s.blurb}
+                    </p>
                   </div>
-                  <span
-                    style={{
-                      ...mono,
-                      fontSize: 10,
-                      color: "var(--text-muted)",
-                      letterSpacing: "0.18em",
-                    }}
-                  >
-                    {s.period}
-                  </span>
                 </div>
-
-                <p
-                  style={{
-                    fontFamily: sans,
-                    fontSize: 14,
-                    color: "var(--text-secondary)",
-                    lineHeight: 1.7,
-                    maxWidth: "62ch",
-                    margin: 0,
-                  }}
-                >
-                  {s.blurb}
-                </p>
               </motion.li>
             );
           })}
+          {/* closing rule */}
+          <li style={{ borderTop: "0.75px solid var(--border)" }} aria-hidden />
         </ul>
       </div>
     </section>
