@@ -176,7 +176,7 @@ function Hero() {
                 marginTop: 6,
               }}
             >
-              — pronounced ni-ha-ree-ka ✦
+              ( ni-ha-ree-ka ) ✦
             </motion.p>
 
             <motion.p
@@ -363,7 +363,7 @@ function MyStory() {
               maxWidth: "44ch",
             }}
           >
-            I started in architecture — drawing buildings before screens.
+            I started in architecture, drawing buildings before screens.
           </p>
 
           <p
@@ -389,8 +389,8 @@ function MyStory() {
             }}
           >
             I moved to Iowa for an M.S. in Human-Computer Interaction at Iowa State,
-            and the pivot stuck. The vocabulary swapped — pixels for stone, frames for
-            plans — but I still measure twice, still sweat the gutters, still draw on
+            and the pivot stuck. The vocabulary swapped (pixels for stone, frames for
+            plans), but I still measure twice, still sweat the gutters, still draw on
             paper before opening Figma. Architecture school left me with a suspicion of
             ornament and a respect for constraints; both translate well.
           </p>
@@ -404,7 +404,7 @@ function MyStory() {
             }}
           >
             Today I'm a Product Designer in Virginia, working across AI, healthcare,
-            and consumer flows. I care about the spaces between taps — the quiet
+            and consumer flows. I care about the spaces between taps: the quiet
             moments where a product proves it understood you. If you're building
             something thoughtful, I'd love to hear about it.
           </p>
@@ -418,7 +418,7 @@ function MyStory() {
               marginTop: 8,
             }}
           >
-            — same hands, new tools ✦
+            same hands, new tools ✦
           </p>
         </motion.div>
       </div>
@@ -432,7 +432,7 @@ const principles = [
     icon: EyeIcon,
     title: "Research before pixels",
     body:
-      "Every flow starts with a real human problem. If I can't name the user, the pain, and the moment — I'm not ready to draw.",
+      "Every flow starts with a real human problem. If I can't name the user, the pain, and the moment, I'm not ready to draw.",
   },
   {
     icon: SparkleIcon,
@@ -444,13 +444,13 @@ const principles = [
     icon: HandHeartIcon,
     title: "Add a little spice",
     body:
-      "Joy is a function, not a flourish. A small surprise — a soft motion, an honest empty state — turns a tool into a memory.",
+      "Joy is a function, not a flourish. A small surprise (a soft motion, an honest empty state) turns a tool into a memory.",
   },
   {
     icon: RulerIcon,
     title: "Measure twice, cut once",
     body:
-      "Architectural rigor on every decision. I sweat the gutters, the type scale, the dead pixels at 11pm — because details compound.",
+      "Architectural rigor on every decision. I sweat the gutters, the type scale, the dead pixels at 11pm, because details compound.",
   },
   {
     icon: CompassToolIcon,
@@ -567,28 +567,28 @@ const stops = [
   {
     role: "Product Designer",
     company: "Mercor",
-    period: "2025 — Now",
+    period: "2025 – Now",
     blurb:
-      "AI-driven flows for the talent marketplace — connecting candidates and companies through smart matching and review.",
+      "AI-driven flows for the talent marketplace, connecting candidates and companies through smart matching and review.",
   },
   {
     role: "UX/UI Designer",
     company: "PyCube",
-    period: "2025 — Now",
+    period: "2025 – Now",
     blurb:
       "Healthcare specimen-tracking suite, end-to-end. Reduced lab handoff errors and shipped a clinician-trusted dashboard.",
   },
   {
     role: "HCI Org Lead",
     company: "Iowa State University",
-    period: "2024 — 2025",
+    period: "2024 – 2025",
     blurb:
-      "Led the HCI student org — workshops, mentorship, and Figma craft sessions for incoming designers.",
+      "Led the HCI student org: workshops, mentorship, and Figma craft sessions for incoming designers.",
   },
   {
     role: "UI/UX Designer",
     company: "Sixth Sense Tech",
-    period: "2022 — 2023",
+    period: "2022 – 2023",
     blurb:
       "Consumer interfaces and engineering handoff. Owned design specs from concept through QA.",
   },
@@ -597,7 +597,7 @@ const stops = [
     company: "Qnaptics",
     period: "2022",
     blurb:
-      "Built a full design system from zero — tokens, components, and patterns for a fledgling product team.",
+      "Built a full design system from zero: tokens, components, and patterns for a fledgling product team.",
   },
 ];
 
@@ -722,13 +722,13 @@ const educations = [
   {
     degree: "M.S. Human-Computer Interaction",
     school: "Iowa State University",
-    period: "2023 — 2025",
+    period: "2023 – 2025",
     note: "the conversion year",
   },
   {
     degree: "B.Arch. Architecture",
     school: "Padmashree Inst. of Architecture",
-    period: "2018 — 2023",
+    period: "2018 – 2023",
     note: "where it started ✿",
   },
 ];
@@ -820,7 +820,7 @@ function Education() {
                     marginTop: 8,
                   }}
                 >
-                  — {e.note}
+                  {e.note}
                 </p>
               </motion.li>
             );
@@ -1111,8 +1111,8 @@ function Connect() {
               marginBottom: 28,
             }}
           >
-            If you're working on something thoughtful — AI, healthcare, consumer, or
-            anything in between — I'd love to hear about it. Coffee chats welcome.
+            If you're working on something thoughtful (AI, healthcare, consumer, or
+            anything in between), I'd love to hear about it. Coffee chats welcome.
           </p>
 
           <div className="flex flex-wrap gap-3">
