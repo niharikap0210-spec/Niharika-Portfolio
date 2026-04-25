@@ -869,12 +869,14 @@ const educations = [
     school: "Iowa State University",
     period: "2023 – 2025",
     note: "the conversion year",
+    abbr: "MS",
   },
   {
     degree: "B.Arch. Architecture",
     school: "Padmashree Inst. of Architecture",
     period: "2018 – 2023",
     note: "where it started ✿",
+    abbr: "B.Arch",
   },
 ];
 
@@ -898,79 +900,98 @@ function Education() {
           italic="one throughline"
         />
 
-        <ul style={{ paddingLeft: 0, margin: 0, listStyle: "none" }}>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {educations.map((e, i) => {
-            const ref = useRef<HTMLLIElement>(null);
+            const ref = useRef<HTMLDivElement>(null);
             const inView = useInView(ref, { once: true, margin: "-40px" });
             return (
-              <motion.li
+              <motion.div
                 key={e.degree}
                 ref={ref}
-                initial={{ opacity: 0, y: 12 }}
-                animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
-                transition={{ duration: 0.55, delay: i * 0.08 }}
-                className="group"
+                initial={{ opacity: 0, y: 16 }}
+                animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
+                transition={{ duration: 0.55, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
+                className="group relative"
                 style={{
-                  padding: "24px 0",
-                  borderBottom:
-                    i === educations.length - 1
-                      ? "none"
-                      : "0.75px solid var(--border)",
+                  backgroundColor: "var(--bg-elevated)",
+                  border: "0.75px solid var(--border)",
+                  padding: "clamp(28px, 3vw, 40px)",
+                  transitionProperty: "border-color, box-shadow",
+                  transitionDuration: "220ms",
+                }}
+                onMouseEnter={(e) => {
+                  const el = e.currentTarget as HTMLElement;
+                  el.style.borderColor = "var(--accent)";
+                  el.style.boxShadow = "0 4px 20px rgba(0,0,0,0.06), 0 1px 4px rgba(0,0,0,0.04)";
+                }}
+                onMouseLeave={(e) => {
+                  const el = e.currentTarget as HTMLElement;
+                  el.style.borderColor = "var(--border)";
+                  el.style.boxShadow = "none";
                 }}
               >
-                <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 mb-2">
-                  <h3
-                    style={{
-                      fontFamily: serif,
-                      fontWeight: 600,
-                      fontSize: "clamp(19px, 1.8vw, 23px)",
-                      letterSpacing: "-0.015em",
-                      color: "var(--text-primary)",
-                      lineHeight: 1.3,
-                      margin: 0,
-                      transitionProperty: "color",
-                      transitionDuration: "220ms",
-                    }}
-                    className="group-hover:text-[var(--accent)]"
-                  >
-                    {e.degree}
-                  </h3>
-                  <span
-                    style={{
-                      ...mono,
-                      fontSize: 10,
-                      color: "var(--text-muted)",
-                      letterSpacing: "0.18em",
-                    }}
-                  >
-                    {e.period}
-                  </span>
-                </div>
-                <p
+                {/* Corner ticks */}
+                {[{ top: 8, left: 8 }, { top: 8, right: 8 }, { bottom: 8, left: 8 }, { bottom: 8, right: 8 }].map((pos, j) => (
+                  <span key={j} aria-hidden style={{ position: "absolute", width: 6, height: 6, border: "0.75px solid var(--construction)", ...pos }} />
+                ))}
+
+                {/* Period */}
+                <span style={{ ...mono, fontSize: 11, color: "var(--text-muted)", letterSpacing: "0.2em", display: "block", marginBottom: 24 }}>
+                  {e.period}
+                </span>
+
+                {/* Large degree abbreviation */}
+                <div
                   style={{
-                    fontFamily: sans,
-                    fontSize: 14,
-                    color: "var(--text-secondary)",
-                    margin: 0,
+                    fontFamily: serif,
+                    fontWeight: 700,
+                    fontStyle: "italic",
+                    fontSize: "clamp(52px, 6vw, 80px)",
+                    letterSpacing: "-0.04em",
+                    lineHeight: 1,
+                    color: "var(--accent)",
+                    opacity: 0.2,
+                    marginBottom: 24,
+                    transitionProperty: "opacity",
+                    transitionDuration: "220ms",
+                    userSelect: "none",
+                  }}
+                  className="group-hover:!opacity-40"
+                >
+                  {e.abbr}
+                </div>
+
+                {/* Degree name */}
+                <h3
+                  style={{
+                    fontFamily: serif,
+                    fontWeight: 700,
+                    fontSize: "clamp(18px, 1.8vw, 22px)",
+                    letterSpacing: "-0.018em",
+                    lineHeight: 1.3,
+                    color: "var(--text-primary)",
+                    marginBottom: 8,
                   }}
                 >
+                  {e.degree}
+                </h3>
+
+                {/* School */}
+                <p style={{ fontFamily: sans, fontSize: 15, color: "var(--text-secondary)", margin: 0, marginBottom: 16 }}>
                   {e.school}
                 </p>
-                <p
-                  style={{
-                    ...caveat,
-                    fontSize: 20,
-                    color: "var(--accent)",
-                    opacity: 0.8,
-                    marginTop: 8,
-                  }}
-                >
+
+                {/* Divider */}
+                <span aria-hidden style={{ display: "block", width: "100%", height: "0.75px", backgroundColor: "var(--border)", marginBottom: 16 }} />
+
+                {/* Caveat note */}
+                <p style={{ ...caveat, fontSize: 20, color: "var(--accent)", opacity: 0.85, margin: 0 }}>
                   {e.note}
                 </p>
-              </motion.li>
+              </motion.div>
             );
           })}
-        </ul>
+        </div>
       </div>
     </section>
   );
