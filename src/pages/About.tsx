@@ -138,8 +138,8 @@ function Hero() {
                   color: "var(--text-muted)",
                 }}
               >
-                Indore <span style={{ color: "var(--accent)" }}>→</span> Iowa{" "}
-                <span style={{ color: "var(--accent)" }}>→</span> Virginia
+                Indore, IN <span style={{ color: "var(--accent)" }}>→</span> Iowa, US{" "}
+                <span style={{ color: "var(--accent)" }}>→</span> Virginia, US
               </span>
             </motion.div>
           </div>
