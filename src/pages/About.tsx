@@ -394,7 +394,7 @@ function MyStory() {
                   width: "100%",
                   height: "100%",
                   objectFit: "cover",
-                  objectPosition: "center top",
+                  objectPosition: "center 18%",
                   display: "block",
                 }}
               />
