@@ -9,27 +9,6 @@ import {
   ArrowRightIcon,
   ArrowUpRightIcon,
   MapPinIcon,
-  CompassToolIcon,
-  EyeIcon,
-  HandHeartIcon,
-  ChartBarIcon,
-  UsersIcon,
-  VideoCameraIcon,
-  MicrophoneIcon,
-  PenNibIcon,
-  CubeIcon,
-  DeviceMobileIcon,
-  DiamondIcon,
-  CodeIcon,
-  BracketsCurlyIcon,
-  AtomIcon,
-  TerminalIcon,
-  SquaresFourIcon,
-  ChatCircleIcon,
-  PresentationChartIcon,
-  NoteBlankIcon,
-  BookOpenIcon,
-  CompassIcon,
 } from "@phosphor-icons/react";
 import HandDrawnSketch from "../components/HandDrawnSketch";
 
@@ -875,297 +854,45 @@ function Experience() {
           })}
           <li style={{ borderTop: "0.75px solid var(--border)" }} aria-hidden />
         </ul>
-      </div>
-    </section>
-  );
-}
 
-/* ─── Education — compact two rows ──────────────────────────────── */
-const educations = [
-  {
-    degree: "M.S. Human-Computer Interaction",
-    school: "Iowa State University",
-    period: "2023 – 2025",
-    note: "the conversion year",
-    abbr: "MS",
-  },
-  {
-    degree: "B.Arch. Architecture",
-    school: "Priyadarshini Inst. of Architecture and Design Studies",
-    period: "2018 – 2023",
-    note: "where it started ✿",
-    abbr: "B.Arch",
-  },
-];
-
-function Education() {
-  return (
-    <section
-      id="education"
-      className="blueprint-grid-subtle"
-      style={{
-        padding: "clamp(56px, 7vw, 96px) 0",
-        scrollMarginTop: 96,
-        borderTop: "0.75px solid var(--border)",
-        borderBottom: "0.75px solid var(--border)",
-      }}
-    >
-      <div className="max-w-6xl mx-auto px-6 md:px-10">
-        <SectionHeader
-          num="04"
-          label="Education"
-          title="Two degrees,"
-          italic="one throughline"
-        />
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {educations.map((e, i) => {
-            const ref = useRef<HTMLDivElement>(null);
-            const inView = useInView(ref, { once: true, margin: "-40px" });
-            return (
-              <motion.div
-                key={e.degree}
-                ref={ref}
-                initial={{ opacity: 0, y: 16 }}
-                animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
-                transition={{ duration: 0.55, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
-                className="group relative"
-                style={{
-                  backgroundColor: "var(--bg-elevated)",
-                  border: "0.75px solid var(--border)",
-                  padding: "clamp(28px, 3vw, 40px)",
-                  transitionProperty: "border-color, box-shadow",
-                  transitionDuration: "220ms",
-                }}
-                onMouseEnter={(e) => {
-                  const el = e.currentTarget as HTMLElement;
-                  el.style.borderColor = "var(--accent)";
-                  el.style.boxShadow = "0 4px 20px rgba(0,0,0,0.06), 0 1px 4px rgba(0,0,0,0.04)";
-                }}
-                onMouseLeave={(e) => {
-                  const el = e.currentTarget as HTMLElement;
-                  el.style.borderColor = "var(--border)";
-                  el.style.boxShadow = "none";
-                }}
-              >
-                {/* Corner ticks */}
-                {[{ top: 8, left: 8 }, { top: 8, right: 8 }, { bottom: 8, left: 8 }, { bottom: 8, right: 8 }].map((pos, j) => (
-                  <span key={j} aria-hidden style={{ position: "absolute", width: 6, height: 6, border: "0.75px solid var(--construction)", ...pos }} />
-                ))}
-
-                {/* Period */}
-                <span style={{ ...mono, fontSize: 11, color: "var(--text-muted)", letterSpacing: "0.2em", display: "block", marginBottom: 24 }}>
-                  {e.period}
-                </span>
-
-                {/* Large degree abbreviation */}
-                <div
-                  style={{
-                    fontFamily: serif,
-                    fontWeight: 700,
-                    fontStyle: "italic",
-                    fontSize: "clamp(52px, 6vw, 80px)",
-                    letterSpacing: "-0.04em",
-                    lineHeight: 1,
-                    color: "var(--accent)",
-                    opacity: 0.2,
-                    marginBottom: 24,
-                    transitionProperty: "opacity",
-                    transitionDuration: "220ms",
-                    userSelect: "none",
-                  }}
-                  className="group-hover:!opacity-40"
-                >
-                  {e.abbr}
+        {/* Education — folded into the experience section as inline rows */}
+        <div style={{ marginTop: 40 }}>
+          <div style={{ borderTop: "0.75px dashed var(--border)", paddingTop: 20, marginBottom: 4 }}>
+            <span style={{ ...mono, fontSize: 9, color: "var(--text-muted)", letterSpacing: "0.22em" }}>Education</span>
+          </div>
+          {[
+            { degree: "M.S. Human-Computer Interaction", school: "Iowa State University", period: "2023 – 2025", note: "the conversion year" },
+            { degree: "B.Arch. Architecture", school: "Priyadarshini Inst. of Architecture and Design Studies", period: "2018 – 2023", note: "where it started ✿" },
+          ].map((e, i) => (
+            <motion.div
+              key={e.degree}
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-30px" }}
+              transition={{ duration: 0.45, delay: i * 0.07, ease: [0.16, 1, 0.3, 1] }}
+              style={{ borderTop: "0.75px solid var(--border)", padding: "20px 0" }}
+            >
+              <div className="grid grid-cols-1 lg:grid-cols-[180px_1fr] gap-3 lg:gap-12">
+                <div className="flex lg:flex-col gap-2 lg:gap-1 pt-1">
+                  <span style={{ ...mono, fontSize: 11, color: "var(--text-muted)", letterSpacing: "0.18em" }}>{e.period}</span>
+                  <span style={{ ...caveat, fontSize: 16, color: "var(--accent)", opacity: 0.85 }}>{e.note}</span>
                 </div>
-
-                {/* Degree name */}
-                <h3
-                  style={{
-                    fontFamily: serif,
-                    fontWeight: 700,
-                    fontSize: "clamp(18px, 1.8vw, 22px)",
-                    letterSpacing: "-0.018em",
-                    lineHeight: 1.3,
-                    color: "var(--text-primary)",
-                    marginBottom: 8,
-                  }}
-                >
-                  {e.degree}
-                </h3>
-
-                {/* School */}
-                <p style={{ fontFamily: sans, fontSize: 15, color: "var(--text-secondary)", margin: 0, marginBottom: 16 }}>
-                  {e.school}
-                </p>
-
-                {/* Divider */}
-                <span aria-hidden style={{ display: "block", width: "100%", height: "0.75px", backgroundColor: "var(--border)", marginBottom: 16 }} />
-
-                {/* Caveat note */}
-                <p style={{ ...caveat, fontSize: 20, color: "var(--accent)", opacity: 0.85, margin: 0 }}>
-                  {e.note}
-                </p>
-              </motion.div>
-            );
-          })}
+                <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                  <h3 style={{ fontFamily: serif, fontWeight: 600, fontSize: "clamp(18px, 1.8vw, 22px)", letterSpacing: "-0.018em", lineHeight: 1.2, color: "var(--text-primary)", margin: 0 }}>
+                    {e.degree}
+                  </h3>
+                  <p style={{ fontFamily: sans, fontSize: 15, color: "var(--text-secondary)", margin: 0 }}>{e.school}</p>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+          <div style={{ borderTop: "0.75px solid var(--border)" }} aria-hidden />
         </div>
       </div>
     </section>
   );
 }
 
-/* ─── Toolbox — categorized skills ──────────────────────────────── */
-const skillCols = [
-  {
-    label: "Research",
-    icon: EyeIcon,
-    tools: [
-      { name: "Dovetail", icon: ChartBarIcon },
-      { name: "Maze", icon: CompassIcon },
-      { name: "UserTesting", icon: UsersIcon },
-      { name: "Lookback", icon: VideoCameraIcon },
-      { name: "Otter AI", icon: MicrophoneIcon },
-    ],
-  },
-  {
-    label: "Design",
-    icon: PencilSimpleLineIcon,
-    tools: [
-      { name: "Figma", icon: PenNibIcon },
-      { name: "FigJam", icon: DiamondIcon },
-      { name: "Framer", icon: CubeIcon },
-      { name: "Protopie", icon: DeviceMobileIcon },
-      { name: "Sketch", icon: PencilSimpleLineIcon },
-    ],
-  },
-  {
-    label: "Code",
-    icon: CompassToolIcon,
-    tools: [
-      { name: "HTML / CSS", icon: CodeIcon },
-      { name: "JavaScript", icon: BracketsCurlyIcon },
-      { name: "React", icon: AtomIcon },
-      { name: "Python", icon: TerminalIcon },
-    ],
-  },
-  {
-    label: "Collab",
-    icon: HandHeartIcon,
-    tools: [
-      { name: "Jira", icon: SquaresFourIcon },
-      { name: "Slack", icon: ChatCircleIcon },
-      { name: "Miro", icon: PresentationChartIcon },
-      { name: "Notion", icon: NoteBlankIcon },
-      { name: "Confluence", icon: BookOpenIcon },
-    ],
-  },
-];
-
-function Toolbox() {
-  return (
-    <section
-      id="toolbox"
-      style={{ padding: "clamp(56px, 7vw, 96px) 0", scrollMarginTop: 96 }}
-    >
-      <div className="max-w-6xl mx-auto px-6 md:px-10">
-        <div className="max-w-3xl">
-          <SectionHeader
-            num="05"
-            label="Toolbox"
-            title="What I"
-            italic="reach for"
-          />
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-0"
-          style={{ borderTop: "0.75px solid var(--text-primary)" }}
-        >
-          {skillCols.map((col, i) => {
-            const CatIcon = col.icon;
-            return (
-              <motion.div
-                key={col.label}
-                initial={{ opacity: 0, y: 12 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-40px" }}
-                transition={{ duration: 0.5, delay: i * 0.07 }}
-                style={{
-                  padding: "24px 20px 28px",
-                  borderRight: i < skillCols.length - 1 ? "0.75px dashed var(--border)" : "none",
-                  position: "relative",
-                }}
-              >
-                {/* Category header */}
-                <div className="flex items-center justify-between mb-5">
-                  <div className="flex items-center gap-2">
-                    <CatIcon size={14} weight="regular" color="var(--accent)" />
-                    <span style={{ ...mono, fontSize: 9, color: "var(--text-muted)", letterSpacing: "0.2em" }}>
-                      {col.label}
-                    </span>
-                  </div>
-                  <span style={{ ...mono, fontSize: 9, color: "var(--text-muted)", opacity: 0.5 }}>
-                    0{i + 1}
-                  </span>
-                </div>
-
-                {/* Tool badges */}
-                <div className="flex flex-col gap-2">
-                  {col.tools.map((tool, j) => {
-                    const ToolIcon = tool.icon;
-                    return (
-                      <motion.div
-                        key={tool.name}
-                        initial={{ opacity: 0, x: -6 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true, margin: "-20px" }}
-                        transition={{ duration: 0.35, delay: i * 0.06 + j * 0.04 }}
-                        className="group flex items-center gap-2.5"
-                        style={{
-                          padding: "8px 12px",
-                          border: "0.75px solid var(--border)",
-                          borderRadius: 6,
-                          background: "var(--bg-elevated)",
-                          transitionProperty: "border-color, background-color, transform",
-                          transitionDuration: "180ms",
-                          cursor: "default",
-                        }}
-                        whileHover={{ y: -2, transition: { duration: 0.15 } }}
-                      >
-                        <ToolIcon
-                          size={14}
-                          weight="regular"
-                          style={{
-                            color: "var(--text-muted)",
-                            flexShrink: 0,
-                            transitionProperty: "color",
-                            transitionDuration: "180ms",
-                          }}
-                          className="group-hover:text-[var(--accent)]"
-                        />
-                        <span
-                          style={{
-                            fontFamily: sans,
-                            fontSize: 13,
-                            color: "var(--text-secondary)",
-                            letterSpacing: "0.005em",
-                            lineHeight: 1,
-                          }}
-                        >
-                          {tool.name}
-                        </span>
-                      </motion.div>
-                    );
-                  })}
-                </div>
-              </motion.div>
-            );
-          })}
-        </div>
-      </div>
-    </section>
-  );
-}
 
 /* ─── Off-Duty — interest panels ────────────────────────────────── */
 const loves = [
@@ -1240,7 +967,7 @@ function OffDuty() {
     >
       <div className="max-w-6xl mx-auto px-6 md:px-10">
         <SectionHeader
-          num="06"
+          num="04"
           label="Off-Duty"
           title="When I'm not designing, I'm"
           italic="chasing something"
@@ -1531,8 +1258,6 @@ export default function About() {
       <MyStory />
       <MyApproach />
       <Experience />
-      <Education />
-      <Toolbox />
       <OffDuty />
       <Connect />
     </motion.div>
