@@ -663,7 +663,7 @@ export default function HeroSection() {
           {/* Subheading - dragged up from below by cursor */}
           <div
             className="relative"
-            style={{ maxWidth: "min(550px, 90vw)", marginBottom: 24, textAlign: "center" }}
+            style={{ maxWidth: "min(660px, 90vw)", marginBottom: 24, textAlign: "center" }}
           >
             {/* Drag cursor - bottom-centre of text box, rises with it */}
             <motion.div
