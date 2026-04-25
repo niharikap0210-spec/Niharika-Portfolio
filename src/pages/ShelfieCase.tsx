@@ -107,7 +107,7 @@ function Reveal({
       ref={ref}
       initial={{ opacity: 0, y }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.7, delay, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: 0.7, delay, ease: [0.25, 1, 0.4, 1] }}
       className={className}
     >
       {children}
@@ -123,7 +123,7 @@ function CountUp({ value, suffix = "", duration = 1.4 }: { value: number; suffix
   useEffect(() => {
     if (!inView) return;
     const controls = animate(mv, value, {
-      duration, ease: [0.16, 1, 0.3, 1],
+      duration, ease: [0.25, 1, 0.4, 1],
       onUpdate: (v) => setDisplay(Math.round(v).toString()),
     });
     return () => controls.stop();
@@ -147,7 +147,7 @@ function SectionHeader({
         <motion.span
           initial={{ opacity: 0, y: 8 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.55, ease: [0.25, 1, 0.4, 1] }}
           style={{
             ...mono, fontSize: 14, color: sh.primary,
             letterSpacing: "0.22em", fontWeight: 700,
@@ -157,7 +157,7 @@ function SectionHeader({
         <motion.span
           initial={{ opacity: 0, y: 8 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.08, duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ delay: 0.08, duration: 0.55, ease: [0.25, 1, 0.4, 1] }}
           style={{
             ...mono, fontSize: 14, color: "var(--text-primary)",
             letterSpacing: "0.22em", fontWeight: 600,
@@ -178,7 +178,7 @@ function SectionHeader({
       <motion.div
         initial={{ scaleX: 0 }}
         animate={inView ? { scaleX: 1 } : {}}
-        transition={{ delay: 0.15, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ delay: 0.15, duration: 0.9, ease: [0.25, 1, 0.4, 1] }}
         style={{
           height: 1, background: sh.primary, transformOrigin: "left",
           opacity: 0.6,
@@ -525,7 +525,7 @@ function MethodCard({
             ? "0 1px 2px rgba(0,0,0,0.04), 0 18px 40px rgba(31,95,92,0.13)"
             : "none",
         }}
-        transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 0.32, ease: [0.25, 1, 0.4, 1] }}
         style={{
           borderTop: `2px solid ${sh.primary}`,
           padding: "26px 24px 22px",
@@ -546,7 +546,7 @@ function MethodCard({
           </motion.div>
           <motion.div
             animate={{ rotate: open ? 45 : 0, color: open ? sh.primary : "var(--text-muted)" }}
-            transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.32, ease: [0.25, 1, 0.4, 1] }}
             style={{
               width: 32, height: 32,
               border: `1px solid ${open ? sh.primary : sh.subtle}`,
@@ -577,7 +577,7 @@ function MethodCard({
               initial={{ opacity: 0, height: 0, marginTop: 0 }}
               animate={{ opacity: 1, height: "auto", marginTop: 22 }}
               exit={{ opacity: 0, height: 0, marginTop: 0 }}
-              transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.32, ease: [0.25, 1, 0.4, 1] }}
               style={{ overflow: "hidden" }}
             >
               <div style={{
@@ -594,7 +594,7 @@ function MethodCard({
                     key={i}
                     initial={{ opacity: 0, x: -6 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.28, delay: 0.06 + i * 0.05, ease: [0.16, 1, 0.3, 1] }}
+                    transition={{ duration: 0.28, delay: 0.06 + i * 0.05, ease: [0.25, 1, 0.4, 1] }}
                     style={{
                       display: "grid",
                       gridTemplateColumns: "100px 1fr",
@@ -667,7 +667,7 @@ function VoicesPanel({ voices }: { voices: Voice[] }) {
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.4, ease: [0.25, 1, 0.4, 1] }}
           >
             <p style={{
               ...mono, fontSize: 10, letterSpacing: "0.24em",
@@ -830,7 +830,7 @@ function TakeawayCard({ tk }: { tk: Takeaway }) {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.32, ease: [0.25, 1, 0.4, 1] }}
             style={{ overflow: "hidden" }}
           >
             <p style={{ ...t.bodyLg, margin: 0, marginTop: 16 }}>{tk.body}</p>
@@ -878,7 +878,7 @@ function ProposalBand({ data, index }: { data: ProposalBandData; index: number }
       ref={ref}
       initial={{ opacity: 0, y: 28 }}
       animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 28 }}
-      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: 0.7, ease: [0.25, 1, 0.4, 1] }}
       style={{
         background: "var(--bg-elevated)",
         border: `1px solid ${sh.subtle}`,
@@ -907,7 +907,7 @@ function ProposalBand({ data, index }: { data: ProposalBandData; index: number }
         <motion.div
           className={`lg:col-span-6 ${flip ? "lg:order-2" : ""}`}
           whileHover={{ scale: 1.012 }}
-          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.5, ease: [0.25, 1, 0.4, 1] }}
           style={{
             position: "relative",
             background: sh.surface,
@@ -1191,7 +1191,7 @@ function HeroVisual() {
       className="md:col-span-7"
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.6, duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ delay: 0.6, duration: 1.0, ease: [0.25, 1, 0.4, 1] }}
       style={{
         position: "relative", width: "100%", minWidth: 0,
         display: "flex", alignItems: "center", justifyContent: "center",
@@ -1387,7 +1387,7 @@ function FailureExplorer() {
                     transition={{
                       duration: 1.0,
                       delay: 0.15 + i * 0.12,
-                      ease: [0.16, 1, 0.3, 1],
+                      ease: [0.25, 1, 0.4, 1],
                     }}
                     style={{
                       position: "absolute", left: 0, top: 0, bottom: 0,
@@ -1466,7 +1466,7 @@ function FailureExplorer() {
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.4, ease: [0.25, 1, 0.4, 1] }}
               style={{ display: "flex", flexDirection: "column", flex: 1 }}
             >
               <div style={{
@@ -1756,7 +1756,7 @@ export default function ShelfieCase() {
               <div style={{ overflow: "hidden", marginBottom: "clamp(24px, 2.6vw, 36px)" }}>
                 <motion.h1
                   initial={{ y: "110%" }} animate={{ y: 0 }}
-                  transition={{ delay: 0.15, duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
+                  transition={{ delay: 0.15, duration: 1.0, ease: [0.25, 1, 0.4, 1] }}
                   style={{
                     fontFamily: serif, fontWeight: 700,
                     fontSize: "clamp(64px, 9.5vw, 140px)",
@@ -2014,7 +2014,7 @@ export default function ShelfieCase() {
                 <Reveal key={i} delay={0.05 + i * 0.05}>
                   <motion.div
                     whileHover={{ y: -3 }}
-                    transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                    transition={{ duration: 0.25, ease: [0.25, 1, 0.4, 1] }}
                     style={{
                       background: "var(--bg-elevated)",
                       padding: "26px 24px 24px",
@@ -2281,7 +2281,7 @@ export default function ShelfieCase() {
                 <Reveal key={i} delay={0.1 + i * 0.06}>
                   <motion.div
                     whileHover={{ y: -4 }}
-                    transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                    transition={{ duration: 0.3, ease: [0.25, 1, 0.4, 1] }}
                     style={{
                       background: "var(--bg-elevated)",
                       border: "1px solid var(--border)",
@@ -2535,7 +2535,7 @@ export default function ShelfieCase() {
             initial={{ opacity: 0, y: 12, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 12, scale: 0.9 }}
-            transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.28, ease: [0.25, 1, 0.4, 1] }}
             whileHover={{ y: -3 }}
             whileTap={{ scale: 0.94 }}
             style={{

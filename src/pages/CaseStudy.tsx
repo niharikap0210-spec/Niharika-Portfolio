@@ -31,7 +31,7 @@ function DrawingSheet({
       ref={ref}
       initial={{ opacity: 0, y: 32 }}
       animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 32 }}
-      transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: 0.65, ease: [0.25, 1, 0.4, 1] }}
     >
       <DrawingSheetBorder
         titleBlock={{ sheet: sheetNumber }}
@@ -126,7 +126,7 @@ export default function CaseStudy() {
           <motion.h1
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ delay: 0.1, duration: 0.6, ease: [0.25, 1, 0.4, 1] }}
             style={{
               fontFamily: "'Playfair Display', Georgia, serif",
               fontWeight: 700,
@@ -209,7 +209,7 @@ export default function CaseStudy() {
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.6, ease: [0.25, 1, 0.4, 1] }}
           style={{
             overflow: "hidden",
             border: "1px solid var(--border)",

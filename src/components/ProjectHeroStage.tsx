@@ -56,7 +56,7 @@ export function ProjectHeroStage({ project, hovered = false, textOverlay = false
       {/* Composition - swapped by slug */}
       <motion.div
         animate={{ scale: hovered ? 1.03 : 1 }}
-        transition={{ type: "spring", stiffness: 180, damping: 22, mass: 0.7 }}
+        transition={{ type: "spring", stiffness: 160, damping: 30, mass: 0.9 }}
         style={{
           position: "absolute",
           inset: textOverlay ? "22% 14% 24%" : 22,

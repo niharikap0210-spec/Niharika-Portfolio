@@ -34,7 +34,7 @@ function RevealWord({
         style={{ display: "inline-block", fontStyle: italic ? "italic" : "inherit" }}
         initial={{ x: "-110%" }}
         animate={{ x: 0 }}
-        transition={{ delay, duration: 0.34, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ delay, duration: 0.34, ease: [0.25, 1, 0.4, 1] }}
       >
         {text}
       </motion.span>

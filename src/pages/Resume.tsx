@@ -33,7 +33,7 @@ const containerVariants = {
 
 const itemVariants = {
   hidden: { opacity: 0, y: 16 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] as const } },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.25, 1, 0.4, 1] as const } },
 };
 
 export default function Resume() {
@@ -56,7 +56,7 @@ export default function Resume() {
           <motion.h1
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.6, ease: [0.25, 1, 0.4, 1] }}
             style={{
               fontFamily: "'Playfair Display', Georgia, serif",
               fontWeight: 700,
@@ -168,7 +168,7 @@ export default function Resume() {
           <motion.div
             initial={{ opacity: 0, x: 24 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.2, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ delay: 0.2, duration: 0.6, ease: [0.25, 1, 0.4, 1] }}
           >
             <h2
               style={{

@@ -9,7 +9,7 @@ const mono: React.CSSProperties = {
   letterSpacing: "0.14em",
 };
 
-const SPRING = { type: "spring" as const, stiffness: 260, damping: 24, mass: 0.6 };
+const SPRING = { type: "spring" as const, stiffness: 200, damping: 32, mass: 0.8 };
 
 interface Contact {
   label: string;
@@ -108,7 +108,7 @@ function ContactCard({ contact, index }: { contact: Contact; index: number }) {
       initial={{ opacity: 0, y: 16 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.55, delay: 0.08 + index * 0.08, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: 0.55, delay: 0.08 + index * 0.08, ease: [0.25, 1, 0.4, 1] }}
       className="group relative flex items-center justify-between focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
       style={{
         textDecoration: "none",
@@ -296,7 +296,7 @@ export default function ConnectSection() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-40px" }}
-            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.7, ease: [0.25, 1, 0.4, 1] }}
             style={{
               fontFamily: "'Playfair Display', Georgia, serif",
               fontWeight: 700,
@@ -317,7 +317,7 @@ export default function ConnectSection() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-40px" }}
-            transition={{ duration: 0.7, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.7, delay: 0.15, ease: [0.25, 1, 0.4, 1] }}
           >
             <p
               style={{

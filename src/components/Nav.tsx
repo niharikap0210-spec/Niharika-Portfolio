@@ -34,34 +34,34 @@ const pillVariants = {
   expanded: {
     width: "auto",
     transition: {
-      type: "spring" as const, damping: 22, stiffness: 280,
+      type: "spring" as const, damping: 30, stiffness: 220,
       staggerChildren: 0.055, delayChildren: 0.08,
     },
   },
   collapsed: {
     width: "2.75rem",
     transition: {
-      type: "spring" as const, damping: 22, stiffness: 280,
+      type: "spring" as const, damping: 30, stiffness: 220,
       when: "afterChildren" as const, staggerChildren: 0.04, staggerDirection: -1 as const,
     },
   },
 };
 
 const brandVar = {
-  expanded: { opacity: 1, x: 0,   transition: { type: "spring" as const, damping: 15 } },
-  collapsed: { opacity: 0, x: -20, transition: { duration: 0.13 } },
+  expanded: { opacity: 1, x: 0,   transition: { type: "spring" as const, damping: 24, stiffness: 220 } },
+  collapsed: { opacity: 0, x: -20, transition: { duration: 0.18, ease: [0.4, 0, 1, 1] } },
 };
 
 const itemVar = {
-  expanded: { opacity: 1, x: 0,   transition: { type: "spring" as const, damping: 15 } },
-  collapsed: { opacity: 0, x: -10, transition: { duration: 0.13 } },
+  expanded: { opacity: 1, x: 0,   transition: { type: "spring" as const, damping: 24, stiffness: 220 } },
+  collapsed: { opacity: 0, x: -10, transition: { duration: 0.18, ease: [0.4, 0, 1, 1] } },
 };
 
 const menuIconVar = {
-  expanded: { opacity: 0, scale: 0.5, transition: { duration: 0.12 } },
+  expanded: { opacity: 0, scale: 0.5, transition: { duration: 0.16, ease: [0.4, 0, 1, 1] } },
   collapsed: {
     opacity: 1, scale: 1,
-    transition: { type: "spring" as const, damping: 14, stiffness: 280, delay: 0.1 },
+    transition: { type: "spring" as const, damping: 26, stiffness: 200, delay: 0.1 },
   },
 };
 
@@ -124,8 +124,8 @@ export default function Nav() {
     alignItems: "center",
     gap: 5,
     transitionProperty: "color",
-    transitionDuration: "180ms",
-    transitionTimingFunction: "ease-out",
+    transitionDuration: "200ms",
+    transitionTimingFunction: "cubic-bezier(0.25, 1, 0.4, 1)",
   };
 
   /* ───────────────────────────────────────────────────────────────── */
@@ -136,7 +136,7 @@ export default function Nav() {
         <motion.div
           initial={{ y: -52, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.15, duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ delay: 0.15, duration: 0.65, ease: [0.25, 1, 0.4, 1] }}
         >
           <motion.nav
             role="navigation"
@@ -277,7 +277,7 @@ export default function Nav() {
       <motion.header
         initial={{ opacity: 0, y: -8 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 0.6, ease: [0.25, 1, 0.4, 1] }}
         className="md:hidden fixed top-0 left-0 right-0 z-50"
         style={{
           backgroundColor: "rgba(250,250,250,0.92)",
@@ -323,7 +323,7 @@ export default function Nav() {
             initial={{ opacity: 0, x: "100%" }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: "100%" }}
-            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.38, ease: [0.25, 1, 0.4, 1] }}
             className="md:hidden fixed inset-0 z-40 blueprint-grid flex flex-col"
             style={{ paddingTop: 56 }}
             role="dialog"
@@ -348,7 +348,7 @@ export default function Nav() {
                     key={item.label}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.05 * (i + 1), duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                    transition={{ delay: 0.05 * (i + 1), duration: 0.5, ease: [0.25, 1, 0.4, 1] }}
                   >
                     {item.external ? (
                       <a

@@ -140,7 +140,7 @@ function Hero() {
             <motion.h1
               initial={{ opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.7, ease: [0.25, 1, 0.4, 1] }}
               style={{
                 fontFamily: serif,
                 fontWeight: 700,
@@ -207,7 +207,7 @@ function Hero() {
             className="lg:col-span-5 order-1 lg:order-2 flex justify-center lg:justify-end relative"
             initial={{ opacity: 0, scale: 0.96 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.8, ease: [0.25, 1, 0.4, 1] }}
           >
             <div className="relative">
               <div
@@ -339,7 +339,7 @@ function MyStory() {
             initial={{ opacity: 0, y: 14 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-40px" }}
-            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.7, ease: [0.25, 1, 0.4, 1] }}
             className="relative"
           >
             {/* Construction frame */}
@@ -563,7 +563,7 @@ function MyApproach() {
                 ref={ref}
                 initial={{ opacity: 0, y: 10 }}
                 animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
-                transition={{ duration: 0.5, delay: i * 0.06, ease: [0.16, 1, 0.3, 1] }}
+                transition={{ duration: 0.5, delay: i * 0.06, ease: [0.25, 1, 0.4, 1] }}
               >
                 <button
                   type="button"
@@ -683,7 +683,7 @@ function MyApproach() {
                       initial={{ height: 0, opacity: 0 }}
                       animate={{ height: "auto", opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1] }}
+                      transition={{ duration: 0.38, ease: [0.25, 1, 0.4, 1] }}
                       style={{ overflow: "hidden" }}
                     >
                       <div
@@ -797,7 +797,7 @@ function Experience() {
                 ref={ref}
                 initial={{ opacity: 0, y: 12 }}
                 animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
-                transition={{ duration: 0.5, delay: i * 0.06, ease: [0.16, 1, 0.3, 1] }}
+                transition={{ duration: 0.5, delay: i * 0.06, ease: [0.25, 1, 0.4, 1] }}
                 className="group"
                 style={{
                   borderTop: "0.75px solid var(--border)",
@@ -867,7 +867,7 @@ function Experience() {
               initial={{ opacity: 0, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-30px" }}
-              transition={{ duration: 0.45, delay: i * 0.07, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.45, delay: i * 0.07, ease: [0.25, 1, 0.4, 1] }}
               style={{ borderTop: "0.75px solid var(--border)", padding: "20px 0" }}
             >
               <div className="grid grid-cols-1 lg:grid-cols-[180px_1fr] gap-3 lg:gap-12">

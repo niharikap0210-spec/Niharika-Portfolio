@@ -15,8 +15,8 @@ const mono: React.CSSProperties = {
   letterSpacing: "0.14em",
 };
 
-const SPRING = { type: "spring" as const, stiffness: 260, damping: 26, mass: 0.6 };
-const EASE = [0.16, 1, 0.3, 1] as const;
+const SPRING = { type: "spring" as const, stiffness: 200, damping: 32, mass: 0.8 };
+const EASE = [0.25, 1, 0.4, 1] as const;
 
 export default function ProjectCard({ project, index }: ProjectCardProps) {
   const ref = useRef<HTMLDivElement>(null);
@@ -52,7 +52,7 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
               ? `0 2px 6px rgba(0,0,0,0.04), 0 20px 48px ${accent.primary}1a`
               : "0 1px 3px rgba(0,0,0,0.03), 0 8px 24px rgba(0,0,0,0.025)",
             transitionProperty: "box-shadow, border-color",
-            transitionDuration: "320ms",
+            transitionDuration: "300ms",
             transitionTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)",
             borderColor: hovered ? `${accent.primary}55` : "var(--border)",
           }}
@@ -66,7 +66,7 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
               border: `0.75px dashed ${hovered ? accent.primary + "55" : "var(--construction)"}`,
               pointerEvents: "none",
               transitionProperty: "border-color",
-              transitionDuration: "320ms",
+              transitionDuration: "300ms",
               zIndex: 1,
             }}
           />
@@ -86,7 +86,7 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
                   border: `0.75px solid ${hovered ? accent.primary + "77" : "var(--border)"}`,
                   backgroundColor: hovered ? accent.surface : "var(--bg-primary)",
                   transitionProperty: "background-color, border-color",
-                  transitionDuration: "320ms",
+                  transitionDuration: "300ms",
                 }}
               >
                 {indexLabel}
@@ -201,7 +201,7 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
                     fontSize: 10,
                     color: hovered ? accent.dark : "var(--text-secondary)",
                     transitionProperty: "color",
-                    transitionDuration: "320ms",
+                    transitionDuration: "300ms",
                     gap: 14,
                   }}
                 >
@@ -273,7 +273,7 @@ function CornerTicks({ hovered, color }: { hovered: boolean; color: string }) {
     zIndex: 3,
     pointerEvents: "none",
     transitionProperty: "opacity",
-    transitionDuration: "320ms",
+    transitionDuration: "300ms",
     opacity: hovered ? 0.9 : 0,
   };
   const stroke = `0.75px solid ${color}`;

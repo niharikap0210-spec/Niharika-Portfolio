@@ -18,7 +18,7 @@ export default function Home() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.3 }}
+      transition={{ duration: 0.35, ease: [0.4, 0, 0.6, 1] }}
       className=""
     >
       {/* Hero */}
@@ -122,7 +122,7 @@ export default function Home() {
               initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-40px" }}
-              transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.55, ease: [0.25, 1, 0.4, 1] }}
               style={{
                 fontFamily: "'Playfair Display', Georgia, serif",
                 fontWeight: 700,
@@ -146,7 +146,7 @@ export default function Home() {
               initial={{ opacity: 0, y: 12 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-40px" }}
-              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+              transition={{ duration: 0.6, ease: [0.25, 1, 0.4, 1], delay: 0.1 }}
               style={{
                 fontFamily: "'Playfair Display', Georgia, serif",
                 fontStyle: "italic",
@@ -166,7 +166,7 @@ export default function Home() {
               initial={{ opacity: 0, y: 12 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-40px" }}
-              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.25 }}
+              transition={{ duration: 0.6, ease: [0.25, 1, 0.4, 1], delay: 0.25 }}
               className="grid grid-cols-3 gap-6"
               style={{
                 borderTop: "0.75px solid var(--border)",
@@ -219,7 +219,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-40px" }}
-            transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.55, ease: [0.25, 1, 0.4, 1] }}
             className="grid grid-cols-1 lg:grid-cols-[auto_1fr_auto] gap-6 lg:gap-10 items-start"
             style={{
               marginTop: 56,

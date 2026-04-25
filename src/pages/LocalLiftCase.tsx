@@ -119,7 +119,7 @@ function Reveal({
       ref={ref}
       initial={{ opacity: 0, y }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.8, delay, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: 0.8, delay, ease: [0.25, 1, 0.4, 1] }}
       className={className}
     >
       {children}
@@ -135,7 +135,7 @@ function CountUp({ value, suffix = "", duration = 1.6 }: { value: number; suffix
   useEffect(() => {
     if (!inView) return;
     const controls = animate(mv, value, {
-      duration, ease: [0.16, 1, 0.3, 1],
+      duration, ease: [0.25, 1, 0.4, 1],
       onUpdate: (v) => setDisplay(Math.round(v).toString()),
     });
     return () => controls.stop();
@@ -158,7 +158,7 @@ function SectionHeader({
         <motion.span
           initial={{ opacity: 0, y: 8 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.55, ease: [0.25, 1, 0.4, 1] }}
           style={{ ...mono, fontSize: 13, color: ll.primary, letterSpacing: "0.24em", fontWeight: 700 }}
         >
           {num} <span style={{ color: ll.muted, fontWeight: 400 }}>/ {TOTAL}</span>
@@ -166,7 +166,7 @@ function SectionHeader({
         <motion.span
           initial={{ opacity: 0, y: 8 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.08, duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ delay: 0.08, duration: 0.55, ease: [0.25, 1, 0.4, 1] }}
           style={{ ...mono, fontSize: 13, color: "var(--text-primary)", letterSpacing: "0.24em", fontWeight: 600 }}
         >
           {title}
@@ -183,7 +183,7 @@ function SectionHeader({
       <motion.div
         initial={{ scaleX: 0 }}
         animate={inView ? { scaleX: 1 } : {}}
-        transition={{ delay: 0.15, duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ delay: 0.15, duration: 1.0, ease: [0.25, 1, 0.4, 1] }}
         style={{ height: 1, background: ll.primary, transformOrigin: "left", opacity: 0.7 }}
       />
     </div>
@@ -366,7 +366,7 @@ function PhoneGallery({
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-40px" }}
-          transition={{ duration: 0.7, delay: (i % 6) * 0.06, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.7, delay: (i % 6) * 0.06, ease: [0.25, 1, 0.4, 1] }}
           style={{ margin: 0, display: "flex", flexDirection: "column", alignItems: "center", gap: 14 }}
         >
           <PhoneFrame src={s.src} alt={`LocalLift ${s.label}`} />
@@ -567,7 +567,7 @@ function LofiFilmstrip({
                 initial={{ opacity: 0, y: 18 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.45, delay: i * 0.04, ease: [0.16, 1, 0.3, 1] }}
+                transition={{ duration: 0.45, delay: i * 0.04, ease: [0.25, 1, 0.4, 1] }}
                 style={{
                   margin: 0,
                   flex: "0 0 clamp(160px, 17vw, 200px)",
@@ -659,7 +659,7 @@ function HeroMockup() {
       <motion.div
         initial={{ opacity: 0, x: -30, y: 20 }}
         animate={{ opacity: 1, x: 0, y: 0 }}
-        transition={{ delay: 0.3, duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ delay: 0.3, duration: 1.1, ease: [0.25, 1, 0.4, 1] }}
         style={{
           position: "absolute",
           left: "4%",
@@ -676,7 +676,7 @@ function HeroMockup() {
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.45, duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ delay: 0.45, duration: 1.1, ease: [0.25, 1, 0.4, 1] }}
         style={{
           position: "relative",
           width: "34%",
@@ -690,7 +690,7 @@ function HeroMockup() {
       <motion.div
         initial={{ opacity: 0, x: 30, y: 20 }}
         animate={{ opacity: 1, x: 0, y: 0 }}
-        transition={{ delay: 0.6, duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ delay: 0.6, duration: 1.1, ease: [0.25, 1, 0.4, 1] }}
         style={{
           position: "absolute",
           right: "4%",
@@ -829,7 +829,7 @@ function TensionCard({
       initial={{ opacity: 0, y: 18 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-40px" }}
-      transition={{ duration: 0.6, delay: index * 0.07, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: 0.6, delay: index * 0.07, ease: [0.25, 1, 0.4, 1] }}
       onMouseEnter={onEnter}
       onMouseLeave={onLeave}
       onFocus={onEnter}
@@ -856,7 +856,7 @@ function TensionCard({
       <motion.span
         aria-hidden
         animate={{ scaleY: active ? 1 : 0 }}
-        transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 0.35, ease: [0.25, 1, 0.4, 1] }}
         style={{
           position: "absolute", left: 0, top: 0, bottom: 0,
           width: 3, background: ll.warm, transformOrigin: "top",
@@ -922,7 +922,7 @@ function TensionCard({
               initial={{ scaleX: 0 }}
               whileInView={{ scaleX: 1 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.9, delay: 0.2 + index * 0.08, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.9, delay: 0.2 + index * 0.08, ease: [0.25, 1, 0.4, 1] }}
               style={{
                 position: "absolute", left: 0, top: 0,
                 width: `${(tension.count / 40) * 100}%`,
@@ -1301,7 +1301,7 @@ function PersonasSection() {
                   initial={{ opacity: 0, scale: 1.02 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.99 }}
-                  transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+                  transition={{ duration: 0.45, ease: [0.25, 1, 0.4, 1] }}
                   style={{
                     width: "100%", height: "100%",
                     objectFit: "contain",
@@ -1324,7 +1324,7 @@ function PersonasSection() {
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -8 }}
-                  transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+                  transition={{ duration: 0.45, ease: [0.25, 1, 0.4, 1] }}
                   style={{ display: "flex", flexDirection: "column", gap: "clamp(20px, 2vw, 28px)" }}
                 >
                   {/* Header */}
@@ -1379,7 +1379,7 @@ function PersonasSection() {
                           key={g.label}
                           initial={{ opacity: 0, y: 10 }}
                           animate={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 0.45, delay: 0.15 + gi * 0.08, ease: [0.16, 1, 0.3, 1] }}
+                          transition={{ duration: 0.45, delay: 0.15 + gi * 0.08, ease: [0.25, 1, 0.4, 1] }}
                           style={{ display: "flex", flexDirection: "column", gap: 10 }}
                         >
                           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
@@ -1620,7 +1620,7 @@ function ReflectionStepper() {
           aria-hidden
           initial={{ opacity: 0, x: 16 }}
           animate={{ opacity: 0.08, x: 0 }}
-          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.5, ease: [0.25, 1, 0.4, 1] }}
           style={{
             position: "absolute",
             right: "clamp(20px, 3vw, 44px)",
@@ -1642,7 +1642,7 @@ function ReflectionStepper() {
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.45, ease: [0.25, 1, 0.4, 1] }}
             style={{
               position: "relative", zIndex: 1,
               display: "flex", flexDirection: "column",
@@ -1905,7 +1905,7 @@ export default function LocalLiftCase() {
               <div style={{ overflow: "hidden", marginBottom: "clamp(22px, 2.4vw, 32px)" }}>
                 <motion.h1
                   initial={{ y: "110%" }} animate={{ y: 0 }}
-                  transition={{ delay: 0.15, duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
+                  transition={{ delay: 0.15, duration: 1.0, ease: [0.25, 1, 0.4, 1] }}
                   style={{
                     fontFamily: serif, fontWeight: 700,
                     fontSize: "clamp(60px, 8.5vw, 124px)",
@@ -2734,7 +2734,7 @@ export default function LocalLiftCase() {
             initial={{ opacity: 0, y: 12, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 12, scale: 0.9 }}
-            transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.28, ease: [0.25, 1, 0.4, 1] }}
             whileHover={{ y: -3 }}
             whileTap={{ scale: 0.94 }}
             style={{

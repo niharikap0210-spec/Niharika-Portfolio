@@ -109,7 +109,7 @@ export default function Footer() {
           <Link
             to="/"
             className="flex items-center gap-x-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded"
-            aria-label="Niharika Pundlik — home"
+            aria-label="Niharika Pundlik - home"
             style={{ textDecoration: "none" }}
           >
             <LogoMark />
@@ -143,7 +143,7 @@ export default function Footer() {
                     backgroundColor: "var(--bg-elevated)",
                     color: "var(--text-secondary)",
                     transitionProperty: "background-color, color, border-color",
-                    transitionDuration: "160ms",
+                    transitionDuration: "200ms",
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.backgroundColor = "var(--accent)";

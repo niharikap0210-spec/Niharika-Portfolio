@@ -84,7 +84,7 @@ function Reveal({
       ref={ref}
       initial={{ opacity: 0, y }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.7, delay, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: 0.7, delay, ease: [0.25, 1, 0.4, 1] }}
       className={className}
     >
       {children}
@@ -100,7 +100,7 @@ function CountUp({ value, suffix = "", duration = 1.4 }: { value: number; suffix
   useEffect(() => {
     if (!inView) return;
     const controls = animate(mv, value, {
-      duration, ease: [0.16, 1, 0.3, 1],
+      duration, ease: [0.25, 1, 0.4, 1],
       onUpdate: (v) => setDisplay(Math.round(v).toString()),
     });
     return () => controls.stop();
@@ -122,7 +122,7 @@ function SectionHeader({
         <motion.span
           initial={{ opacity: 0, y: 8 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.55, ease: [0.25, 1, 0.4, 1] }}
           style={{ ...mono, fontSize: 14, color: vf.primary, letterSpacing: "0.22em", fontWeight: 700 }}
         >
           {num} <span style={{ color: "var(--text-muted)", fontWeight: 400 }}>/ {total}</span>
@@ -130,7 +130,7 @@ function SectionHeader({
         <motion.span
           initial={{ opacity: 0, y: 8 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.08, duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ delay: 0.08, duration: 0.55, ease: [0.25, 1, 0.4, 1] }}
           style={{ ...mono, fontSize: 14, color: "var(--text-primary)", letterSpacing: "0.22em", fontWeight: 600 }}
         >
           {phase}
@@ -138,14 +138,14 @@ function SectionHeader({
         <motion.div
           initial={{ scaleX: 0 }}
           animate={inView ? { scaleX: 1 } : {}}
-          transition={{ delay: 0.15, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ delay: 0.15, duration: 0.9, ease: [0.25, 1, 0.4, 1] }}
           style={{ flex: 1, height: 1, background: vf.primary, opacity: 0.55, transformOrigin: "left", minWidth: 40 }}
         />
       </div>
       <motion.h2
         initial={{ opacity: 0, y: 12 }}
         animate={inView ? { opacity: 1, y: 0 } : {}}
-        transition={{ delay: 0.22, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ delay: 0.22, duration: 0.8, ease: [0.25, 1, 0.4, 1] }}
         style={{ ...t.h2Section, marginTop: 20, maxWidth: 860 }}
       >
         {title}
@@ -222,7 +222,7 @@ function AnimatedTabletFrame({ src, alt }: { src: string; alt: string }) {
             initial={{ opacity: 0, scale: 1.015 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.45, ease: [0.25, 1, 0.4, 1] }}
             style={{ position: "absolute", inset: 0, width: "100%", height: "100%", display: "block", objectFit: "cover" }}
           />
         </AnimatePresence>
@@ -404,7 +404,7 @@ function TabletStepper({ steps, figPrefix }: { steps: Step[]; figPrefix: string 
                           initial={{ opacity: 0, height: 0 }}
                           animate={{ opacity: 1, height: "auto" }}
                           exit={{ opacity: 0, height: 0 }}
-                          transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+                          transition={{ duration: 0.28, ease: [0.25, 1, 0.4, 1] }}
                           style={{ overflow: "hidden" }}
                         >
                           <p style={{ fontFamily: sans, fontSize: 16, color: "var(--text-secondary)", lineHeight: 1.6, paddingTop: 4 }}>
@@ -500,7 +500,7 @@ function OverrideTimeline() {
                 initial={{ scale: 0 }}
                 whileInView={{ scale: 1 }}
                 viewport={{ once: true, margin: "-40px" }}
-                transition={{ delay: 0.1 * i + 0.2, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                transition={{ delay: 0.1 * i + 0.2, duration: 0.5, ease: [0.25, 1, 0.4, 1] }}
                 style={{
                   width: 14, height: 14, borderRadius: "50%",
                   background: "#fff", border: `2px solid ${s.color}`,
@@ -524,7 +524,7 @@ function OverrideTimeline() {
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-40px" }}
-            transition={{ delay: 0.08 * i, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ delay: 0.08 * i, duration: 0.6, ease: [0.25, 1, 0.4, 1] }}
             style={{
               background: "var(--bg-elevated)",
               border: `1px solid ${vf.subtle}`,
@@ -677,7 +677,7 @@ function BeforeAfterBand() {
         }}>
           <motion.div
             animate={{ x: hover ? 4 : 0 }}
-            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.35, ease: [0.25, 1, 0.4, 1] }}
             style={{
               width: 44, height: 44, borderRadius: "50%",
               background: vf.primary, display: "flex", alignItems: "center", justifyContent: "center",
@@ -807,7 +807,7 @@ function LessonCard({ index, title, body, tag }: { index: number; title: string;
         overflow: "hidden",
       }}
       animate={{ y: hovered ? -3 : 0 }}
-      transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: 0.35, ease: [0.25, 1, 0.4, 1] }}
     >
       <span aria-hidden style={{
         position: "absolute", top: 0, left: 0, bottom: 0, width: 3, background: vf.primary,
@@ -1079,7 +1079,7 @@ function GapRow({
       onHoverEnd={() => setHovered(false)}
       initial={{ opacity: 0, y: 16 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ delay: index * 0.12, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ delay: index * 0.12, duration: 0.7, ease: [0.25, 1, 0.4, 1] }}
       className="vf-gap-row"
       style={{
         display: "grid",
@@ -1096,7 +1096,7 @@ function GapRow({
         aria-hidden
         initial={false}
         animate={{ scaleX: hovered ? 1 : 0 }}
-        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 0.5, ease: [0.25, 1, 0.4, 1] }}
         style={{
           position: "absolute", left: 0, right: 0, bottom: -1, height: 2,
           background: vf.flag, transformOrigin: "left",
@@ -1105,7 +1105,7 @@ function GapRow({
       {/* Big serif numeral in flag color */}
       <motion.div
         animate={{ x: hovered ? 6 : 0 }}
-        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 0.4, ease: [0.25, 1, 0.4, 1] }}
         style={{
           fontFamily: serif, fontWeight: 700,
           fontSize: "clamp(64px, 7.5vw, 104px)",
@@ -1139,7 +1139,7 @@ function GapRow({
       {/* Icon ornament, circular outlined */}
       <motion.div
         animate={{ rotate: hovered ? 8 : 0, scale: hovered ? 1.05 : 1 }}
-        transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 0.45, ease: [0.25, 1, 0.4, 1] }}
         style={{
           width: 60, height: 60, borderRadius: "50%",
           border: `1px solid ${hovered ? vf.flag : vf.subtle}`,
@@ -1214,7 +1214,7 @@ function JourneyIllustration() {
           stroke={vf.primary} strokeWidth="1.2" strokeDasharray="2 6" opacity="0.4"
           initial={{ pathLength: 0 }}
           animate={inView ? { pathLength: 1 } : {}}
-          transition={{ duration: 1.6, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
+          transition={{ duration: 1.6, ease: [0.25, 1, 0.4, 1], delay: 0.2 }}
         />
 
         {/* HAND labels, well clear of the circles, high-contrast primary */}
@@ -1223,7 +1223,7 @@ function JourneyIllustration() {
             key={label}
             initial={{ opacity: 0, y: -6 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ delay: 0.3 + i * 0.15, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ delay: 0.3 + i * 0.15, duration: 0.6, ease: [0.25, 1, 0.4, 1] }}
           >
             <line
               x1={nodes[i].x} y1="72"
@@ -1249,7 +1249,7 @@ function JourneyIllustration() {
             key={n.label}
             initial={{ opacity: 0, y: 8 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ delay: 0.45 + i * 0.16, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ delay: 0.45 + i * 0.16, duration: 0.7, ease: [0.25, 1, 0.4, 1] }}
           >
             <circle cx={n.x} cy="170" r="48" fill={vf.surface} stroke={vf.primary} strokeWidth="1.4" />
             <circle cx={n.x} cy="170" r="7" fill={vf.primary} />
@@ -1274,7 +1274,7 @@ function JourneyIllustration() {
             markerEnd="url(#vf-arrow)"
             initial={{ pathLength: 0, opacity: 0 }}
             animate={inView ? { pathLength: 1, opacity: 0.75 } : {}}
-            transition={{ delay: 1.0 + i * 0.18, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ delay: 1.0 + i * 0.18, duration: 0.9, ease: [0.25, 1, 0.4, 1] }}
           />
         ))}
 
@@ -1288,7 +1288,7 @@ function JourneyIllustration() {
           transition={{
             duration: 6.4,
             times:   [0, 0.08, 0.38,                     0.5,                      0.82,                     0.92,                     1],
-            ease: [0.16, 1, 0.3, 1],
+            ease: [0.25, 1, 0.4, 1],
             repeat: Infinity,
             repeatDelay: 0.4,
             delay: 1.6,
@@ -1343,7 +1343,7 @@ function HeroMockups() {
       onMouseLeave={handleLeave}
       className="md:col-span-7"
       initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.6, duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ delay: 0.6, duration: 1.0, ease: [0.25, 1, 0.4, 1] }}
       style={{ position: "relative", width: "100%", minWidth: 0 }}
     >
       <div aria-hidden style={{
@@ -1446,7 +1446,7 @@ function CoolerSketch() {
           <motion.g
             initial={{ opacity: 0, y: 12 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.8, ease: [0.25, 1, 0.4, 1] }}
           >
             <rect x="80" y="90" width="240" height="140" rx="6"
               fill="url(#vf-hatch)" stroke={vf.primary} strokeWidth="1.4" />
@@ -1747,7 +1747,7 @@ export default function VeriflowCase() {
               <div style={{ overflow: "hidden", marginBottom: "clamp(24px, 2.6vw, 36px)" }}>
                 <motion.h1
                   initial={{ y: "110%" }} animate={{ y: 0 }}
-                  transition={{ delay: 0.15, duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
+                  transition={{ delay: 0.15, duration: 1.0, ease: [0.25, 1, 0.4, 1] }}
                   style={{
                     fontFamily: serif, fontWeight: 700,
                     fontSize: "clamp(56px, 8.2vw, 120px)",
@@ -1932,7 +1932,7 @@ export default function VeriflowCase() {
                   initial={{ opacity: 0, y: 12 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: "-40px" }}
-                  transition={{ delay: i * 0.1, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                  transition={{ delay: i * 0.1, duration: 0.7, ease: [0.25, 1, 0.4, 1] }}
                   style={{
                     padding: "0 clamp(18px, 3vw, 40px)",
                     borderLeft: i > 0 ? `1px solid ${vf.subtle}` : undefined,
@@ -2357,7 +2357,7 @@ export default function VeriflowCase() {
             initial={{ opacity: 0, y: 12, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 12, scale: 0.9 }}
-            transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.28, ease: [0.25, 1, 0.4, 1] }}
             whileHover={{ y: -3 }}
             whileTap={{ scale: 0.94 }}
             style={{
