@@ -854,62 +854,72 @@ function Experience() {
           <li style={{ borderTop: "0.75px solid var(--border)" }} aria-hidden />
         </ul>
 
-        {/* Education — clearly separated block */}
-        <div style={{ marginTop: 56 }}>
-          {/* Section divider with label */}
+        {/* Education — visually distinct block */}
+        <div style={{ marginTop: 64 }}>
+          {/* Header row — accent left bar + label */}
           <div
             style={{
               display: "flex",
               alignItems: "center",
-              gap: 16,
+              gap: 12,
               marginBottom: 0,
+              paddingBottom: 16,
             }}
           >
-            <div style={{ flex: 1, height: "0.75px", backgroundColor: "var(--border)" }} />
+            <div
+              aria-hidden
+              style={{ width: 3, height: 18, backgroundColor: "var(--accent)", flexShrink: 0 }}
+            />
             <span
               style={{
                 ...mono,
                 fontSize: 11,
                 color: "var(--text-secondary)",
                 letterSpacing: "0.22em",
-                padding: "6px 14px",
-                border: "0.75px solid var(--border)",
-                backgroundColor: "var(--bg-secondary)",
-                whiteSpace: "nowrap",
               }}
             >
               Education
             </span>
-            <div style={{ flex: 1, height: "0.75px", backgroundColor: "var(--border)" }} />
           </div>
 
-          {[
-            { degree: "M.S. Human-Computer Interaction", school: "Iowa State University", period: "2023 – 2025", note: "the conversion year" },
-            { degree: "B.Arch. Architecture", school: "Priyadarshini Inst. of Architecture and Design Studies", period: "2018 – 2023", note: "where it started ✿" },
-          ].map((e, i) => (
-            <motion.div
-              key={e.degree}
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-30px" }}
-              transition={{ duration: 0.45, delay: i * 0.07, ease: [0.25, 1, 0.4, 1] }}
-              style={{ borderTop: "0.75px solid var(--border)", padding: "24px 0" }}
-            >
-              <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr] gap-3 lg:gap-12">
-                <div className="flex lg:flex-col gap-2 lg:gap-1 pt-1">
-                  <span style={{ ...mono, fontSize: 13, color: "var(--text-secondary)", letterSpacing: "0.14em" }}>{e.period}</span>
-                  <span style={{ ...caveat, fontSize: 18, color: "var(--accent)", opacity: 0.9 }}>{e.note}</span>
+          {/* Education rows on tinted surface */}
+          <div
+            style={{
+              backgroundColor: "var(--bg-secondary)",
+              border: "0.75px solid var(--border)",
+              padding: "0 clamp(20px, 3vw, 40px)",
+            }}
+          >
+            {[
+              { degree: "M.S. Human-Computer Interaction", school: "Iowa State University", period: "2023 – 2025", note: "the conversion year" },
+              { degree: "B.Arch. Architecture", school: "Priyadarshini Inst. of Architecture and Design Studies", period: "2018 – 2023", note: "where it started ✿" },
+            ].map((e, i) => (
+              <motion.div
+                key={e.degree}
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-30px" }}
+                transition={{ duration: 0.45, delay: i * 0.07, ease: [0.25, 1, 0.4, 1] }}
+                style={{
+                  borderTop: i > 0 ? "0.75px solid var(--border)" : "none",
+                  padding: "28px 0",
+                }}
+              >
+                <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr] gap-3 lg:gap-12">
+                  <div className="flex lg:flex-col gap-2 lg:gap-1 pt-1">
+                    <span style={{ ...mono, fontSize: 13, color: "var(--text-secondary)", letterSpacing: "0.14em" }}>{e.period}</span>
+                    <span style={{ ...caveat, fontSize: 18, color: "var(--accent)", opacity: 0.9 }}>{e.note}</span>
+                  </div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                    <h3 style={{ fontFamily: serif, fontWeight: 600, fontSize: "clamp(20px, 2vw, 24px)", letterSpacing: "-0.018em", lineHeight: 1.2, color: "var(--text-primary)", margin: 0 }}>
+                      {e.degree}
+                    </h3>
+                    <p style={{ fontFamily: sans, fontSize: 16, color: "var(--text-primary)", opacity: 0.65, margin: 0 }}>{e.school}</p>
+                  </div>
                 </div>
-                <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                  <h3 style={{ fontFamily: serif, fontWeight: 600, fontSize: "clamp(20px, 2vw, 24px)", letterSpacing: "-0.018em", lineHeight: 1.2, color: "var(--text-primary)", margin: 0 }}>
-                    {e.degree}
-                  </h3>
-                  <p style={{ fontFamily: sans, fontSize: 16, color: "var(--text-primary)", opacity: 0.65, margin: 0 }}>{e.school}</p>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-          <div style={{ borderTop: "0.75px solid var(--border)" }} aria-hidden />
+              </motion.div>
+            ))}
+          </div>
         </div>
       </div>
     </section>
