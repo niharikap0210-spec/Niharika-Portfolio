@@ -581,7 +581,7 @@ function WebGallery({
                   style={{
                     fontFamily: serif,
                     fontWeight: 700,
-                    fontSize: isMobile ? 18 : 20,
+                    fontSize: isMobile ? 19 : 24,
                     lineHeight: 1.2,
                     letterSpacing: "-0.015em",
                     color: isActive ? "var(--text-primary)" : "var(--text-secondary)",
@@ -1122,7 +1122,7 @@ function DecisionStepper() {
                 <span
                   style={{
                     fontFamily: serif,
-                    fontSize: isMobile ? 17 : 22,
+                    fontSize: isMobile ? 19 : 24,
                     fontWeight: 700,
                     color: isActive ? "var(--text-primary)" : "var(--text-secondary)",
                     letterSpacing: "-0.015em",
@@ -1983,7 +1983,7 @@ function ArEditorStepper({
                 <span
                   style={{
                     fontFamily: serif,
-                    fontSize: isMobile ? 17 : 22,
+                    fontSize: isMobile ? 19 : 24,
                     fontWeight: 700,
                     color: isActive ? "var(--text-primary)" : "var(--text-secondary)",
                     letterSpacing: "-0.015em",
