@@ -551,6 +551,20 @@ function MyApproach() {
           italic="believe"
         />
 
+        {/* Expand hint */}
+        <p
+          style={{
+            ...mono,
+            fontSize: 10,
+            color: "var(--text-muted)",
+            letterSpacing: "0.18em",
+            marginBottom: 24,
+            marginTop: -4,
+          }}
+        >
+          — tap any row to expand
+        </p>
+
         <ol style={{ listStyle: "none", padding: 0, margin: 0 }}>
           {principles.map((p, i) => {
             const ref = useRef<HTMLLIElement>(null);
@@ -572,16 +586,22 @@ function MyApproach() {
                   className="group w-full text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
                   style={{
                     display: "grid",
-                    gridTemplateColumns: "48px 1fr auto 28px",
+                    gridTemplateColumns: "48px 1fr auto 36px",
                     alignItems: "center",
                     columnGap: "clamp(16px, 2vw, 32px)",
                     padding: "clamp(20px, 2.5vw, 28px) 0",
                     borderTop: i === 0 ? "0.75px solid var(--border)" : "none",
                     borderBottom: "0.75px solid var(--border)",
-                    background: "transparent",
+                    background: isOpen ? "var(--bg-secondary)" : "transparent",
                     cursor: "pointer",
-                    width: "100%",
+                    width: "calc(100% + 24px)",
                     position: "relative",
+                    paddingLeft: 12,
+                    paddingRight: 12,
+                    marginLeft: -12,
+                    marginRight: -12,
+                    transitionProperty: "background-color",
+                    transitionDuration: "200ms",
                   }}
                 >
                   {/* Accent left bar on hover/open */}
@@ -660,16 +680,17 @@ function MyApproach() {
                     aria-hidden
                     style={{
                       ...mono,
-                      fontSize: 16,
-                      color: isOpen ? "var(--accent)" : "var(--text-muted)",
+                      fontSize: 22,
+                      color: "var(--accent)",
                       lineHeight: 1,
                       textAlign: "center",
-                      transitionProperty: "color, transform",
+                      transitionProperty: "transform",
                       transitionDuration: "220ms",
                       transform: isOpen ? "rotate(45deg)" : "rotate(0deg)",
                       display: "inline-block",
+                      opacity: isOpen ? 1 : 0.6,
                     }}
-                    className="group-hover:!text-[var(--accent)]"
+                    className="group-hover:!opacity-100"
                   >
                     +
                   </span>
