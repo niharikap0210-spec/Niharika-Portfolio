@@ -1380,7 +1380,7 @@ function Connect() {
   return (
     <section
       id="connect"
-      className="blueprint-grid relative"
+      className="relative"
       style={{
         padding: "clamp(72px, 9vw, 120px) 0",
         scrollMarginTop: 96,
