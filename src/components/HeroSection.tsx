@@ -243,7 +243,6 @@ export default function HeroSection() {
   const [displayWord, setDisplayWord] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
   const [showRotatingWord, setShowRotatingWord] = useState(false);
-  const [showCTA, setShowCTA] = useState(false);
 
   useEffect(() => {
     const ids: ReturnType<typeof setTimeout>[] = [];
@@ -257,7 +256,6 @@ export default function HeroSection() {
     q(() => { setSubtextState("placed"); setShowSelBox(true); }, (SUBTEXT_START + 1.2) * 1000);
     q(() => setSubtextState("done"), (SUBTEXT_START + 1.5) * 1000);
     q(() => setSelBoxFaded(true), (SUBTEXT_START + 3.2) * 1000);
-    q(() => setShowCTA(true), (SUBTEXT_START + 1.9) * 1000);
 
     return () => ids.forEach(clearTimeout);
   }, []);
@@ -619,7 +617,7 @@ export default function HeroSection() {
           {/* Headline */}
           <div
             className="relative"
-            style={{ marginBottom: 40, width: "100%" }}
+            style={{ marginBottom: 56, width: "100%" }}
           >
             {/* Construction guide lines */}
             <AnimatePresence>
@@ -762,66 +760,6 @@ export default function HeroSection() {
               precision to every pixel.
             </motion.p>
           </div>
-
-          {/* CTA row */}
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={showCTA ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
-            transition={{ duration: 0.5, ease: [0.25, 1, 0.4, 1] }}
-            style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 36, flexWrap: "wrap", justifyContent: "center" }}
-          >
-            <a
-              href="#projects"
-              onClick={(e) => { e.preventDefault(); document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" }); }}
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 8,
-                padding: "12px 24px",
-                backgroundColor: "var(--text-primary)",
-                color: "var(--bg-primary)",
-                fontFamily: "'Inter', system-ui, sans-serif",
-                fontSize: 13,
-                fontWeight: 500,
-                letterSpacing: "0.01em",
-                borderRadius: 2,
-                textDecoration: "none",
-                transition: "opacity 180ms ease-out",
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.82")}
-              onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
-            >
-              View Work
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden>
-                <path d="M7 2.5L7 11.5M7 11.5L3 7.5M7 11.5L11 7.5" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </a>
-            <a
-              href="/resume"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 7,
-                padding: "12px 22px",
-                border: "0.75px solid var(--border)",
-                color: "var(--text-secondary)",
-                fontFamily: "'Inter', system-ui, sans-serif",
-                fontSize: 13,
-                letterSpacing: "0.01em",
-                borderRadius: 2,
-                textDecoration: "none",
-                backgroundColor: "var(--bg-elevated)",
-                transition: "border-color 180ms ease-out, color 180ms ease-out",
-              }}
-              onMouseEnter={(e) => { e.currentTarget.style.borderColor = "var(--text-muted)"; e.currentTarget.style.color = "var(--text-primary)"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.borderColor = "var(--border)"; e.currentTarget.style.color = "var(--text-secondary)"; }}
-            >
-              Resume
-              <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden>
-                <path d="M3 10L10 3M10 3H5M10 3V8" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </a>
-          </motion.div>
 
         </div>
 
