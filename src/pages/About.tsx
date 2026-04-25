@@ -12,6 +12,24 @@ import {
   CompassToolIcon,
   EyeIcon,
   HandHeartIcon,
+  ChartBarIcon,
+  UsersIcon,
+  VideoCameraIcon,
+  MicrophoneIcon,
+  PenNibIcon,
+  CubeIcon,
+  DeviceMobileIcon,
+  DiamondIcon,
+  CodeIcon,
+  BracketsCurlyIcon,
+  AtomIcon,
+  TerminalIcon,
+  SquaresFourIcon,
+  ChatCircleIcon,
+  PresentationChartIcon,
+  NoteBlankIcon,
+  BookOpenIcon,
+  CompassIcon,
 } from "@phosphor-icons/react";
 import HandDrawnSketch from "../components/HandDrawnSketch";
 
@@ -1002,22 +1020,45 @@ const skillCols = [
   {
     label: "Research",
     icon: EyeIcon,
-    tools: ["Dovetail", "Maze", "UserTesting", "Lookback", "Otter AI"],
+    tools: [
+      { name: "Dovetail", icon: ChartBarIcon },
+      { name: "Maze", icon: CompassIcon },
+      { name: "UserTesting", icon: UsersIcon },
+      { name: "Lookback", icon: VideoCameraIcon },
+      { name: "Otter AI", icon: MicrophoneIcon },
+    ],
   },
   {
     label: "Design",
     icon: PencilSimpleLineIcon,
-    tools: ["Figma", "FigJam", "Framer", "Protopie", "Sketch"],
+    tools: [
+      { name: "Figma", icon: PenNibIcon },
+      { name: "FigJam", icon: DiamondIcon },
+      { name: "Framer", icon: CubeIcon },
+      { name: "Protopie", icon: DeviceMobileIcon },
+      { name: "Sketch", icon: PencilSimpleLineIcon },
+    ],
   },
   {
     label: "Code",
     icon: CompassToolIcon,
-    tools: ["HTML/CSS", "JavaScript", "React", "Python"],
+    tools: [
+      { name: "HTML / CSS", icon: CodeIcon },
+      { name: "JavaScript", icon: BracketsCurlyIcon },
+      { name: "React", icon: AtomIcon },
+      { name: "Python", icon: TerminalIcon },
+    ],
   },
   {
     label: "Collab",
     icon: HandHeartIcon,
-    tools: ["Jira", "Slack", "Miro", "Notion", "Confluence"],
+    tools: [
+      { name: "Jira", icon: SquaresFourIcon },
+      { name: "Slack", icon: ChatCircleIcon },
+      { name: "Miro", icon: PresentationChartIcon },
+      { name: "Notion", icon: NoteBlankIcon },
+      { name: "Confluence", icon: BookOpenIcon },
+    ],
   },
 ];
 
@@ -1037,12 +1078,11 @@ function Toolbox() {
           />
         </div>
 
-        <div
-          className="grid grid-cols-2 lg:grid-cols-4 gap-0"
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-0"
           style={{ borderTop: "0.75px solid var(--text-primary)" }}
         >
           {skillCols.map((col, i) => {
-            const Icon = col.icon;
+            const CatIcon = col.icon;
             return (
               <motion.div
                 key={col.label}
@@ -1051,75 +1091,73 @@ function Toolbox() {
                 viewport={{ once: true, margin: "-40px" }}
                 transition={{ duration: 0.5, delay: i * 0.07 }}
                 style={{
-                  padding: "20px 18px 24px",
-                  borderRight:
-                    i < skillCols.length - 1 ? "0.75px dashed var(--border)" : "none",
-                  borderBottom: "0.75px solid var(--text-primary)",
+                  padding: "24px 20px 28px",
+                  borderRight: i < skillCols.length - 1 ? "0.75px dashed var(--border)" : "none",
                   position: "relative",
-                  transitionProperty: "background-color",
-                  transitionDuration: "200ms",
                 }}
-                className="group hover:bg-[var(--accent-subtle)]"
               >
+                {/* Category header */}
                 <div className="flex items-center justify-between mb-5">
-                  <span
-                    style={{
-                      ...mono,
-                      fontSize: 9,
-                      color: "var(--text-muted)",
-                      letterSpacing: "0.2em",
-                    }}
-                  >
+                  <div className="flex items-center gap-2">
+                    <CatIcon size={14} weight="regular" color="var(--accent)" />
+                    <span style={{ ...mono, fontSize: 9, color: "var(--text-muted)", letterSpacing: "0.2em" }}>
+                      {col.label}
+                    </span>
+                  </div>
+                  <span style={{ ...mono, fontSize: 9, color: "var(--text-muted)", opacity: 0.5 }}>
                     0{i + 1}
                   </span>
-                  <Icon
-                    size={16}
-                    weight="regular"
-                    color="var(--text-muted)"
-                    className="group-hover:text-[var(--accent)] transition-colors duration-200"
-                  />
                 </div>
 
-                <h3
-                  style={{
-                    fontFamily: serif,
-                    fontSize: "clamp(20px, 2.2vw, 26px)",
-                    fontWeight: 600,
-                    letterSpacing: "-0.018em",
-                    color: "var(--text-primary)",
-                    marginBottom: 14,
-                    lineHeight: 1.15,
-                  }}
-                >
-                  {col.label}
-                </h3>
-
-                <ul className="flex flex-col gap-1.5">
-                  {col.tools.map((tool) => (
-                    <li
-                      key={tool}
-                      className="flex items-baseline gap-2"
-                      style={{
-                        fontFamily: sans,
-                        fontSize: 13,
-                        color: "var(--text-secondary)",
-                      }}
-                    >
-                      <span
-                        aria-hidden
+                {/* Tool badges */}
+                <div className="flex flex-col gap-2">
+                  {col.tools.map((tool, j) => {
+                    const ToolIcon = tool.icon;
+                    return (
+                      <motion.div
+                        key={tool.name}
+                        initial={{ opacity: 0, x: -6 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true, margin: "-20px" }}
+                        transition={{ duration: 0.35, delay: i * 0.06 + j * 0.04 }}
+                        className="group flex items-center gap-2.5"
                         style={{
-                          width: 4,
-                          height: 4,
-                          borderRadius: "50%",
-                          backgroundColor: "var(--text-muted)",
-                          flexShrink: 0,
-                          transform: "translateY(-2px)",
+                          padding: "8px 12px",
+                          border: "0.75px solid var(--border)",
+                          borderRadius: 6,
+                          background: "var(--bg-elevated)",
+                          transitionProperty: "border-color, background-color, transform",
+                          transitionDuration: "180ms",
+                          cursor: "default",
                         }}
-                      />
-                      {tool}
-                    </li>
-                  ))}
-                </ul>
+                        whileHover={{ y: -2, transition: { duration: 0.15 } }}
+                      >
+                        <ToolIcon
+                          size={14}
+                          weight="regular"
+                          style={{
+                            color: "var(--text-muted)",
+                            flexShrink: 0,
+                            transitionProperty: "color",
+                            transitionDuration: "180ms",
+                          }}
+                          className="group-hover:text-[var(--accent)]"
+                        />
+                        <span
+                          style={{
+                            fontFamily: sans,
+                            fontSize: 13,
+                            color: "var(--text-secondary)",
+                            letterSpacing: "0.005em",
+                            lineHeight: 1,
+                          }}
+                        >
+                          {tool.name}
+                        </span>
+                      </motion.div>
+                    );
+                  })}
+                </div>
               </motion.div>
             );
           })}
