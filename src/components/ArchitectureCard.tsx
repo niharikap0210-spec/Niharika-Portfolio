@@ -1,6 +1,7 @@
 import { motion, useInView } from "framer-motion";
 import { useState, useRef } from "react";
-import { ArrowUpRight } from "@phosphor-icons/react";
+import { Link } from "react-router-dom";
+import { ArrowRightIcon as ArrowRight } from "@phosphor-icons/react";
 
 interface ArchAccent {
   primary: string;
@@ -47,10 +48,8 @@ export default function ArchitectureCard({
       onHoverStart={() => setHovered(true)}
       onHoverEnd={() => setHovered(false)}
     >
-      <a
-        href={href}
-        target="_blank"
-        rel="noopener noreferrer"
+      <Link
+        to={href}
         style={{ textDecoration: "none", color: "inherit", display: "block" }}
         className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
       >
@@ -175,7 +174,7 @@ export default function ArchitectureCard({
                   transitionProperty: "color", transitionDuration: "300ms",
                   display: "flex", alignItems: "center", gap: 14,
                 }}>
-                  <span>View Project</span>
+                  <span>View Case Study</span>
                   <span aria-hidden style={{ position: "relative", display: "inline-block", width: 48, height: 1, overflow: "hidden" }}>
                     <motion.span
                       initial={false}
@@ -188,7 +187,7 @@ export default function ArchitectureCard({
                       }}
                     />
                   </span>
-                  <ArrowUpRight
+                  <ArrowRight
                     size={14}
                     weight="regular"
                     style={{
@@ -214,7 +213,7 @@ export default function ArchitectureCard({
             </div>
           </div>
         </motion.article>
-      </a>
+      </Link>
     </motion.div>
   );
 }

@@ -21,7 +21,7 @@ const archProjects = [
     type: "Architectural Thesis · Urban Design",
     year: "2024",
     tags: ["URBAN DESIGN", "ARCH PLANNING"],
-    href: "https://uxniharika.framer.website/projects/thesis",
+    href: "/architecture/thesis",
     accent: {
       primary: "#9B7A52",
       light: "#B8966D",
@@ -36,7 +36,7 @@ const archProjects = [
     type: "Architectural Visualization",
     year: "2024",
     tags: ["3D MODELLING", "RENDERING"],
-    href: "https://uxniharika.framer.website/projects/renders",
+    href: "/architecture/renders",
     accent: {
       primary: "#4E7396",
       light: "#6B90B3",
