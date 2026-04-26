@@ -167,7 +167,7 @@ export default function RendersCase() {
                   maxWidth: 520,
                 }}
               >
-                3D modelling and visualisation in architecture — translating
+                3D modelling and visualisation in architecture, translating
                 technical drawings into spatial narratives that communicate
                 design intent before a single brick is laid.
               </motion.p>
@@ -229,15 +229,15 @@ export default function RendersCase() {
           <RenderImage src={allImages[1]} onClick={() => setLightbox(allImages[1])} ratio="16/7" delay={0.05} />
 
           {/* Row 3 — two column */}
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "clamp(6px, 1vw, 10px)" }}>
-            <RenderImage src={allImages[2]} onClick={() => setLightbox(allImages[2])} ratio="4/3" delay={0.05} />
-            <RenderImage src={allImages[3]} onClick={() => setLightbox(allImages[3])} ratio="4/3" delay={0.1} />
+          <div className="grid grid-cols-1 sm:grid-cols-2" style={{ gap: "clamp(6px, 1vw, 10px)" }}>
+            <RenderImage src={allImages[2]} onClick={() => setLightbox(allImages[2])} ratio="16/9" delay={0.05} />
+            <RenderImage src={allImages[3]} onClick={() => setLightbox(allImages[3])} ratio="16/9" delay={0.1} />
           </div>
 
           {/* Row 4 — two column */}
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "clamp(6px, 1vw, 10px)" }}>
-            <RenderImage src={allImages[4]} onClick={() => setLightbox(allImages[4])} ratio="4/3" delay={0.05} />
-            <RenderImage src={allImages[5]} onClick={() => setLightbox(allImages[5])} ratio="4/3" delay={0.1} />
+          <div className="grid grid-cols-1 sm:grid-cols-2" style={{ gap: "clamp(6px, 1vw, 10px)" }}>
+            <RenderImage src={allImages[4]} onClick={() => setLightbox(allImages[4])} ratio="16/9" delay={0.05} />
+            <RenderImage src={allImages[5]} onClick={() => setLightbox(allImages[5])} ratio="16/9" delay={0.1} />
           </div>
 
           {/* Row 5 — full width */}
@@ -247,9 +247,9 @@ export default function RendersCase() {
           <RenderImage src={allImages[7]} onClick={() => setLightbox(allImages[7])} ratio="16/7" delay={0} />
 
           {/* Row 7 — two column */}
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "clamp(6px, 1vw, 10px)" }}>
-            <RenderImage src={allImages[8]} onClick={() => setLightbox(allImages[8])} ratio="4/3" delay={0.05} />
-            <RenderImage src={allImages[9]} onClick={() => setLightbox(allImages[9])} ratio="4/3" delay={0.1} />
+          <div className="grid grid-cols-1 sm:grid-cols-2" style={{ gap: "clamp(6px, 1vw, 10px)" }}>
+            <RenderImage src={allImages[8]} onClick={() => setLightbox(allImages[8])} ratio="16/9" delay={0.05} />
+            <RenderImage src={allImages[9]} onClick={() => setLightbox(allImages[9])} ratio="16/9" delay={0.1} />
           </div>
 
         </div>
