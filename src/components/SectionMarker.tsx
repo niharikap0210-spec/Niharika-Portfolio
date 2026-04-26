@@ -24,62 +24,98 @@ export default function SectionMarker({
       style={{
         display: "flex",
         alignItems: "center",
-        justifyContent: "space-between",
-        gap: 24,
-        paddingBottom: 14,
-        borderBottom: "0.75px solid var(--border)",
+        gap: 0,
+        height: 36,
+        position: "relative",
       }}
     >
-      {/* Left cluster: accent bar + letter + label */}
-      <div style={{ display: "flex", alignItems: "center", gap: 16, minWidth: 0 }}>
-        <span
-          style={{
-            width: 3,
-            height: 26,
-            backgroundColor: accentColor,
-            flexShrink: 0,
-          }}
-        />
+      {/* Reference bubble — boxed letter like architectural drawing callouts */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          width: 36,
+          height: 36,
+          border: `1px solid ${accentColor}`,
+          flexShrink: 0,
+          position: "relative",
+          backgroundColor: "transparent",
+        }}
+      >
+        {/* Corner ticks */}
+        <span style={{ position: "absolute", top: 3, left: 3, width: 5, height: 5, borderTop: `0.75px solid ${accentColor}`, borderLeft: `0.75px solid ${accentColor}` }} />
+        <span style={{ position: "absolute", top: 3, right: 3, width: 5, height: 5, borderTop: `0.75px solid ${accentColor}`, borderRight: `0.75px solid ${accentColor}` }} />
+        <span style={{ position: "absolute", bottom: 3, left: 3, width: 5, height: 5, borderBottom: `0.75px solid ${accentColor}`, borderLeft: `0.75px solid ${accentColor}` }} />
+        <span style={{ position: "absolute", bottom: 3, right: 3, width: 5, height: 5, borderBottom: `0.75px solid ${accentColor}`, borderRight: `0.75px solid ${accentColor}` }} />
         <span
           style={{
             fontFamily: "'Playfair Display', Georgia, serif",
             fontStyle: "italic",
             fontWeight: 700,
-            fontSize: 22,
+            fontSize: 17,
             color: accentColor,
             lineHeight: 1,
             letterSpacing: "-0.02em",
-            flexShrink: 0,
           }}
         >
           {letter}
         </span>
-        <span
-          style={{
-            fontFamily: "'Space Mono', monospace",
-            fontSize: 13,
-            color: "var(--text-primary)",
-            letterSpacing: "0.22em",
-            textTransform: "uppercase",
-            fontWeight: 600,
-            whiteSpace: "nowrap",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-          }}
-        >
-          {label}
-        </span>
       </div>
 
-      {/* Right cluster: section counter */}
-      <div style={{ display: "flex", alignItems: "center", gap: 10, flexShrink: 0 }}>
+      {/* Leader tick out of the box */}
+      <div style={{ width: 14, height: 1, backgroundColor: accentColor, opacity: 0.5, flexShrink: 0 }} />
+
+      {/* Label */}
+      <span
+        style={{
+          fontFamily: "'Space Mono', monospace",
+          fontSize: 11,
+          color: "var(--text-primary)",
+          letterSpacing: "0.26em",
+          textTransform: "uppercase",
+          fontWeight: 600,
+          whiteSpace: "nowrap",
+          paddingRight: 20,
+        }}
+      >
+        {label}
+      </span>
+
+      {/* Dashed rule filling available space */}
+      <div
+        style={{
+          flex: 1,
+          height: 0,
+          borderTop: "0.75px dashed var(--border)",
+          minWidth: 24,
+        }}
+      />
+
+      {/* Right: section reference tag */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 0,
+          flexShrink: 0,
+          marginLeft: 20,
+          height: 26,
+          border: "0.75px solid var(--border)",
+        }}
+      >
         <span
           style={{
             fontFamily: "'Space Mono', monospace",
-            fontSize: 11,
-            color: "var(--text-secondary)",
-            letterSpacing: "0.2em",
+            fontSize: 9,
+            color: "var(--text-muted)",
+            letterSpacing: "0.22em",
             textTransform: "uppercase",
+            padding: "0 10px",
+            borderRight: "0.75px solid var(--border)",
+            height: "100%",
+            display: "flex",
+            alignItems: "center",
           }}
         >
           Section
@@ -87,15 +123,19 @@ export default function SectionMarker({
         <span
           style={{
             fontFamily: "'Space Mono', monospace",
-            fontSize: 13,
-            color: accentColor,
-            letterSpacing: "0.14em",
+            fontSize: 11,
+            letterSpacing: "0.12em",
             fontWeight: 600,
+            padding: "0 10px",
+            height: "100%",
+            display: "flex",
+            alignItems: "center",
+            gap: 4,
           }}
         >
-          {counter}
-          <span style={{ color: "var(--text-secondary)", margin: "0 4px" }}>/</span>
-          <span style={{ color: "var(--text-secondary)", fontWeight: 400 }}>{totalStr}</span>
+          <span style={{ color: accentColor }}>{counter}</span>
+          <span style={{ color: "var(--border)", margin: "0 2px" }}>/</span>
+          <span style={{ color: "var(--text-muted)", fontWeight: 400 }}>{totalStr}</span>
         </span>
       </div>
     </div>
