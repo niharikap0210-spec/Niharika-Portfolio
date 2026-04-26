@@ -428,7 +428,7 @@ export default function Home() {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.25 }}
-                className="flex flex-wrap items-center gap-x-6 gap-y-4"
+                style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%", flexWrap: "wrap", gap: "16px 0" }}
               >
                 {(activeTab === "product" ? PRODUCT_TOOLS : ARCH_TOOLS).map((tool) => (
                   <div
@@ -438,19 +438,19 @@ export default function Home() {
                       display: "flex",
                       flexDirection: "column",
                       alignItems: "center",
-                      gap: 6,
+                      gap: 8,
                     }}
                   >
                     {tool.kind === "brand" ? (
                       <img
                         src={`https://cdn.simpleicons.org/${tool.slug}/9A9A9A`}
                         alt={tool.name}
-                        width={20}
-                        height={20}
+                        width={26}
+                        height={26}
                         style={{ display: "block", objectFit: "contain" }}
                       />
                     ) : (
-                      <tool.Icon size={20} color="var(--text-muted)" weight="regular" />
+                      <tool.Icon size={26} color="var(--text-muted)" weight="regular" />
                     )}
                     <span
                       style={{
