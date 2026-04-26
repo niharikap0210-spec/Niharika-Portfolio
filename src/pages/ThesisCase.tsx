@@ -7,15 +7,13 @@ import {
   useMotionValue,
   animate,
 } from "framer-motion";
-import { useRef, useState, useEffect, useCallback } from "react";
+import { useRef, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
   ArrowLeftIcon as ArrowLeft,
   ArrowRightIcon as ArrowRight,
-  XIcon as X,
   CaretLeftIcon as CaretLeft,
   CaretRightIcon as CaretRight,
-  FrameCornersIcon as FrameCorners,
 } from "@phosphor-icons/react";
 import DrawingSheetBorder from "../components/DrawingSheetBorder";
 import SectionMarker from "../components/SectionMarker";
@@ -174,517 +172,267 @@ function SectionHeader({ num, title, phase, total = "04" }: {
 
 /* ── Sheet data ───────────────────────────────────────────────────── */
 const SHEETS = [
-  {
-    src: "/thesis/img-05.png",
-    label: "Sheet 01",
-    title: "Introduction & Synopsis",
-    caption: "Placemaking framework, design principles for public realm, objectives and scope of the thesis.",
-  },
-  {
-    src: "/thesis/img-15.png",
-    label: "Sheet 02",
-    title: "Case Study · Dilli Haat INA, Delhi",
-    caption: "Site surroundings, activity generators, user groups, site response, and section through the mallah.",
-  },
-  {
-    src: "/thesis/img-14.png",
-    label: "Sheet 03",
-    title: "Case Study · Riverfront Development, Ahmedabad",
-    caption: "Master plan, street network, recreation zones, development sites, and general facilities along the Sabarmati.",
-  },
-  {
-    src: "/thesis/img-02.png",
-    label: "Sheet 04",
-    title: "Case Study · Manek Chowk, Sarafa & Chandni Chowk",
-    caption: "Urban chowk analysis across Ahmedabad, Indore, and Delhi — character, activity, design elements.",
-  },
-  {
-    src: "/thesis/img-07.png",
-    label: "Sheet 05",
-    title: "Case Study · Select City Walk & Chappan",
-    caption: "Design elements, footfall patterns, and pedestrian experience across two contrasting public places.",
-  },
-  {
-    src: "/thesis/img-04.png",
-    label: "Sheet 06",
-    title: "Site Analysis · Sonegao, Nagpur",
-    caption: "Climate, geology, soil conditions, site profile, SWOT analysis and site surroundings.",
-  },
-  {
-    src: "/thesis/img-10.png",
-    label: "Sheet 07",
-    title: "Site Plan & View",
-    caption: "Master site plan with programme distribution, legend, and aerial render of the proposed public realm.",
-  },
-  {
-    src: "/thesis/img-08.png",
-    label: "Sheet 08",
-    title: "Activity Centre",
-    caption: "Circular form, vertical RCC fins, spiralling roof, form development, and rendered exterior views.",
-  },
-  {
-    src: "/thesis/img-01.png",
-    label: "Sheet 09",
-    title: "Yoga & Meditation Centre",
-    caption: "Waffle slab detail, elevation, section AA, floor plan, sensory garden renders.",
-  },
-  {
-    src: "/thesis/img-12.png",
-    label: "Sheet 10",
-    title: "Book Cafe, Event Centre & Workshop",
-    caption: "Sunken workshop, glass-grooved roof, folded plate structure — plans, sections, exterior renders.",
-  },
-  {
-    src: "/thesis/img-03.png",
-    label: "Sheet 11",
-    title: "Views · Pavilions & Landscape",
-    caption: "Entrance pavilion, sculpture garden, HAT, celebration pavilion, levels & steps seating.",
-  },
-  {
-    src: "/thesis/img-06.png",
-    label: "Sheet 12",
-    title: "Views · Active Zones & Aerial",
-    caption: "Fountain, pit, skate park, view from the skate park, and aerial overview of the full site.",
-  },
-  {
-    src: "/thesis/img-09.png",
-    label: "Sheet 13",
-    title: "Street Plan",
-    caption: "Proposed street module with hardscape, softscape planters, street furniture and lighting.",
-  },
-  {
-    src: "/thesis/img-11.jpg",
-    label: "Final Render",
-    title: "Aerial Site View",
-    caption: "Photorealistic aerial render of the completed public realm — Sonegao, Nagpur, 2024.",
-  },
+  { src: "/thesis/img-05.png", label: "Sheet 01", title: "Introduction & Synopsis", caption: "Placemaking framework, design principles for public realm, objectives and scope of the thesis." },
+  { src: "/thesis/img-15.png", label: "Sheet 02", title: "Case Study · Dilli Haat INA, Delhi", caption: "Site surroundings, activity generators, user groups, site response, and section through the mallah." },
+  { src: "/thesis/img-14.png", label: "Sheet 03", title: "Case Study · Riverfront Development, Ahmedabad", caption: "Master plan, street network, recreation zones, development sites, and general facilities along the Sabarmati." },
+  { src: "/thesis/img-02.png", label: "Sheet 04", title: "Case Study · Manek Chowk, Sarafa & Chandni Chowk", caption: "Urban chowk analysis across Ahmedabad, Indore, and Delhi — character, activity, design elements." },
+  { src: "/thesis/img-07.png", label: "Sheet 05", title: "Case Study · Select City Walk & Chappan", caption: "Design elements, footfall patterns, and pedestrian experience across two contrasting public places." },
+  { src: "/thesis/img-04.png", label: "Sheet 06", title: "Site Analysis · Sonegao, Nagpur", caption: "Climate, geology, soil conditions, site profile, SWOT analysis and site surroundings." },
+  { src: "/thesis/img-10.png", label: "Sheet 07", title: "Site Plan & View", caption: "Master site plan with programme distribution, legend, and aerial render of the proposed public realm." },
+  { src: "/thesis/img-08.png", label: "Sheet 08", title: "Activity Centre", caption: "Circular form, vertical RCC fins, spiralling roof, form development, and rendered exterior views." },
+  { src: "/thesis/img-01.png", label: "Sheet 09", title: "Yoga & Meditation Centre", caption: "Waffle slab detail, elevation, section AA, floor plan, sensory garden renders." },
+  { src: "/thesis/img-12.png", label: "Sheet 10", title: "Book Cafe, Event Centre & Workshop", caption: "Sunken workshop, glass-grooved roof, folded plate structure — plans, sections, exterior renders." },
+  { src: "/thesis/img-03.png", label: "Sheet 11", title: "Views · Pavilions & Landscape", caption: "Entrance pavilion, sculpture garden, HAT, celebration pavilion, levels & steps seating." },
+  { src: "/thesis/img-06.png", label: "Sheet 12", title: "Views · Active Zones & Aerial", caption: "Fountain, pit, skate park, view from the skate park, and aerial overview of the full site." },
+  { src: "/thesis/img-09.png", label: "Sheet 13", title: "Street Plan", caption: "Proposed street module with hardscape, softscape planters, street furniture and lighting." },
+  { src: "/thesis/img-11.jpg", label: "Final Render", title: "Aerial Site View", caption: "Photorealistic aerial render of the completed public realm — Sonegao, Nagpur, 2024." },
 ];
 
 /* ══════════════════════════════════════════════════════════════════
-   LIGHTBOX
+   SHEET CAROUSEL — full-viewport, full sheet visible, minimal nav
 ══════════════════════════════════════════════════════════════════ */
-function Lightbox({
-  index,
-  onClose,
-  onPrev,
-  onNext,
-}: {
-  index: number;
-  onClose: () => void;
-  onPrev: () => void;
-  onNext: () => void;
-}) {
-  const sheet = SHEETS[index];
+function SheetCarousel() {
+  const [active, setActive] = useState(0);
+  const [dir, setDir] = useState(1);
   const isMobile = useIsMobile();
+  const thumbRef = useRef<HTMLDivElement>(null);
 
+  const go = (next: number) => {
+    setDir(next > active ? 1 : -1);
+    setActive(next);
+  };
+  const prev = () => { if (active > 0) go(active - 1); };
+  const next = () => { if (active < SHEETS.length - 1) go(active + 1); };
+
+  /* keyboard nav */
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-      if (e.key === "ArrowLeft") onPrev();
-      if (e.key === "ArrowRight") onNext();
+      if (e.key === "ArrowLeft") prev();
+      if (e.key === "ArrowRight") next();
     };
     window.addEventListener("keydown", handler);
-    document.body.style.overflow = "hidden";
-    return () => {
-      window.removeEventListener("keydown", handler);
-      document.body.style.overflow = "";
-    };
-  }, [onClose, onPrev, onNext]);
+    return () => window.removeEventListener("keydown", handler);
+  }, [active]);
+
+  /* auto-scroll active thumb into view */
+  useEffect(() => {
+    const container = thumbRef.current;
+    if (!container) return;
+    const thumb = container.children[active] as HTMLElement;
+    thumb?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+  }, [active]);
+
+  const current = SHEETS[active];
+
+  const variants = {
+    enter: (d: number) => ({ opacity: 0, x: d * 40 }),
+    center: { opacity: 1, x: 0 },
+    exit:  (d: number) => ({ opacity: 0, x: d * -40 }),
+  };
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.22 }}
-      style={{
-        position: "fixed", inset: 0, zIndex: 999,
-        background: "rgba(10, 10, 10, 0.96)",
-        backdropFilter: "blur(12px)",
-        display: "flex", flexDirection: "column",
-        alignItems: "center", justifyContent: "center",
-      }}
-      onClick={onClose}
-    >
-      {/* Top bar */}
-      <div
-        style={{
-          position: "absolute", top: 0, left: 0, right: 0,
-          display: "flex", alignItems: "center", justifyContent: "space-between",
-          padding: "20px 24px",
-          borderBottom: "1px solid rgba(255,255,255,0.08)",
-        }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-          <span style={{
-            ...mono, fontSize: 10, color: thesis.light,
-            letterSpacing: "0.22em", fontWeight: 700,
-          }}>
-            {sheet.label}
-          </span>
-          <span aria-hidden style={{ width: 1, height: 12, background: "rgba(255,255,255,0.15)" }} />
-          <span style={{
-            fontFamily: serif, fontStyle: "italic",
-            fontSize: isMobile ? 13 : 15,
-            color: "rgba(255,255,255,0.7)",
-          }}>
-            {sheet.title}
-          </span>
-        </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-          <span style={{ ...mono, fontSize: 10, color: "rgba(255,255,255,0.35)", letterSpacing: "0.16em" }}>
-            {String(index + 1).padStart(2, "0")} / {String(SHEETS.length).padStart(2, "0")}
-          </span>
-          <button
-            onClick={onClose}
-            aria-label="Close"
-            style={{
-              width: 36, height: 36, borderRadius: "50%",
-              border: "1px solid rgba(255,255,255,0.15)",
-              background: "transparent", cursor: "pointer",
-              display: "flex", alignItems: "center", justifyContent: "center",
-              color: "rgba(255,255,255,0.6)",
-              transitionProperty: "background, color",
-              transitionDuration: "180ms",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = "rgba(255,255,255,0.1)";
-              e.currentTarget.style.color = "#fff";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = "transparent";
-              e.currentTarget.style.color = "rgba(255,255,255,0.6)";
-            }}
+    <div style={{ display: "flex", flexDirection: "column" }}>
+
+      {/* ── Top bar: label + title + counter ── */}
+      <div style={{
+        display: "flex", alignItems: "center",
+        justifyContent: "space-between",
+        padding: isMobile ? "14px 0" : "18px 0",
+        borderBottom: "1px solid var(--border)",
+        gap: 16,
+      }}>
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={active}
+            initial={{ opacity: 0, y: 5 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -5 }}
+            transition={{ duration: 0.22, ease: EASE }}
+            style={{ display: "flex", alignItems: "baseline", gap: 14, minWidth: 0 }}
           >
-            <X size={16} weight="regular" />
-          </button>
-        </div>
+            <span style={{ ...mono, fontSize: 10, color: thesis.primary, letterSpacing: "0.22em", fontWeight: 700, flexShrink: 0 }}>
+              {current.label}
+            </span>
+            <span aria-hidden style={{ width: 1, height: 12, background: "var(--border)", flexShrink: 0 }} />
+            <span style={{
+              fontFamily: serif, fontStyle: "italic",
+              fontSize: isMobile ? 14 : 16,
+              color: "var(--text-secondary)",
+              overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
+            }}>
+              {current.title}
+            </span>
+          </motion.div>
+        </AnimatePresence>
+
+        <span style={{ ...mono, fontSize: 10, color: "var(--text-muted)", letterSpacing: "0.16em", flexShrink: 0 }}>
+          {String(active + 1).padStart(2, "0")}&nbsp;/&nbsp;{String(SHEETS.length).padStart(2, "0")}
+        </span>
       </div>
 
-      {/* Image area */}
-      <div
-        style={{
-          flex: 1, display: "flex", alignItems: "center",
-          justifyContent: "center", width: "100%",
-          padding: isMobile ? "80px 16px 100px" : "80px 100px 120px",
-          position: "relative",
-        }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Prev arrow */}
-        <button
-          onClick={onPrev}
-          disabled={index === 0}
-          aria-label="Previous sheet"
-          style={{
-            position: "absolute", left: isMobile ? 8 : 24,
-            width: 44, height: 44, borderRadius: "50%",
-            border: "1px solid rgba(255,255,255,0.15)",
-            background: "transparent", cursor: index === 0 ? "default" : "pointer",
-            display: "flex", alignItems: "center", justifyContent: "center",
-            color: index === 0 ? "rgba(255,255,255,0.2)" : "rgba(255,255,255,0.7)",
-            transitionProperty: "background, color",
-            transitionDuration: "180ms",
-          }}
-          onMouseEnter={(e) => {
-            if (index === 0) return;
-            e.currentTarget.style.background = "rgba(255,255,255,0.1)";
-            e.currentTarget.style.color = "#fff";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = "transparent";
-            e.currentTarget.style.color = index === 0 ? "rgba(255,255,255,0.2)" : "rgba(255,255,255,0.7)";
-          }}
-        >
-          <CaretLeft size={18} weight="regular" />
-        </button>
-
-        {/* Image */}
-        <AnimatePresence mode="wait">
+      {/* ── Main image — full sheet visible ── */}
+      <div style={{
+        position: "relative",
+        width: "100%",
+        height: isMobile ? "60vh" : "82vh",
+        background: "var(--bg-secondary)",
+        display: "flex", alignItems: "center", justifyContent: "center",
+        overflow: "hidden",
+      }}>
+        <AnimatePresence mode="wait" custom={dir}>
           <motion.img
-            key={index}
-            src={sheet.src}
-            alt={sheet.title}
-            initial={{ opacity: 0, scale: 0.97 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 1.02 }}
-            transition={{ duration: 0.28, ease: EASE }}
+            key={active}
+            src={current.src}
+            alt={current.title}
+            loading="lazy"
+            custom={dir}
+            variants={variants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{ duration: 0.38, ease: EASE }}
             style={{
-              maxWidth: "100%",
-              maxHeight: "100%",
+              position: "absolute",
+              maxWidth: "calc(100% - 80px)",
+              maxHeight: "calc(100% - 48px)",
+              width: "auto",
+              height: "auto",
               objectFit: "contain",
               display: "block",
-              boxShadow: "0 32px 80px rgba(0,0,0,0.6)",
+              userSelect: "none",
             }}
           />
         </AnimatePresence>
+
+        {/* Prev arrow */}
+        <button
+          onClick={prev}
+          disabled={active === 0}
+          aria-label="Previous sheet"
+          style={{
+            position: "absolute", left: isMobile ? 8 : 20,
+            top: "50%", transform: "translateY(-50%)",
+            width: 40, height: 40,
+            border: `1px solid ${active === 0 ? "var(--border)" : thesis.primary}`,
+            borderRadius: "50%",
+            background: active === 0 ? "transparent" : thesis.subtle,
+            cursor: active === 0 ? "default" : "pointer",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            color: active === 0 ? "var(--text-muted)" : thesis.primary,
+            transitionProperty: "background, border-color, color",
+            transitionDuration: "200ms",
+            zIndex: 2,
+          }}
+        >
+          <CaretLeft size={16} weight="regular" />
+        </button>
 
         {/* Next arrow */}
         <button
-          onClick={onNext}
-          disabled={index === SHEETS.length - 1}
+          onClick={next}
+          disabled={active === SHEETS.length - 1}
           aria-label="Next sheet"
           style={{
-            position: "absolute", right: isMobile ? 8 : 24,
-            width: 44, height: 44, borderRadius: "50%",
-            border: "1px solid rgba(255,255,255,0.15)",
-            background: "transparent", cursor: index === SHEETS.length - 1 ? "default" : "pointer",
+            position: "absolute", right: isMobile ? 8 : 20,
+            top: "50%", transform: "translateY(-50%)",
+            width: 40, height: 40,
+            border: `1px solid ${active === SHEETS.length - 1 ? "var(--border)" : thesis.primary}`,
+            borderRadius: "50%",
+            background: active === SHEETS.length - 1 ? "transparent" : thesis.subtle,
+            cursor: active === SHEETS.length - 1 ? "default" : "pointer",
             display: "flex", alignItems: "center", justifyContent: "center",
-            color: index === SHEETS.length - 1 ? "rgba(255,255,255,0.2)" : "rgba(255,255,255,0.7)",
-            transitionProperty: "background, color",
-            transitionDuration: "180ms",
-          }}
-          onMouseEnter={(e) => {
-            if (index === SHEETS.length - 1) return;
-            e.currentTarget.style.background = "rgba(255,255,255,0.1)";
-            e.currentTarget.style.color = "#fff";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = "transparent";
-            e.currentTarget.style.color = index === SHEETS.length - 1 ? "rgba(255,255,255,0.2)" : "rgba(255,255,255,0.7)";
+            color: active === SHEETS.length - 1 ? "var(--text-muted)" : thesis.primary,
+            transitionProperty: "background, border-color, color",
+            transitionDuration: "200ms",
+            zIndex: 2,
           }}
         >
-          <CaretRight size={18} weight="regular" />
+          <CaretRight size={16} weight="regular" />
         </button>
+
+        {/* Progress bar at the very bottom of the image area */}
+        <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 2, background: "var(--border)" }}>
+          <motion.div
+            animate={{ width: `${((active + 1) / SHEETS.length) * 100}%` }}
+            transition={{ duration: 0.4, ease: EASE }}
+            style={{ height: "100%", background: thesis.primary }}
+          />
+        </div>
       </div>
 
-      {/* Caption bar */}
-      <div
-        style={{
-          position: "absolute", bottom: 0, left: 0, right: 0,
-          padding: "16px 24px",
-          borderTop: "1px solid rgba(255,255,255,0.08)",
-          background: "rgba(0,0,0,0.4)",
-          display: "flex", alignItems: "center", justifyContent: "space-between", gap: 24,
-        }}
-        onClick={(e) => e.stopPropagation()}
-      >
+      {/* ── Caption ── */}
+      <div style={{
+        borderTop: "1px solid var(--border)",
+        borderBottom: "1px solid var(--border)",
+        background: thesis.surface,
+        padding: isMobile ? "12px 0" : "14px 0",
+        minHeight: 48,
+        display: "flex", alignItems: "center",
+      }}>
         <AnimatePresence mode="wait">
           <motion.p
-            key={index}
-            initial={{ opacity: 0, y: 4 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -4 }}
-            transition={{ duration: 0.22 }}
+            key={active}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
             style={{
               fontFamily: serif, fontStyle: "italic",
-              fontSize: isMobile ? 13 : 15,
-              color: "rgba(255,255,255,0.55)",
-              lineHeight: 1.5, margin: 0, flex: 1,
+              fontSize: isMobile ? 13 : 14,
+              color: thesis.dark, lineHeight: 1.55, margin: 0,
             }}
           >
-            {sheet.caption}
+            {current.caption}
           </motion.p>
         </AnimatePresence>
-        <span style={{ ...mono, fontSize: 9, color: thesis.muted, flexShrink: 0, letterSpacing: "0.16em" }}>
-          B.ARCH · 2024
-        </span>
       </div>
-    </motion.div>
-  );
-}
 
-/* ══════════════════════════════════════════════════════════════════
-   SHEET GALLERY — clean grid with hover + lightbox
-══════════════════════════════════════════════════════════════════ */
-function SheetGallery() {
-  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
-
-  const openLightbox = (i: number) => setLightboxIndex(i);
-  const closeLightbox = useCallback(() => setLightboxIndex(null), []);
-  const prevSheet = useCallback(() =>
-    setLightboxIndex((i) => (i !== null && i > 0 ? i - 1 : i)), []);
-  const nextSheet = useCallback(() =>
-    setLightboxIndex((i) => (i !== null && i < SHEETS.length - 1 ? i + 1 : i)), []);
-
-  return (
-    <>
-      {/* Grid */}
+      {/* ── Thumbnail strip ── */}
       <div
+        ref={thumbRef}
         style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
-          gap: 2,
+          display: "flex", gap: 6,
+          paddingTop: 16,
+          overflowX: "auto",
+          scrollbarWidth: "none",
         }}
       >
         {SHEETS.map((sheet, i) => (
-          <SheetCard
+          <button
             key={i}
-            sheet={sheet}
-            index={i}
-            onClick={() => openLightbox(i)}
-          />
+            onClick={() => go(i)}
+            aria-label={`Go to ${sheet.label}`}
+            style={{
+              flexShrink: 0,
+              width: isMobile ? 52 : 68,
+              height: isMobile ? 38 : 50,
+              padding: 0,
+              border: `1.5px solid ${i === active ? thesis.primary : "var(--border)"}`,
+              overflow: "hidden",
+              cursor: "pointer",
+              background: "var(--bg-secondary)",
+              opacity: i === active ? 1 : 0.45,
+              transitionProperty: "opacity, border-color",
+              transitionDuration: "200ms",
+              position: "relative",
+            }}
+          >
+            <img
+              src={sheet.src}
+              alt=""
+              loading="lazy"
+              style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+            />
+            {i === active && (
+              <span aria-hidden style={{
+                position: "absolute", top: 0, left: 0, right: 0, height: 2,
+                background: thesis.primary,
+              }} />
+            )}
+          </button>
         ))}
       </div>
-
-      {/* Lightbox */}
-      <AnimatePresence>
-        {lightboxIndex !== null && (
-          <Lightbox
-            index={lightboxIndex}
-            onClose={closeLightbox}
-            onPrev={prevSheet}
-            onNext={nextSheet}
-          />
-        )}
-      </AnimatePresence>
-    </>
-  );
-}
-
-function SheetCard({
-  sheet,
-  index,
-  onClick,
-}: {
-  sheet: typeof SHEETS[0];
-  index: number;
-  onClick: () => void;
-}) {
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-30px" });
-  const [hovered, setHovered] = useState(false);
-
-  return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 16 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.5, delay: (index % 3) * 0.07, ease: EASE }}
-    >
-      <button
-        onClick={onClick}
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
-        aria-label={`View ${sheet.label} — ${sheet.title}`}
-        style={{
-          display: "block", width: "100%", padding: 0, border: "none",
-          background: "transparent", cursor: "pointer", textAlign: "left",
-          position: "relative",
-        }}
-      >
-        {/* Image container */}
-        <div
-          style={{
-            position: "relative", overflow: "hidden",
-            aspectRatio: "4 / 3",
-            background: "var(--bg-secondary)",
-            border: `1px solid ${hovered ? thesis.primary : "var(--border)"}`,
-            transitionProperty: "border-color",
-            transitionDuration: "220ms",
-          }}
-        >
-          <motion.img
-            src={sheet.src}
-            alt={sheet.title}
-            loading="lazy"
-            animate={{ scale: hovered ? 1.04 : 1 }}
-            transition={{ duration: 0.45, ease: EASE }}
-            style={{
-              width: "100%", height: "100%",
-              objectFit: "cover", display: "block",
-            }}
-          />
-
-          {/* Gradient overlay — always present, deepens on hover */}
-          <motion.div
-            aria-hidden
-            animate={{ opacity: hovered ? 1 : 0 }}
-            transition={{ duration: 0.3 }}
-            style={{
-              position: "absolute", inset: 0,
-              background: "linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.18) 55%, transparent 100%)",
-            }}
-          />
-
-          {/* Expand icon — appears on hover */}
-          <motion.div
-            aria-hidden
-            initial={false}
-            animate={{ opacity: hovered ? 1 : 0, scale: hovered ? 1 : 0.8 }}
-            transition={{ duration: 0.22 }}
-            style={{
-              position: "absolute", top: 12, right: 12,
-              width: 32, height: 32, borderRadius: "50%",
-              background: "rgba(255,255,255,0.12)",
-              backdropFilter: "blur(8px)",
-              border: "1px solid rgba(255,255,255,0.18)",
-              display: "flex", alignItems: "center", justifyContent: "center",
-              color: "#fff",
-            }}
-          >
-            <FrameCorners size={14} weight="regular" />
-          </motion.div>
-
-          {/* Caption on hover */}
-          <motion.div
-            aria-hidden
-            animate={{ opacity: hovered ? 1 : 0, y: hovered ? 0 : 6 }}
-            transition={{ duration: 0.28 }}
-            style={{
-              position: "absolute", bottom: 0, left: 0, right: 0,
-              padding: "32px 14px 14px",
-              background: "linear-gradient(to top, rgba(0,0,0,0.82) 0%, transparent 100%)",
-            }}
-          >
-            <p style={{
-              fontFamily: serif, fontStyle: "italic",
-              fontSize: 12, color: "rgba(255,255,255,0.72)",
-              lineHeight: 1.5, margin: 0,
-            }}>
-              {sheet.caption}
-            </p>
-          </motion.div>
-
-          {/* Active top border */}
-          <motion.div
-            aria-hidden
-            animate={{ scaleX: hovered ? 1 : 0 }}
-            transition={{ duration: 0.3, ease: EASE }}
-            style={{
-              position: "absolute", top: 0, left: 0, right: 0,
-              height: 2, background: thesis.primary,
-              transformOrigin: "left",
-            }}
-          />
-        </div>
-
-        {/* Card footer */}
-        <div
-          style={{
-            padding: "10px 14px 12px",
-            background: hovered ? thesis.surface : "var(--bg-primary)",
-            borderLeft: `1px solid ${hovered ? thesis.primary : "var(--border)"}`,
-            borderRight: `1px solid ${hovered ? thesis.primary : "var(--border)"}`,
-            borderBottom: `1px solid ${hovered ? thesis.primary : "var(--border)"}`,
-            borderTop: "none",
-            transitionProperty: "background, border-color",
-            transitionDuration: "220ms",
-          }}
-        >
-          <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
-            <span style={{
-              ...mono, fontSize: 9, fontWeight: 700,
-              color: thesis.primary, letterSpacing: "0.22em",
-              flexShrink: 0,
-            }}>
-              {sheet.label}
-            </span>
-            <span aria-hidden style={{ flex: 1, height: "1px", background: "var(--border)" }} />
-          </div>
-          <p style={{
-            fontFamily: serif, fontWeight: 600,
-            fontSize: 14, color: "var(--text-primary)",
-            letterSpacing: "-0.01em", lineHeight: 1.35,
-            margin: "6px 0 0", whiteSpace: "nowrap",
-            overflow: "hidden", textOverflow: "ellipsis",
-          }}>
-            {sheet.title}
-          </p>
-        </div>
-      </button>
-    </motion.div>
+    </div>
   );
 }
 
@@ -887,8 +635,7 @@ export default function ThesisCase() {
                     }}>
                       <div style={{
                         ...mono, fontSize: 9, color: "var(--text-muted)",
-                        letterSpacing: "0.18em",
-                        padding: "14px 16px",
+                        letterSpacing: "0.18em", padding: "14px 16px",
                         borderRight: "0.75px solid var(--border)",
                         display: "flex", alignItems: "center",
                       }}>
@@ -915,23 +662,9 @@ export default function ThesisCase() {
       }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10">
           <SectionHeader num="02" title="Project Sheets" phase="Documentation" />
-
           <Reveal>
-            <div style={{
-              display: "flex", alignItems: "center", gap: 10,
-              marginBottom: "clamp(28px, 4vw, 44px)",
-            }}>
-              <p style={{ ...t.bodySm, margin: 0 }}>
-                {SHEETS.length} drawing sheets — click any to view full size
-              </p>
-              <span aria-hidden style={{ flex: 1, height: 1, background: "var(--border)" }} />
-              <span style={{ ...mono, fontSize: 9, color: thesis.muted, letterSpacing: "0.18em" }}>
-                B.ARCH · 2024
-              </span>
-            </div>
+            <SheetCarousel />
           </Reveal>
-
-          <SheetGallery />
         </div>
       </div>
 
@@ -942,30 +675,12 @@ export default function ThesisCase() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3" style={{ borderTop: "1px solid var(--border)" }}>
             {[
-              {
-                label: "Urban Design",
-                desc: "Designing at the scale of the street, block, and neighbourhood — prioritising movement, gathering, and legibility.",
-              },
-              {
-                label: "Conceptualization",
-                desc: "Developing a design argument from first principles — translating research insight into spatial form and programme.",
-              },
-              {
-                label: "Architectural Planning",
-                desc: "Coordinating programme, structure, and systems into a coherent built proposal across multiple scales.",
-              },
-              {
-                label: "3D Modelling",
-                desc: "Building detailed spatial models in SketchUp to test section, massing, and material relationships before committing to drawings.",
-              },
-              {
-                label: "Rendering",
-                desc: "Communicating design intent through photorealistic Lumion renders with accurate light, material, and landscape conditions.",
-              },
-              {
-                label: "Placemaking",
-                desc: "Designing for identity and belonging — ensuring the space reflects and strengthens the community it serves.",
-              },
+              { label: "Urban Design", desc: "Designing at the scale of the street, block, and neighbourhood — prioritising movement, gathering, and legibility." },
+              { label: "Conceptualization", desc: "Developing a design argument from first principles — translating research insight into spatial form and programme." },
+              { label: "Architectural Planning", desc: "Coordinating programme, structure, and systems into a coherent built proposal across multiple scales." },
+              { label: "3D Modelling", desc: "Building detailed spatial models in SketchUp to test section, massing, and material relationships before committing to drawings." },
+              { label: "Rendering", desc: "Communicating design intent through photorealistic Lumion renders with accurate light, material, and landscape conditions." },
+              { label: "Placemaking", desc: "Designing for identity and belonging — ensuring the space reflects and strengthens the community it serves." },
             ].map((d, i) => (
               <Reveal key={d.label} delay={i * 0.05}>
                 <div style={{
@@ -1018,36 +733,15 @@ export default function ThesisCase() {
 
           <div style={{ display: "flex", flexDirection: "column" }}>
             {[
-              {
-                num: "01",
-                title: "Placemaking prioritises engagement",
-                body: "Just as UX design centres the user, architectural placemaking centres the inhabitant — every spatial decision is tested against how people will actually dwell, move, and interact with the space.",
-              },
-              {
-                num: "02",
-                title: "Sustainability and efficiency align",
-                body: "Passive design strategies — orientation, natural ventilation, daylight — reduce energy load without compromising quality. The most sustainable solution is often the most elegant one.",
-              },
-              {
-                num: "03",
-                title: "Human-centered thinking drives both disciplines",
-                body: "The translation from architecture to HCI was natural because both share a core methodology: observe how people behave in a space, identify friction, redesign until the friction disappears.",
-              },
-              {
-                num: "04",
-                title: "Context informs meaningful design",
-                body: "A public space cannot be lifted from one city and planted in another. Site history, climate, culture, and existing movement patterns are the raw material — not constraints to work around.",
-              },
-              {
-                num: "05",
-                title: "Iteration refines functionality",
-                body: "No design survives contact with a real site unchanged. Iteration — through model, section, and drawing — is how spatial hypotheses get pressure-tested and resolved.",
-              },
+              { num: "01", title: "Placemaking prioritises engagement", body: "Just as UX design centres the user, architectural placemaking centres the inhabitant — every spatial decision is tested against how people will actually dwell, move, and interact with the space." },
+              { num: "02", title: "Sustainability and efficiency align", body: "Passive design strategies — orientation, natural ventilation, daylight — reduce energy load without compromising quality. The most sustainable solution is often the most elegant one." },
+              { num: "03", title: "Human-centered thinking drives both disciplines", body: "The translation from architecture to HCI was natural because both share a core methodology: observe how people behave in a space, identify friction, redesign until the friction disappears." },
+              { num: "04", title: "Context informs meaningful design", body: "A public space cannot be lifted from one city and planted in another. Site history, climate, culture, and existing movement patterns are the raw material — not constraints to work around." },
+              { num: "05", title: "Iteration refines functionality", body: "No design survives contact with a real site unchanged. Iteration — through model, section, and drawing — is how spatial hypotheses get pressure-tested and resolved." },
             ].map((item, i) => (
               <Reveal key={item.num} delay={i * 0.06}>
                 <div style={{
-                  display: "grid",
-                  gridTemplateColumns: "48px 1fr",
+                  display: "grid", gridTemplateColumns: "48px 1fr",
                   gap: "clamp(16px, 3vw, 32px)",
                   padding: "clamp(24px, 3vw, 36px) 0",
                   borderBottom: "1px solid var(--border)",
