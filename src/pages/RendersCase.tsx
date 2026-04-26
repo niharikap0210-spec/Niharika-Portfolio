@@ -31,7 +31,6 @@ const allImages = [
   "/renders/villa-01.jpg",
   "/renders/villa-08.jpg",
   "/renders/villa-04.jpg",
-  "/renders/grameen-04.jpg",
 ];
 
 function RenderImage({ src, onClick, ratio, delay }: { src: string; onClick: () => void; ratio: string; delay: number }) {
@@ -228,9 +227,6 @@ export default function RendersCase() {
             <RenderImage src={allImages[8]} onClick={() => setLightbox(allImages[8])} ratio="4/3" delay={0.05} />
             <RenderImage src={allImages[9]} onClick={() => setLightbox(allImages[9])} ratio="4/3" delay={0.1} />
           </div>
-
-          {/* Row 8 — full width */}
-          <RenderImage src={allImages[10]} onClick={() => setLightbox(allImages[10])} ratio="16/7" delay={0.05} />
 
         </div>
       </section>
