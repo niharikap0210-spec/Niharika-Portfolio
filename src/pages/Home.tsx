@@ -1,9 +1,46 @@
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { useState } from "react";
 import HeroSection from "../components/HeroSection";
 import ProjectCard from "../components/ProjectCard";
+import ArchitectureCard from "../components/ArchitectureCard";
 import HandDrawnSketch from "../components/HandDrawnSketch";
 import ConnectSection from "../components/ConnectSection";
 import { projects } from "../data/projects";
+
+type Tab = "product" | "architecture";
+
+const archProjects = [
+  {
+    title: "Public Realm: Beyond the Streets",
+    subtitle: "Redefining public spaces, reviving community life",
+    type: "Architectural Thesis · Urban Design",
+    year: "2024",
+    tags: ["URBAN DESIGN", "ARCH PLANNING"],
+    href: "/architecture/thesis",
+    accent: {
+      primary: "#9B7A52",
+      light: "#B8966D",
+      dark: "#6B5238",
+      surface: "#F6EEE5",
+    },
+    visualKind: "thesis" as const,
+  },
+  {
+    title: "Rendered Realities",
+    subtitle: "3D modeling and visualization in architecture",
+    type: "Architectural Visualization",
+    year: "2024",
+    tags: ["3D MODELLING", "RENDERING"],
+    href: "/architecture/renders",
+    accent: {
+      primary: "#4E7396",
+      light: "#6B90B3",
+      dark: "#2E4F6A",
+      surface: "#EBF1F8",
+    },
+    visualKind: "renders" as const,
+  },
+];
 
 const mono: React.CSSProperties = {
   fontFamily: "'Space Mono', monospace",
@@ -13,6 +50,11 @@ const mono: React.CSSProperties = {
 
 /* ─── Home Page ──────────────────────────────────────────────────── */
 export default function Home() {
+  const [activeTab, setActiveTab] = useState<Tab>("product");
+
+  const activeCount = activeTab === "product" ? projects.length : archProjects.length;
+  const sheetPrefix = activeTab === "product" ? "A" : "B";
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -114,7 +156,7 @@ export default function Home() {
                   letterSpacing: "0.22em",
                 }}
               >
-                {String(projects.length).padStart(2, "0")} Projects
+                {String(activeCount).padStart(2, "0")} Projects
               </span>
             </div>
 
@@ -207,12 +249,89 @@ export default function Home() {
             </motion.div>
           </div>
 
-          {/* 2-col grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {projects.map((project, i) => (
-              <ProjectCard key={project.slug} project={project} index={i} />
-            ))}
+          {/* ── Filter pills ── */}
+          <div className="flex items-center gap-3" style={{ marginBottom: 40 }}>
+            {(["product", "architecture"] as Tab[]).map((tab) => {
+              const active = activeTab === tab;
+              const label = tab === "product" ? "Product Design" : "Architecture";
+              return (
+                <button
+                  key={tab}
+                  onClick={() => setActiveTab(tab)}
+                  style={{
+                    ...mono,
+                    fontSize: 10,
+                    letterSpacing: "0.18em",
+                    padding: "7px 16px",
+                    borderRadius: 999,
+                    border: `0.75px solid ${active ? "var(--accent)" : "var(--border)"}`,
+                    backgroundColor: active ? "var(--accent)" : "transparent",
+                    color: active ? "#FAFAFA" : "var(--text-secondary)",
+                    cursor: "pointer",
+                    transitionProperty: "background-color, border-color, color",
+                    transitionDuration: "200ms",
+                    transitionTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)",
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!active) {
+                      (e.currentTarget as HTMLButtonElement).style.borderColor = "var(--accent)";
+                      (e.currentTarget as HTMLButtonElement).style.color = "var(--text-primary)";
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!active) {
+                      (e.currentTarget as HTMLButtonElement).style.borderColor = "var(--border)";
+                      (e.currentTarget as HTMLButtonElement).style.color = "var(--text-secondary)";
+                    }
+                  }}
+                >
+                  {label}
+                </button>
+              );
+            })}
           </div>
+
+          {/* 2-col grid */}
+          <AnimatePresence mode="wait">
+            {activeTab === "product" ? (
+              <motion.div
+                key="product"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -6 }}
+                transition={{ duration: 0.3, ease: [0.25, 1, 0.4, 1] }}
+                className="grid grid-cols-1 md:grid-cols-2 gap-8"
+              >
+                {projects.map((project, i) => (
+                  <ProjectCard key={project.slug} project={project} index={i} />
+                ))}
+              </motion.div>
+            ) : (
+              <motion.div
+                key="architecture"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -6 }}
+                transition={{ duration: 0.3, ease: [0.25, 1, 0.4, 1] }}
+                className="grid grid-cols-1 md:grid-cols-2 gap-8"
+              >
+                {archProjects.map((project, i) => (
+                  <ArchitectureCard
+                    key={project.title}
+                    index={i}
+                    title={project.title}
+                    subtitle={project.subtitle}
+                    type={project.type}
+                    year={project.year}
+                    tags={project.tags}
+                    href={project.href}
+                    accent={project.accent}
+                    visualKind={project.visualKind}
+                  />
+                ))}
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           {/* ── Tools / Methodologies strip ── */}
           <motion.div
@@ -320,7 +439,7 @@ export default function Home() {
                 opacity: 0.7,
               }}
             >
-              A-{String(projects.length).padStart(2, "0")} / A-{String(projects.length).padStart(2, "0")}
+              {sheetPrefix}-{String(activeCount).padStart(2, "0")} / {sheetPrefix}-{String(activeCount).padStart(2, "0")}
             </span>
           </div>
         </div>
