@@ -1,5 +1,18 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
+import {
+  CursorClickIcon as CursorClick,
+  PencilLineIcon as PencilLine,
+  UsersIcon as Users,
+  PaletteIcon as Palette,
+  BrowsersIcon as Browsers,
+  SunIcon as Sun,
+  CameraIcon as Camera,
+  BuildingsIcon as Buildings,
+  RulerIcon as Ruler,
+  CubeIcon as Cube,
+  MapPinIcon as MapPin,
+} from "@phosphor-icons/react";
 import HeroSection from "../components/HeroSection";
 import ProjectCard from "../components/ProjectCard";
 import ArchitectureCard from "../components/ArchitectureCard";
@@ -47,6 +60,34 @@ const mono: React.CSSProperties = {
   textTransform: "uppercase",
   letterSpacing: "0.12em",
 };
+
+/* ─── Tool data ──────────────────────────────────────────────────── */
+type BrandTool    = { name: string; kind: "brand";    slug: string };
+type PhosphorTool = { name: string; kind: "phosphor"; Icon: React.ElementType };
+type ToolEntry    = BrandTool | PhosphorTool;
+
+const PRODUCT_TOOLS: ToolEntry[] = [
+  { name: "Figma",          kind: "brand",    slug: "figma" },
+  { name: "Framer",         kind: "brand",    slug: "framer" },
+  { name: "ProtoPie",       kind: "phosphor", Icon: CursorClick },
+  { name: "SwiftUI",        kind: "brand",    slug: "swift" },
+  { name: "Rive",           kind: "brand",    slug: "rive" },
+  { name: "FigJam",         kind: "phosphor", Icon: PencilLine },
+  { name: "User Research",  kind: "phosphor", Icon: Users },
+  { name: "Design Systems", kind: "phosphor", Icon: Palette },
+  { name: "Prototyping",    kind: "phosphor", Icon: Browsers },
+];
+
+const ARCH_TOOLS: ToolEntry[] = [
+  { name: "AutoCAD",            kind: "brand",    slug: "autocad" },
+  { name: "SketchUp",           kind: "brand",    slug: "sketchup" },
+  { name: "Lumion",             kind: "phosphor", Icon: Sun },
+  { name: "V-Ray",              kind: "phosphor", Icon: Camera },
+  { name: "Urban Planning",     kind: "phosphor", Icon: Buildings },
+  { name: "Structural Drawing", kind: "phosphor", Icon: Ruler },
+  { name: "Physical Models",    kind: "phosphor", Icon: Cube },
+  { name: "Site Analysis",      kind: "phosphor", Icon: MapPin },
+];
 
 /* ─── Home Page ──────────────────────────────────────────────────── */
 export default function Home() {
@@ -387,36 +428,42 @@ export default function Home() {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.25 }}
-                className="flex flex-wrap items-center gap-x-5 gap-y-2"
+                className="flex flex-wrap items-center gap-x-6 gap-y-4"
               >
-                {(activeTab === "product"
-                  ? ["Figma", "Framer", "Protopie", "SwiftUI", "Rive", "FigJam", "User Research", "Design Systems", "Prototyping"]
-                  : ["AutoCAD", "SketchUp", "Lumion", "V-Ray", "Urban Planning", "Structural Drawing", "Physical Models", "Site Analysis"]
-                ).map((tool, i, arr) => (
-                  <span key={tool} style={{ display: "inline-flex", alignItems: "center", gap: 20 }}>
+                {(activeTab === "product" ? PRODUCT_TOOLS : ARCH_TOOLS).map((tool) => (
+                  <div
+                    key={tool.name}
+                    title={tool.name}
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      gap: 6,
+                    }}
+                  >
+                    {tool.kind === "brand" ? (
+                      <img
+                        src={`https://cdn.simpleicons.org/${tool.slug}/9A9A9A`}
+                        alt={tool.name}
+                        width={20}
+                        height={20}
+                        style={{ display: "block", objectFit: "contain" }}
+                      />
+                    ) : (
+                      <tool.Icon size={20} color="var(--text-muted)" weight="regular" />
+                    )}
                     <span
                       style={{
-                        fontFamily: "'Inter', system-ui, sans-serif",
-                        fontSize: 13,
-                        color: "var(--text-secondary)",
-                        letterSpacing: "0.01em",
+                        ...mono,
+                        fontSize: 8,
+                        color: "var(--text-muted)",
+                        letterSpacing: "0.14em",
+                        whiteSpace: "nowrap",
                       }}
                     >
-                      {tool}
+                      {tool.name}
                     </span>
-                    {i < arr.length - 1 && (
-                      <span
-                        aria-hidden
-                        style={{
-                          width: 3,
-                          height: 3,
-                          backgroundColor: "var(--text-muted)",
-                          opacity: 0.5,
-                          borderRadius: "50%",
-                        }}
-                      />
-                    )}
-                  </span>
+                  </div>
                 ))}
               </motion.div>
             </AnimatePresence>
