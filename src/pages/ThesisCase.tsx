@@ -564,32 +564,37 @@ export default function ThesisCase() {
       </div>
 
       {/* ── Metadata strip ──────────────────────────────────────────── */}
-      <div style={{
-        borderTop: "1px solid var(--border)",
-        borderBottom: "1px solid var(--border)",
-        backgroundColor: "var(--bg-secondary)",
-      }}>
-        <div
-          className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10"
-          style={{ padding: "clamp(28px, 4vw, 44px) clamp(16px, 5vw, 40px)" }}
-        >
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {[
-              { label: "Role", value: "Lead Architect, Researcher & Designer" },
-              { label: "Type", value: "Individual Thesis" },
-              { label: "Timeline", value: "20 Weeks · 2022–23" },
-              { label: "Tools", value: "AutoCAD · SketchUp · Lumion · Photoshop" },
-            ].map((item) => (
-              <div key={item.label}>
-                <div style={{ ...mono, fontSize: 9, color: "var(--text-muted)", letterSpacing: "0.2em", marginBottom: 8 }}>
+      <div style={{ borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)" }}>
+        <div className="max-w-6xl mx-auto" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)" }}>
+          {[
+            { label: "Role", value: "Lead Architect, Researcher & Designer" },
+            { label: "Type", value: "Individual Thesis" },
+            { label: "Timeline", value: "20 Weeks · 2022–23" },
+            { label: "Tools", value: "AutoCAD · SketchUp · Lumion · Photoshop" },
+          ].map((item, i, arr) => (
+            <Reveal key={item.label} delay={i * 0.07}>
+              <div style={{
+                padding: "clamp(24px, 3.5vw, 40px) clamp(16px, 3vw, 36px)",
+                borderRight: i < arr.length - 1 ? "1px solid var(--border)" : "none",
+                height: "100%",
+                display: "flex", flexDirection: "column", gap: 10,
+              }}>
+                <span style={{
+                  ...mono, fontSize: 9, letterSpacing: "0.22em",
+                  color: thesis.primary, fontWeight: 700,
+                }}>
                   {item.label}
-                </div>
-                <div style={{ ...t.bodySm, color: "var(--text-primary)" }}>
+                </span>
+                <span style={{
+                  fontFamily: sans, fontSize: "clamp(14px, 1.1vw, 17px)",
+                  fontWeight: 500, lineHeight: 1.55,
+                  color: "var(--text-primary)",
+                }}>
                   {item.value}
-                </div>
+                </span>
               </div>
-            ))}
-          </div>
+            </Reveal>
+          ))}
         </div>
       </div>
 
