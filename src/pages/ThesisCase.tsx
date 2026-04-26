@@ -1,15 +1,22 @@
-import { motion, useScroll, useSpring, useInView } from "framer-motion";
-import { useRef } from "react";
+import { motion, AnimatePresence, useScroll, useSpring, useInView } from "framer-motion";
+import { useRef, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeftIcon as ArrowLeft, ArrowRightIcon as ArrowRight } from "@phosphor-icons/react";
+import {
+  ArrowLeftIcon as ArrowLeft,
+  ArrowRightIcon as ArrowRight,
+  CaretLeftIcon as CaretLeft,
+  CaretRightIcon as CaretRight,
+} from "@phosphor-icons/react";
 import DrawingSheetBorder from "../components/DrawingSheetBorder";
 import SectionMarker from "../components/SectionMarker";
 
-const accent = {
+/* ── Brand palette (scoped to this page) ─────────────────────────── */
+const thesis = {
   primary: "#9B7A52",
-  light: "#B8966D",
-  dark: "#6B5238",
+  light:   "#B8966D",
+  dark:    "#6B5238",
   surface: "#F6EEE5",
+  subtle:  "rgba(155, 122, 82, 0.08)",
 };
 
 const mono: React.CSSProperties = {
@@ -20,103 +27,375 @@ const mono: React.CSSProperties = {
 const serif = "'Playfair Display', Georgia, serif";
 const sans  = "'Inter', system-ui, sans-serif";
 
-function Reveal({ children, delay = 0, className = "" }: { children: React.ReactNode; delay?: number; className?: string }) {
+const EASE = [0.25, 1, 0.4, 1] as const;
+const SECTION_PAD = "clamp(72px, 9vw, 112px) 0";
+
+/* ── Reveal helper ─────────────────────────────────────────────────── */
+function Reveal({
+  children, delay = 0, y = 20, className = "",
+}: { children: React.ReactNode; delay?: number; y?: number; className?: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-50px" });
   return (
-    <motion.div
-      ref={ref}
-      className={className}
-      initial={{ opacity: 0, y: 20 }}
+    <motion.div ref={ref} className={className}
+      initial={{ opacity: 0, y }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.65, delay, ease: [0.25, 1, 0.4, 1] }}
+      transition={{ duration: 0.65, delay, ease: EASE }}
     >
       {children}
     </motion.div>
   );
 }
 
-/* Reusable image block with drawing-sheet border treatment */
-function SheetImage({
-  src, alt, label, caption, delay = 0, aspect,
-}: {
-  src: string; alt: string; label: string; caption?: string;
-  delay?: number; aspect?: string;
+/* ── Section header — matches ArkoCase SectionHeader ─────────────── */
+function SectionHeader({ num, title, phase, total = "08" }: {
+  num: string; title: string; phase: string; total?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-60px" });
+  const inView = useInView(ref, { once: true, margin: "-40px" });
   return (
-    <motion.figure
-      ref={ref}
-      initial={{ opacity: 0, y: 24 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.7, delay, ease: [0.25, 1, 0.4, 1] }}
-      style={{ margin: 0, position: "relative" }}
-    >
-      {/* Drawing-sheet eyebrow */}
-      <div style={{
-        display: "flex",
-        alignItems: "baseline",
-        justifyContent: "space-between",
-        borderTop: `0.75px solid ${accent.primary}55`,
-        paddingTop: 8,
-        marginBottom: 10,
-      }}>
-        <span style={{ ...mono, fontSize: 9, color: accent.primary, letterSpacing: "0.2em" }}>
-          {label}
-        </span>
-        <span style={{ ...mono, fontSize: 9, color: "var(--text-muted)", letterSpacing: "0.14em" }}>
-          B.ARCH THESIS · 2024
-        </span>
+    <div ref={ref} style={{ marginBottom: "clamp(40px, 5vw, 64px)" }}>
+      <div style={{ display: "flex", alignItems: "baseline", gap: 18, flexWrap: "wrap", paddingBottom: 14 }}>
+        <motion.span
+          initial={{ opacity: 0, y: 8 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.55, ease: EASE }}
+          style={{ ...mono, fontSize: 14, color: thesis.primary, letterSpacing: "0.22em", fontWeight: 700 }}
+        >
+          {num} <span style={{ color: "var(--text-muted)", fontWeight: 400 }}>/ {total}</span>
+        </motion.span>
+        <motion.span
+          initial={{ opacity: 0, y: 8 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ delay: 0.08, duration: 0.55, ease: EASE }}
+          style={{ ...mono, fontSize: 14, color: "var(--text-primary)", letterSpacing: "0.22em", fontWeight: 600 }}
+        >
+          {title}
+        </motion.span>
+        <motion.span
+          initial={{ opacity: 0 }}
+          animate={inView ? { opacity: 1 } : {}}
+          transition={{ delay: 0.2, duration: 0.55 }}
+          style={{ ...mono, fontSize: 13, color: "var(--text-muted)", letterSpacing: "0.2em", marginLeft: "auto" }}
+        >
+          {phase}
+        </motion.span>
       </div>
-
-      {/* Image wrapper */}
-      <div style={{
-        position: "relative",
-        overflow: "hidden",
-        border: "1px solid var(--border)",
-        aspectRatio: aspect ?? "auto",
-      }}>
-        {/* Corner ticks */}
-        {[
-          { top: 0, left: 0, borderTop: `0.75px solid ${accent.primary}66`, borderLeft: `0.75px solid ${accent.primary}66` },
-          { top: 0, right: 0, borderTop: `0.75px solid ${accent.primary}66`, borderRight: `0.75px solid ${accent.primary}66` },
-          { bottom: 0, left: 0, borderBottom: `0.75px solid ${accent.primary}66`, borderLeft: `0.75px solid ${accent.primary}66` },
-          { bottom: 0, right: 0, borderBottom: `0.75px solid ${accent.primary}66`, borderRight: `0.75px solid ${accent.primary}66` },
-        ].map((style, i) => (
-          <span key={i} aria-hidden style={{ position: "absolute", width: 10, height: 10, zIndex: 2, pointerEvents: "none", ...style }} />
-        ))}
-
-        <img
-          src={src}
-          alt={alt}
-          loading="lazy"
-          style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-        />
-        {/* Bottom gradient overlay per design system */}
-        <div aria-hidden style={{
-          position: "absolute", inset: 0,
-          background: "linear-gradient(to top, rgba(0,0,0,0.18) 0%, transparent 50%)",
-          pointerEvents: "none",
-        }} />
-      </div>
-
-      {caption && (
-        <figcaption style={{
-          fontFamily: serif,
-          fontStyle: "italic",
-          fontSize: 13,
-          color: "var(--text-muted)",
-          lineHeight: 1.5,
-          marginTop: 10,
-        }}>
-          {caption}
-        </figcaption>
-      )}
-    </motion.figure>
+      <motion.div
+        initial={{ scaleX: 0 }}
+        animate={inView ? { scaleX: 1 } : {}}
+        transition={{ delay: 0.15, duration: 0.9, ease: EASE }}
+        style={{ height: 1, background: thesis.primary, transformOrigin: "left", opacity: 0.6 }}
+      />
+    </div>
   );
 }
 
+/* ── Sheet data ───────────────────────────────────────────────────── */
+const SHEETS = [
+  {
+    src: "/thesis/img-05.png",
+    label: "Sheet 01",
+    title: "Introduction & Synopsis",
+    caption: "Placemaking framework, design principles for public realm, objectives and scope of the thesis.",
+  },
+  {
+    src: "/thesis/img-04.png",
+    label: "Sheet 06",
+    title: "Site Analysis",
+    caption: "Climate, geology, soil conditions, SWOT analysis and site surroundings — Sonegao, Nagpur.",
+  },
+  {
+    src: "/thesis/img-15.png",
+    label: "Sheet 02",
+    title: "Case Study · Dilli Haat INA, Delhi",
+    caption: "Site response, integrated user groups, activity generators, section through the mallah.",
+  },
+  {
+    src: "/thesis/img-14.png",
+    label: "Sheet 03",
+    title: "Case Study · Riverfront, Ahmedabad",
+    caption: "Master plan, street network, recreation zones, and development sites along the Sabarmati.",
+  },
+  {
+    src: "/thesis/img-02.png",
+    label: "Sheet 04",
+    title: "Case Study · Manek Chowk, Sarafa, Chandni Chowk",
+    caption: "Urban chowk analysis across Ahmedabad, Indore, and Delhi — character, activity, design elements.",
+  },
+  {
+    src: "/thesis/img-07.png",
+    label: "Sheet 05",
+    title: "Case Study · Select City Walk & Chappan",
+    caption: "Design elements, footfall patterns, and pedestrian experience across two contrasting public places.",
+  },
+  {
+    src: "/thesis/img-10.png",
+    label: "Sheet 07",
+    title: "Site Plan & View",
+    caption: "Master site plan with programme distribution, legend, and aerial render of the proposed public realm.",
+  },
+  {
+    src: "/thesis/img-08.png",
+    label: "Sheet 08",
+    title: "Activity Centre",
+    caption: "Circular form, vertical RCC fins, spiralling roof, form development, and rendered exterior views.",
+  },
+  {
+    src: "/thesis/img-01.png",
+    label: "Sheet 09",
+    title: "Yoga & Meditation Centre",
+    caption: "Waffle slab detail, elevation, section AA, floor plan, sensory garden renders.",
+  },
+  {
+    src: "/thesis/img-12.png",
+    label: "Sheet 10",
+    title: "Book Cafe, Event Centre & Workshop",
+    caption: "Sunken workshop, glass-grooved roof, folded plate structure — plans, sections, exterior renders.",
+  },
+  {
+    src: "/thesis/img-09.png",
+    label: "Sheet 13",
+    title: "Street Plan",
+    caption: "Proposed street module with hardscape, softscape planters, street furniture and lighting.",
+  },
+  {
+    src: "/thesis/img-03.png",
+    label: "Sheet 11",
+    title: "Views · Pavilions & Landscape",
+    caption: "Entrance pavilion, sculpture garden, HAT, celebration pavilion, levels & steps seating.",
+  },
+  {
+    src: "/thesis/img-06.png",
+    label: "Sheet 12",
+    title: "Views · Active Zones & Aerial",
+    caption: "Fountain, pit, skate park, view from the skate park, and aerial overview of the full site.",
+  },
+  {
+    src: "/thesis/img-11.jpg",
+    label: "Final Render",
+    title: "Aerial Site View",
+    caption: "Photorealistic aerial render of the completed public realm — Sonegao, Nagpur, 2024.",
+  },
+];
+
+/* ── Sheet Viewer ─────────────────────────────────────────────────── */
+function SheetViewer() {
+  const [active, setActive] = useState(0);
+  const thumbRef = useRef<HTMLDivElement>(null);
+  const p = thesis.primary;
+
+  const prev = () => setActive((i) => Math.max(0, i - 1));
+  const next = () => setActive((i) => Math.min(SHEETS.length - 1, i + 1));
+
+  useEffect(() => {
+    const container = thumbRef.current;
+    if (!container) return;
+    const thumb = container.children[active] as HTMLElement;
+    thumb?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+  }, [active]);
+
+  const current = SHEETS[active];
+
+  return (
+    <div>
+      {/* ── Main viewer ── */}
+      <div style={{
+        border: "1px solid var(--border)",
+        overflow: "hidden",
+        backgroundColor: "var(--bg-secondary)",
+        position: "relative",
+      }}>
+        {/* Top bar */}
+        <div style={{
+          display: "flex", alignItems: "center", justifyContent: "space-between",
+          padding: "10px 16px",
+          borderBottom: "0.75px solid var(--border)",
+          backgroundColor: "var(--bg-elevated)",
+          gap: 12,
+        }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 12, minWidth: 0 }}>
+            <span style={{ ...mono, fontSize: 9, color: p, letterSpacing: "0.2em", flexShrink: 0 }}>
+              {current.label}
+            </span>
+            <span aria-hidden style={{ width: 1, height: 12, backgroundColor: "var(--border)", flexShrink: 0 }} />
+            <span style={{
+              fontFamily: sans, fontSize: 13, color: "var(--text-secondary)",
+              overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
+            }}>
+              {current.title}
+            </span>
+          </div>
+          <span style={{ ...mono, fontSize: 9, color: "var(--text-muted)", flexShrink: 0 }}>
+            {String(active + 1).padStart(2, "0")} / {String(SHEETS.length).padStart(2, "0")}
+          </span>
+        </div>
+
+        {/* Image area */}
+        <div style={{ position: "relative", minHeight: 320, backgroundColor: "var(--bg-secondary)" }}>
+          <AnimatePresence mode="wait">
+            <motion.img
+              key={active}
+              src={current.src}
+              alt={current.title}
+              loading="lazy"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.28, ease: EASE }}
+              style={{
+                width: "100%",
+                maxHeight: "75vh",
+                objectFit: "contain",
+                display: "block",
+              }}
+            />
+          </AnimatePresence>
+
+          {/* Prev / Next overlay buttons */}
+          <button
+            onClick={prev}
+            disabled={active === 0}
+            aria-label="Previous sheet"
+            style={{
+              position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)",
+              width: 36, height: 36, borderRadius: 0,
+              display: "flex", alignItems: "center", justifyContent: "center",
+              backgroundColor: active === 0 ? "rgba(255,255,255,0.4)" : "var(--bg-elevated)",
+              border: `0.75px solid ${active === 0 ? "var(--border)" : p + "66"}`,
+              color: active === 0 ? "var(--text-muted)" : p,
+              cursor: active === 0 ? "default" : "pointer",
+              transitionProperty: "background-color, border-color, color",
+              transitionDuration: "200ms",
+              zIndex: 2,
+            }}
+          >
+            <CaretLeft size={16} weight="regular" />
+          </button>
+
+          <button
+            onClick={next}
+            disabled={active === SHEETS.length - 1}
+            aria-label="Next sheet"
+            style={{
+              position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)",
+              width: 36, height: 36, borderRadius: 0,
+              display: "flex", alignItems: "center", justifyContent: "center",
+              backgroundColor: active === SHEETS.length - 1 ? "rgba(255,255,255,0.4)" : "var(--bg-elevated)",
+              border: `0.75px solid ${active === SHEETS.length - 1 ? "var(--border)" : p + "66"}`,
+              color: active === SHEETS.length - 1 ? "var(--text-muted)" : p,
+              cursor: active === SHEETS.length - 1 ? "default" : "pointer",
+              transitionProperty: "background-color, border-color, color",
+              transitionDuration: "200ms",
+              zIndex: 2,
+            }}
+          >
+            <CaretRight size={16} weight="regular" />
+          </button>
+        </div>
+
+        {/* Caption bar */}
+        <div style={{
+          display: "flex", alignItems: "center", justifyContent: "space-between",
+          padding: "10px 16px",
+          borderTop: "0.75px solid var(--border)",
+          backgroundColor: "var(--bg-elevated)",
+          gap: 16,
+        }}>
+          <AnimatePresence mode="wait">
+            <motion.p
+              key={active}
+              initial={{ opacity: 0, y: 4 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -4 }}
+              transition={{ duration: 0.25 }}
+              style={{
+                fontFamily: serif, fontStyle: "italic",
+                fontSize: 13, color: "var(--text-secondary)",
+                lineHeight: 1.5, margin: 0,
+              }}
+            >
+              {current.caption}
+            </motion.p>
+          </AnimatePresence>
+          <span style={{ ...mono, fontSize: 9, color: "var(--text-muted)", flexShrink: 0, letterSpacing: "0.16em" }}>
+            B.ARCH · 2024
+          </span>
+        </div>
+      </div>
+
+      {/* ── Thumbnail filmstrip ── */}
+      <div
+        ref={thumbRef}
+        style={{
+          display: "flex",
+          gap: 6,
+          marginTop: 8,
+          overflowX: "auto",
+          scrollbarWidth: "none",
+          WebkitOverflowScrolling: "touch" as React.CSSProperties["WebkitOverflowScrolling"],
+          paddingBottom: 2,
+        }}
+      >
+        {SHEETS.map((sheet, i) => (
+          <button
+            key={i}
+            onClick={() => setActive(i)}
+            aria-label={`View ${sheet.title}`}
+            style={{
+              flexShrink: 0,
+              width: 72,
+              height: 52,
+              padding: 0,
+              border: `1.5px solid ${i === active ? p : "var(--border)"}`,
+              overflow: "hidden",
+              cursor: "pointer",
+              backgroundColor: "var(--bg-secondary)",
+              opacity: i === active ? 1 : 0.55,
+              transitionProperty: "opacity, border-color",
+              transitionDuration: "200ms",
+              position: "relative",
+            }}
+          >
+            <img
+              src={sheet.src}
+              alt=""
+              loading="lazy"
+              style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+            />
+            {i === active && (
+              <span aria-hidden style={{
+                position: "absolute", top: 0, left: 0, right: 0, height: 2,
+                backgroundColor: p,
+              }} />
+            )}
+          </button>
+        ))}
+      </div>
+
+      {/* ── Progress bar ── */}
+      <div style={{
+        height: "1px",
+        backgroundColor: "var(--border)",
+        marginTop: 16,
+        position: "relative",
+      }}>
+        <motion.div
+          animate={{ width: `${((active + 1) / SHEETS.length) * 100}%` }}
+          transition={{ duration: 0.35, ease: EASE }}
+          style={{
+            position: "absolute", top: 0, left: 0, height: "100%",
+            backgroundColor: p,
+          }}
+        />
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   PAGE
+══════════════════════════════════════════════════════════════════ */
 export default function ThesisCase() {
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, { stiffness: 200, damping: 40 });
@@ -129,16 +408,12 @@ export default function ThesisCase() {
       transition={{ duration: 0.35 }}
       className="pt-14"
     >
-      {/* Scroll progress bar */}
+      {/* Scroll progress */}
       <motion.div
         style={{
-          scaleX,
-          transformOrigin: "left",
-          position: "fixed",
-          top: 56, left: 0, right: 0,
-          height: 2,
-          backgroundColor: accent.primary,
-          zIndex: 50,
+          scaleX, transformOrigin: "left",
+          position: "fixed", top: 56, left: 0, right: 0,
+          height: 2, backgroundColor: thesis.primary, zIndex: 50,
         }}
       />
 
@@ -154,8 +429,7 @@ export default function ThesisCase() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-end">
             <div className="lg:col-span-7">
               <motion.div
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
                 style={{ ...mono, fontSize: 11, color: "var(--text-muted)", letterSpacing: "0.22em", marginBottom: 20 }}
               >
@@ -163,35 +437,29 @@ export default function ThesisCase() {
               </motion.div>
 
               <motion.h1
-                initial={{ opacity: 0, y: 18 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.75, ease: [0.25, 1, 0.4, 1] }}
+                initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.75, ease: EASE }}
                 style={{
-                  fontFamily: serif,
-                  fontWeight: 700,
+                  fontFamily: serif, fontWeight: 700,
                   fontSize: "clamp(40px, 5.5vw, 80px)",
-                  letterSpacing: "-0.04em",
-                  lineHeight: 0.95,
+                  letterSpacing: "-0.04em", lineHeight: 0.95,
                   color: "var(--text-primary)",
-                  margin: 0,
-                  marginBottom: "clamp(20px, 2.4vw, 32px)",
+                  margin: 0, marginBottom: "clamp(20px, 2.4vw, 32px)",
                 }}
               >
                 Public Realm:{" "}
-                <span style={{ fontStyle: "italic", color: accent.primary }}>Beyond</span>
+                <span style={{ fontStyle: "italic", color: thesis.primary }}>Beyond</span>
                 {" "}the Streets
               </motion.h1>
 
               <motion.p
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.25, duration: 0.6 }}
                 style={{
                   fontFamily: sans,
                   fontSize: "clamp(16px, 1.4vw, 19px)",
                   color: "var(--text-secondary)",
-                  lineHeight: 1.75,
-                  maxWidth: 520,
+                  lineHeight: 1.75, maxWidth: 520,
                 }}
               >
                 Redefining public spaces, reviving community life — an architectural
@@ -202,14 +470,13 @@ export default function ThesisCase() {
 
             <motion.div
               className="lg:col-span-5"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }}
               transition={{ delay: 0.4, duration: 0.6 }}
             >
               <div className="grid grid-cols-3" style={{ borderTop: "1px solid var(--border)", paddingTop: 24, gap: 0 }}>
                 {[
                   { value: "20", label: "Week Thesis" },
-                  { value: "1:1", label: "Lead Role" },
+                  { value: "14", label: "Project Sheets" },
                   { value: "B.Arch", label: "Discipline" },
                 ].map((s, i) => (
                   <div key={s.label} style={{
@@ -237,33 +504,35 @@ export default function ThesisCase() {
         </div>
       </DrawingSheetBorder>
 
-      {/* ── Hero render — full-width aerial ── */}
-      <div style={{ position: "relative", width: "100%", maxHeight: "72vh", overflow: "hidden" }}>
+      {/* ── Hero aerial render ── */}
+      <div style={{ position: "relative", overflow: "hidden", maxHeight: "68vh" }}>
         <motion.img
           src="/thesis/img-11.jpg"
-          alt="Aerial render of the Public Realm thesis project — full site view"
-          initial={{ opacity: 0, scale: 1.03 }}
+          alt="Aerial render — Public Realm thesis project, full site view, Sonegao Nagpur"
+          initial={{ opacity: 0, scale: 1.04 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.1, ease: [0.25, 1, 0.4, 1] }}
-          style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", maxHeight: "72vh" }}
+          transition={{ duration: 1.1, ease: EASE }}
+          style={{ width: "100%", maxHeight: "68vh", objectFit: "cover", display: "block" }}
         />
         <div aria-hidden style={{
           position: "absolute", inset: 0,
-          background: "linear-gradient(to top, rgba(0,0,0,0.35) 0%, transparent 55%)",
+          background: "linear-gradient(to top, rgba(0,0,0,0.38) 0%, transparent 55%)",
         }} />
         <div aria-hidden style={{
           position: "absolute", inset: 0,
-          background: "linear-gradient(to bottom, rgba(0,0,0,0.12) 0%, transparent 30%)",
+          background: "linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, transparent 28%)",
         }} />
         <div style={{
-          position: "absolute", bottom: "clamp(16px, 3vw, 28px)", left: "clamp(16px, 5vw, 40px)",
-          ...mono, fontSize: 9, color: "rgba(255,255,255,0.75)", letterSpacing: "0.2em",
+          position: "absolute",
+          bottom: "clamp(16px, 3vw, 28px)",
+          left: "clamp(16px, 5vw, 40px)",
+          ...mono, fontSize: 9, color: "rgba(255,255,255,0.72)", letterSpacing: "0.22em",
         }}>
-          Aerial View · Sonegao, Nagpur · 2024
+          Aerial Render · Sonegao, Nagpur · 2024
         </div>
       </div>
 
-      {/* ── Project metadata strip ── */}
+      {/* ── Metadata strip ── */}
       <div style={{
         borderTop: "1px solid var(--border)",
         borderBottom: "1px solid var(--border)",
@@ -271,7 +540,7 @@ export default function ThesisCase() {
       }}>
         <div
           className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10"
-          style={{ padding: "clamp(32px, 4vw, 48px) clamp(16px, 5vw, 40px)" }}
+          style={{ padding: "clamp(28px, 4vw, 44px) clamp(16px, 5vw, 40px)" }}
         >
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {[
@@ -293,346 +562,184 @@ export default function ThesisCase() {
         </div>
       </div>
 
-      {/* ── Overview ── */}
-      <section
-        style={{ padding: "clamp(72px, 9vw, 112px) 0" }}
-        className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10"
-      >
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
-          <div className="lg:col-span-4">
-            <Reveal>
-              <div style={{ ...mono, fontSize: 9, color: accent.primary, letterSpacing: "0.22em", marginBottom: 16 }}>
-                01 / Overview
-              </div>
-              <h2 style={{
-                fontFamily: serif, fontWeight: 700,
-                fontSize: "clamp(28px, 3vw, 40px)",
-                letterSpacing: "-0.025em", lineHeight: 1.15,
-                color: "var(--text-primary)", margin: 0,
-              }}>
-                The Project
-              </h2>
-            </Reveal>
-          </div>
+      {/* ── 01 Overview ── */}
+      <section style={{ padding: SECTION_PAD }}>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10">
+          <SectionHeader num="01" title="Overview" phase="Context & Intent" />
 
-          <div className="lg:col-span-8">
-            <Reveal delay={0.1}>
-              <p style={{
-                fontFamily: sans,
-                fontSize: "clamp(17px, 1.4vw, 20px)",
-                color: "var(--text-secondary)",
-                lineHeight: 1.8, marginBottom: 24,
-              }}>
-                An architectural initiative aimed at revitalising urban spaces by creating
-                inclusive, sustainable, and vibrant public areas that foster community
-                interactions and enhance quality of life.
-              </p>
-              <p style={{ fontFamily: sans, fontSize: 18, color: "var(--text-secondary)", lineHeight: 1.75 }}>
-                This thesis explores transforming underutilised urban spaces into vibrant
-                public realms through placemaking, sustainable design, and inclusive spatial
-                planning — to foster community interactions, enhance social cohesion, and
-                improve urban life quality.
-              </p>
-            </Reveal>
-          </div>
-        </div>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
+            <div className="lg:col-span-5">
+              <Reveal>
+                <p style={{
+                  fontFamily: sans,
+                  fontSize: "clamp(17px, 1.4vw, 20px)",
+                  color: "var(--text-secondary)",
+                  lineHeight: 1.8, marginBottom: 24,
+                }}>
+                  An architectural initiative aimed at revitalising urban spaces by
+                  creating inclusive, sustainable, and vibrant public areas that foster
+                  community interactions and enhance quality of life.
+                </p>
+                <p style={{ fontFamily: sans, fontSize: 18, color: "var(--text-secondary)", lineHeight: 1.75 }}>
+                  This thesis explores transforming underutilised urban spaces into vibrant
+                  public realms through placemaking, sustainable design, and inclusive
+                  spatial planning — to foster community interactions, enhance social
+                  cohesion, and improve urban life quality.
+                </p>
+              </Reveal>
+            </div>
 
-        {/* Introduction sheet */}
-        <div style={{ marginTop: "clamp(48px, 6vw, 72px)" }}>
-          <SheetImage
-            src="/thesis/img-05.png"
-            alt="Thesis introduction and synopsis sheet"
-            label="Sheet 01 · Introduction & Synopsis"
-            caption="Placemaking framework, design principles, objectives, and the case for public realm intervention."
-            delay={0.1}
-          />
+            <div className="lg:col-span-7">
+              <Reveal delay={0.12}>
+                <div style={{
+                  display: "flex", flexDirection: "column",
+                  border: "1px solid var(--border)",
+                  backgroundColor: "var(--bg-elevated)",
+                }}>
+                  {[
+                    { k: "Site", v: "Sonegao, Nagpur" },
+                    { k: "Site Area", v: "3770 sq.m" },
+                    { k: "Programme", v: "Activity Centre · Yoga Centre · Book Café · Workshop · Street" },
+                    { k: "Guide", v: "Prof. Sonali Borate" },
+                    { k: "Institution", v: "SVITS, Indore · B.Arch 2022–23" },
+                  ].map((row, i, arr) => (
+                    <div key={row.k} style={{
+                      display: "grid", gridTemplateColumns: "140px 1fr",
+                      borderBottom: i < arr.length - 1 ? "0.75px solid var(--border)" : "none",
+                    }}>
+                      <div style={{
+                        ...mono, fontSize: 9, color: "var(--text-muted)",
+                        letterSpacing: "0.18em",
+                        padding: "14px 16px",
+                        borderRight: "0.75px solid var(--border)",
+                        display: "flex", alignItems: "center",
+                      }}>
+                        {row.k}
+                      </div>
+                      <div style={{
+                        fontFamily: sans, fontSize: 14,
+                        color: "var(--text-primary)",
+                        padding: "14px 16px",
+                        lineHeight: 1.5,
+                      }}>
+                        {row.v}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </Reveal>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* ── Site Plan ── */}
+      {/* ── 02 Project Sheets ── */}
       <div style={{
         backgroundColor: "var(--bg-secondary)",
         borderTop: "1px solid var(--border)",
         borderBottom: "1px solid var(--border)",
-        padding: "clamp(64px, 8vw, 96px) 0",
+        padding: SECTION_PAD,
       }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10">
+          <SectionHeader num="02" title="Project Sheets" phase="Documentation" />
           <Reveal>
-            <div style={{ ...mono, fontSize: 9, color: accent.primary, letterSpacing: "0.22em", marginBottom: 40 }}>
-              02 / Site Plan
-            </div>
+            <SheetViewer />
           </Reveal>
-
-          <SheetImage
-            src="/thesis/img-10.png"
-            alt="Site plan and aerial view of the full thesis project"
-            label="Sheet 07 · Site Plan & View · Sonegao, Nagpur"
-            caption="Master site plan showing programme distribution, site boundaries, and the aerial render of the proposed public realm."
-          />
         </div>
       </div>
 
-      {/* ── Site Analysis ── */}
-      <section
-        style={{ padding: "clamp(64px, 8vw, 96px) 0" }}
-        className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10"
-      >
-        <Reveal>
-          <div style={{ ...mono, fontSize: 9, color: accent.primary, letterSpacing: "0.22em", marginBottom: 40 }}>
-            03 / Site Analysis
-          </div>
-        </Reveal>
+      {/* ── 03 Disciplines ── */}
+      <section style={{ padding: SECTION_PAD }}>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10">
+          <SectionHeader num="03" title="Disciplines" phase="Skills Applied" />
 
-        <SheetImage
-          src="/thesis/img-04.png"
-          alt="Site analysis sheet for Sonegao, Nagpur"
-          label="Sheet 06 · Site Analysis · Sonegao, Nagpur"
-          caption="Climate, geology, SWOT analysis, soil conditions, and site surroundings informing the design response."
-        />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3" style={{ borderTop: "1px solid var(--border)" }}>
+            {[
+              {
+                label: "Urban Design",
+                desc: "Designing at the scale of the street, the block, and the neighbourhood — prioritising movement, gathering, and legibility.",
+              },
+              {
+                label: "Conceptualization",
+                desc: "Developing a design argument from first principles — translating research insight into spatial form and programme.",
+              },
+              {
+                label: "Architectural Planning",
+                desc: "Coordinating programme, structure, and systems into a coherent built proposal across multiple scales.",
+              },
+              {
+                label: "3D Modelling",
+                desc: "Building detailed spatial models in SketchUp to test section, massing, and material relationships before committing to drawings.",
+              },
+              {
+                label: "Rendering",
+                desc: "Communicating design intent through photorealistic Lumion renders with accurate light, material, and landscape conditions.",
+              },
+              {
+                label: "Placemaking",
+                desc: "Designing for identity and belonging — ensuring the space reflects and strengthens the community it serves.",
+              },
+            ].map((d, i) => (
+              <Reveal key={d.label} delay={i * 0.05}>
+                <div style={{
+                  padding: "clamp(24px, 3vw, 36px) clamp(16px, 2.5vw, 28px)",
+                  borderBottom: "1px solid var(--border)",
+                  borderRight: (i % 3 !== 2) ? "1px solid var(--border)" : "none",
+                }}>
+                  <div style={{
+                    fontFamily: serif, fontWeight: 700,
+                    fontSize: "clamp(17px, 1.6vw, 20px)",
+                    letterSpacing: "-0.015em",
+                    color: "var(--text-primary)", marginBottom: 10,
+                  }}>
+                    {d.label}
+                  </div>
+                  <p style={{ fontFamily: sans, fontSize: 15, color: "var(--text-secondary)", lineHeight: 1.7, margin: 0 }}>
+                    {d.desc}
+                  </p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
       </section>
 
-      {/* ── Case Study Research ── */}
+      {/* ── 04 Key Takeaways ── */}
       <div style={{
         backgroundColor: "var(--bg-secondary)",
         borderTop: "1px solid var(--border)",
         borderBottom: "1px solid var(--border)",
-        padding: "clamp(64px, 8vw, 96px) 0",
+        padding: SECTION_PAD,
       }} className="blueprint-grid-subtle">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10">
-          <Reveal>
-            <div style={{ ...mono, fontSize: 9, color: accent.primary, letterSpacing: "0.22em", marginBottom: 12 }}>
-              04 / Case Studies
-            </div>
-            <h2 style={{
-              fontFamily: serif, fontWeight: 700,
-              fontSize: "clamp(26px, 3vw, 40px)",
-              letterSpacing: "-0.025em", lineHeight: 1.2,
-              color: "var(--text-primary)", margin: 0,
-              marginBottom: "clamp(36px, 4vw, 56px)",
-            }}>
-              Learning from existing{" "}
-              <span style={{ fontStyle: "italic", color: accent.primary }}>public realms</span>
-            </h2>
-          </Reveal>
+          <SectionHeader num="04" title="Key Takeaways" phase="Architecture → HCI" />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <SheetImage
-              src="/thesis/img-15.png"
-              alt="Case study — Dilli Haat INA, Delhi"
-              label="Sheet 02 · Case Study · Dilli Haat INA, Delhi"
-              caption="Analysis of integrated cultural marketplace — site response, user groups, section through the mallah."
-              delay={0}
-              aspect="4/3"
-            />
-            <SheetImage
-              src="/thesis/img-14.png"
-              alt="Case study — Riverfront Development, Ahmedabad"
-              label="Sheet 03 · Case Study · Riverfront Development, Ahmedabad"
-              caption="Master plan, street network, recreation zones, and development sites along the Sabarmati."
-              delay={0.08}
-              aspect="4/3"
-            />
-            <SheetImage
-              src="/thesis/img-02.png"
-              alt="Case study — Manek Chowk, Sarafa, Chandni Chowk"
-              label="Sheet 04 · Case Study · Manek Chowk · Sarafa · Chandni Chowk"
-              caption="Urban chowk analysis across Ahmedabad, Indore, and Delhi — character, activity, and design elements."
-              delay={0.04}
-              aspect="4/3"
-            />
-            <SheetImage
-              src="/thesis/img-07.png"
-              alt="Case study — Select City Walk and Chappan, Indore"
-              label="Sheet 05 · Case Study · Select City Walk · Chappan"
-              caption="Design elements, footfall patterns, and pedestrian experience across two contrasting public places."
-              delay={0.12}
-              aspect="4/3"
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* ── Building Programmes ── */}
-      <section
-        style={{ padding: "clamp(64px, 8vw, 96px) 0" }}
-        className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10"
-      >
-        <Reveal>
-          <div style={{ ...mono, fontSize: 9, color: accent.primary, letterSpacing: "0.22em", marginBottom: 40 }}>
-            05 / Building Programmes
-          </div>
-        </Reveal>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8" style={{ marginBottom: "clamp(32px, 4vw, 48px)" }}>
-          <SheetImage
-            src="/thesis/img-08.png"
-            alt="Activity Centre plans, sections, and renders"
-            label="Sheet 08 · Activity Centre"
-            caption="Circular form, vertical RCC fins, spiralling roof plan, and terrace seating — rendered exterior view."
-            delay={0}
-          />
-          <SheetImage
-            src="/thesis/img-01.png"
-            alt="Yoga & Meditation Centre with sensory garden"
-            label="Sheet 09 · Yoga & Meditation Centre"
-            caption="Waffle slab detail, elevation, section, floor plan, and sensory garden renders."
-            delay={0.08}
-          />
-        </div>
-
-        <SheetImage
-          src="/thesis/img-12.png"
-          alt="Book Cafe, Event Centre, and Workshop plans and renders"
-          label="Sheet 10 · Book Cafe · Event Centre · Workshop"
-          caption="Sunken workshop, glass-grooved roof, folded plate structure — plans, sections, and exterior renders."
-          delay={0.12}
-        />
-      </section>
-
-      {/* ── Views & Renders ── */}
-      <div style={{
-        backgroundColor: "var(--bg-secondary)",
-        borderTop: "1px solid var(--border)",
-        borderBottom: "1px solid var(--border)",
-        padding: "clamp(64px, 8vw, 96px) 0",
-      }}>
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10">
-          <Reveal>
-            <div style={{ ...mono, fontSize: 9, color: accent.primary, letterSpacing: "0.22em", marginBottom: 12 }}>
-              06 / Views & Renders
-            </div>
-            <h2 style={{
-              fontFamily: serif, fontWeight: 700,
-              fontSize: "clamp(26px, 3vw, 40px)",
-              letterSpacing: "-0.025em", lineHeight: 1.2,
-              color: "var(--text-primary)", margin: 0,
-              marginBottom: "clamp(36px, 4vw, 56px)",
-            }}>
-              The space{" "}
-              <span style={{ fontStyle: "italic", color: accent.primary }}>as rendered</span>
-            </h2>
-          </Reveal>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <SheetImage
-              src="/thesis/img-03.png"
-              alt="Rendered views — entrance pavilion, sculpture garden, HAT, celebration pavilion, levels and steps seating"
-              label="Sheet 11 · Views — Pavilions & Landscape"
-              caption="Entrance pavilion, sculpture garden, HAT, celebration pavilion, and levels & steps seating with landscape."
-              delay={0}
-            />
-            <SheetImage
-              src="/thesis/img-06.png"
-              alt="Rendered views — fountain, pit, skate park, aerial site view"
-              label="Sheet 12 · Views — Active Zones & Aerial"
-              caption="Fountain, pit, skate park, view from the skate park, and aerial overview of the full site."
-              delay={0.08}
-            />
-          </div>
-
-          {/* Street plan */}
-          <div style={{ marginTop: "clamp(32px, 4vw, 48px)" }}>
-            <SheetImage
-              src="/thesis/img-09.png"
-              alt="Street plan — proposed module, characteristics, and renders"
-              label="Sheet 13 · Street Plan"
-              caption="Proposed street module with hardscape elements, softscape planters, and street furniture integration."
-              delay={0.12}
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* ── Disciplines ── */}
-      <section
-        style={{ padding: "clamp(72px, 9vw, 112px) 0" }}
-        className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10"
-      >
-        <Reveal>
-          <div style={{ ...mono, fontSize: 9, color: accent.primary, letterSpacing: "0.22em", marginBottom: 40 }}>
-            07 / Disciplines
-          </div>
-        </Reveal>
-
-        <div
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
-          style={{ borderTop: "1px solid var(--border)" }}
-        >
-          {[
-            {
-              label: "Urban Design",
-              desc: "Designing at the scale of the street, the block, and the neighbourhood — prioritising movement, gathering, and legibility.",
-            },
-            {
-              label: "Conceptualization",
-              desc: "Developing a design argument from first principles — translating research insight into spatial form and programme.",
-            },
-            {
-              label: "Architectural Planning",
-              desc: "Coordinating programme, structure, and systems into a coherent built proposal across multiple scales.",
-            },
-            {
-              label: "3D Modelling",
-              desc: "Building detailed spatial models in SketchUp to test section, massing, and material relationships before committing to drawings.",
-            },
-            {
-              label: "Rendering",
-              desc: "Communicating design intent through photorealistic Lumion renders with accurate light, material, and landscape conditions.",
-            },
-            {
-              label: "Placemaking",
-              desc: "Designing for identity and belonging — ensuring the space reflects and strengthens the community it serves.",
-            },
-          ].map((d, i) => (
-            <Reveal key={d.label} delay={i * 0.05}>
-              <div style={{
-                padding: "clamp(24px, 3vw, 36px) clamp(16px, 2.5vw, 28px)",
-                borderBottom: "1px solid var(--border)",
-                borderRight: (i % 3 !== 2) ? "1px solid var(--border)" : "none",
-              }}>
-                <div style={{
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16" style={{ marginBottom: "clamp(40px, 5vw, 64px)" }}>
+            <div className="lg:col-span-5">
+              <Reveal>
+                <h2 style={{
                   fontFamily: serif, fontWeight: 700,
-                  fontSize: "clamp(17px, 1.6vw, 20px)",
-                  letterSpacing: "-0.015em",
-                  color: "var(--text-primary)", marginBottom: 10,
+                  fontSize: "clamp(28px, 3.2vw, 44px)",
+                  letterSpacing: "-0.025em", lineHeight: 1.2,
+                  color: "var(--text-primary)", margin: 0,
                 }}>
-                  {d.label}
-                </div>
-                <p style={{ fontFamily: sans, fontSize: 15, color: "var(--text-secondary)", lineHeight: 1.7, margin: 0 }}>
-                  {d.desc}
-                </p>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-      </section>
-
-      {/* ── Key takeaways ── */}
-      <div
-        style={{
-          backgroundColor: "var(--bg-secondary)",
-          borderTop: "1px solid var(--border)",
-          borderBottom: "1px solid var(--border)",
-          padding: "clamp(64px, 8vw, 96px) 0",
-        }}
-        className="blueprint-grid-subtle"
-      >
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10">
-          <Reveal>
-            <div style={{ ...mono, fontSize: 9, color: accent.primary, letterSpacing: "0.22em", marginBottom: 12 }}>
-              08 / Key Takeaways
+                  Where architecture{" "}
+                  <span style={{ fontStyle: "italic", color: thesis.primary }}>
+                    meets design thinking
+                  </span>
+                </h2>
+              </Reveal>
             </div>
-            <h2 style={{
-              fontFamily: serif, fontWeight: 700,
-              fontSize: "clamp(28px, 3.2vw, 44px)",
-              letterSpacing: "-0.025em", lineHeight: 1.2,
-              color: "var(--text-primary)", margin: 0,
-              marginBottom: "clamp(40px, 5vw, 64px)",
-            }}>
-              Where architecture{" "}
-              <span style={{ fontStyle: "italic", color: accent.primary }}>meets design thinking</span>
-            </h2>
-          </Reveal>
+            <div className="lg:col-span-7">
+              <Reveal delay={0.1}>
+                <p style={{ fontFamily: sans, fontSize: 18, color: "var(--text-secondary)", lineHeight: 1.8, margin: 0 }}>
+                  Five years of B.Arch training shaped how I approach every design
+                  problem — before screens, before flows, before prototypes. These are
+                  the principles that survived the transition.
+                </p>
+              </Reveal>
+            </div>
+          </div>
 
           <div style={{ display: "flex", flexDirection: "column" }}>
             {[
@@ -671,7 +778,7 @@ export default function ThesisCase() {
                   borderBottom: "1px solid var(--border)",
                   borderTop: i === 0 ? "1px solid var(--border)" : "none",
                 }}>
-                  <span style={{ ...mono, fontSize: 11, color: accent.primary, letterSpacing: "0.22em", paddingTop: 4 }}>
+                  <span style={{ ...mono, fontSize: 11, color: thesis.primary, letterSpacing: "0.22em", paddingTop: 4 }}>
                     {item.num}
                   </span>
                   <div>
@@ -694,7 +801,7 @@ export default function ThesisCase() {
         </div>
       </div>
 
-      {/* ── Navigation row ── */}
+      {/* ── Navigation ── */}
       <section
         style={{ padding: "clamp(48px, 6vw, 72px) 0" }}
         className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10"
@@ -708,7 +815,7 @@ export default function ThesisCase() {
               color: "var(--text-secondary)", textDecoration: "none",
               transitionProperty: "color", transitionDuration: "200ms",
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = accent.primary)}
+            onMouseEnter={(e) => (e.currentTarget.style.color = thesis.primary)}
             onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-secondary)")}
           >
             <ArrowLeft size={14} weight="regular" />
@@ -723,7 +830,7 @@ export default function ThesisCase() {
               color: "var(--text-secondary)", textDecoration: "none",
               transitionProperty: "color", transitionDuration: "200ms",
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = accent.primary)}
+            onMouseEnter={(e) => (e.currentTarget.style.color = thesis.primary)}
             onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-secondary)")}
           >
             Rendered Realities
