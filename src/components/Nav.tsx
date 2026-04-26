@@ -48,13 +48,13 @@ const pillVariants = {
 };
 
 const brandVar = {
-  expanded: { opacity: 1, x: 0,   transition: { type: "spring" as const, damping: 24, stiffness: 220 } },
-  collapsed: { opacity: 0, x: -20, transition: { duration: 0.18, ease: [0.4, 0, 1, 1] } },
+  expanded:  { opacity: 1, transition: { duration: 0.2,  ease: [0.25, 1, 0.4, 1] } },
+  collapsed: { opacity: 0, transition: { duration: 0.15, ease: [0.4, 0, 1, 1] } },
 };
 
 const itemVar = {
-  expanded: { opacity: 1, x: 0,   transition: { type: "spring" as const, damping: 24, stiffness: 220 } },
-  collapsed: { opacity: 0, x: -10, transition: { duration: 0.18, ease: [0.4, 0, 1, 1] } },
+  expanded:  { opacity: 1, transition: { duration: 0.2,  ease: [0.25, 1, 0.4, 1] } },
+  collapsed: { opacity: 0, transition: { duration: 0.15, ease: [0.4, 0, 1, 1] } },
 };
 
 const menuIconVar = {
@@ -81,7 +81,7 @@ export default function Nav() {
   useMotionValueEvent(scrollY, "change", (latest) => {
     const prev = lastY.current;
     const now  = Date.now();
-    if (now - lastToggle.current < 400) { lastY.current = latest; return; }
+    if (now - lastToggle.current < 700) { lastY.current = latest; return; }
     if (isExpanded && latest > prev && latest > COLLAPSE_AT) {
       setExpanded(false);
       collapseY.current = latest;
