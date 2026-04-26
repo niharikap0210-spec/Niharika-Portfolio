@@ -8,7 +8,7 @@ import {
   animate,
 } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 import {
   ArrowLeftIcon as ArrowLeft,
   ArrowRightIcon as ArrowRight,
@@ -155,7 +155,7 @@ function SectionHeader({ num, title, phase, total = "04" }: {
           initial={{ opacity: 0 }}
           animate={inView ? { opacity: 1 } : {}}
           transition={{ delay: 0.2, duration: 0.55 }}
-          style={{ ...mono, fontSize: 13, color: "var(--text-muted)", letterSpacing: "0.2em", marginLeft: "auto" }}
+          style={{ ...mono, fontSize: 11, color: "var(--text-muted)", letterSpacing: "0.2em", marginLeft: "auto" }}
         >
           {phase}
         </motion.span>
@@ -189,22 +189,30 @@ const SHEETS = [
 ];
 
 /* ══════════════════════════════════════════════════════════════════
-   SHEET CAROUSEL — full-viewport, full sheet visible, minimal nav
+   SHEET CAROUSEL — sliding track, active card centered, adjacent peek
 ══════════════════════════════════════════════════════════════════ */
 function SheetCarousel() {
   const [active, setActive] = useState(0);
-  const [dir, setDir] = useState(1);
+  const [containerW, setContainerW] = useState(0);
+  const containerRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
-  const thumbRef = useRef<HTMLDivElement>(null);
+
+  /* measure container width */
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver(([e]) => setContainerW(e.contentRect.width));
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
 
   const go = (next: number) => {
-    setDir(next > active ? 1 : -1);
+    if (next === active) return;
     setActive(next);
   };
-  const prev = () => { if (active > 0) go(active - 1); };
-  const next = () => { if (active < SHEETS.length - 1) go(active + 1); };
+  const prev = () => active > 0 && go(active - 1);
+  const next = () => active < SHEETS.length - 1 && go(active + 1);
 
-  /* keyboard nav */
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if (e.key === "ArrowLeft") prev();
@@ -214,223 +222,168 @@ function SheetCarousel() {
     return () => window.removeEventListener("keydown", handler);
   }, [active]);
 
-  /* auto-scroll active thumb into view */
-  useEffect(() => {
-    const container = thumbRef.current;
-    if (!container) return;
-    const thumb = container.children[active] as HTMLElement;
-    thumb?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
-  }, [active]);
-
-  const current = SHEETS[active];
-
-  const variants = {
-    enter: (d: number) => ({ opacity: 0, x: d * 40 }),
-    center: { opacity: 1, x: 0 },
-    exit:  (d: number) => ({ opacity: 0, x: d * -40 }),
-  };
+  /* card width = 78% of container; gap between cards = 20px */
+  const CARD_W = containerW * (isMobile ? 0.88 : 0.78);
+  const GAP = 8;
+  /* translateX so active card is centered in container */
+  const trackX = containerW > 0
+    ? (containerW - CARD_W) / 2 - active * (CARD_W + GAP)
+    : 0;
 
   return (
-    <div style={{ display: "flex", flexDirection: "column" }}>
+    <div className="blueprint-grid-subtle" style={{ backgroundColor: "var(--bg-secondary)" }}>
 
-      {/* ── Top bar: label + title + counter ── */}
-      <div style={{
-        display: "flex", alignItems: "center",
-        justifyContent: "space-between",
-        padding: isMobile ? "14px 0" : "18px 0",
-        borderBottom: "1px solid var(--border)",
-        gap: 16,
-      }}>
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={active}
-            initial={{ opacity: 0, y: 5 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -5 }}
-            transition={{ duration: 0.22, ease: EASE }}
-            style={{ display: "flex", alignItems: "baseline", gap: 14, minWidth: 0 }}
-          >
-            <span style={{ ...mono, fontSize: 10, color: thesis.primary, letterSpacing: "0.22em", fontWeight: 700, flexShrink: 0 }}>
-              {current.label}
-            </span>
-            <span aria-hidden style={{ width: 1, height: 12, background: "var(--border)", flexShrink: 0 }} />
-            <span style={{
-              fontFamily: serif, fontStyle: "italic",
-              fontSize: isMobile ? 14 : 16,
-              color: "var(--text-secondary)",
-              overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
-            }}>
-              {current.title}
-            </span>
-          </motion.div>
-        </AnimatePresence>
+      {/* ── Sliding track ── */}
+      <div
+        ref={containerRef}
+        style={{
+          overflow: "hidden",
+          position: "relative",
+          padding: isMobile ? "28px 0" : "40px 0",
+          height: isMobile ? "clamp(320px, 66vw, 520px)" : "clamp(600px, 86vh, 900px)",
+        }}
+      >
+        <motion.div
+          animate={{ x: trackX }}
+          transition={{ duration: 0.48, ease: EASE }}
+          style={{ display: "flex", gap: GAP, alignItems: "center", height: "100%", willChange: "transform" }}
+        >
+          {SHEETS.map((sheet, i) => (
+            <div
+              key={i}
+              onClick={() => go(i)}
+              style={{
+                width: CARD_W,
+                flexShrink: 0,
+                height: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                opacity: i === active ? 1 : 0.22,
+                cursor: i !== active ? "pointer" : "default",
+                transitionProperty: "opacity",
+                transitionDuration: "320ms",
+              }}
+            >
+              <img
+                src={sheet.src}
+                alt={i === active ? sheet.title : ""}
+                loading="lazy"
+                style={{
+                  maxWidth: "100%",
+                  maxHeight: "100%",
+                  objectFit: "contain",
+                  display: "block",
+                  userSelect: "none",
+                  boxShadow: i === active
+                    ? "0 8px 40px rgba(0,0,0,0.13), 0 2px 8px rgba(0,0,0,0.07)"
+                    : "none",
+                }}
+              />
+            </div>
+          ))}
+        </motion.div>
 
-        <span style={{ ...mono, fontSize: 10, color: "var(--text-muted)", letterSpacing: "0.16em", flexShrink: 0 }}>
-          {String(active + 1).padStart(2, "0")}&nbsp;/&nbsp;{String(SHEETS.length).padStart(2, "0")}
-        </span>
-      </div>
-
-      {/* ── Main image — full sheet visible ── */}
-      <div style={{
-        position: "relative",
-        width: "100%",
-        height: isMobile ? "60vh" : "82vh",
-        background: "var(--bg-secondary)",
-        display: "flex", alignItems: "center", justifyContent: "center",
-        overflow: "hidden",
-      }}>
-        <AnimatePresence mode="wait" custom={dir}>
-          <motion.img
-            key={active}
-            src={current.src}
-            alt={current.title}
-            loading="lazy"
-            custom={dir}
-            variants={variants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            transition={{ duration: 0.38, ease: EASE }}
-            style={{
-              position: "absolute",
-              maxWidth: "calc(100% - 80px)",
-              maxHeight: "calc(100% - 48px)",
-              width: "auto",
-              height: "auto",
-              objectFit: "contain",
-              display: "block",
-              userSelect: "none",
-            }}
-          />
-        </AnimatePresence>
-
-        {/* Prev arrow */}
+        {/* Prev arrow — sits just inside the left edge of center card */}
         <button
           onClick={prev}
           disabled={active === 0}
           aria-label="Previous sheet"
           style={{
-            position: "absolute", left: isMobile ? 8 : 20,
+            position: "absolute",
+            left: containerW > 0 ? Math.max(8, (containerW - CARD_W) / 2 + 12) : "13%",
             top: "50%", transform: "translateY(-50%)",
-            width: 40, height: 40,
+            width: 36, height: 36, borderRadius: "50%",
             border: `1px solid ${active === 0 ? "var(--border)" : thesis.primary}`,
-            borderRadius: "50%",
             background: active === 0 ? "transparent" : thesis.subtle,
-            cursor: active === 0 ? "default" : "pointer",
             display: "flex", alignItems: "center", justifyContent: "center",
             color: active === 0 ? "var(--text-muted)" : thesis.primary,
-            transitionProperty: "background, border-color, color",
+            cursor: active === 0 ? "default" : "pointer",
+            transitionProperty: "background, color, border-color",
             transitionDuration: "200ms",
-            zIndex: 2,
+            zIndex: 5,
           }}
         >
-          <CaretLeft size={16} weight="regular" />
+          <CaretLeft size={15} weight="regular" />
         </button>
 
-        {/* Next arrow */}
+        {/* Next arrow — sits just inside the right edge of center card */}
         <button
           onClick={next}
           disabled={active === SHEETS.length - 1}
           aria-label="Next sheet"
           style={{
-            position: "absolute", right: isMobile ? 8 : 20,
+            position: "absolute",
+            right: containerW > 0 ? Math.max(8, (containerW - CARD_W) / 2 + 12) : "13%",
             top: "50%", transform: "translateY(-50%)",
-            width: 40, height: 40,
+            width: 36, height: 36, borderRadius: "50%",
             border: `1px solid ${active === SHEETS.length - 1 ? "var(--border)" : thesis.primary}`,
-            borderRadius: "50%",
             background: active === SHEETS.length - 1 ? "transparent" : thesis.subtle,
-            cursor: active === SHEETS.length - 1 ? "default" : "pointer",
             display: "flex", alignItems: "center", justifyContent: "center",
             color: active === SHEETS.length - 1 ? "var(--text-muted)" : thesis.primary,
-            transitionProperty: "background, border-color, color",
+            cursor: active === SHEETS.length - 1 ? "default" : "pointer",
+            transitionProperty: "background, color, border-color",
             transitionDuration: "200ms",
-            zIndex: 2,
+            zIndex: 5,
           }}
         >
-          <CaretRight size={16} weight="regular" />
+          <CaretRight size={15} weight="regular" />
         </button>
-
-        {/* Progress bar at the very bottom of the image area */}
-        <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 2, background: "var(--border)" }}>
-          <motion.div
-            animate={{ width: `${((active + 1) / SHEETS.length) * 100}%` }}
-            transition={{ duration: 0.4, ease: EASE }}
-            style={{ height: "100%", background: thesis.primary }}
-          />
-        </div>
       </div>
 
-      {/* ── Caption ── */}
+      {/* ── Bottom info ── */}
       <div style={{
-        borderTop: "1px solid var(--border)",
-        borderBottom: "1px solid var(--border)",
-        background: thesis.surface,
-        padding: isMobile ? "12px 0" : "14px 0",
-        minHeight: 48,
-        display: "flex", alignItems: "center",
+        display: "flex", flexDirection: "column", alignItems: "center",
+        gap: 14,
+        padding: isMobile ? "14px 24px 28px" : "18px 0 36px",
       }}>
-        <AnimatePresence mode="wait">
-          <motion.p
-            key={active}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.25 }}
-            style={{
-              fontFamily: serif, fontStyle: "italic",
-              fontSize: isMobile ? 13 : 14,
-              color: thesis.dark, lineHeight: 1.55, margin: 0,
-            }}
-          >
-            {current.caption}
-          </motion.p>
-        </AnimatePresence>
-      </div>
 
-      {/* ── Thumbnail strip ── */}
-      <div
-        ref={thumbRef}
-        style={{
-          display: "flex", gap: 6,
-          paddingTop: 16,
-          overflowX: "auto",
-          scrollbarWidth: "none",
-        }}
-      >
-        {SHEETS.map((sheet, i) => (
-          <button
-            key={i}
-            onClick={() => go(i)}
-            aria-label={`Go to ${sheet.label}`}
-            style={{
-              flexShrink: 0,
-              width: isMobile ? 52 : 68,
-              height: isMobile ? 38 : 50,
-              padding: 0,
-              border: `1.5px solid ${i === active ? thesis.primary : "var(--border)"}`,
-              overflow: "hidden",
-              cursor: "pointer",
-              background: "var(--bg-secondary)",
-              opacity: i === active ? 1 : 0.45,
-              transitionProperty: "opacity, border-color",
-              transitionDuration: "200ms",
-              position: "relative",
-            }}
-          >
-            <img
-              src={sheet.src}
-              alt=""
-              loading="lazy"
-              style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+        {/* Dot navigation */}
+        <div style={{ display: "flex", gap: 6, alignItems: "center", flexWrap: "wrap", justifyContent: "center" }}>
+          {SHEETS.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => go(i)}
+              aria-label={`Go to sheet ${i + 1}`}
+              style={{
+                width: i === active ? 22 : 7,
+                height: 7,
+                borderRadius: 4,
+                border: "none",
+                padding: 0,
+                background: i === active ? thesis.primary : "var(--border)",
+                cursor: "pointer",
+                transitionProperty: "width, background",
+                transitionDuration: "280ms",
+              }}
             />
-            {i === active && (
-              <span aria-hidden style={{
-                position: "absolute", top: 0, left: 0, right: 0, height: 2,
-                background: thesis.primary,
-              }} />
-            )}
-          </button>
-        ))}
+          ))}
+        </div>
+
+        {/* Sheet label + italic title */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={active}
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -6 }}
+            transition={{ duration: 0.26 }}
+            style={{ textAlign: "center", display: "flex", flexDirection: "column", gap: 6 }}
+          >
+            <span style={{ ...mono, fontSize: 9, color: thesis.muted, letterSpacing: "0.26em" }}>
+              {SHEETS[active].label}&nbsp;&nbsp;{String(active + 1).padStart(2, "0")}&nbsp;/&nbsp;{String(SHEETS.length).padStart(2, "0")}
+            </span>
+            <span style={{
+              fontFamily: serif, fontStyle: "italic",
+              fontSize: isMobile ? 14 : 16,
+              color: "var(--text-secondary)",
+              lineHeight: 1.4,
+            }}>
+              {SHEETS[active].title}
+            </span>
+          </motion.div>
+        </AnimatePresence>
+
       </div>
     </div>
   );
@@ -442,6 +395,7 @@ function SheetCarousel() {
 export default function ThesisCase() {
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, { stiffness: 200, damping: 40 });
+  const isMobile = useIsMobile();
 
   return (
     <motion.div
@@ -472,7 +426,7 @@ export default function ThesisCase() {
       {/* ── Hero ────────────────────────────────────────────────────── */}
       <DrawingSheetBorder
         titleBlock={{ name: "NIHARIKA PUNDLIK", sheet: "ARCHITECTURE / THESIS" }}
-        className="blueprint-grid"
+        className="blueprint-grid overflow-hidden"
         style={{ padding: "clamp(52px, 8vw, 88px) 0 clamp(44px, 6vw, 72px)" }}
       >
         <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10">
@@ -545,14 +499,20 @@ export default function ThesisCase() {
       </DrawingSheetBorder>
 
       {/* ── Hero aerial render ───────────────────────────────────────── */}
-      <div style={{ position: "relative", overflow: "hidden", maxHeight: "68vh" }}>
+      <div style={{
+        position: "relative",
+        overflow: "hidden",
+        width: "100vw",
+        marginLeft: "calc(50% - 50vw)",
+        maxHeight: isMobile ? "45vw" : "68vh",
+      }}>
         <motion.img
           src="/thesis/img-11.jpg"
           alt="Aerial render, Public Realm thesis, Sonegao Nagpur"
           initial={{ opacity: 0, scale: 1.04 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1.1, ease: EASE }}
-          style={{ width: "100%", maxHeight: "68vh", objectFit: "cover", display: "block" }}
+          style={{ width: "100%", maxHeight: isMobile ? "45vw" : "68vh", objectFit: "cover", display: "block" }}
         />
         <div aria-hidden style={{
           position: "absolute", inset: 0,
@@ -574,19 +534,28 @@ export default function ThesisCase() {
 
       {/* ── Metadata strip ──────────────────────────────────────────── */}
       <div style={{ borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)" }}>
-        <div className="max-w-6xl mx-auto" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)" }}>
+        <div
+          className="max-w-6xl mx-auto"
+          style={{
+            display: "grid",
+            gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(4, 1fr)",
+          }}
+        >
           {[
             { label: "Role", value: "Lead Architect, Researcher & Designer" },
             { label: "Type", value: "Individual Thesis" },
             { label: "Timeline", value: "20 Weeks · 2022–23" },
             { label: "Tools", value: "AutoCAD · SketchUp · Lumion · Photoshop" },
-          ].map((item, i, arr) => (
+          ].map((item, i) => (
             <Reveal key={item.label} delay={i * 0.07}>
               <div style={{
-                padding: "clamp(24px, 3.5vw, 40px) clamp(16px, 3vw, 36px)",
-                borderRight: i < arr.length - 1 ? "1px solid var(--border)" : "none",
+                padding: isMobile ? "20px 16px" : "clamp(24px, 3.5vw, 40px) clamp(16px, 3vw, 36px)",
+                borderRight: isMobile
+                  ? (i % 2 === 0 ? "1px solid var(--border)" : "none")
+                  : (i < 3 ? "1px solid var(--border)" : "none"),
+                borderBottom: isMobile && i < 2 ? "1px solid var(--border)" : "none",
                 height: "100%",
-                display: "flex", flexDirection: "column", gap: 10,
+                display: "flex", flexDirection: "column", gap: 8,
               }}>
                 <span style={{
                   ...mono, fontSize: 9, letterSpacing: "0.22em",
@@ -595,7 +564,8 @@ export default function ThesisCase() {
                   {item.label}
                 </span>
                 <span style={{
-                  fontFamily: sans, fontSize: "clamp(16px, 1.3vw, 19px)",
+                  fontFamily: sans,
+                  fontSize: isMobile ? 14 : "clamp(16px, 1.3vw, 19px)",
                   fontWeight: 500, lineHeight: 1.55,
                   color: "var(--text-primary)",
                 }}>
@@ -689,18 +659,18 @@ export default function ThesisCase() {
       </section>
 
       {/* ── 02 / Project Sheets ─────────────────────────────────────── */}
-      <div className="blueprint-grid-subtle" style={{
-        backgroundColor: "var(--bg-secondary)",
-        borderTop: "1px solid var(--border)",
-        borderBottom: "1px solid var(--border)",
-        padding: SECTION_PAD,
-      }}>
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10">
-          <SectionHeader num="02" title="Project Sheets" phase="Documentation" total="03" />
-          <Reveal>
-            <SheetCarousel />
-          </Reveal>
+      <div style={{ borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)" }}>
+        {/* Section header — light area */}
+        <div className="blueprint-grid-subtle" style={{
+          backgroundColor: "var(--bg-secondary)",
+          padding: "clamp(72px, 9vw, 120px) 0 clamp(40px, 5vw, 60px)",
+        }}>
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10">
+            <SectionHeader num="02" title="Project Sheets" phase="Documentation" total="03" />
+          </div>
         </div>
+        {/* Full-bleed dark carousel */}
+        <SheetCarousel />
       </div>
 
       {/* ── 03 / Key Takeaways ──────────────────────────────────────── */}
@@ -736,18 +706,18 @@ export default function ThesisCase() {
             ].map((item, i) => (
               <Reveal key={item.num} delay={i * 0.06}>
                 <div style={{
-                  display: "grid", gridTemplateColumns: "48px 1fr",
-                  gap: "clamp(16px, 3vw, 32px)",
-                  padding: "clamp(24px, 3vw, 36px) 0",
+                  display: "grid", gridTemplateColumns: isMobile ? "32px 1fr" : "48px 1fr",
+                  gap: isMobile ? 12 : "clamp(16px, 3vw, 32px)",
+                  padding: "clamp(20px, 3vw, 36px) 0",
                   borderBottom: "1px solid var(--border)",
                   borderTop: i === 0 ? "1px solid var(--border)" : "none",
                 }}>
-                  <span style={{ ...mono, fontSize: 11, color: thesis.primary, letterSpacing: "0.22em", paddingTop: 4 }}>
+                  <span style={{ ...mono, fontSize: isMobile ? 16 : 11, color: thesis.primary, letterSpacing: "0.22em", paddingTop: 4 }}>
                     {item.num}
                   </span>
                   <div>
-                    <h3 style={{ ...t.h3Lede, margin: 0, marginBottom: 12 }}>{item.title}</h3>
-                    <p style={{ ...t.body, margin: 0 }}>{item.body}</p>
+                    <h3 style={{ ...t.h3Lede, ...(isMobile ? { fontSize: 18 } : {}), margin: 0, marginBottom: 12 }}>{item.title}</h3>
+                    <p style={{ ...t.body, ...(isMobile ? { fontSize: 15 } : {}), margin: 0 }}>{item.body}</p>
                   </div>
                 </div>
               </Reveal>
@@ -757,42 +727,68 @@ export default function ThesisCase() {
       </div>
 
       {/* ── Navigation ──────────────────────────────────────────────── */}
-      <section
-        style={{ padding: "clamp(48px, 6vw, 72px) 0" }}
-        className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10"
-      >
-        <div className="flex items-center justify-between">
-          <Link
-            to="/architecture"
-            style={{
-              display: "inline-flex", alignItems: "center", gap: 10,
-              ...mono, fontSize: 11, letterSpacing: "0.2em",
-              color: "var(--text-secondary)", textDecoration: "none",
-              transitionProperty: "color", transitionDuration: "200ms",
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = thesis.primary)}
-            onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-secondary)")}
-          >
+      <nav style={{ borderTop: "0.75px solid var(--border)" }}>
+        <div
+          className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10"
+          style={{ display: "flex", justifyContent: "space-between" }}
+        >
+          <ThesisNavLink to="/architecture" align="left">
             <ArrowLeft size={14} weight="regular" />
-            Architecture
-          </Link>
+            <span>
+              <span style={{ ...mono, fontSize: 9, color: "var(--text-muted)", letterSpacing: "0.22em", display: "block", marginBottom: 5 }}>
+                Prev
+              </span>
+              <span style={{ ...mono, fontSize: 13, letterSpacing: "0.18em" }}>
+                Architecture
+              </span>
+            </span>
+          </ThesisNavLink>
 
-          <Link
-            to="/architecture/renders"
-            style={{
-              display: "inline-flex", alignItems: "center", gap: 10,
-              ...mono, fontSize: 11, letterSpacing: "0.2em",
-              color: "var(--text-secondary)", textDecoration: "none",
-              transitionProperty: "color", transitionDuration: "200ms",
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = thesis.primary)}
-            onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-secondary)")}
-          >
-            Rendered Realities
+          <ThesisNavLink to="/architecture/renders" align="right">
+            <span style={{ textAlign: "right" }}>
+              <span style={{ ...mono, fontSize: 9, color: "var(--text-muted)", letterSpacing: "0.22em", display: "block", marginBottom: 5 }}>
+                Next
+              </span>
+              <span style={{ ...mono, fontSize: 13, letterSpacing: "0.18em" }}>
+                Rendered Realities
+              </span>
+            </span>
             <ArrowRight size={14} weight="regular" />
-          </Link>
+          </ThesisNavLink>
         </div>
-      </section>
+      </nav>
     </motion.div>
+  );
+}
+
+function ThesisNavLink({
+  to,
+  align,
+  children,
+}: {
+  to: string;
+  align: "left" | "right";
+  children: React.ReactNode;
+}) {
+  const [hovered, setHovered] = useState(false);
+  return (
+    <RouterLink
+      to={to}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: 12,
+        justifyContent: align === "right" ? "flex-end" : "flex-start",
+        padding: "clamp(20px, 3vw, 32px) 0",
+        textDecoration: "none",
+        color: hovered ? "var(--accent)" : "var(--text-secondary)",
+        transitionProperty: "color",
+        transitionDuration: "200ms",
+      }}
+    >
+      {children}
+    </RouterLink>
   );
 }
