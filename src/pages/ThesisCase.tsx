@@ -175,17 +175,17 @@ const SHEETS = [
   { src: "/thesis/img-05.png", label: "Sheet 01", title: "Introduction & Synopsis", caption: "Placemaking framework, design principles for public realm, objectives and scope of the thesis." },
   { src: "/thesis/img-15.png", label: "Sheet 02", title: "Case Study · Dilli Haat INA, Delhi", caption: "Site surroundings, activity generators, user groups, site response, and section through the mallah." },
   { src: "/thesis/img-14.png", label: "Sheet 03", title: "Case Study · Riverfront Development, Ahmedabad", caption: "Master plan, street network, recreation zones, development sites, and general facilities along the Sabarmati." },
-  { src: "/thesis/img-02.png", label: "Sheet 04", title: "Case Study · Manek Chowk, Sarafa & Chandni Chowk", caption: "Urban chowk analysis across Ahmedabad, Indore, and Delhi — character, activity, design elements." },
+  { src: "/thesis/img-02.png", label: "Sheet 04", title: "Case Study · Manek Chowk, Sarafa & Chandni Chowk", caption: "Urban chowk analysis across Ahmedabad, Indore, and Delhi: character, activity, and design elements." },
   { src: "/thesis/img-07.png", label: "Sheet 05", title: "Case Study · Select City Walk & Chappan", caption: "Design elements, footfall patterns, and pedestrian experience across two contrasting public places." },
   { src: "/thesis/img-04.png", label: "Sheet 06", title: "Site Analysis · Sonegao, Nagpur", caption: "Climate, geology, soil conditions, site profile, SWOT analysis and site surroundings." },
   { src: "/thesis/img-10.png", label: "Sheet 07", title: "Site Plan & View", caption: "Master site plan with programme distribution, legend, and aerial render of the proposed public realm." },
   { src: "/thesis/img-08.png", label: "Sheet 08", title: "Activity Centre", caption: "Circular form, vertical RCC fins, spiralling roof, form development, and rendered exterior views." },
   { src: "/thesis/img-01.png", label: "Sheet 09", title: "Yoga & Meditation Centre", caption: "Waffle slab detail, elevation, section AA, floor plan, sensory garden renders." },
-  { src: "/thesis/img-12.png", label: "Sheet 10", title: "Book Cafe, Event Centre & Workshop", caption: "Sunken workshop, glass-grooved roof, folded plate structure — plans, sections, exterior renders." },
+  { src: "/thesis/img-12.png", label: "Sheet 10", title: "Book Cafe, Event Centre & Workshop", caption: "Sunken workshop, glass-grooved roof, folded plate structure; plans, sections, and exterior renders." },
   { src: "/thesis/img-03.png", label: "Sheet 11", title: "Views · Pavilions & Landscape", caption: "Entrance pavilion, sculpture garden, HAT, celebration pavilion, levels & steps seating." },
   { src: "/thesis/img-06.png", label: "Sheet 12", title: "Views · Active Zones & Aerial", caption: "Fountain, pit, skate park, view from the skate park, and aerial overview of the full site." },
   { src: "/thesis/img-09.png", label: "Sheet 13", title: "Street Plan", caption: "Proposed street module with hardscape, softscape planters, street furniture and lighting." },
-  { src: "/thesis/img-11.jpg", label: "Final Render", title: "Aerial Site View", caption: "Photorealistic aerial render of the completed public realm — Sonegao, Nagpur, 2023." },
+  { src: "/thesis/img-11.jpg", label: "Final Render", title: "Aerial Site View", caption: "Photorealistic aerial render of the completed public realm. Sonegao, Nagpur, 2023." },
 ];
 
 /* ══════════════════════════════════════════════════════════════════
@@ -503,7 +503,7 @@ export default function ThesisCase() {
                 transition={{ delay: 0.25, duration: 0.6 }}
                 style={{ ...t.bodyLg, maxWidth: 520 }}
               >
-                Redefining public spaces, reviving community life — an architectural
+                Redefining public spaces, reviving community life. An architectural
                 thesis exploring how underutilised urban land becomes a catalyst for
                 social cohesion and belonging.
               </motion.p>
@@ -548,7 +548,7 @@ export default function ThesisCase() {
       <div style={{ position: "relative", overflow: "hidden", maxHeight: "68vh" }}>
         <motion.img
           src="/thesis/img-11.jpg"
-          alt="Aerial render — Public Realm thesis, Sonegao Nagpur"
+          alt="Aerial render, Public Realm thesis, Sonegao Nagpur"
           initial={{ opacity: 0, scale: 1.04 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1.1, ease: EASE }}
@@ -628,7 +628,7 @@ export default function ThesisCase() {
                 <p style={{ ...t.body }}>
                   This thesis explores transforming underutilised urban spaces into
                   vibrant public realms through placemaking, sustainable design, and
-                  inclusive spatial planning — to foster social cohesion and improve
+                  inclusive spatial planning, fostering social cohesion and improving
                   urban life quality.
                 </p>
               </Reveal>
@@ -660,12 +660,12 @@ export default function ThesisCase() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3" style={{ borderTop: "1px solid var(--border)" }}>
             {[
-              { label: "Urban Design", desc: "Designing at the scale of the street, block, and neighbourhood — prioritising movement, gathering, and legibility." },
-              { label: "Conceptualization", desc: "Developing a design argument from first principles — translating research insight into spatial form and programme." },
+              { label: "Urban Design", desc: "Designing at the scale of the street, block, and neighbourhood, prioritising movement, gathering, and legibility." },
+              { label: "Conceptualization", desc: "Developing a design argument from first principles, translating research insight into spatial form and programme." },
               { label: "Architectural Planning", desc: "Coordinating programme, structure, and systems into a coherent built proposal across multiple scales." },
               { label: "3D Modelling", desc: "Building detailed spatial models in SketchUp to test section, massing, and material relationships before committing to drawings." },
               { label: "Rendering", desc: "Communicating design intent through photorealistic Lumion renders with accurate light, material, and landscape conditions." },
-              { label: "Placemaking", desc: "Designing for identity and belonging — ensuring the space reflects and strengthens the community it serves." },
+              { label: "Placemaking", desc: "Designing for identity and belonging, ensuring the space reflects and strengthens the community it serves." },
             ].map((d, i) => (
               <Reveal key={d.label} delay={i * 0.05}>
                 <div style={{
@@ -709,7 +709,7 @@ export default function ThesisCase() {
               <Reveal delay={0.1}>
                 <p style={t.body}>
                   Five years of B.Arch training shaped how I approach every design
-                  problem — before screens, before flows, before prototypes. These are
+                  problem: before screens, before flows, before prototypes. These are
                   the principles that survived the transition.
                 </p>
               </Reveal>
@@ -718,11 +718,11 @@ export default function ThesisCase() {
 
           <div style={{ display: "flex", flexDirection: "column" }}>
             {[
-              { num: "01", title: "Placemaking prioritises engagement", body: "Just as UX design centres the user, architectural placemaking centres the inhabitant — every spatial decision is tested against how people will actually dwell, move, and interact with the space." },
-              { num: "02", title: "Sustainability and efficiency align", body: "Passive design strategies — orientation, natural ventilation, daylight — reduce energy load without compromising quality. The most sustainable solution is often the most elegant one." },
+              { num: "01", title: "Placemaking prioritises engagement", body: "Just as UX design centres the user, architectural placemaking centres the inhabitant. Every spatial decision is tested against how people will actually dwell, move, and interact with the space." },
+              { num: "02", title: "Sustainability and efficiency align", body: "Passive design strategies (orientation, natural ventilation, daylight) reduce energy load without compromising quality. The most sustainable solution is often the most elegant one." },
               { num: "03", title: "Human-centered thinking drives both disciplines", body: "The translation from architecture to HCI was natural because both share a core methodology: observe how people behave in a space, identify friction, redesign until the friction disappears." },
-              { num: "04", title: "Context informs meaningful design", body: "A public space cannot be lifted from one city and planted in another. Site history, climate, culture, and existing movement patterns are the raw material — not constraints to work around." },
-              { num: "05", title: "Iteration refines functionality", body: "No design survives contact with a real site unchanged. Iteration — through model, section, and drawing — is how spatial hypotheses get pressure-tested and resolved." },
+              { num: "04", title: "Context informs meaningful design", body: "A public space cannot be lifted from one city and planted in another. Site history, climate, culture, and existing movement patterns are the raw material, not constraints to work around." },
+              { num: "05", title: "Iteration refines functionality", body: "No design survives contact with a real site unchanged. Iteration through model, section, and drawing is how spatial hypotheses get pressure-tested and resolved." },
             ].map((item, i) => (
               <Reveal key={item.num} delay={i * 0.06}>
                 <div style={{
