@@ -674,15 +674,6 @@ export default function ThesisCase() {
                 </h2>
               </Reveal>
             </div>
-            <div className="lg:col-span-7">
-              <Reveal delay={0.1}>
-                <p style={t.body}>
-                  Five years of B.Arch training shaped how I approach every design
-                  problem: before screens, before flows, before prototypes. These are
-                  the principles that survived the transition.
-                </p>
-              </Reveal>
-            </div>
           </div>
 
           <div style={{ display: "flex", flexDirection: "column" }}>
