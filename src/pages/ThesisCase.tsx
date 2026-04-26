@@ -689,7 +689,7 @@ export default function ThesisCase() {
       </section>
 
       {/* ── 02 / Project Sheets ─────────────────────────────────────── */}
-      <div style={{
+      <div className="blueprint-grid-subtle" style={{
         backgroundColor: "var(--bg-secondary)",
         borderTop: "1px solid var(--border)",
         borderBottom: "1px solid var(--border)",
@@ -709,7 +709,7 @@ export default function ThesisCase() {
         borderTop: "1px solid var(--border)",
         borderBottom: "1px solid var(--border)",
         padding: SECTION_PAD,
-      }} className="blueprint-grid-subtle">
+      }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10">
           <SectionHeader num="03" title="Key Takeaways" phase="Architecture → HCI" total="03" />
 
