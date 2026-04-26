@@ -610,7 +610,7 @@ export default function ThesisCase() {
       {/* ── 01 / Overview ───────────────────────────────────────────── */}
       <section style={{ padding: SECTION_PAD }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10">
-          <SectionHeader num="01" title="Overview" phase="Context & Intent" />
+          <SectionHeader num="01" title="Overview" phase="Context & Intent" total="03" />
 
           {/* Editorial text split */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16" style={{ marginBottom: "clamp(48px, 6vw, 72px)" }}>
@@ -646,7 +646,7 @@ export default function ThesisCase() {
         padding: SECTION_PAD,
       }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10">
-          <SectionHeader num="02" title="Project Sheets" phase="Documentation" />
+          <SectionHeader num="02" title="Project Sheets" phase="Documentation" total="03" />
           <Reveal>
             <SheetCarousel />
           </Reveal>
@@ -661,7 +661,7 @@ export default function ThesisCase() {
         padding: SECTION_PAD,
       }} className="blueprint-grid-subtle">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10">
-          <SectionHeader num="03" title="Key Takeaways" phase="Architecture → HCI" />
+          <SectionHeader num="03" title="Key Takeaways" phase="Architecture → HCI" total="03" />
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16" style={{ marginBottom: "clamp(40px, 5vw, 64px)" }}>
             <div className="lg:col-span-5">
