@@ -451,14 +451,23 @@ export default function ThesisCase() {
       transition={{ duration: 0.35 }}
       className="pt-14"
     >
-      {/* Scroll progress */}
-      <motion.div
-        style={{
-          scaleX, transformOrigin: "left",
-          position: "fixed", top: 56, left: 0, right: 0,
-          height: 2, backgroundColor: thesis.primary, zIndex: 50,
-        }}
-      />
+      {/* Top mask — solid white behind nav pill */}
+      <div style={{
+        position: "fixed", top: 0, left: 0, right: 0, height: 59,
+        background: "var(--bg-primary)", zIndex: 45,
+        pointerEvents: "none",
+      }} />
+
+      {/* Scroll progress bar — sits behind nav pill (z-index 49 < nav 50) */}
+      <div style={{
+        position: "fixed", top: 56, left: 0, right: 0, height: 2,
+        background: "var(--bg-primary)", zIndex: 49,
+      }}>
+        <motion.div style={{
+          height: "100%", background: thesis.primary,
+          scaleX, transformOrigin: "left", opacity: 0.85,
+        }} />
+      </div>
 
       {/* ── Hero ────────────────────────────────────────────────────── */}
       <DrawingSheetBorder
