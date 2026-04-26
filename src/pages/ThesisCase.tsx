@@ -612,17 +612,30 @@ export default function ThesisCase() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10">
           <SectionHeader num="01" title="Overview" phase="Context & Intent" total="03" />
 
-          {/* Editorial text split */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16" style={{ marginBottom: "clamp(48px, 6vw, 72px)" }}>
-            <div className="lg:col-span-6">
-              <Reveal>
-                <p style={{ ...t.bodyLg }}>
-                  An architectural initiative aimed at revitalising urban spaces by
-                  creating inclusive, sustainable, and vibrant public areas that
-                  foster community interactions and enhance quality of life.
-                </p>
-              </Reveal>
+          {/* Full-width lede */}
+          <Reveal>
+            <p style={{
+              ...t.bodyLg,
+              fontSize: "clamp(20px, 1.8vw, 26px)",
+              maxWidth: 820,
+              marginBottom: "clamp(36px, 5vw, 56px)",
+            }}>
+              An architectural initiative aimed at revitalising urban spaces by
+              creating inclusive, sustainable, and vibrant public areas that
+              foster community interactions and enhance quality of life.
+            </p>
+          </Reveal>
+
+          {/* Ruled divider */}
+          <Reveal delay={0.08}>
+            <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: "clamp(36px, 5vw, 56px)" }}>
+              <div style={{ width: 32, height: 2, background: thesis.primary }} />
+              <div style={{ flex: 1, height: 1, background: "var(--border)" }} />
             </div>
+          </Reveal>
+
+          {/* Body + Project Brief */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
             <div className="lg:col-span-6">
               <Reveal delay={0.12}>
                 <p style={{ ...t.body }}>
@@ -631,6 +644,56 @@ export default function ThesisCase() {
                   inclusive spatial planning, fostering social cohesion and improving
                   urban life quality.
                 </p>
+              </Reveal>
+            </div>
+
+            <div className="lg:col-span-6">
+              <Reveal delay={0.2}>
+                <div style={{
+                  border: "1px solid var(--border)",
+                  background: thesis.subtle,
+                }}>
+                  {/* Panel header */}
+                  <div style={{
+                    padding: "12px 20px",
+                    borderBottom: "1px solid var(--border)",
+                    display: "flex", alignItems: "center", gap: 10,
+                  }}>
+                    <div style={{ width: 6, height: 6, background: thesis.primary }} />
+                    <span style={{ ...mono, fontSize: 9, color: thesis.primary, letterSpacing: "0.22em", fontWeight: 700 }}>
+                      Project Brief
+                    </span>
+                  </div>
+                  {/* Facts */}
+                  {[
+                    { k: "Site", v: "Sonegao, Nagpur" },
+                    { k: "Site Area", v: "3,770 sq.m" },
+                    { k: "Programme", v: "Activity Centre · Yoga Centre · Book Café · Workshop · Street" },
+                    { k: "Guide", v: "Prof. Sonali Borate" },
+                    { k: "Institution", v: "SVITS, Indore · B.Arch 2022–23" },
+                  ].map((row, i, arr) => (
+                    <div key={row.k} style={{
+                      display: "grid", gridTemplateColumns: "110px 1fr",
+                      borderBottom: i < arr.length - 1 ? "1px solid var(--border)" : "none",
+                    }}>
+                      <div style={{
+                        ...mono, fontSize: 9, color: "var(--text-muted)",
+                        letterSpacing: "0.18em", padding: "12px 16px",
+                        borderRight: "1px solid var(--border)",
+                        display: "flex", alignItems: "center",
+                      }}>
+                        {row.k}
+                      </div>
+                      <div style={{
+                        fontFamily: sans, fontSize: 14, fontWeight: 500,
+                        color: "var(--text-primary)", padding: "12px 16px",
+                        lineHeight: 1.5,
+                      }}>
+                        {row.v}
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </Reveal>
             </div>
           </div>
