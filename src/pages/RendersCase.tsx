@@ -174,7 +174,7 @@ export default function RendersCase() {
             </div>
 
             <motion.div
-              className="lg:col-span-5"
+              className="lg:col-span-5 hidden lg:block"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4, duration: 0.6 }}
