@@ -653,38 +653,7 @@ export default function ThesisCase() {
         </div>
       </div>
 
-      {/* ── 03 / Disciplines ────────────────────────────────────────── */}
-      <section style={{ padding: SECTION_PAD }}>
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10">
-          <SectionHeader num="03" title="Disciplines" phase="Skills Applied" />
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3" style={{ borderTop: "1px solid var(--border)" }}>
-            {[
-              { label: "Urban Design", desc: "Designing at the scale of the street, block, and neighbourhood, prioritising movement, gathering, and legibility." },
-              { label: "Conceptualization", desc: "Developing a design argument from first principles, translating research insight into spatial form and programme." },
-              { label: "Architectural Planning", desc: "Coordinating programme, structure, and systems into a coherent built proposal across multiple scales." },
-              { label: "3D Modelling", desc: "Building detailed spatial models in SketchUp to test section, massing, and material relationships before committing to drawings." },
-              { label: "Rendering", desc: "Communicating design intent through photorealistic Lumion renders with accurate light, material, and landscape conditions." },
-              { label: "Placemaking", desc: "Designing for identity and belonging, ensuring the space reflects and strengthens the community it serves." },
-            ].map((d, i) => (
-              <Reveal key={d.label} delay={i * 0.05}>
-                <div style={{
-                  padding: "clamp(24px, 3vw, 36px) clamp(16px, 2.5vw, 28px)",
-                  borderBottom: "1px solid var(--border)",
-                  borderRight: (i % 3 !== 2) ? "1px solid var(--border)" : "none",
-                }}>
-                  <div style={{ ...t.h3Lede, fontSize: "clamp(17px, 1.6vw, 20px)", marginBottom: 10 }}>
-                    {d.label}
-                  </div>
-                  <p style={{ ...t.bodySm, margin: 0 }}>{d.desc}</p>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── 04 / Key Takeaways ──────────────────────────────────────── */}
+      {/* ── 03 / Key Takeaways ──────────────────────────────────────── */}
       <div style={{
         backgroundColor: "var(--bg-secondary)",
         borderTop: "1px solid var(--border)",
@@ -692,7 +661,7 @@ export default function ThesisCase() {
         padding: SECTION_PAD,
       }} className="blueprint-grid-subtle">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10">
-          <SectionHeader num="04" title="Key Takeaways" phase="Architecture → HCI" />
+          <SectionHeader num="03" title="Key Takeaways" phase="Architecture → HCI" />
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16" style={{ marginBottom: "clamp(40px, 5vw, 64px)" }}>
             <div className="lg:col-span-5">
