@@ -133,7 +133,7 @@ export default function RendersCase() {
                 transition={{ duration: 0.5 }}
                 style={{ ...mono, fontSize: 11, color: "var(--text-muted)", letterSpacing: "0.22em", marginBottom: 20 }}
               >
-                B.Arch · SVITS Indore · 2019–2024
+                B.Arch · 2018–2023
               </motion.div>
 
               <motion.h1
