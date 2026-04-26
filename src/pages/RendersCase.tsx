@@ -28,6 +28,10 @@ const allImages = [
   "/renders/grameen-03.jpg",
   "/renders/grameen-05.jpg",
   "/renders/villa-02.jpg",
+  "/renders/villa-01.jpg",
+  "/renders/villa-08.jpg",
+  "/renders/villa-04.jpg",
+  "/renders/grameen-04.jpg",
 ];
 
 function RenderImage({ src, onClick, ratio, delay }: { src: string; onClick: () => void; ratio: string; delay: number }) {
@@ -215,6 +219,18 @@ export default function RendersCase() {
 
           {/* Row 5 — full width */}
           <RenderImage src={allImages[6]} onClick={() => setLightbox(allImages[6])} ratio="16/7" delay={0.05} />
+
+          {/* Row 6 — full width (dramatic entrance) */}
+          <RenderImage src={allImages[7]} onClick={() => setLightbox(allImages[7])} ratio="16/7" delay={0} />
+
+          {/* Row 7 — two column */}
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "clamp(6px, 1vw, 10px)" }}>
+            <RenderImage src={allImages[8]} onClick={() => setLightbox(allImages[8])} ratio="4/3" delay={0.05} />
+            <RenderImage src={allImages[9]} onClick={() => setLightbox(allImages[9])} ratio="4/3" delay={0.1} />
+          </div>
+
+          {/* Row 8 — full width */}
+          <RenderImage src={allImages[10]} onClick={() => setLightbox(allImages[10])} ratio="16/7" delay={0.05} />
 
         </div>
       </section>
