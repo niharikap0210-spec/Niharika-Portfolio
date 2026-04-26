@@ -1,11 +1,21 @@
-import { motion, AnimatePresence, useScroll, useSpring, useInView, useMotionValue, animate } from "framer-motion";
-import { useRef, useState, useEffect } from "react";
+import {
+  motion,
+  AnimatePresence,
+  useScroll,
+  useSpring,
+  useInView,
+  useMotionValue,
+  animate,
+} from "framer-motion";
+import { useRef, useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
 import {
   ArrowLeftIcon as ArrowLeft,
   ArrowRightIcon as ArrowRight,
+  XIcon as X,
   CaretLeftIcon as CaretLeft,
   CaretRightIcon as CaretRight,
+  FrameCornersIcon as FrameCorners,
 } from "@phosphor-icons/react";
 import DrawingSheetBorder from "../components/DrawingSheetBorder";
 import SectionMarker from "../components/SectionMarker";
@@ -20,7 +30,7 @@ const thesis = {
   muted:   "rgba(155, 122, 82, 0.55)",
 };
 
-/* ── Type scale — single source of truth (matches ArkoCase) ────────── */
+/* ── Type scale ───────────────────────────────────────────────────── */
 const mono: React.CSSProperties = {
   fontFamily: "'Space Mono', monospace",
   textTransform: "uppercase" as const,
@@ -31,58 +41,38 @@ const sans  = "'Inter', system-ui, sans-serif";
 
 const t = {
   eyebrow: {
-    ...mono,
-    fontSize: 11,
-    letterSpacing: "0.18em",
+    ...mono, fontSize: 11, letterSpacing: "0.18em",
     color: "var(--text-secondary)",
   } as React.CSSProperties,
-  eyebrowAccent: {
-    ...mono,
-    fontSize: 11,
-    letterSpacing: "0.18em",
-    color: thesis.dark,
-  } as React.CSSProperties,
   h1Display: {
-    fontFamily: serif,
-    fontWeight: 700,
+    fontFamily: serif, fontWeight: 700,
     fontSize: "clamp(40px, 5.2vw, 64px)",
-    letterSpacing: "-0.035em",
-    lineHeight: 1.05,
+    letterSpacing: "-0.035em", lineHeight: 1.05,
     color: "var(--text-primary)",
   } as React.CSSProperties,
   h2Section: {
-    fontFamily: serif,
-    fontWeight: 700,
+    fontFamily: serif, fontWeight: 700,
     fontSize: "clamp(30px, 3.6vw, 44px)",
-    letterSpacing: "-0.025em",
-    lineHeight: 1.2,
+    letterSpacing: "-0.025em", lineHeight: 1.2,
     color: "var(--text-primary)",
   } as React.CSSProperties,
   h3Lede: {
-    fontFamily: serif,
-    fontWeight: 700,
+    fontFamily: serif, fontWeight: 700,
     fontSize: "clamp(22px, 2.4vw, 28px)",
-    letterSpacing: "-0.02em",
-    lineHeight: 1.3,
+    letterSpacing: "-0.02em", lineHeight: 1.3,
     color: "var(--text-primary)",
   } as React.CSSProperties,
   bodyLg: {
-    fontFamily: sans,
-    fontSize: "clamp(18px, 1.4vw, 21px)",
-    lineHeight: 1.75,
-    color: "var(--text-secondary)",
+    fontFamily: sans, fontSize: "clamp(18px, 1.4vw, 21px)",
+    lineHeight: 1.75, color: "var(--text-secondary)",
   } as React.CSSProperties,
   body: {
-    fontFamily: sans,
-    fontSize: 18,
-    lineHeight: 1.75,
-    color: "var(--text-secondary)",
+    fontFamily: sans, fontSize: 18,
+    lineHeight: 1.75, color: "var(--text-secondary)",
   } as React.CSSProperties,
   bodySm: {
-    fontFamily: sans,
-    fontSize: 14,
-    lineHeight: 1.7,
-    color: "var(--text-secondary)",
+    fontFamily: sans, fontSize: 14,
+    lineHeight: 1.7, color: "var(--text-secondary)",
   } as React.CSSProperties,
 };
 
@@ -138,7 +128,7 @@ function CountUp({
   return <span ref={ref} style={style}>{display}{suffix}</span>;
 }
 
-/* ── Section header — matches ArkoCase exactly ────────────────────── */
+/* ── Section header ───────────────────────────────────────────────── */
 function SectionHeader({ num, title, phase, total = "04" }: {
   num: string; title: string; phase: string; total?: string;
 }) {
@@ -182,7 +172,7 @@ function SectionHeader({ num, title, phase, total = "04" }: {
   );
 }
 
-/* ── Sheet data — ordered by sheet number printed on each sheet ───── */
+/* ── Sheet data ───────────────────────────────────────────────────── */
 const SHEETS = [
   {
     src: "/thesis/img-05.png",
@@ -270,283 +260,431 @@ const SHEETS = [
   },
 ];
 
-/* ── Sheet Viewer ─────────────────────────────────────────────────── */
-function SheetViewer() {
-  const [active, setActive] = useState(0);
-  const thumbRef = useRef<HTMLDivElement>(null);
+/* ══════════════════════════════════════════════════════════════════
+   LIGHTBOX
+══════════════════════════════════════════════════════════════════ */
+function Lightbox({
+  index,
+  onClose,
+  onPrev,
+  onNext,
+}: {
+  index: number;
+  onClose: () => void;
+  onPrev: () => void;
+  onNext: () => void;
+}) {
+  const sheet = SHEETS[index];
   const isMobile = useIsMobile();
-  const p = thesis.primary;
-
-  const prev = () => setActive((i) => Math.max(0, i - 1));
-  const next = () => setActive((i) => Math.min(SHEETS.length - 1, i + 1));
 
   useEffect(() => {
-    const container = thumbRef.current;
-    if (!container) return;
-    const thumb = container.children[active] as HTMLElement;
-    thumb?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
-  }, [active]);
-
-  const current = SHEETS[active];
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+      if (e.key === "ArrowLeft") onPrev();
+      if (e.key === "ArrowRight") onNext();
+    };
+    window.addEventListener("keydown", handler);
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", handler);
+      document.body.style.overflow = "";
+    };
+  }, [onClose, onPrev, onNext]);
 
   return (
-    <div>
-      {/* ── Top navigation tabs ── */}
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.22 }}
+      style={{
+        position: "fixed", inset: 0, zIndex: 999,
+        background: "rgba(10, 10, 10, 0.96)",
+        backdropFilter: "blur(12px)",
+        display: "flex", flexDirection: "column",
+        alignItems: "center", justifyContent: "center",
+      }}
+      onClick={onClose}
+    >
+      {/* Top bar */}
       <div
         style={{
-          display: "flex",
-          alignItems: "stretch",
-          borderBottom: "1px solid var(--border)",
-          marginBottom: 0,
-          overflowX: "auto",
-          scrollbarWidth: "none",
+          position: "absolute", top: 0, left: 0, right: 0,
+          display: "flex", alignItems: "center", justifyContent: "space-between",
+          padding: "20px 24px",
+          borderBottom: "1px solid rgba(255,255,255,0.08)",
         }}
+        onClick={(e) => e.stopPropagation()}
       >
-        {/* prev button */}
-        <button
-          onClick={prev}
-          disabled={active === 0}
-          aria-label="Previous sheet"
-          style={{
-            flexShrink: 0,
-            width: 44,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            background: "transparent",
-            border: "none",
-            borderRight: "1px solid var(--border)",
-            color: active === 0 ? "var(--text-muted)" : p,
-            cursor: active === 0 ? "default" : "pointer",
-            transitionProperty: "color",
-            transitionDuration: "200ms",
-          }}
-        >
-          <CaretLeft size={16} weight="regular" />
-        </button>
-
-        {/* sheet label + title */}
-        <div style={{
-          flex: 1,
-          display: "flex",
-          alignItems: "center",
-          gap: 12,
-          padding: isMobile ? "14px 16px" : "18px 24px",
-          minWidth: 0,
-        }}>
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={active}
-              initial={{ opacity: 0, y: 4 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -4 }}
-              transition={{ duration: 0.22, ease: EASE }}
-              style={{ display: "flex", alignItems: "center", gap: 12, minWidth: 0 }}
-            >
-              <span style={{
-                ...mono,
-                fontSize: 10,
-                color: p,
-                letterSpacing: "0.22em",
-                fontWeight: 700,
-                flexShrink: 0,
-              }}>
-                {current.label}
-              </span>
-              <span aria-hidden style={{ width: 1, height: 12, backgroundColor: "var(--border)", flexShrink: 0 }} />
-              <span style={{
-                fontFamily: serif,
-                fontStyle: "italic",
-                fontSize: isMobile ? 14 : 16,
-                color: "var(--text-secondary)",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-              }}>
-                {current.title}
-              </span>
-            </motion.div>
-          </AnimatePresence>
-        </div>
-
-        {/* counter + next */}
-        <div style={{
-          display: "flex",
-          alignItems: "center",
-          gap: 0,
-          flexShrink: 0,
-          borderLeft: "1px solid var(--border)",
-        }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
           <span style={{
-            ...mono,
-            fontSize: 10,
-            color: "var(--text-muted)",
-            letterSpacing: "0.16em",
-            padding: "0 16px",
+            ...mono, fontSize: 10, color: thesis.light,
+            letterSpacing: "0.22em", fontWeight: 700,
           }}>
-            {String(active + 1).padStart(2, "0")} / {String(SHEETS.length).padStart(2, "0")}
+            {sheet.label}
+          </span>
+          <span aria-hidden style={{ width: 1, height: 12, background: "rgba(255,255,255,0.15)" }} />
+          <span style={{
+            fontFamily: serif, fontStyle: "italic",
+            fontSize: isMobile ? 13 : 15,
+            color: "rgba(255,255,255,0.7)",
+          }}>
+            {sheet.title}
+          </span>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+          <span style={{ ...mono, fontSize: 10, color: "rgba(255,255,255,0.35)", letterSpacing: "0.16em" }}>
+            {String(index + 1).padStart(2, "0")} / {String(SHEETS.length).padStart(2, "0")}
           </span>
           <button
-            onClick={next}
-            disabled={active === SHEETS.length - 1}
-            aria-label="Next sheet"
+            onClick={onClose}
+            aria-label="Close"
             style={{
-              width: 44,
-              height: "100%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              background: "transparent",
-              border: "none",
-              borderLeft: "1px solid var(--border)",
-              color: active === SHEETS.length - 1 ? "var(--text-muted)" : p,
-              cursor: active === SHEETS.length - 1 ? "default" : "pointer",
-              transitionProperty: "color",
-              transitionDuration: "200ms",
+              width: 36, height: 36, borderRadius: "50%",
+              border: "1px solid rgba(255,255,255,0.15)",
+              background: "transparent", cursor: "pointer",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              color: "rgba(255,255,255,0.6)",
+              transitionProperty: "background, color",
+              transitionDuration: "180ms",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "rgba(255,255,255,0.1)";
+              e.currentTarget.style.color = "#fff";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "transparent";
+              e.currentTarget.style.color = "rgba(255,255,255,0.6)";
             }}
           >
-            <CaretRight size={16} weight="regular" />
+            <X size={16} weight="regular" />
           </button>
         </div>
       </div>
 
-      {/* ── Main image ── */}
-      <div style={{
-        border: "1px solid var(--border)",
-        borderTop: "none",
-        backgroundColor: "var(--bg-secondary)",
-        position: "relative",
-        overflow: "hidden",
-      }}>
+      {/* Image area */}
+      <div
+        style={{
+          flex: 1, display: "flex", alignItems: "center",
+          justifyContent: "center", width: "100%",
+          padding: isMobile ? "80px 16px 100px" : "80px 100px 120px",
+          position: "relative",
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Prev arrow */}
+        <button
+          onClick={onPrev}
+          disabled={index === 0}
+          aria-label="Previous sheet"
+          style={{
+            position: "absolute", left: isMobile ? 8 : 24,
+            width: 44, height: 44, borderRadius: "50%",
+            border: "1px solid rgba(255,255,255,0.15)",
+            background: "transparent", cursor: index === 0 ? "default" : "pointer",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            color: index === 0 ? "rgba(255,255,255,0.2)" : "rgba(255,255,255,0.7)",
+            transitionProperty: "background, color",
+            transitionDuration: "180ms",
+          }}
+          onMouseEnter={(e) => {
+            if (index === 0) return;
+            e.currentTarget.style.background = "rgba(255,255,255,0.1)";
+            e.currentTarget.style.color = "#fff";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = "transparent";
+            e.currentTarget.style.color = index === 0 ? "rgba(255,255,255,0.2)" : "rgba(255,255,255,0.7)";
+          }}
+        >
+          <CaretLeft size={18} weight="regular" />
+        </button>
+
+        {/* Image */}
         <AnimatePresence mode="wait">
           <motion.img
-            key={active}
-            src={current.src}
-            alt={current.title}
-            loading="lazy"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3, ease: EASE }}
+            key={index}
+            src={sheet.src}
+            alt={sheet.title}
+            initial={{ opacity: 0, scale: 0.97 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 1.02 }}
+            transition={{ duration: 0.28, ease: EASE }}
             style={{
-              width: "100%",
-              maxHeight: "78vh",
+              maxWidth: "100%",
+              maxHeight: "100%",
               objectFit: "contain",
               display: "block",
+              boxShadow: "0 32px 80px rgba(0,0,0,0.6)",
             }}
           />
         </AnimatePresence>
 
-        {/* Progress bar overlay at bottom of image */}
-        <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 2, backgroundColor: "rgba(0,0,0,0.08)" }}>
-          <motion.div
-            animate={{ width: `${((active + 1) / SHEETS.length) * 100}%` }}
-            transition={{ duration: 0.35, ease: EASE }}
-            style={{ height: "100%", backgroundColor: p }}
-          />
-        </div>
+        {/* Next arrow */}
+        <button
+          onClick={onNext}
+          disabled={index === SHEETS.length - 1}
+          aria-label="Next sheet"
+          style={{
+            position: "absolute", right: isMobile ? 8 : 24,
+            width: 44, height: 44, borderRadius: "50%",
+            border: "1px solid rgba(255,255,255,0.15)",
+            background: "transparent", cursor: index === SHEETS.length - 1 ? "default" : "pointer",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            color: index === SHEETS.length - 1 ? "rgba(255,255,255,0.2)" : "rgba(255,255,255,0.7)",
+            transitionProperty: "background, color",
+            transitionDuration: "180ms",
+          }}
+          onMouseEnter={(e) => {
+            if (index === SHEETS.length - 1) return;
+            e.currentTarget.style.background = "rgba(255,255,255,0.1)";
+            e.currentTarget.style.color = "#fff";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = "transparent";
+            e.currentTarget.style.color = index === SHEETS.length - 1 ? "rgba(255,255,255,0.2)" : "rgba(255,255,255,0.7)";
+          }}
+        >
+          <CaretRight size={18} weight="regular" />
+        </button>
       </div>
 
-      {/* ── Caption bar ── */}
-      <div style={{
-        border: "1px solid var(--border)",
-        borderTop: "none",
-        padding: "12px 20px",
-        backgroundColor: thesis.surface,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        gap: 16,
-      }}>
+      {/* Caption bar */}
+      <div
+        style={{
+          position: "absolute", bottom: 0, left: 0, right: 0,
+          padding: "16px 24px",
+          borderTop: "1px solid rgba(255,255,255,0.08)",
+          background: "rgba(0,0,0,0.4)",
+          display: "flex", alignItems: "center", justifyContent: "space-between", gap: 24,
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
         <AnimatePresence mode="wait">
           <motion.p
-            key={active}
+            key={index}
             initial={{ opacity: 0, y: 4 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
-            transition={{ duration: 0.25 }}
+            transition={{ duration: 0.22 }}
             style={{
-              fontFamily: serif,
-              fontStyle: "italic",
-              fontSize: 14,
-              color: thesis.dark,
-              lineHeight: 1.5,
-              margin: 0,
+              fontFamily: serif, fontStyle: "italic",
+              fontSize: isMobile ? 13 : 15,
+              color: "rgba(255,255,255,0.55)",
+              lineHeight: 1.5, margin: 0, flex: 1,
             }}
           >
-            {current.caption}
+            {sheet.caption}
           </motion.p>
         </AnimatePresence>
         <span style={{ ...mono, fontSize: 9, color: thesis.muted, flexShrink: 0, letterSpacing: "0.16em" }}>
           B.ARCH · 2024
         </span>
       </div>
+    </motion.div>
+  );
+}
 
-      {/* ── Thumbnail filmstrip ── */}
+/* ══════════════════════════════════════════════════════════════════
+   SHEET GALLERY — clean grid with hover + lightbox
+══════════════════════════════════════════════════════════════════ */
+function SheetGallery() {
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+
+  const openLightbox = (i: number) => setLightboxIndex(i);
+  const closeLightbox = useCallback(() => setLightboxIndex(null), []);
+  const prevSheet = useCallback(() =>
+    setLightboxIndex((i) => (i !== null && i > 0 ? i - 1 : i)), []);
+  const nextSheet = useCallback(() =>
+    setLightboxIndex((i) => (i !== null && i < SHEETS.length - 1 ? i + 1 : i)), []);
+
+  return (
+    <>
+      {/* Grid */}
       <div
-        ref={thumbRef}
         style={{
-          display: "flex",
-          gap: 4,
-          marginTop: 10,
-          overflowX: "auto",
-          scrollbarWidth: "none",
-          paddingBottom: 2,
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
+          gap: 2,
         }}
       >
         {SHEETS.map((sheet, i) => (
-          <button
+          <SheetCard
             key={i}
-            onClick={() => setActive(i)}
-            aria-label={`View ${sheet.label}`}
-            style={{
-              flexShrink: 0,
-              width: isMobile ? 60 : 76,
-              height: isMobile ? 44 : 56,
-              padding: 0,
-              border: `1.5px solid ${i === active ? p : "var(--border)"}`,
-              overflow: "hidden",
-              cursor: "pointer",
-              backgroundColor: "var(--bg-secondary)",
-              opacity: i === active ? 1 : 0.5,
-              transitionProperty: "opacity, border-color",
-              transitionDuration: "200ms",
-              position: "relative",
-            }}
-          >
-            <img
-              src={sheet.src}
-              alt=""
-              loading="lazy"
-              style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-            />
-            {i === active && (
-              <span aria-hidden style={{
-                position: "absolute", top: 0, left: 0, right: 0, height: 2,
-                backgroundColor: p,
-              }} />
-            )}
-            {/* Sheet label overlay */}
-            <span style={{
-              position: "absolute",
-              bottom: 0,
-              left: 0,
-              right: 0,
-              padding: "2px 4px",
-              backgroundColor: i === active ? p : "rgba(0,0,0,0.45)",
-              fontFamily: "'Space Mono', monospace",
-              fontSize: 7,
-              color: "#fff",
-              textAlign: "center",
-              letterSpacing: "0.06em",
-              lineHeight: 1.4,
-            }}>
-              {sheet.label.replace("Sheet ", "S")}
-            </span>
-          </button>
+            sheet={sheet}
+            index={i}
+            onClick={() => openLightbox(i)}
+          />
         ))}
       </div>
-    </div>
+
+      {/* Lightbox */}
+      <AnimatePresence>
+        {lightboxIndex !== null && (
+          <Lightbox
+            index={lightboxIndex}
+            onClose={closeLightbox}
+            onPrev={prevSheet}
+            onNext={nextSheet}
+          />
+        )}
+      </AnimatePresence>
+    </>
+  );
+}
+
+function SheetCard({
+  sheet,
+  index,
+  onClick,
+}: {
+  sheet: typeof SHEETS[0];
+  index: number;
+  onClick: () => void;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-30px" });
+  const [hovered, setHovered] = useState(false);
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 16 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.5, delay: (index % 3) * 0.07, ease: EASE }}
+    >
+      <button
+        onClick={onClick}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        aria-label={`View ${sheet.label} — ${sheet.title}`}
+        style={{
+          display: "block", width: "100%", padding: 0, border: "none",
+          background: "transparent", cursor: "pointer", textAlign: "left",
+          position: "relative",
+        }}
+      >
+        {/* Image container */}
+        <div
+          style={{
+            position: "relative", overflow: "hidden",
+            aspectRatio: "4 / 3",
+            background: "var(--bg-secondary)",
+            border: `1px solid ${hovered ? thesis.primary : "var(--border)"}`,
+            transitionProperty: "border-color",
+            transitionDuration: "220ms",
+          }}
+        >
+          <motion.img
+            src={sheet.src}
+            alt={sheet.title}
+            loading="lazy"
+            animate={{ scale: hovered ? 1.04 : 1 }}
+            transition={{ duration: 0.45, ease: EASE }}
+            style={{
+              width: "100%", height: "100%",
+              objectFit: "cover", display: "block",
+            }}
+          />
+
+          {/* Gradient overlay — always present, deepens on hover */}
+          <motion.div
+            aria-hidden
+            animate={{ opacity: hovered ? 1 : 0 }}
+            transition={{ duration: 0.3 }}
+            style={{
+              position: "absolute", inset: 0,
+              background: "linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.18) 55%, transparent 100%)",
+            }}
+          />
+
+          {/* Expand icon — appears on hover */}
+          <motion.div
+            aria-hidden
+            initial={false}
+            animate={{ opacity: hovered ? 1 : 0, scale: hovered ? 1 : 0.8 }}
+            transition={{ duration: 0.22 }}
+            style={{
+              position: "absolute", top: 12, right: 12,
+              width: 32, height: 32, borderRadius: "50%",
+              background: "rgba(255,255,255,0.12)",
+              backdropFilter: "blur(8px)",
+              border: "1px solid rgba(255,255,255,0.18)",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              color: "#fff",
+            }}
+          >
+            <FrameCorners size={14} weight="regular" />
+          </motion.div>
+
+          {/* Caption on hover */}
+          <motion.div
+            aria-hidden
+            animate={{ opacity: hovered ? 1 : 0, y: hovered ? 0 : 6 }}
+            transition={{ duration: 0.28 }}
+            style={{
+              position: "absolute", bottom: 0, left: 0, right: 0,
+              padding: "32px 14px 14px",
+              background: "linear-gradient(to top, rgba(0,0,0,0.82) 0%, transparent 100%)",
+            }}
+          >
+            <p style={{
+              fontFamily: serif, fontStyle: "italic",
+              fontSize: 12, color: "rgba(255,255,255,0.72)",
+              lineHeight: 1.5, margin: 0,
+            }}>
+              {sheet.caption}
+            </p>
+          </motion.div>
+
+          {/* Active top border */}
+          <motion.div
+            aria-hidden
+            animate={{ scaleX: hovered ? 1 : 0 }}
+            transition={{ duration: 0.3, ease: EASE }}
+            style={{
+              position: "absolute", top: 0, left: 0, right: 0,
+              height: 2, background: thesis.primary,
+              transformOrigin: "left",
+            }}
+          />
+        </div>
+
+        {/* Card footer */}
+        <div
+          style={{
+            padding: "10px 14px 12px",
+            background: hovered ? thesis.surface : "var(--bg-primary)",
+            borderLeft: `1px solid ${hovered ? thesis.primary : "var(--border)"}`,
+            borderRight: `1px solid ${hovered ? thesis.primary : "var(--border)"}`,
+            borderBottom: `1px solid ${hovered ? thesis.primary : "var(--border)"}`,
+            borderTop: "none",
+            transitionProperty: "background, border-color",
+            transitionDuration: "220ms",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
+            <span style={{
+              ...mono, fontSize: 9, fontWeight: 700,
+              color: thesis.primary, letterSpacing: "0.22em",
+              flexShrink: 0,
+            }}>
+              {sheet.label}
+            </span>
+            <span aria-hidden style={{ flex: 1, height: "1px", background: "var(--border)" }} />
+          </div>
+          <p style={{
+            fontFamily: serif, fontWeight: 600,
+            fontSize: 14, color: "var(--text-primary)",
+            letterSpacing: "-0.01em", lineHeight: 1.35,
+            margin: "6px 0 0", whiteSpace: "nowrap",
+            overflow: "hidden", textOverflow: "ellipsis",
+          }}>
+            {sheet.title}
+          </p>
+        </div>
+      </button>
+    </motion.div>
   );
 }
 
@@ -634,8 +772,7 @@ export default function ThesisCase() {
                       fontFamily: serif, fontWeight: 700,
                       fontSize: "clamp(24px, 3vw, 40px)",
                       letterSpacing: "-0.03em",
-                      color: thesis.primary,
-                      lineHeight: 1, marginBottom: 8,
+                      color: thesis.primary, lineHeight: 1, marginBottom: 8,
                     }}>
                       <CountUp value={s.value} suffix={s.suffix} />
                     </div>
@@ -662,7 +799,7 @@ export default function ThesisCase() {
         />
         <div aria-hidden style={{
           position: "absolute", inset: 0,
-          background: "linear-gradient(to top, rgba(0,0,0,0.42) 0%, transparent 55%)",
+          background: "linear-gradient(to top, rgba(0,0,0,0.45) 0%, transparent 55%)",
         }} />
         <div aria-hidden style={{
           position: "absolute", inset: 0,
@@ -757,11 +894,7 @@ export default function ThesisCase() {
                       }}>
                         {row.k}
                       </div>
-                      <div style={{
-                        ...t.bodySm,
-                        color: "var(--text-primary)",
-                        padding: "14px 16px",
-                      }}>
+                      <div style={{ ...t.bodySm, color: "var(--text-primary)", padding: "14px 16px" }}>
                         {row.v}
                       </div>
                     </div>
@@ -782,9 +915,23 @@ export default function ThesisCase() {
       }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10">
           <SectionHeader num="02" title="Project Sheets" phase="Documentation" />
+
           <Reveal>
-            <SheetViewer />
+            <div style={{
+              display: "flex", alignItems: "center", gap: 10,
+              marginBottom: "clamp(28px, 4vw, 44px)",
+            }}>
+              <p style={{ ...t.bodySm, margin: 0 }}>
+                {SHEETS.length} drawing sheets — click any to view full size
+              </p>
+              <span aria-hidden style={{ flex: 1, height: 1, background: "var(--border)" }} />
+              <span style={{ ...mono, fontSize: 9, color: thesis.muted, letterSpacing: "0.18em" }}>
+                B.ARCH · 2024
+              </span>
+            </div>
           </Reveal>
+
+          <SheetGallery />
         </div>
       </div>
 
@@ -829,9 +976,7 @@ export default function ThesisCase() {
                   <div style={{ ...t.h3Lede, fontSize: "clamp(17px, 1.6vw, 20px)", marginBottom: 10 }}>
                     {d.label}
                   </div>
-                  <p style={{ ...t.bodySm, margin: 0 }}>
-                    {d.desc}
-                  </p>
+                  <p style={{ ...t.bodySm, margin: 0 }}>{d.desc}</p>
                 </div>
               </Reveal>
             ))}
@@ -912,12 +1057,8 @@ export default function ThesisCase() {
                     {item.num}
                   </span>
                   <div>
-                    <h3 style={{ ...t.h3Lede, margin: 0, marginBottom: 12 }}>
-                      {item.title}
-                    </h3>
-                    <p style={{ ...t.body, margin: 0 }}>
-                      {item.body}
-                    </p>
+                    <h3 style={{ ...t.h3Lede, margin: 0, marginBottom: 12 }}>{item.title}</h3>
+                    <p style={{ ...t.body, margin: 0 }}>{item.body}</p>
                   </div>
                 </div>
               </Reveal>
