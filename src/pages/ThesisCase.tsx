@@ -595,7 +595,7 @@ export default function ThesisCase() {
                   {item.label}
                 </span>
                 <span style={{
-                  fontFamily: sans, fontSize: "clamp(14px, 1.1vw, 17px)",
+                  fontFamily: sans, fontSize: "clamp(16px, 1.3vw, 19px)",
                   fontWeight: 500, lineHeight: 1.55,
                   color: "var(--text-primary)",
                 }}>
@@ -638,7 +638,7 @@ export default function ThesisCase() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
             <div className="lg:col-span-6">
               <Reveal delay={0.12}>
-                <p style={{ ...t.body }}>
+                <p style={{ ...t.body, fontSize: "clamp(18px, 1.4vw, 21px)" }}>
                   This thesis explores transforming underutilised urban spaces into
                   vibrant public realms through placemaking, sustainable design, and
                   inclusive spatial planning, fostering social cohesion and improving
