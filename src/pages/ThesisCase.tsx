@@ -69,7 +69,7 @@ const t = {
     lineHeight: 1.75, color: "var(--text-secondary)",
   } as React.CSSProperties,
   bodySm: {
-    fontFamily: sans, fontSize: 14,
+    fontFamily: sans, fontSize: 16,
     lineHeight: 1.7, color: "var(--text-secondary)",
   } as React.CSSProperties,
 };
