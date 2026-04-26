@@ -6,6 +6,13 @@ import {
   PencilSimpleLineIcon,
   ForkKnifeIcon,
   MapPinIcon,
+  HeartbeatIcon,
+  RobotIcon,
+  UsersThreeIcon,
+  MonitorIcon,
+  PaletteIcon,
+  GraduationCapIcon,
+  BuildingsIcon,
 } from "@phosphor-icons/react";
 import HandDrawnSketch from "../components/HandDrawnSketch";
 import ConnectSection from "../components/ConnectSection";
@@ -763,6 +770,7 @@ const stops = [
     period: "2025 – Now",
     blurb:
       "Healthcare specimen-tracking suite, end-to-end. Reduced lab handoff errors and shipped a clinician-trusted dashboard.",
+    icon: HeartbeatIcon,
   },
   {
     role: "Product Designer",
@@ -770,6 +778,7 @@ const stops = [
     period: "2025 – Now",
     blurb:
       "AI-driven flows for the talent marketplace, connecting candidates and companies through smart matching and review.",
+    icon: RobotIcon,
   },
   {
     role: "HCI Org Lead",
@@ -777,6 +786,7 @@ const stops = [
     period: "2024 – 2025",
     blurb:
       "Led the HCI student org: workshops, mentorship, and Figma craft sessions for incoming designers.",
+    icon: UsersThreeIcon,
   },
   {
     role: "UI/UX Designer",
@@ -784,6 +794,7 @@ const stops = [
     period: "2022 – 2023",
     blurb:
       "Consumer interfaces and engineering handoff. Owned design specs from concept through QA.",
+    icon: MonitorIcon,
   },
   {
     role: "UX Designer",
@@ -791,6 +802,7 @@ const stops = [
     period: "2022",
     blurb:
       "Built a full design system from zero: tokens, components, and patterns for a fledgling product team.",
+    icon: PaletteIcon,
   },
 ];
 
@@ -827,14 +839,40 @@ function Experience() {
               >
                 <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr] gap-3 lg:gap-12">
 
-                  {/* Left — period */}
-                  <div className="flex lg:flex-col gap-2 lg:gap-1 pt-1">
-                    <span style={{ ...mono, fontSize: 13, color: "var(--text-secondary)", letterSpacing: "0.14em" }}>
-                      {s.period}
-                    </span>
-                    <span style={{ ...mono, fontSize: 13, color: "var(--accent)", letterSpacing: "0.14em" }}>
-                      {s.role}
-                    </span>
+                  {/* Left — icon badge + period + role */}
+                  <div className="flex lg:flex-col gap-3 lg:gap-2 items-start pt-1">
+                    <div
+                      aria-hidden
+                      style={{
+                        width: 32,
+                        height: 32,
+                        border: "0.75px solid var(--border)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        flexShrink: 0,
+                        backgroundColor: "var(--bg-secondary)",
+                        transitionProperty: "border-color, background-color",
+                        transitionDuration: "200ms",
+                      }}
+                      className="group-hover:border-[var(--accent)] group-hover:bg-[var(--accent-subtle)]"
+                    >
+                      <s.icon
+                        size={15}
+                        weight="regular"
+                        color="var(--text-muted)"
+                        className="group-hover:text-[var(--accent)]"
+                        style={{ transitionProperty: "color", transitionDuration: "200ms" }}
+                      />
+                    </div>
+                    <div className="flex lg:flex-col gap-1 lg:gap-1">
+                      <span style={{ ...mono, fontSize: 13, color: "var(--text-secondary)", letterSpacing: "0.14em" }}>
+                        {s.period}
+                      </span>
+                      <span style={{ ...mono, fontSize: 13, color: "var(--accent)", letterSpacing: "0.14em" }}>
+                        {s.role}
+                      </span>
+                    </div>
                   </div>
 
                   {/* Right — company + blurb */}
@@ -912,8 +950,8 @@ function Experience() {
             }}
           >
             {[
-              { degree: "M.S. Human-Computer Interaction", school: "Iowa State University", period: "2023 – 2025", note: "the conversion year" },
-              { degree: "B.Arch. Architecture", school: "Priyadarshini Inst. of Architecture and Design Studies", period: "2018 – 2023", note: "where it started ✿" },
+              { degree: "M.S. Human-Computer Interaction", school: "Iowa State University", period: "2023 – 2025", note: "the conversion year", icon: GraduationCapIcon },
+              { degree: "B.Arch. Architecture", school: "Priyadarshini Inst. of Architecture and Design Studies", period: "2018 – 2023", note: "where it started ✿", icon: BuildingsIcon },
             ].map((e, i) => (
               <motion.div
                 key={e.degree}
@@ -927,9 +965,26 @@ function Experience() {
                 }}
               >
                 <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr] gap-3 lg:gap-12">
-                  <div className="flex lg:flex-col gap-2 lg:gap-1 pt-1">
-                    <span style={{ ...mono, fontSize: 13, color: "var(--text-secondary)", letterSpacing: "0.14em" }}>{e.period}</span>
-                    <span style={{ ...caveat, fontSize: 18, color: "var(--accent)", opacity: 0.9 }}>{e.note}</span>
+                  <div className="flex lg:flex-col gap-3 lg:gap-2 items-start pt-1">
+                    <div
+                      aria-hidden
+                      style={{
+                        width: 32,
+                        height: 32,
+                        border: "0.75px solid var(--border)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        flexShrink: 0,
+                        backgroundColor: "rgba(255,255,255,0.5)",
+                      }}
+                    >
+                      <e.icon size={15} weight="regular" color="var(--text-muted)" />
+                    </div>
+                    <div className="flex lg:flex-col gap-1">
+                      <span style={{ ...mono, fontSize: 13, color: "var(--text-secondary)", letterSpacing: "0.14em" }}>{e.period}</span>
+                      <span style={{ ...caveat, fontSize: 18, color: "var(--accent)", opacity: 0.9 }}>{e.note}</span>
+                    </div>
                   </div>
                   <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
                     <h3 style={{ fontFamily: serif, fontWeight: 600, fontSize: "clamp(20px, 2vw, 24px)", letterSpacing: "-0.018em", lineHeight: 1.2, color: "var(--text-primary)", margin: 0 }}>
