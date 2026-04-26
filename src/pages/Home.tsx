@@ -428,7 +428,12 @@ export default function Home() {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.25 }}
-                style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%", flexWrap: "wrap", gap: "16px 0" }}
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: `repeat(${activeTab === "product" ? 9 : 8}, 1fr)`,
+                  width: "100%",
+                  gap: "16px 0",
+                }}
               >
                 {(activeTab === "product" ? PRODUCT_TOOLS : ARCH_TOOLS).map((tool) => (
                   <div
