@@ -250,45 +250,63 @@ export default function Home() {
           </div>
 
           {/* ── Filter pills ── */}
-          <div className="flex items-center gap-3" style={{ marginBottom: 40 }}>
-            {(["product", "architecture"] as Tab[]).map((tab) => {
-              const active = activeTab === tab;
-              const label = tab === "product" ? "Product Design" : "Architecture";
-              return (
-                <button
-                  key={tab}
-                  onClick={() => setActiveTab(tab)}
-                  style={{
-                    ...mono,
-                    fontSize: 10,
-                    letterSpacing: "0.18em",
-                    padding: "7px 16px",
-                    borderRadius: 999,
-                    border: `0.75px solid ${active ? "var(--accent)" : "var(--border)"}`,
-                    backgroundColor: active ? "var(--accent)" : "transparent",
-                    color: active ? "#FAFAFA" : "var(--text-secondary)",
-                    cursor: "pointer",
-                    transitionProperty: "background-color, border-color, color",
-                    transitionDuration: "200ms",
-                    transitionTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)",
-                  }}
-                  onMouseEnter={(e) => {
-                    if (!active) {
-                      (e.currentTarget as HTMLButtonElement).style.borderColor = "var(--accent)";
-                      (e.currentTarget as HTMLButtonElement).style.color = "var(--text-primary)";
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (!active) {
-                      (e.currentTarget as HTMLButtonElement).style.borderColor = "var(--border)";
-                      (e.currentTarget as HTMLButtonElement).style.color = "var(--text-secondary)";
-                    }
-                  }}
-                >
-                  {label}
-                </button>
-              );
-            })}
+          <div style={{ marginBottom: 40 }}>
+            <div
+              style={{
+                display: "inline-flex",
+                border: "0.75px solid var(--border)",
+                padding: 3,
+                gap: 2,
+              }}
+            >
+              {(["product", "architecture"] as Tab[]).map((tab) => {
+                const active = activeTab === tab;
+                const label = tab === "product" ? "Product Design" : "Architecture";
+                const count = tab === "product"
+                  ? String(projects.length).padStart(2, "0")
+                  : String(archProjects.length).padStart(2, "0");
+                return (
+                  <button
+                    key={tab}
+                    onClick={() => setActiveTab(tab)}
+                    style={{
+                      ...mono,
+                      fontSize: 11,
+                      letterSpacing: "0.18em",
+                      padding: "11px 28px",
+                      border: "none",
+                      backgroundColor: active ? "var(--text-primary)" : "transparent",
+                      color: active ? "#FAFAFA" : "var(--text-secondary)",
+                      cursor: "pointer",
+                      transitionProperty: "background-color, color",
+                      transitionDuration: "220ms",
+                      transitionTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 10,
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!active) (e.currentTarget as HTMLButtonElement).style.color = "var(--text-primary)";
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!active) (e.currentTarget as HTMLButtonElement).style.color = "var(--text-secondary)";
+                    }}
+                  >
+                    {label}
+                    <span
+                      style={{
+                        ...mono,
+                        fontSize: 9,
+                        letterSpacing: "0.14em",
+                        opacity: active ? 0.55 : 0.4,
+                      }}
+                    >
+                      {count}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
           {/* 2-col grid */}
@@ -359,47 +377,49 @@ export default function Home() {
                 whiteSpace: "nowrap",
               }}
             >
-              Shared Stack
+              {activeTab === "product" ? "Shared Stack" : "Disciplines"}
             </span>
 
-            <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
-              {[
-                "Figma",
-                "Framer",
-                "Protopie",
-                "SwiftUI",
-                "Rive",
-                "FigJam",
-                "User Research",
-                "Design Systems",
-                "Prototyping",
-              ].map((tool, i, arr) => (
-                <span key={tool} style={{ display: "inline-flex", alignItems: "center", gap: 20 }}>
-                  <span
-                    style={{
-                      fontFamily: "'Inter', system-ui, sans-serif",
-                      fontSize: 13,
-                      color: "var(--text-secondary)",
-                      letterSpacing: "0.01em",
-                    }}
-                  >
-                    {tool}
-                  </span>
-                  {i < arr.length - 1 && (
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeTab + "-tools"}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.25 }}
+                className="flex flex-wrap items-center gap-x-5 gap-y-2"
+              >
+                {(activeTab === "product"
+                  ? ["Figma", "Framer", "Protopie", "SwiftUI", "Rive", "FigJam", "User Research", "Design Systems", "Prototyping"]
+                  : ["AutoCAD", "SketchUp", "Lumion", "V-Ray", "Urban Planning", "Structural Drawing", "Physical Models", "Site Analysis"]
+                ).map((tool, i, arr) => (
+                  <span key={tool} style={{ display: "inline-flex", alignItems: "center", gap: 20 }}>
                     <span
-                      aria-hidden
                       style={{
-                        width: 3,
-                        height: 3,
-                        backgroundColor: "var(--text-muted)",
-                        opacity: 0.5,
-                        borderRadius: "50%",
+                        fontFamily: "'Inter', system-ui, sans-serif",
+                        fontSize: 13,
+                        color: "var(--text-secondary)",
+                        letterSpacing: "0.01em",
                       }}
-                    />
-                  )}
-                </span>
-              ))}
-            </div>
+                    >
+                      {tool}
+                    </span>
+                    {i < arr.length - 1 && (
+                      <span
+                        aria-hidden
+                        style={{
+                          width: 3,
+                          height: 3,
+                          backgroundColor: "var(--text-muted)",
+                          opacity: 0.5,
+                          borderRadius: "50%",
+                        }}
+                      />
+                    )}
+                  </span>
+                ))}
+              </motion.div>
+            </AnimatePresence>
 
             <span
               style={{
@@ -410,7 +430,7 @@ export default function Home() {
                 whiteSpace: "nowrap",
               }}
             >
-              09 Tools
+              {activeTab === "product" ? "09 Tools" : "08 Tools"}
             </span>
           </motion.div>
 
