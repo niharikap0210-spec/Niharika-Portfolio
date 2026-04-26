@@ -603,15 +603,20 @@ export default function ThesisCase() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10">
           <SectionHeader num="01" title="Overview" phase="Context & Intent" />
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
-            <div className="lg:col-span-5">
+          {/* Editorial text split */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16" style={{ marginBottom: "clamp(48px, 6vw, 72px)" }}>
+            <div className="lg:col-span-6">
               <Reveal>
-                <p style={{ ...t.bodyLg, marginBottom: 24 }}>
+                <p style={{ ...t.bodyLg }}>
                   An architectural initiative aimed at revitalising urban spaces by
                   creating inclusive, sustainable, and vibrant public areas that
                   foster community interactions and enhance quality of life.
                 </p>
-                <p style={t.body}>
+              </Reveal>
+            </div>
+            <div className="lg:col-span-6">
+              <Reveal delay={0.12}>
+                <p style={{ ...t.body }}>
                   This thesis explores transforming underutilised urban spaces into
                   vibrant public realms through placemaking, sustainable design, and
                   inclusive spatial planning — to foster social cohesion and improve
@@ -619,42 +624,40 @@ export default function ThesisCase() {
                 </p>
               </Reveal>
             </div>
-
-            <div className="lg:col-span-7">
-              <Reveal delay={0.12}>
-                <div style={{
-                  display: "flex", flexDirection: "column",
-                  border: "1px solid var(--border)",
-                  backgroundColor: "var(--bg-elevated, var(--bg-secondary))",
-                }}>
-                  {[
-                    { k: "Site", v: "Sonegao, Nagpur" },
-                    { k: "Site Area", v: "3770 sq.m" },
-                    { k: "Programme", v: "Activity Centre · Yoga Centre · Book Café · Workshop · Street" },
-                    { k: "Guide", v: "Prof. Sonali Borate" },
-                    { k: "Institution", v: "SVITS, Indore · B.Arch 2022–23" },
-                  ].map((row, i, arr) => (
-                    <div key={row.k} style={{
-                      display: "grid", gridTemplateColumns: "140px 1fr",
-                      borderBottom: i < arr.length - 1 ? "0.75px solid var(--border)" : "none",
-                    }}>
-                      <div style={{
-                        ...mono, fontSize: 9, color: "var(--text-muted)",
-                        letterSpacing: "0.18em", padding: "14px 16px",
-                        borderRight: "0.75px solid var(--border)",
-                        display: "flex", alignItems: "center",
-                      }}>
-                        {row.k}
-                      </div>
-                      <div style={{ ...t.bodySm, color: "var(--text-primary)", padding: "14px 16px" }}>
-                        {row.v}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </Reveal>
-            </div>
           </div>
+
+          {/* Site facts strip */}
+          <Reveal delay={0.18}>
+            <div style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(4, 1fr)",
+              borderTop: "1px solid var(--border)",
+              borderLeft: "1px solid var(--border)",
+            }}>
+              {[
+                { label: "Site", value: "Sonegao, Nagpur" },
+                { label: "Site Area", value: "3770 sq.m" },
+                { label: "Guide", value: "Prof. Sonali Borate" },
+                { label: "Programme", value: "Activity Centre · Yoga Centre · Book Café · Workshop" },
+              ].map((item) => (
+                <div
+                  key={item.label}
+                  style={{
+                    padding: "clamp(18px, 2.5vw, 28px) clamp(16px, 2vw, 24px)",
+                    borderRight: "1px solid var(--border)",
+                    borderBottom: "1px solid var(--border)",
+                  }}
+                >
+                  <div style={{ ...mono, fontSize: 9, color: thesis.primary, letterSpacing: "0.2em", marginBottom: 10, fontWeight: 700 }}>
+                    {item.label}
+                  </div>
+                  <div style={{ fontFamily: sans, fontSize: "clamp(13px, 1vw, 15px)", fontWeight: 500, color: "var(--text-primary)", lineHeight: 1.55 }}>
+                    {item.value}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Reveal>
         </div>
       </section>
 
