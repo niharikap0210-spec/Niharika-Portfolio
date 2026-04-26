@@ -1,5 +1,5 @@
-import { motion, useScroll, useSpring, useInView } from "framer-motion";
-import { useRef } from "react";
+import { motion, useScroll, useSpring, useInView, AnimatePresence } from "framer-motion";
+import { useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeftIcon as ArrowLeft, ArrowRightIcon as ArrowRight } from "@phosphor-icons/react";
 import DrawingSheetBorder from "../components/DrawingSheetBorder";
@@ -35,6 +35,67 @@ function Reveal({ children, delay = 0 }: { children: React.ReactNode; delay?: nu
   );
 }
 
+const projects = [
+  {
+    id: "villa",
+    num: "A",
+    title: "Private Villa",
+    subtitle: "Luxury residential — exterior, interior & landscape",
+    images: [
+      { src: "/renders/villa-01.jpg", label: "Entrance Approach" },
+      { src: "/renders/villa-02.jpg", label: "Courtyard" },
+      { src: "/renders/villa-03.jpg", label: "Lobby" },
+      { src: "/renders/villa-04.jpg", label: "Living Room" },
+      { src: "/renders/villa-05.jpg", label: "Fitness Centre" },
+      { src: "/renders/villa-06.jpg", label: "Spa Garden" },
+      { src: "/renders/villa-07.jpg", label: "Spa Pool" },
+      { src: "/renders/villa-08.jpg", label: "Pool Deck" },
+      { src: "/renders/villa-09.jpg", label: "Pool Exterior" },
+      { src: "/renders/villa-10.jpg", label: "Pool Elevation" },
+      { src: "/renders/villa-11.jpg", label: "Aerial — Overview" },
+      { src: "/renders/villa-12.jpg", label: "Aerial — Estate" },
+      { src: "/renders/villa-13.jpg", label: "Aerial — Site" },
+    ],
+  },
+  {
+    id: "urban",
+    num: "B",
+    title: "Urban Cultural Complex",
+    subtitle: "Public realm — civic buildings, landscape & plazas",
+    images: [
+      { src: "/renders/urban-01.jpg", label: "Amphitheatre" },
+      { src: "/renders/urban-02.jpg", label: "Civic Auditorium" },
+      { src: "/renders/urban-03.jpg", label: "Sculpture Garden" },
+      { src: "/renders/urban-04.jpg", label: "Circular Plaza" },
+      { src: "/renders/urban-05.jpg", label: "Cultural Centre" },
+      { src: "/renders/urban-06.jpg", label: "Promenade" },
+      { src: "/renders/urban-07.jpg", label: "Main Building" },
+      { src: "/renders/urban-08.jpg", label: "Fountain Plaza" },
+      { src: "/renders/urban-09.jpg", label: "Activity Court" },
+      { src: "/renders/urban-10.jpg", label: "Aerial — Complex" },
+      { src: "/renders/urban-11.jpg", label: "Aerial — Master Plan" },
+      { src: "/renders/urban-12.jpg", label: "Aerial — Overview" },
+      { src: "/renders/urban-13.jpg", label: "Aerial — Site Plan" },
+    ],
+  },
+  {
+    id: "grameen",
+    num: "C",
+    title: "Grameen Haat Bazar",
+    subtitle: "Rural market complex — vernacular architecture",
+    images: [
+      { src: "/renders/grameen-01.jpg", label: "Main Entrance" },
+      { src: "/renders/grameen-02.jpg", label: "Gate Approach" },
+      { src: "/renders/grameen-03.jpg", label: "Entry Gateway" },
+      { src: "/renders/grameen-04.jpg", label: "Market Gate" },
+      { src: "/renders/grameen-05.jpg", label: "Compound Wall" },
+      { src: "/renders/grameen-06.jpg", label: "Side Approach" },
+      { src: "/renders/grameen-07.jpg", label: "Facade" },
+      { src: "/renders/grameen-08.jpg", label: "Front Elevation" },
+    ],
+  },
+];
+
 const tools = [
   {
     name: "AutoCAD",
@@ -65,6 +126,177 @@ const workflow = [
   { num: "04", step: "Rendering", tool: "Lumion", desc: "Generate high-resolution outputs across key views — exterior approach, interior perspective, aerial massing, and detail shots." },
   { num: "05", step: "Post-Production", tool: "Photoshop", desc: "Add people, vehicles, and entourage. Grade colour, adjust contrast, and composite layers to produce a final image that communicates both space and atmosphere." },
 ];
+
+function GallerySection() {
+  const [lightbox, setLightbox] = useState<{ src: string; label: string } | null>(null);
+
+  return (
+    <section style={{ padding: "clamp(72px, 9vw, 112px) 0" }}>
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10">
+        <Reveal>
+          <div style={{ ...mono, fontSize: 9, color: accent.primary, letterSpacing: "0.22em", marginBottom: 40 }}>
+            04 / Gallery
+          </div>
+        </Reveal>
+
+        {projects.map((project, pi) => (
+          <div key={project.id} style={{ marginBottom: pi < projects.length - 1 ? "clamp(72px, 9vw, 96px)" : 0 }}>
+            {/* Project header */}
+            <Reveal delay={0.05}>
+              <div style={{
+                display: "flex",
+                alignItems: "baseline",
+                gap: 16,
+                marginBottom: "clamp(24px, 3vw, 36px)",
+                paddingBottom: 20,
+                borderBottom: "1px solid var(--border)",
+              }}>
+                <span style={{ ...mono, fontSize: 9, color: accent.primary, letterSpacing: "0.22em" }}>
+                  {project.num}
+                </span>
+                <div>
+                  <h3 style={{
+                    fontFamily: serif,
+                    fontWeight: 700,
+                    fontSize: "clamp(22px, 2.2vw, 30px)",
+                    letterSpacing: "-0.02em",
+                    color: "var(--text-primary)",
+                    margin: 0,
+                    marginBottom: 4,
+                  }}>
+                    {project.title}
+                  </h3>
+                  <p style={{ ...mono, fontSize: 9, color: "var(--text-muted)", letterSpacing: "0.16em", margin: 0 }}>
+                    {project.subtitle}
+                  </p>
+                </div>
+                <span style={{ ...mono, fontSize: 9, color: "var(--text-muted)", letterSpacing: "0.14em", marginLeft: "auto" }}>
+                  {project.images.length} views
+                </span>
+              </div>
+            </Reveal>
+
+            {/* Image grid */}
+            <div style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(2, 1fr)",
+              gap: "clamp(8px, 1.2vw, 14px)",
+            }}>
+              {project.images.map((img, idx) => {
+                const isFeature = idx === 0;
+                return (
+                  <Reveal key={img.src} delay={idx * 0.04}>
+                    <div
+                      onClick={() => setLightbox(img)}
+                      style={{
+                        gridColumn: isFeature ? "1 / -1" : undefined,
+                        position: "relative",
+                        overflow: "hidden",
+                        cursor: "zoom-in",
+                        backgroundColor: "var(--bg-secondary)",
+                        aspectRatio: isFeature ? "16/7" : "16/9",
+                      }}
+                    >
+                      <img
+                        src={img.src}
+                        alt={img.label}
+                        loading="lazy"
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                          display: "block",
+                          transitionProperty: "transform",
+                          transitionDuration: "600ms",
+                          transitionTimingFunction: "cubic-bezier(0.25, 1, 0.4, 1)",
+                        }}
+                        onMouseEnter={(e) => { (e.currentTarget as HTMLImageElement).style.transform = "scale(1.04)"; }}
+                        onMouseLeave={(e) => { (e.currentTarget as HTMLImageElement).style.transform = "scale(1)"; }}
+                      />
+                      {/* Gradient overlay */}
+                      <div style={{
+                        position: "absolute",
+                        inset: 0,
+                        background: "linear-gradient(to top, rgba(26,26,26,0.55) 0%, transparent 50%)",
+                        pointerEvents: "none",
+                      }} />
+                      {/* Label */}
+                      <span style={{
+                        position: "absolute",
+                        bottom: 12,
+                        left: 14,
+                        ...mono,
+                        fontSize: 9,
+                        letterSpacing: "0.18em",
+                        color: "rgba(250,250,250,0.85)",
+                      }}>
+                        {img.label}
+                      </span>
+                    </div>
+                  </Reveal>
+                );
+              })}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Lightbox */}
+      <AnimatePresence>
+        {lightbox && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            onClick={() => setLightbox(null)}
+            style={{
+              position: "fixed",
+              inset: 0,
+              backgroundColor: "rgba(26,26,26,0.93)",
+              zIndex: 100,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: "clamp(16px, 4vw, 40px)",
+              cursor: "zoom-out",
+            }}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.96 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.96 }}
+              transition={{ duration: 0.25, ease: [0.25, 1, 0.4, 1] }}
+              style={{ position: "relative", maxWidth: "90vw", maxHeight: "90vh" }}
+            >
+              <img
+                src={lightbox.src}
+                alt={lightbox.label}
+                style={{
+                  maxWidth: "90vw",
+                  maxHeight: "85vh",
+                  objectFit: "contain",
+                  display: "block",
+                }}
+              />
+              <div style={{
+                position: "absolute",
+                bottom: -28,
+                left: 0,
+                ...mono,
+                fontSize: 9,
+                letterSpacing: "0.18em",
+                color: "rgba(250,250,250,0.5)",
+              }}>
+                {lightbox.label}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </section>
+  );
+}
 
 export default function RendersCase() {
   const { scrollYProgress } = useScroll();
@@ -404,6 +636,9 @@ export default function RendersCase() {
           </div>
         </div>
       </div>
+
+      {/* ── Gallery ── */}
+      <GallerySection />
 
       {/* ── Navigation row ── */}
       <section
