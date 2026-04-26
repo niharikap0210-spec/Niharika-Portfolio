@@ -559,7 +559,7 @@ export default function ThesisCase() {
           left: "clamp(16px, 5vw, 40px)",
           ...mono, fontSize: 9, color: "rgba(255,255,255,0.72)", letterSpacing: "0.22em",
         }}>
-          Aerial Render · Sonegao, Nagpur · 2024
+          Aerial Render
         </div>
       </div>
 
