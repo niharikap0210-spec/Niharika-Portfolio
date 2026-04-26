@@ -271,9 +271,9 @@ export default function Home() {
                     onClick={() => setActiveTab(tab)}
                     style={{
                       ...mono,
-                      fontSize: 11,
+                      fontSize: 12,
                       letterSpacing: "0.18em",
-                      padding: "11px 28px",
+                      padding: "14px 36px",
                       border: "none",
                       backgroundColor: active ? "var(--text-primary)" : "transparent",
                       color: active ? "#FAFAFA" : "var(--text-secondary)",
