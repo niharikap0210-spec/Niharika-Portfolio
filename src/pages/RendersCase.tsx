@@ -1,6 +1,6 @@
 import { motion, useScroll, useSpring, useInView, AnimatePresence } from "framer-motion";
 import { useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 import { ArrowLeftIcon as ArrowLeft, ArrowRightIcon as ArrowRight } from "@phosphor-icons/react";
 import DrawingSheetBorder from "../components/DrawingSheetBorder";
 import SectionMarker from "../components/SectionMarker";
@@ -32,6 +32,30 @@ const allImages = [
   "/renders/villa-08.jpg",
   "/renders/villa-04.jpg",
 ];
+
+function RendersNavLink({ to, align, children }: { to: string; align: "left" | "right"; children: React.ReactNode }) {
+  const [hovered, setHovered] = useState(false);
+  return (
+    <RouterLink
+      to={to}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: 12,
+        justifyContent: align === "right" ? "flex-end" : "flex-start",
+        padding: "clamp(20px, 3vw, 32px) 0",
+        textDecoration: "none",
+        color: hovered ? accent.primary : "var(--text-secondary)",
+        transitionProperty: "color",
+        transitionDuration: "200ms",
+      }}
+    >
+      {children}
+    </RouterLink>
+  );
+}
 
 function RenderImage({ src, onClick, ratio, delay }: { src: string; onClick: () => void; ratio: string; delay: number }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -232,54 +256,36 @@ export default function RendersCase() {
       </section>
 
       {/* ── Navigation row ── */}
-      <section
-        style={{ padding: "clamp(48px, 6vw, 72px) 0" }}
-        className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10"
-      >
-        <div className="flex items-center justify-between">
-          <Link
-            to="/architecture/thesis"
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 10,
-              ...mono,
-              fontSize: 11,
-              letterSpacing: "0.2em",
-              color: "var(--text-secondary)",
-              textDecoration: "none",
-              transitionProperty: "color",
-              transitionDuration: "200ms",
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = accent.primary)}
-            onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-secondary)")}
-          >
+      <nav style={{ borderTop: "0.75px solid var(--border)" }}>
+        <div
+          className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10"
+          style={{ display: "flex", justifyContent: "space-between" }}
+        >
+          <RendersNavLink to="/architecture/thesis" align="left">
             <ArrowLeft size={14} weight="regular" />
-            Thesis
-          </Link>
+            <span>
+              <span style={{ ...mono, fontSize: 9, color: "var(--text-muted)", letterSpacing: "0.22em", display: "block", marginBottom: 5 }}>
+                Prev
+              </span>
+              <span style={{ ...mono, fontSize: 13, letterSpacing: "0.18em" }}>
+                Thesis
+              </span>
+            </span>
+          </RendersNavLink>
 
-          <Link
-            to="/architecture"
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 10,
-              ...mono,
-              fontSize: 11,
-              letterSpacing: "0.2em",
-              color: "var(--text-secondary)",
-              textDecoration: "none",
-              transitionProperty: "color",
-              transitionDuration: "200ms",
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = accent.primary)}
-            onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-secondary)")}
-          >
-            Architecture
+          <RendersNavLink to="/architecture" align="right">
+            <span style={{ textAlign: "right" }}>
+              <span style={{ ...mono, fontSize: 9, color: "var(--text-muted)", letterSpacing: "0.22em", display: "block", marginBottom: 5 }}>
+                Next
+              </span>
+              <span style={{ ...mono, fontSize: 13, letterSpacing: "0.18em" }}>
+                Architecture
+              </span>
+            </span>
             <ArrowRight size={14} weight="regular" />
-          </Link>
+          </RendersNavLink>
         </div>
-      </section>
+      </nav>
 
       {/* ── Lightbox ── */}
       <AnimatePresence>
