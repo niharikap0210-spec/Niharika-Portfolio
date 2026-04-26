@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { useState, useCallback } from "react";
 import Nav from "./components/Nav";
 import Footer from "./components/Footer";
@@ -13,7 +13,6 @@ import VeriflowCase from "./pages/VeriflowCase";
 import ShelfieCase from "./pages/ShelfieCase";
 import LocalLiftCase from "./pages/LocalLiftCase";
 import Resume from "./pages/Resume";
-import Architecture from "./pages/Architecture";
 import ThesisCase from "./pages/ThesisCase";
 import RendersCase from "./pages/RendersCase";
 import NotFound from "./pages/NotFound";
@@ -31,7 +30,6 @@ function AnimatedRoutes() {
         <Route path="/work/locallift" element={<LocalLiftCase />} />
         <Route path="/work/:slug" element={<CaseStudy />} />
         <Route path="/resume" element={<Resume />} />
-        <Route path="/architecture" element={<Architecture />} />
         <Route path="/architecture/thesis" element={<ThesisCase />} />
         <Route path="/architecture/renders" element={<RendersCase />} />
         <Route path="*" element={<NotFound />} />
@@ -57,19 +55,29 @@ export default function App() {
   const [showSplash, setShowSplash] = useState<boolean>(
     () => !sessionStorage.getItem("np-splash-seen")
   );
+  const [splashDone, setSplashDone] = useState<boolean>(
+    () => !!sessionStorage.getItem("np-splash-seen")
+  );
 
   const handleSplashComplete = useCallback(() => {
     sessionStorage.setItem("np-splash-seen", "1");
     setShowSplash(false);
+    setSplashDone(true);
   }, []);
 
   return (
     <BrowserRouter>
-      <AnimatePresence mode="wait">
-        {showSplash ? (
+      {/* App renders underneath — invisible until splash exits */}
+      <motion.div
+        initial={{ opacity: splashDone ? 1 : 0 }}
+        animate={{ opacity: splashDone ? 1 : 0 }}
+        transition={{ duration: 0.6, ease: [0.25, 1, 0.4, 1] }}
+      >
+        <AppShell />
+      </motion.div>
+      <AnimatePresence>
+        {showSplash && (
           <SplashScreen key="splash" onComplete={handleSplashComplete} />
-        ) : (
-          <AppShell key="app" />
         )}
       </AnimatePresence>
     </BrowserRouter>
