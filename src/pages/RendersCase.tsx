@@ -19,57 +19,44 @@ const mono: React.CSSProperties = {
 };
 const serif = "'Playfair Display', Georgia, serif";
 
-function Reveal({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
+
+const allImages = [
+  "/renders/grameen-01.jpg",
+  "/renders/grameen-02.jpg",
+  "/renders/villa-09.jpg",
+  "/renders/villa-10.jpg",
+  "/renders/grameen-03.jpg",
+  "/renders/grameen-05.jpg",
+  "/renders/villa-02.jpg",
+];
+
+function RenderImage({ src, onClick, ratio, delay }: { src: string; onClick: () => void; ratio: string; delay: number }) {
   const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-50px" });
+  const inView = useInView(ref, { once: true, margin: "-40px" });
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 16 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.65, delay, ease: [0.25, 1, 0.4, 1] }}
+      onClick={onClick}
+      style={{ position: "relative", overflow: "hidden", cursor: "zoom-in", backgroundColor: "var(--bg-secondary)", aspectRatio: ratio }}
     >
-      {children}
+      <img
+        src={src}
+        alt=""
+        loading="lazy"
+        style={{
+          width: "100%", height: "100%", objectFit: "cover", display: "block",
+          transitionProperty: "transform", transitionDuration: "600ms",
+          transitionTimingFunction: "cubic-bezier(0.25, 1, 0.4, 1)",
+        }}
+        onMouseEnter={(e) => { (e.currentTarget as HTMLImageElement).style.transform = "scale(1.04)"; }}
+        onMouseLeave={(e) => { (e.currentTarget as HTMLImageElement).style.transform = "scale(1)"; }}
+      />
     </motion.div>
   );
 }
-
-const allImages = [
-  "/renders/villa-01.jpg",
-  "/renders/villa-02.jpg",
-  "/renders/villa-03.jpg",
-  "/renders/villa-04.jpg",
-  "/renders/villa-05.jpg",
-  "/renders/villa-06.jpg",
-  "/renders/villa-07.jpg",
-  "/renders/villa-08.jpg",
-  "/renders/villa-09.jpg",
-  "/renders/villa-10.jpg",
-  "/renders/villa-11.jpg",
-  "/renders/villa-12.jpg",
-  "/renders/villa-13.jpg",
-  "/renders/urban-01.jpg",
-  "/renders/urban-02.jpg",
-  "/renders/urban-03.jpg",
-  "/renders/urban-04.jpg",
-  "/renders/urban-05.jpg",
-  "/renders/urban-06.jpg",
-  "/renders/urban-07.jpg",
-  "/renders/urban-08.jpg",
-  "/renders/urban-09.jpg",
-  "/renders/urban-10.jpg",
-  "/renders/urban-11.jpg",
-  "/renders/urban-12.jpg",
-  "/renders/urban-13.jpg",
-  "/renders/grameen-01.jpg",
-  "/renders/grameen-02.jpg",
-  "/renders/grameen-03.jpg",
-  "/renders/grameen-04.jpg",
-  "/renders/grameen-05.jpg",
-  "/renders/grameen-06.jpg",
-  "/renders/grameen-07.jpg",
-  "/renders/grameen-08.jpg",
-];
 
 export default function RendersCase() {
   const { scrollYProgress } = useScroll();
@@ -206,45 +193,29 @@ export default function RendersCase() {
 
       {/* ── Image gallery ── */}
       <section style={{ padding: "clamp(48px, 6vw, 72px) 0 clamp(72px, 9vw, 112px)" }}>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(2, 1fr)",
-            gap: "clamp(6px, 1vw, 10px)",
-            padding: "0 clamp(6px, 1vw, 10px)",
-          }}
-        >
-          {allImages.map((src, i) => (
-            <Reveal key={src} delay={i * 0.03}>
-              <div
-                onClick={() => setLightbox(src)}
-                style={{
-                  position: "relative",
-                  overflow: "hidden",
-                  cursor: "zoom-in",
-                  backgroundColor: "var(--bg-secondary)",
-                  aspectRatio: "16/9",
-                }}
-              >
-                <img
-                  src={src}
-                  alt=""
-                  loading="lazy"
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "cover",
-                    display: "block",
-                    transitionProperty: "transform",
-                    transitionDuration: "600ms",
-                    transitionTimingFunction: "cubic-bezier(0.25, 1, 0.4, 1)",
-                  }}
-                  onMouseEnter={(e) => { (e.currentTarget as HTMLImageElement).style.transform = "scale(1.04)"; }}
-                  onMouseLeave={(e) => { (e.currentTarget as HTMLImageElement).style.transform = "scale(1)"; }}
-                />
-              </div>
-            </Reveal>
-          ))}
+        <div style={{ display: "flex", flexDirection: "column", gap: "clamp(6px, 1vw, 10px)", padding: "0 clamp(6px, 1vw, 10px)" }}>
+
+          {/* Row 1 — full width */}
+          <RenderImage src={allImages[0]} onClick={() => setLightbox(allImages[0])} ratio="16/7" delay={0} />
+
+          {/* Row 2 — full width */}
+          <RenderImage src={allImages[1]} onClick={() => setLightbox(allImages[1])} ratio="16/7" delay={0.05} />
+
+          {/* Row 3 — two column */}
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "clamp(6px, 1vw, 10px)" }}>
+            <RenderImage src={allImages[2]} onClick={() => setLightbox(allImages[2])} ratio="4/3" delay={0.05} />
+            <RenderImage src={allImages[3]} onClick={() => setLightbox(allImages[3])} ratio="4/3" delay={0.1} />
+          </div>
+
+          {/* Row 4 — two column */}
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "clamp(6px, 1vw, 10px)" }}>
+            <RenderImage src={allImages[4]} onClick={() => setLightbox(allImages[4])} ratio="4/3" delay={0.05} />
+            <RenderImage src={allImages[5]} onClick={() => setLightbox(allImages[5])} ratio="4/3" delay={0.1} />
+          </div>
+
+          {/* Row 5 — full width */}
+          <RenderImage src={allImages[6]} onClick={() => setLightbox(allImages[6])} ratio="16/7" delay={0.05} />
+
         </div>
       </section>
 
