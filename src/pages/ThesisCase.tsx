@@ -185,7 +185,7 @@ const SHEETS = [
   { src: "/thesis/img-03.png", label: "Sheet 11", title: "Views · Pavilions & Landscape", caption: "Entrance pavilion, sculpture garden, HAT, celebration pavilion, levels & steps seating." },
   { src: "/thesis/img-06.png", label: "Sheet 12", title: "Views · Active Zones & Aerial", caption: "Fountain, pit, skate park, view from the skate park, and aerial overview of the full site." },
   { src: "/thesis/img-09.png", label: "Sheet 13", title: "Street Plan", caption: "Proposed street module with hardscape, softscape planters, street furniture and lighting." },
-  { src: "/thesis/img-11.jpg", label: "Final Render", title: "Aerial Site View", caption: "Photorealistic aerial render of the completed public realm — Sonegao, Nagpur, 2024." },
+  { src: "/thesis/img-11.jpg", label: "Final Render", title: "Aerial Site View", caption: "Photorealistic aerial render of the completed public realm — Sonegao, Nagpur, 2023." },
 ];
 
 /* ══════════════════════════════════════════════════════════════════
@@ -485,7 +485,7 @@ export default function ThesisCase() {
                 transition={{ duration: 0.5 }}
                 style={{ ...t.eyebrow, marginBottom: 20, letterSpacing: "0.22em" }}
               >
-                B.Arch Thesis · SVITS Indore · 2024 · 20 Weeks
+                B.Arch Thesis · 2023 · 20 Weeks
               </motion.div>
 
               <motion.h1
