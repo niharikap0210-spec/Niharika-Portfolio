@@ -650,46 +650,33 @@ export default function ThesisCase() {
             <div className="lg:col-span-6">
               <Reveal delay={0.2}>
                 <div style={{
-                  border: "1px solid var(--border)",
-                  background: thesis.subtle,
+                  display: "grid", gridTemplateColumns: "1fr 1fr",
+                  borderTop: "1px solid var(--border)",
                 }}>
-                  {/* Panel header */}
-                  <div style={{
-                    padding: "12px 20px",
-                    borderBottom: "1px solid var(--border)",
-                    display: "flex", alignItems: "center", gap: 10,
-                  }}>
-                    <div style={{ width: 6, height: 6, background: thesis.primary }} />
-                    <span style={{ ...mono, fontSize: 9, color: thesis.primary, letterSpacing: "0.22em", fontWeight: 700 }}>
-                      Project Brief
-                    </span>
-                  </div>
-                  {/* Facts */}
                   {[
-                    { k: "Site", v: "Sonegao, Nagpur" },
-                    { k: "Site Area", v: "3,770 sq.m" },
-                    { k: "Programme", v: "Activity Centre · Yoga Centre · Book Café · Workshop · Street" },
-                    { k: "Guide", v: "Prof. Sonali Borate" },
-                    { k: "Institution", v: "SVITS, Indore · B.Arch 2022–23" },
-                  ].map((row, i, arr) => (
-                    <div key={row.k} style={{
-                      display: "grid", gridTemplateColumns: "110px 1fr",
-                      borderBottom: i < arr.length - 1 ? "1px solid var(--border)" : "none",
+                    { value: "20", suffix: " wks", label: "Thesis Duration" },
+                    { value: "3,770", suffix: " sq.m", label: "Site Area" },
+                    { value: "5", suffix: "", label: "Programme Elements" },
+                    { value: "4", suffix: "", label: "Case Studies" },
+                  ].map((s, i) => (
+                    <div key={s.label} style={{
+                      padding: "clamp(24px, 3vw, 36px) clamp(16px, 2vw, 28px)",
+                      borderRight: i % 2 === 0 ? "1px solid var(--border)" : "none",
+                      borderBottom: i < 2 ? "1px solid var(--border)" : "none",
                     }}>
                       <div style={{
-                        ...mono, fontSize: 9, color: "var(--text-muted)",
-                        letterSpacing: "0.18em", padding: "12px 16px",
-                        borderRight: "1px solid var(--border)",
-                        display: "flex", alignItems: "center",
+                        fontFamily: serif, fontWeight: 700,
+                        fontSize: "clamp(32px, 3.5vw, 48px)",
+                        letterSpacing: "-0.035em", lineHeight: 1,
+                        color: thesis.primary, marginBottom: 10,
                       }}>
-                        {row.k}
+                        {s.value}
+                        <span style={{ fontSize: "0.45em", fontWeight: 400, letterSpacing: "0.04em", color: thesis.muted }}>
+                          {s.suffix}
+                        </span>
                       </div>
-                      <div style={{
-                        fontFamily: sans, fontSize: 14, fontWeight: 500,
-                        color: "var(--text-primary)", padding: "12px 16px",
-                        lineHeight: 1.5,
-                      }}>
-                        {row.v}
+                      <div style={{ ...mono, fontSize: 9, color: "var(--text-muted)", letterSpacing: "0.18em" }}>
+                        {s.label}
                       </div>
                     </div>
                   ))}
