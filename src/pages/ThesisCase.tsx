@@ -626,38 +626,6 @@ export default function ThesisCase() {
             </div>
           </div>
 
-          {/* Site facts strip */}
-          <Reveal delay={0.18}>
-            <div style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(4, 1fr)",
-              borderTop: "1px solid var(--border)",
-              borderLeft: "1px solid var(--border)",
-            }}>
-              {[
-                { label: "Site", value: "Sonegao, Nagpur" },
-                { label: "Site Area", value: "3770 sq.m" },
-                { label: "Guide", value: "Prof. Sonali Borate" },
-                { label: "Programme", value: "Activity Centre · Yoga Centre · Book Café · Workshop" },
-              ].map((item) => (
-                <div
-                  key={item.label}
-                  style={{
-                    padding: "clamp(18px, 2.5vw, 28px) clamp(16px, 2vw, 24px)",
-                    borderRight: "1px solid var(--border)",
-                    borderBottom: "1px solid var(--border)",
-                  }}
-                >
-                  <div style={{ ...mono, fontSize: 9, color: thesis.primary, letterSpacing: "0.2em", marginBottom: 10, fontWeight: 700 }}>
-                    {item.label}
-                  </div>
-                  <div style={{ fontFamily: sans, fontSize: "clamp(13px, 1vw, 15px)", fontWeight: 500, color: "var(--text-primary)", lineHeight: 1.55 }}>
-                    {item.value}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </Reveal>
         </div>
       </section>
 
