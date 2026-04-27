@@ -782,6 +782,14 @@ const stops = [
     logo: "/logos/isu.png",
   },
   {
+    role: "UX Designer",
+    company: "Qnaptics",
+    period: "Feb 2023 – Jun 2023",
+    blurb:
+      "Built a full design system from zero: tokens, components, and patterns for a fledgling product team.",
+    logo: "/logos/qnaptics.jpg",
+  },
+  {
     role: "UI/UX Designer",
     company: "Sixth Sense Tech",
     period: "Oct 2022 – Jan 2023",
@@ -789,14 +797,6 @@ const stops = [
       "Consumer interfaces and engineering handoff. Owned design specs from concept through QA.",
     logo: null,
     initials: "SS",
-  },
-  {
-    role: "UX Designer",
-    company: "Qnaptics",
-    period: "Feb 2023 – Jun 2023",
-    blurb:
-      "Built a full design system from zero: tokens, components, and patterns for a fledgling product team.",
-    logo: "/logos/qnaptics.jpg",
   },
 ];
 
