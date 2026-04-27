@@ -1,0 +1,87 @@
+# robots.txt — niharikaux.xyz
+# Portfolio of Niharika Pundlik — Product Designer
+# All original content, design, layout, typography, and visual identity are protected.
+
+# ── Allow legitimate search engines ────────────────────────────────
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+# ── Block OpenAI crawlers ───────────────────────────────────────────
+User-agent: GPTBot
+Disallow: /
+
+User-agent: ChatGPT-User
+Disallow: /
+
+User-agent: OAI-SearchBot
+Disallow: /
+
+# ── Block Anthropic crawlers ────────────────────────────────────────
+User-agent: Claude-Web
+Disallow: /
+
+User-agent: anthropic-ai
+Disallow: /
+
+User-agent: ClaudeBot
+Disallow: /
+
+# ── Block Google AI training ────────────────────────────────────────
+User-agent: Google-Extended
+Disallow: /
+
+# ── Block Common Crawl (used to train most LLMs) ───────────────────
+User-agent: CCBot
+Disallow: /
+
+# ── Block other known AI/LLM training crawlers ─────────────────────
+User-agent: Bytespider
+Disallow: /
+
+User-agent: Diffbot
+Disallow: /
+
+User-agent: FacebookBot
+Disallow: /
+
+User-agent: cohere-ai
+Disallow: /
+
+User-agent: PerplexityBot
+Disallow: /
+
+User-agent: YouBot
+Disallow: /
+
+User-agent: Omgilibot
+Disallow: /
+
+User-agent: Applebot-Extended
+Disallow: /
+
+User-agent: DataForSeoBot
+Disallow: /
+
+User-agent: PetalBot
+Disallow: /
+
+User-agent: Timpibot
+Disallow: /
+
+User-agent: img2dataset
+Disallow: /
+
+User-agent: Scrapy
+Disallow: /
+
+# ── Sitemap ─────────────────────────────────────────────────────────
+Sitemap: https://niharikaux.xyz/sitemap.xml
