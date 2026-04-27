@@ -2,9 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Remove focus outline on mouse click, keep for keyboard nav */
-*:focus:not(:focus-visible) { outline: none; }
-*:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+/* Suppress all focus outlines for mouse/touch — JS adds .keyboard-nav to body on Tab */
+*:focus { outline: none !important; box-shadow: none; }
+body.keyboard-nav *:focus-visible { outline: 2px solid var(--accent) !important; outline-offset: 2px; }
 
 /* ── Design Tokens ─────────────────────────────────────────────── */
 :root {
@@ -74,9 +74,15 @@ body {
   color: var(--text-primary);
   font-family: 'Inter', system-ui, sans-serif;
   line-height: 1.7;
+  overflow-x: hidden;
   /* Firefox scrollbar */
   scrollbar-width: thin;
   scrollbar-color: var(--border) var(--bg-primary);
+}
+
+/* Reserve scrollbar gutter so layout doesn't shift when scrollbar appears */
+html {
+  scrollbar-gutter: stable;
 }
 
 /* ── Selection ──────────────────────────────────────────────────── */
@@ -85,12 +91,6 @@ body {
   color: var(--text-primary);
 }
 
-/* ── Focus ──────────────────────────────────────────────────────── */
-:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-  border-radius: 3px;
-}
 
 /* ── Scrollbar ──────────────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 5px; }

@@ -502,8 +502,8 @@ export default function ThesisCase() {
       <div style={{
         position: "relative",
         overflow: "hidden",
-        width: "100vw",
-        marginLeft: "calc(50% - 50vw)",
+        width: "100%",
+        marginLeft: 0,
         maxHeight: isMobile ? "45vw" : "68vh",
       }}>
         <motion.img

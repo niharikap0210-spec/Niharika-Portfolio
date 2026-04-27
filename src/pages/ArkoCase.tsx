@@ -750,8 +750,7 @@ function UserTabs() {
               cursor: "pointer", textAlign: "left", flex: "0 0 auto",
               transitionProperty: "border-color, color", transitionDuration: "180ms",
             }}
-            onFocus={(e) => { (e.currentTarget as HTMLElement).style.outline = `2px solid ${arko.primary}`; (e.currentTarget as HTMLElement).style.outlineOffset = "2px"; }}
-            onBlur={(e) => { (e.currentTarget as HTMLElement).style.outline = "none"; }}>
+>
             <span style={{ ...mono, fontSize: 12, color: tab === i ? arko.primary : "var(--text-muted)", display: "block", marginBottom: 10, letterSpacing: "0.2em", fontWeight: 600 }}>
               {x.label}
             </span>
@@ -1280,13 +1279,6 @@ function ScanFlowStepper({
                     textAlign: "left",
                     alignItems: "start",
                   }}
-                  onFocus={(e) => {
-                    (e.currentTarget as HTMLElement).style.outline = `2px solid ${arko.primary}`;
-                    (e.currentTarget as HTMLElement).style.outlineOffset = "4px";
-                  }}
-                  onBlur={(e) => {
-                    (e.currentTarget as HTMLElement).style.outline = "none";
-                  }}
                 >
                   {/* Node square - solid fill so it covers the rail cleanly */}
                   <motion.span
@@ -1721,13 +1713,6 @@ function ClientJourneyReel() {
                 flexDirection: "column",
                 gap: 18,
                 alignItems: "stretch",
-              }}
-              onFocus={(e) => {
-                (e.currentTarget as HTMLElement).style.outline = `2px solid ${arko.light}`;
-                (e.currentTarget as HTMLElement).style.outlineOffset = "6px";
-              }}
-              onBlur={(e) => {
-                (e.currentTarget as HTMLElement).style.outline = "none";
               }}
             >
               {/* Top rail · accent on active */}

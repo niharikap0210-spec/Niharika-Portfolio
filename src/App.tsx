@@ -62,8 +62,29 @@ function useViewportHeight() {
   }, []);
 }
 
+/* Adds .keyboard-nav to body on Tab key — removes on mousedown/touchstart
+   This makes focus outlines appear ONLY for keyboard users, not mouse clicks.
+   More reliable than :focus-visible alone, especially on Windows Chrome. */
+function useKeyboardNav() {
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Tab") document.body.classList.add("keyboard-nav");
+    };
+    const onPointer = () => document.body.classList.remove("keyboard-nav");
+    window.addEventListener("keydown", onKey);
+    window.addEventListener("mousedown", onPointer);
+    window.addEventListener("touchstart", onPointer, { passive: true });
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      window.removeEventListener("mousedown", onPointer);
+      window.removeEventListener("touchstart", onPointer);
+    };
+  }, []);
+}
+
 export default function App() {
   useViewportHeight();
+  useKeyboardNav();
   const [showSplash, setShowSplash] = useState<boolean>(
     () => !sessionStorage.getItem("np-splash-seen")
   );
