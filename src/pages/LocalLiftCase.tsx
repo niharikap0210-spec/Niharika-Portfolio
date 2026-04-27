@@ -1812,7 +1812,7 @@ export default function LocalLiftCase() {
         ref={heroRef}
         style={{
           position: "relative",
-          minHeight: "calc(100vh - 56px)",
+          minHeight: "calc(var(--vh, 1vh) * 100 - 56px)",
           display: "flex", flexDirection: "column",
           overflow: "hidden",
           background: "var(--bg-primary)",

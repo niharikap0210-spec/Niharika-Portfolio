@@ -65,6 +65,8 @@ html {
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 body {
@@ -72,6 +74,9 @@ body {
   color: var(--text-primary);
   font-family: 'Inter', system-ui, sans-serif;
   line-height: 1.7;
+  /* Firefox scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) var(--bg-primary);
 }
 
 /* ── Selection ──────────────────────────────────────────────────── */
@@ -191,6 +196,9 @@ body {
     cursor: auto;
   }
 }
+
+/* ── iOS Safari 100vh fix via --vh CSS variable (set in App.tsx) ── */
+:root { --vh: 1vh; }
 
 /* ── Prevent long words from overflowing on small screens ──────── */
 p, h1, h2, h3, h4, blockquote {

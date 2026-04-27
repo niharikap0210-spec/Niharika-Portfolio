@@ -2177,7 +2177,7 @@ export default function ArkoCase() {
       ══════════════════════════════════════════════════════════════ */}
       <section className="blueprint-grid" style={{
         position: "relative",
-        height: isMobile ? "auto" : "calc(100vh - 56px)",
+        height: isMobile ? "auto" : "calc(var(--vh, 1vh) * 100 - 56px)",
         minHeight: isMobile ? 0 : 640,
         display: "flex",
         flexDirection: "column",

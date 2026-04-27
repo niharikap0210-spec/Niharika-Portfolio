@@ -22,10 +22,16 @@ export default function SplashScreen({ onComplete }: SplashScreenProps) {
       width: 200px;
       height: 320px;
       position: relative;
+      -webkit-transform-style: preserve-3d;
+      -webkit-transform-style: preserve-3d;
       transform-style: preserve-3d;
     }
     @media (max-width: 480px) {
-      .loader { zoom: 0.44; }
+      .loader {
+        transform: scale(0.44);
+        transform-origin: top center;
+        margin-bottom: -180px;
+      }
     }
     .loader:before, .loader:after {
       --r: 20.5deg;
@@ -48,6 +54,7 @@ export default function SplashScreen({ onComplete }: SplashScreenProps) {
       position: absolute;
       left: -50px;
       bottom: -120px;
+      -webkit-transform-style: preserve-3d;
       transform-style: preserve-3d;
       transform: rotateY(-47deg) rotateX(-15deg) rotateZ(15deg) scale(1);
     }
@@ -57,6 +64,7 @@ export default function SplashScreen({ onComplete }: SplashScreenProps) {
       height: 200px;
       background: var(--primary);
       background: linear-gradient(45deg, var(--primary) 0%, var(--primary) 50%, var(--primary-light) 50%, var(--primary-light) 100%);
+      -webkit-transform-style: preserve-3d;
       transform-style: preserve-3d;
       animation: ground var(--duration) linear forwards;
     }
@@ -85,6 +93,7 @@ export default function SplashScreen({ onComplete }: SplashScreenProps) {
       width: 48px;
       height: 48px;
       position: relative;
+      -webkit-transform-style: preserve-3d;
       transform-style: preserve-3d;
       animation: var(--duration) ease forwards;
       transform: rotateY(-47deg) rotateX(-15deg) rotateZ(15deg) scale(0);

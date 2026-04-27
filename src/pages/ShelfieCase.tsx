@@ -1663,7 +1663,7 @@ export default function ShelfieCase() {
       ══════════════════════════════════════════════════════════════ */}
       <section style={{
         position: "relative",
-        height: "calc(100vh - 56px)",
+        height: "calc(var(--vh, 1vh) * 100 - 56px)",
         minHeight: 640,
         display: "flex",
         flexDirection: "column",

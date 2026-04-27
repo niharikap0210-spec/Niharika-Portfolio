@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import Nav from "./components/Nav";
 import Footer from "./components/Footer";
 import SplashScreen from "./components/SplashScreen";
@@ -51,7 +51,19 @@ function AppShell() {
   );
 }
 
+/* Sets --vh CSS variable to actual viewport height — fixes 100vh on iOS Safari */
+function useViewportHeight() {
+  useEffect(() => {
+    const set = () =>
+      document.documentElement.style.setProperty("--vh", `${window.innerHeight * 0.01}px`);
+    set();
+    window.addEventListener("resize", set);
+    return () => window.removeEventListener("resize", set);
+  }, []);
+}
+
 export default function App() {
+  useViewportHeight();
   const [showSplash, setShowSplash] = useState<boolean>(
     () => !sessionStorage.getItem("np-splash-seen")
   );
