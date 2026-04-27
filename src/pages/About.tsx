@@ -441,9 +441,9 @@ function MyStory() {
                 lineHeight: 1.75,
               }}
             >
-              Five years of B.Arch in Indore taught me to think in systems, light, and
-              human scale. Along the way, I realized the same care I put into a corridor,
-              I wanted to put into a tap. The materials changed; the discipline didn't.
+              Five years of B.Arch taught me to think in systems, light, and human scale.
+              Along the way, I realized I wanted to put the same care into a tap as into
+              a corridor. The materials changed; the discipline didn't.
             </p>
 
             <p
