@@ -6,13 +6,6 @@ import {
   PencilSimpleLineIcon,
   ForkKnifeIcon,
   MapPinIcon,
-  HeartbeatIcon,
-  RobotIcon,
-  UsersThreeIcon,
-  MonitorIcon,
-  PaletteIcon,
-  GraduationCapIcon,
-  BuildingsIcon,
 } from "@phosphor-icons/react";
 import HandDrawnSketch from "../components/HandDrawnSketch";
 import ConnectSection from "../components/ConnectSection";
@@ -770,7 +763,7 @@ const stops = [
     period: "2025 – Now",
     blurb:
       "Healthcare specimen-tracking suite, end-to-end. Reduced lab handoff errors and shipped a clinician-trusted dashboard.",
-    icon: HeartbeatIcon,
+    logo: "/logos/pycube.png",
   },
   {
     role: "Product Designer",
@@ -778,7 +771,7 @@ const stops = [
     period: "2025 – Now",
     blurb:
       "AI-driven flows for the talent marketplace, connecting candidates and companies through smart matching and review.",
-    icon: RobotIcon,
+    logo: "/logos/mercor.png",
   },
   {
     role: "HCI Org Lead",
@@ -786,7 +779,7 @@ const stops = [
     period: "2024 – 2025",
     blurb:
       "Led the HCI student org: workshops, mentorship, and Figma craft sessions for incoming designers.",
-    icon: UsersThreeIcon,
+    logo: "/logos/isu.png",
   },
   {
     role: "UI/UX Designer",
@@ -794,7 +787,8 @@ const stops = [
     period: "2022 – 2023",
     blurb:
       "Consumer interfaces and engineering handoff. Owned design specs from concept through QA.",
-    icon: MonitorIcon,
+    logo: null,
+    initials: "SS",
   },
   {
     role: "UX Designer",
@@ -802,7 +796,8 @@ const stops = [
     period: "2022",
     blurb:
       "Built a full design system from zero: tokens, components, and patterns for a fledgling product team.",
-    icon: PaletteIcon,
+    logo: null,
+    initials: "QN",
   },
 ];
 
@@ -820,7 +815,8 @@ function Experience() {
           italic="built things"
         />
 
-        <ul style={{ paddingLeft: 0, margin: 0, listStyle: "none" }}>
+        {/* ── Work rows ─────────────────────────────────────────── */}
+        <ul style={{ paddingLeft: 0, margin: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: 10 }}>
           {stops.map((s, i) => {
             const ref = useRef<HTMLLIElement>(null);
             const inView = useInView(ref, { once: true, margin: "-40px" });
@@ -828,62 +824,79 @@ function Experience() {
               <motion.li
                 key={`${s.role}-${s.company}`}
                 ref={ref}
-                initial={{ opacity: 0, y: 12 }}
-                animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
-                transition={{ duration: 0.5, delay: i * 0.06, ease: [0.25, 1, 0.4, 1] }}
+                initial={{ opacity: 0, y: 14 }}
+                animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 14 }}
+                transition={{ duration: 0.5, delay: i * 0.07, ease: [0.25, 1, 0.4, 1] }}
+                whileHover={{ backgroundColor: "rgba(181,146,76,0.05)", transition: { duration: 0.18 } }}
                 className="group"
                 style={{
-                  borderTop: "0.75px solid var(--border)",
-                  padding: "24px 0",
+                  border: "0.75px solid var(--border)",
+                  padding: "clamp(20px, 2.5vw, 28px) clamp(20px, 2.5vw, 32px)",
                 }}
               >
-                <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr] gap-3 lg:gap-12">
+                <div className="grid grid-cols-1 lg:grid-cols-[96px_1px_1fr_auto] gap-5 lg:gap-8 items-center">
 
-                  {/* Left — icon badge + period + role */}
-                  <div className="flex lg:flex-col gap-3 lg:gap-2 items-start pt-1">
-                    <div
-                      aria-hidden
-                      style={{
-                        width: 32,
-                        height: 32,
-                        border: "0.75px solid var(--border)",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        flexShrink: 0,
-                        backgroundColor: "var(--bg-secondary)",
-                        transitionProperty: "border-color, background-color",
-                        transitionDuration: "200ms",
-                      }}
-                      className="group-hover:border-[var(--accent)] group-hover:bg-[var(--accent-subtle)]"
-                    >
-                      <s.icon
-                        size={15}
-                        weight="regular"
-                        color="var(--text-muted)"
-                        className="group-hover:text-[var(--accent)]"
-                        style={{ transitionProperty: "color", transitionDuration: "200ms" }}
+                  {/* Logo / Monogram */}
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: 76 }}>
+                    {s.logo ? (
+                      <img
+                        src={s.logo}
+                        alt={s.company}
+                        style={{
+                          maxWidth: 80,
+                          maxHeight: 64,
+                          objectFit: "contain",
+                          mixBlendMode: "multiply",
+                          display: "block",
+                        }}
                       />
-                    </div>
-                    <div className="flex lg:flex-col gap-1 lg:gap-1">
-                      <span style={{ ...mono, fontSize: 13, color: "var(--text-secondary)", letterSpacing: "0.14em" }}>
-                        {s.period}
-                      </span>
-                      <span style={{ ...mono, fontSize: 13, color: "var(--accent)", letterSpacing: "0.14em" }}>
-                        {s.role}
-                      </span>
-                    </div>
+                    ) : (
+                      <div
+                        style={{
+                          width: 64,
+                          height: 64,
+                          border: "0.75px solid var(--border)",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          backgroundColor: "var(--bg-secondary)",
+                        }}
+                      >
+                        <span
+                          style={{
+                            fontFamily: serif,
+                            fontStyle: "italic",
+                            fontWeight: 700,
+                            fontSize: 22,
+                            color: "var(--accent)",
+                            letterSpacing: "-0.03em",
+                          }}
+                        >
+                          {s.initials}
+                        </span>
+                      </div>
+                    )}
                   </div>
 
-                  {/* Right — company + blurb */}
-                  <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                  {/* Vertical rule */}
+                  <div
+                    aria-hidden
+                    className="hidden lg:block"
+                    style={{ width: 1, height: 52, backgroundColor: "var(--border)" }}
+                  />
+
+                  {/* Role + Company + Blurb */}
+                  <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                    <span style={{ ...mono, fontSize: 10, color: "var(--accent)", letterSpacing: "0.2em" }}>
+                      {s.role}
+                    </span>
                     <h3
                       style={{
                         fontFamily: serif,
                         fontWeight: 600,
-                        fontSize: "clamp(22px, 2.2vw, 28px)",
-                        letterSpacing: "-0.018em",
-                        lineHeight: 1.2,
+                        fontSize: "clamp(20px, 2vw, 26px)",
+                        letterSpacing: "-0.02em",
+                        lineHeight: 1.15,
                         color: "var(--text-primary)",
                         margin: 0,
                         transitionProperty: "color",
@@ -896,102 +909,130 @@ function Experience() {
                     <p
                       style={{
                         fontFamily: sans,
-                        fontSize: 17,
-                        color: "var(--text-primary)",
-                        lineHeight: 1.75,
+                        fontSize: 15,
+                        color: "var(--text-secondary)",
+                        lineHeight: 1.7,
                         margin: 0,
-                        opacity: 0.72,
                       }}
                     >
                       {s.blurb}
                     </p>
                   </div>
+
+                  {/* Period — right col desktop */}
+                  <span
+                    className="hidden lg:block"
+                    style={{
+                      ...mono,
+                      fontSize: 11,
+                      color: "var(--text-muted)",
+                      letterSpacing: "0.14em",
+                      whiteSpace: "nowrap",
+                      alignSelf: "flex-start",
+                      paddingTop: 4,
+                    }}
+                  >
+                    {s.period}
+                  </span>
+
+                  {/* Period — mobile (below blurb) */}
+                  <span
+                    className="lg:hidden col-span-full"
+                    style={{ ...mono, fontSize: 11, color: "var(--text-muted)", letterSpacing: "0.14em" }}
+                  >
+                    {s.period}
+                  </span>
                 </div>
               </motion.li>
             );
           })}
-          <li style={{ borderTop: "0.75px solid var(--border)" }} aria-hidden />
         </ul>
 
-        {/* Education — visually distinct block */}
-        <div style={{ marginTop: 64 }}>
-          {/* Header row — accent left bar + label */}
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 12,
-              marginBottom: 0,
-              paddingBottom: 16,
-            }}
-          >
-            <div
-              aria-hidden
-              style={{ width: 3, height: 18, backgroundColor: "var(--accent)", flexShrink: 0 }}
-            />
-            <span
-              style={{
-                ...mono,
-                fontSize: 11,
-                color: "var(--text-secondary)",
-                letterSpacing: "0.22em",
-              }}
-            >
+        {/* ── Education ─────────────────────────────────────────── */}
+        <div style={{ marginTop: 56 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
+            <div aria-hidden style={{ width: 3, height: 18, backgroundColor: "var(--accent)", flexShrink: 0 }} />
+            <span style={{ ...mono, fontSize: 11, color: "var(--text-secondary)", letterSpacing: "0.22em" }}>
               Education
             </span>
           </div>
 
-          {/* Education rows on tinted surface */}
-          <div
-            style={{
-              backgroundColor: "var(--bg-secondary)",
-              border: "0.75px solid var(--border)",
-              padding: "0 clamp(20px, 3vw, 40px)",
-            }}
-          >
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             {[
-              { degree: "M.S. Human-Computer Interaction", school: "Iowa State University", period: "2023 – 2025", note: "the conversion year", icon: GraduationCapIcon },
-              { degree: "B.Arch. Architecture", school: "Priyadarshini Inst. of Architecture and Design Studies", period: "2018 – 2023", note: "where it started ✿", icon: BuildingsIcon },
+              {
+                degree: "M.S. Human-Computer Interaction",
+                school: "Iowa State University",
+                period: "2023 – 2025",
+                note: "the conversion year",
+                logo: "/logos/isu.png",
+              },
+              {
+                degree: "B.Arch. Architecture",
+                school: "Priyadarshini Inst. of Architecture and Design Studies",
+                period: "2018 – 2023",
+                note: "where it started ✿",
+                logo: "/logos/piads.png",
+              },
             ].map((e, i) => (
               <motion.div
                 key={e.degree}
-                initial={{ opacity: 0, y: 10 }}
+                initial={{ opacity: 0, y: 12 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-30px" }}
-                transition={{ duration: 0.45, delay: i * 0.07, ease: [0.25, 1, 0.4, 1] }}
+                transition={{ duration: 0.5, delay: i * 0.1, ease: [0.25, 1, 0.4, 1] }}
                 style={{
-                  borderTop: i > 0 ? "0.75px solid var(--border)" : "none",
-                  padding: "28px 0",
+                  backgroundColor: "var(--bg-secondary)",
+                  border: "0.75px solid var(--border)",
+                  padding: "clamp(24px, 3vw, 36px)",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 0,
                 }}
               >
-                <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr] gap-3 lg:gap-12">
-                  <div className="flex lg:flex-col gap-3 lg:gap-2 items-start pt-1">
-                    <div
-                      aria-hidden
+                {/* Top — logo + period */}
+                <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 20 }}>
+                  <div style={{ height: 56, display: "flex", alignItems: "center" }}>
+                    <img
+                      src={e.logo}
+                      alt={e.school}
                       style={{
-                        width: 32,
-                        height: 32,
-                        border: "0.75px solid var(--border)",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        flexShrink: 0,
-                        backgroundColor: "rgba(255,255,255,0.5)",
+                        maxHeight: 52,
+                        maxWidth: 110,
+                        objectFit: "contain",
+                        mixBlendMode: "multiply",
+                        display: "block",
                       }}
-                    >
-                      <e.icon size={15} weight="regular" color="var(--text-muted)" />
-                    </div>
-                    <div className="flex lg:flex-col gap-1">
-                      <span style={{ ...mono, fontSize: 13, color: "var(--text-secondary)", letterSpacing: "0.14em" }}>{e.period}</span>
-                      <span style={{ ...caveat, fontSize: 18, color: "var(--accent)", opacity: 0.9 }}>{e.note}</span>
-                    </div>
+                    />
                   </div>
-                  <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                    <h3 style={{ fontFamily: serif, fontWeight: 600, fontSize: "clamp(20px, 2vw, 24px)", letterSpacing: "-0.018em", lineHeight: 1.2, color: "var(--text-primary)", margin: 0 }}>
-                      {e.degree}
-                    </h3>
-                    <p style={{ fontFamily: sans, fontSize: 16, color: "var(--text-primary)", opacity: 0.65, margin: 0 }}>{e.school}</p>
-                  </div>
+                  <span style={{ ...mono, fontSize: 11, color: "var(--text-muted)", letterSpacing: "0.14em", paddingTop: 4 }}>
+                    {e.period}
+                  </span>
+                </div>
+
+                {/* Divider */}
+                <div style={{ borderTop: "0.75px solid var(--border)", marginBottom: 20 }} />
+
+                {/* Degree + school + note */}
+                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                  <h3
+                    style={{
+                      fontFamily: serif,
+                      fontWeight: 600,
+                      fontSize: "clamp(18px, 1.8vw, 22px)",
+                      letterSpacing: "-0.018em",
+                      lineHeight: 1.25,
+                      color: "var(--text-primary)",
+                      margin: 0,
+                    }}
+                  >
+                    {e.degree}
+                  </h3>
+                  <p style={{ fontFamily: sans, fontSize: 14, color: "var(--text-secondary)", margin: 0, lineHeight: 1.55 }}>
+                    {e.school}
+                  </p>
+                  <span style={{ ...caveat, fontSize: 19, color: "var(--accent)", opacity: 0.85, marginTop: 4 }}>
+                    {e.note}
+                  </span>
                 </div>
               </motion.div>
             ))}
