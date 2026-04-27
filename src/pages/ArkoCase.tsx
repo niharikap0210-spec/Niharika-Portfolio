@@ -2184,7 +2184,7 @@ export default function ArkoCase() {
             borderBottom: "1px solid var(--border)",
           }}
         >
-          <Link to="/"
+          <Link to="/#projects"
             style={{
               display: "inline-flex", alignItems: "center", gap: 10,
               ...mono, fontSize: 11, letterSpacing: "0.22em",

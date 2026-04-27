@@ -36,14 +36,10 @@ const socialLinks: SocialLink[] = [
 ];
 
 const mainLinks: NavLink[] = [
-  { href: "/", label: "Work", internal: true },
+  { href: "/#projects", label: "Work", internal: true },
   { href: "/about", label: "About", internal: true },
   { href: "/resume", label: "Resume", internal: true },
   { href: "mailto:niharikap0210@gmail.com", label: "Contact" },
-];
-
-const legalLinks: NavLink[] = [
-  { href: "#top", label: "Back to top" },
 ];
 
 const copyright = {
@@ -226,32 +222,31 @@ export default function Footer() {
           {/* Legal / meta — second right-side row */}
           <div className="mt-5 lg:mt-0 lg:col-[4/11]">
             <ul className="list-none flex flex-wrap gap-x-6 gap-y-2 lg:justify-end">
-              {legalLinks.map((link) => (
-                <li key={link.label}>
-                  <a
-                    href={link.href}
-                    target={link.href.startsWith("http") ? "_blank" : undefined}
-                    rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                    className="hover-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded"
-                    style={{
-                      ...mono,
-                      fontSize: 12,
-                      color: "var(--text-muted)",
-                      textDecoration: "none",
-                      transitionProperty: "color",
-                      transitionDuration: "150ms",
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.color = "var(--accent)";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.color = "var(--text-muted)";
-                    }}
-                  >
-                    {link.label}
-                  </a>
-                </li>
-              ))}
+              <li>
+                <button
+                  onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+                  className="hover-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded"
+                  style={{
+                    ...mono,
+                    fontSize: 12,
+                    color: "var(--text-muted)",
+                    background: "none",
+                    border: "none",
+                    padding: 0,
+                    cursor: "pointer",
+                    transitionProperty: "color",
+                    transitionDuration: "150ms",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.color = "var(--accent)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.color = "var(--text-muted)";
+                  }}
+                >
+                  Back to top
+                </button>
+              </li>
             </ul>
           </div>
 

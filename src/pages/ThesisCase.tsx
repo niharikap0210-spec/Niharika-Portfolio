@@ -732,7 +732,7 @@ export default function ThesisCase() {
           className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10"
           style={{ display: "flex", justifyContent: "space-between" }}
         >
-          <ThesisNavLink to="/" align="left">
+          <ThesisNavLink to="/#projects" align="left">
             <ArrowLeft size={14} weight="regular" />
             <span>
               <span style={{ ...mono, fontSize: 9, color: "var(--text-muted)", letterSpacing: "0.22em", display: "block", marginBottom: 5 }}>

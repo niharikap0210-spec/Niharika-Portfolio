@@ -80,7 +80,7 @@ export default function CaseStudy() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-10">
           {/* Back link */}
           <Link
-            to="/"
+            to="/#projects"
             className="inline-flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded"
             style={{
               fontFamily: "'Space Mono', monospace",
