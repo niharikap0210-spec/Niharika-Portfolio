@@ -471,7 +471,7 @@ function MyStory() {
             >
               Today I'm a Product Designer working across AI, healthcare,
               and consumer flows. I care about the spaces between taps: the quiet
-              moments where a product proves it understood you. If you're building
+              moments where a product shows it gets you. If you're building
               something thoughtful, I'd love to hear about it.
             </p>
 
