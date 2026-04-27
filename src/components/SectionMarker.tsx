@@ -44,10 +44,10 @@ export default function SectionMarker({
         }}
       >
         {/* Corner ticks */}
-        <span style={{ position: "absolute", top: 3, left: 3, width: 5, height: 5, borderTop: `0.75px solid ${accentColor}`, borderLeft: `0.75px solid ${accentColor}` }} />
-        <span style={{ position: "absolute", top: 3, right: 3, width: 5, height: 5, borderTop: `0.75px solid ${accentColor}`, borderRight: `0.75px solid ${accentColor}` }} />
-        <span style={{ position: "absolute", bottom: 3, left: 3, width: 5, height: 5, borderBottom: `0.75px solid ${accentColor}`, borderLeft: `0.75px solid ${accentColor}` }} />
-        <span style={{ position: "absolute", bottom: 3, right: 3, width: 5, height: 5, borderBottom: `0.75px solid ${accentColor}`, borderRight: `0.75px solid ${accentColor}` }} />
+        <span style={{ position: "absolute", top: 3, left: 3, width: 5, height: 5, borderTop: `1px solid ${accentColor}`, borderLeft: `1px solid ${accentColor}` }} />
+        <span style={{ position: "absolute", top: 3, right: 3, width: 5, height: 5, borderTop: `1px solid ${accentColor}`, borderRight: `1px solid ${accentColor}` }} />
+        <span style={{ position: "absolute", bottom: 3, left: 3, width: 5, height: 5, borderBottom: `1px solid ${accentColor}`, borderLeft: `1px solid ${accentColor}` }} />
+        <span style={{ position: "absolute", bottom: 3, right: 3, width: 5, height: 5, borderBottom: `1px solid ${accentColor}`, borderRight: `1px solid ${accentColor}` }} />
         <span
           style={{
             fontFamily: "'Playfair Display', Georgia, serif",
@@ -87,7 +87,7 @@ export default function SectionMarker({
         style={{
           flex: 1,
           height: 0,
-          borderTop: "0.75px dashed var(--border)",
+          borderTop: "1px dashed var(--border)",
           minWidth: 24,
         }}
       />
@@ -101,7 +101,7 @@ export default function SectionMarker({
           flexShrink: 0,
           marginLeft: 20,
           height: 26,
-          border: "0.75px solid var(--border)",
+          border: "1px solid var(--border)",
         }}
       >
         <span
@@ -112,7 +112,7 @@ export default function SectionMarker({
             letterSpacing: "0.22em",
             textTransform: "uppercase",
             padding: "0 10px",
-            borderRight: "0.75px solid var(--border)",
+            borderRight: "1px solid var(--border)",
             height: "100%",
             display: "flex",
             alignItems: "center",

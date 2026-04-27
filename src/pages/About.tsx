@@ -44,7 +44,7 @@ function SectionHeader({
       <div
         className="flex items-center justify-between"
         style={{
-          borderTop: "0.75px solid var(--border)",
+          borderTop: "1px solid var(--border)",
           paddingTop: 12,
           marginBottom: 22,
         }}
@@ -215,7 +215,7 @@ function Hero() {
                 style={{
                   position: "absolute",
                   inset: -12,
-                  border: "0.75px solid var(--construction)",
+                  border: "1px solid var(--construction)",
                   pointerEvents: "none",
                 }}
               />
@@ -232,7 +232,7 @@ function Hero() {
                     position: "absolute",
                     width: 9,
                     height: 9,
-                    border: "0.75px solid var(--accent)",
+                    border: "1px solid var(--accent)",
                     ...pos,
                   }}
                 />
@@ -348,7 +348,7 @@ function MyStory() {
               style={{
                 position: "absolute",
                 inset: -10,
-                border: "0.75px solid var(--construction)",
+                border: "1px solid var(--construction)",
                 pointerEvents: "none",
               }}
             />
@@ -366,7 +366,7 @@ function MyStory() {
                   position: "absolute",
                   width: 8,
                   height: 8,
-                  border: "0.75px solid var(--accent)",
+                  border: "1px solid var(--accent)",
                   ...pos,
                 }}
               />
@@ -539,8 +539,8 @@ function MyApproach() {
       style={{
         padding: "clamp(56px, 7vw, 96px) 0",
         scrollMarginTop: 96,
-        borderTop: "0.75px solid var(--border)",
-        borderBottom: "0.75px solid var(--border)",
+        borderTop: "1px solid var(--border)",
+        borderBottom: "1px solid var(--border)",
       }}
     >
       <div className="max-w-6xl mx-auto px-6 md:px-10">
@@ -590,8 +590,8 @@ function MyApproach() {
                     alignItems: "center",
                     columnGap: "clamp(16px, 2vw, 32px)",
                     padding: "clamp(20px, 2.5vw, 28px) 0",
-                    borderTop: i === 0 ? "0.75px solid var(--border)" : "none",
-                    borderBottom: "0.75px solid var(--border)",
+                    borderTop: i === 0 ? "1px solid var(--border)" : "none",
+                    borderBottom: "1px solid var(--border)",
                     background: isOpen ? "var(--bg-secondary)" : "transparent",
                     cursor: "pointer",
                     width: "calc(100% + 24px)",
@@ -829,14 +829,14 @@ function Experience() {
                 whileHover={{ backgroundColor: "rgba(181,146,76,0.05)", transition: { duration: 0.18 } }}
                 className="group"
                 style={{
-                  border: "0.75px solid var(--border)",
+                  border: "1px solid var(--border)",
                   padding: "clamp(20px, 2.5vw, 28px) clamp(20px, 2.5vw, 32px)",
                 }}
               >
                 <div className="grid grid-cols-1 lg:grid-cols-[96px_1px_1fr_auto] gap-5 lg:gap-8 items-center">
 
                   {/* Logo / Monogram */}
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: 76 }}>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: 76, backgroundColor: "#FFFFFF" }}>
                     {s.logo ? (
                       <img
                         src={s.logo}
@@ -854,7 +854,7 @@ function Experience() {
                         style={{
                           width: 64,
                           height: 64,
-                          border: "0.75px solid var(--border)",
+                          border: "1px solid var(--border)",
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "center",
@@ -981,7 +981,7 @@ function Experience() {
                 transition={{ duration: 0.5, delay: i * 0.1, ease: [0.25, 1, 0.4, 1] }}
                 style={{
                   backgroundColor: "var(--bg-secondary)",
-                  border: "0.75px solid var(--border)",
+                  border: "1px solid var(--border)",
                   padding: "clamp(24px, 3vw, 36px)",
                   display: "flex",
                   flexDirection: "column",
@@ -990,7 +990,7 @@ function Experience() {
               >
                 {/* Top — logo + period */}
                 <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 20 }}>
-                  <div style={{ height: 56, display: "flex", alignItems: "center" }}>
+                  <div style={{ height: 56, display: "flex", alignItems: "center", backgroundColor: "#FFFFFF" }}>
                     <img
                       src={e.logo}
                       alt={e.school}
@@ -1009,7 +1009,7 @@ function Experience() {
                 </div>
 
                 {/* Divider */}
-                <div style={{ borderTop: "0.75px solid var(--border)", marginBottom: 20 }} />
+                <div style={{ borderTop: "1px solid var(--border)", marginBottom: 20 }} />
 
                 {/* Degree + school + note */}
                 <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
@@ -1090,10 +1090,10 @@ function Tick({ top, right, bottom, left }: { top?: number; right?: number; bott
         right: !isLeft ? right : undefined,
         width: 8,
         height: 8,
-        borderTop: isTop ? "0.75px solid var(--construction)" : "none",
-        borderBottom: !isTop ? "0.75px solid var(--construction)" : "none",
-        borderLeft: isLeft ? "0.75px solid var(--construction)" : "none",
-        borderRight: !isLeft ? "0.75px solid var(--construction)" : "none",
+        borderTop: isTop ? "1px solid var(--construction)" : "none",
+        borderBottom: !isTop ? "1px solid var(--construction)" : "none",
+        borderLeft: isLeft ? "1px solid var(--construction)" : "none",
+        borderRight: !isLeft ? "1px solid var(--construction)" : "none",
         pointerEvents: "none",
       }}
     />
@@ -1110,8 +1110,8 @@ function OffDuty() {
       style={{
         padding: "clamp(56px, 7vw, 96px) 0",
         scrollMarginTop: 96,
-        borderTop: "0.75px solid var(--border)",
-        borderBottom: "0.75px solid var(--border)",
+        borderTop: "1px solid var(--border)",
+        borderBottom: "1px solid var(--border)",
       }}
     >
       <div className="max-w-6xl mx-auto px-6 md:px-10">
@@ -1124,7 +1124,7 @@ function OffDuty() {
 
         {/* Panel grid */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-0"
-          style={{ borderTop: "0.75px solid var(--border)", marginTop: 8 }}
+          style={{ borderTop: "1px solid var(--border)", marginTop: 8 }}
         >
           {loves.map((l, i) => {
             const Icon = l.icon;
@@ -1141,7 +1141,7 @@ function OffDuty() {
                 style={{
                   position: "relative",
                   padding: "28px 24px 32px",
-                  borderRight: i < loves.length - 1 ? "0.75px solid var(--border)" : "none",
+                  borderRight: i < loves.length - 1 ? "1px solid var(--border)" : "none",
                   overflow: "hidden",
                   cursor: "default",
                   minHeight: 220,

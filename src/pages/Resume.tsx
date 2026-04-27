@@ -129,7 +129,7 @@ export default function Resume() {
                     style={{
                       width: 36,
                       height: 36,
-                      border: "0.75px solid var(--construction)",
+                      border: "1px solid var(--construction)",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",

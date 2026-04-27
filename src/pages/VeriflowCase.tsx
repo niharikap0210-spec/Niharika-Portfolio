@@ -298,7 +298,7 @@ function TVFrame({ src, alt }: { src: string; alt: string }) {
           position: "absolute", top: 14, right: 18,
           ...mono, fontSize: 10, color: vf.primary, letterSpacing: "0.22em", fontWeight: 700,
           background: "rgba(255,255,255,0.88)",
-          padding: "3px 8px", borderRadius: 3, backdropFilter: "blur(2px)",
+          padding: "3px 8px", borderRadius: 3, backdropFilter: "blur(2px)", WebkitBackdropFilter: "blur(2px)",
           display: "flex", alignItems: "center", gap: 6,
         }}>
           <motion.span
@@ -334,7 +334,7 @@ function TabletStepper({ steps, figPrefix }: { steps: Step[]; figPrefix: string 
         <div aria-hidden style={{
           position: "absolute", inset: "-10% -5%",
           background: `radial-gradient(50% 50% at 50% 50%, ${vf.light} 0%, ${vf.primary} 40%, rgba(30,64,175,0) 72%)`,
-          filter: "blur(60px)", opacity: 0.18, zIndex: 0, pointerEvents: "none",
+          filter: "blur(40px)", opacity: 0.18, zIndex: 0, pointerEvents: "none",
         }} />
         <div style={{ position: "relative", zIndex: 1 }}>
           <AnimatedTabletFrame src={current.src} alt={current.label} />
@@ -972,7 +972,7 @@ function LaptopSpread({
         <div aria-hidden style={{
           position: "absolute", inset: "-6% -4%",
           background: `radial-gradient(60% 60% at 50% 50%, ${vf.light} 0%, ${vf.primary} 45%, rgba(30,64,175,0) 75%)`,
-          filter: "blur(60px)", opacity: 0.18, zIndex: 0, pointerEvents: "none",
+          filter: "blur(40px)", opacity: 0.18, zIndex: 0, pointerEvents: "none",
         }} />
         <div style={{ position: "relative", zIndex: 1 }}>
           <LaptopFrame src={src} alt={title} />
@@ -1196,10 +1196,10 @@ function JourneyIllustration() {
       }}>
         <defs>
           <pattern id="vf-grid-sm" width="20" height="20" patternUnits="userSpaceOnUse">
-            <path d="M 20 0 L 0 0 0 20" fill="none" stroke={vf.subtle} strokeWidth="0.5" />
+            <path d="M 20 0 L 0 0 0 20" fill="none" stroke={vf.subtle} strokeWidth="1" />
           </pattern>
           <pattern id="vf-grid-lg" width="80" height="80" patternUnits="userSpaceOnUse">
-            <path d="M 80 0 L 0 0 0 80" fill="none" stroke={vf.subtle} strokeWidth="0.75" />
+            <path d="M 80 0 L 0 0 0 80" fill="none" stroke={vf.subtle} strokeWidth="1" />
           </pattern>
           <marker id="vf-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
             <path d="M 0 0 L 10 5 L 0 10 z" fill={vf.primary} />
@@ -1350,13 +1350,13 @@ function HeroMockups() {
       <div aria-hidden style={{
         position: "absolute", inset: "-8% -6%",
         background: `radial-gradient(55% 55% at 55% 50%, ${vf.light} 0%, ${vf.primary} 40%, rgba(30,64,175,0) 72%)`,
-        filter: "blur(60px)", opacity: 0.4, zIndex: 0, pointerEvents: "none",
+        filter: "blur(40px)", opacity: 0.4, zIndex: 0, pointerEvents: "none",
       }} />
       <div aria-hidden style={{
         position: "absolute", left: "-10%", top: "15%",
         width: "55%", height: "55%",
         background: `radial-gradient(circle, ${vf.primary} 0%, rgba(30,64,175,0) 70%)`,
-        filter: "blur(48px)", opacity: 0.35, zIndex: 0, pointerEvents: "none",
+        filter: "blur(40px)", opacity: 0.35, zIndex: 0, pointerEvents: "none",
       }} />
 
       {/* Laptop: main focal object, subtle cursor-parallax */}

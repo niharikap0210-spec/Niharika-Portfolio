@@ -173,7 +173,7 @@ export default function Home() {
             <div
               className="flex items-center justify-between"
               style={{
-                borderTop: "0.75px solid var(--border)",
+                borderTop: "1px solid var(--border)",
                 paddingTop: 14,
                 marginBottom: 28,
               }}
@@ -252,7 +252,7 @@ export default function Home() {
               transition={{ duration: 0.6, ease: [0.25, 1, 0.4, 1], delay: 0.25 }}
               className="grid grid-cols-3 gap-6"
               style={{
-                borderTop: "0.75px solid var(--border)",
+                borderTop: "1px solid var(--border)",
                 paddingTop: 18,
                 alignSelf: "end",
               }}
@@ -295,7 +295,7 @@ export default function Home() {
             <div
               style={{
                 display: "inline-flex",
-                border: "0.75px solid var(--border)",
+                border: "1px solid var(--border)",
                 padding: 3,
                 gap: 2,
               }}
@@ -402,7 +402,7 @@ export default function Home() {
             style={{
               marginTop: 56,
               paddingTop: 22,
-              borderTop: "0.75px solid var(--border)",
+              borderTop: "1px solid var(--border)",
               position: "relative",
             }}
           >

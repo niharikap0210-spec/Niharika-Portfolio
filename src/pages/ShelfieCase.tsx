@@ -249,7 +249,7 @@ function OilBottleIllustration() {
 
       {/* ΔE swatch comparison block, top-right */}
       <text x="214" y="48" {...ANNOT.hed} fill={sh.dark}>ΔE · CONTRAST</text>
-      <line x1="214" y1="56" x2="344" y2="56" stroke={sh.dark} strokeWidth="0.5" opacity="0.4" />
+      <line x1="214" y1="56" x2="344" y2="56" stroke={sh.dark} strokeWidth="1" opacity="0.4" />
       <rect x="214" y="66" width="28" height="28" fill={sh.caution} opacity="0.88" />
       <rect x="248" y="66" width="28" height="28" fill={sh.caution} opacity="0.66" />
       <text x="214" y="108" {...ANNOT.small} fill={sh.dark} opacity="0.7">BG</text>
@@ -259,7 +259,7 @@ function OilBottleIllustration() {
       <text x="294" y="102" {...ANNOT.small} fill={sh.dark} opacity="0.6">WCAG MIN 30</text>
 
       {/* base rule + fig footer */}
-      <line x1="214" y1="200" x2="344" y2="200" stroke={sh.dark} strokeWidth="0.5" opacity="0.4" />
+      <line x1="214" y1="200" x2="344" y2="200" stroke={sh.dark} strokeWidth="1" opacity="0.4" />
       <text x="214" y="220" {...ANNOT.fig} fill={sh.dark} opacity="0.55">
         FIG · 01 / CONTRAST
       </text>
@@ -306,7 +306,7 @@ function BreadBagIllustration() {
 
       {/* right rail */}
       <text x="206" y="48" {...ANNOT.hed} fill={sh.dark}>PRINT LOCATIONS</text>
-      <line x1="206" y1="56" x2="344" y2="56" stroke={sh.dark} strokeWidth="0.5" opacity="0.4" />
+      <line x1="206" y1="56" x2="344" y2="56" stroke={sh.dark} strokeWidth="1" opacity="0.4" />
 
       {rows.map((r) => (
         <g key={r.n}>
@@ -343,8 +343,8 @@ function CodedDateIllustration() {
       <path d="M 36 38 L 36 210 L 144 210 L 144 38 L 120 22 L 60 22 Z"
         fill={sh.caution} opacity="0.55" stroke={sh.dark} strokeWidth="1" />
       {/* fold seams */}
-      <line x1="60" y1="22" x2="60" y2="210" stroke={sh.dark} strokeWidth="0.5" opacity="0.45" />
-      <line x1="120" y1="22" x2="120" y2="210" stroke={sh.dark} strokeWidth="0.5" opacity="0.45" />
+      <line x1="60" y1="22" x2="60" y2="210" stroke={sh.dark} strokeWidth="1" opacity="0.45" />
+      <line x1="120" y1="22" x2="120" y2="210" stroke={sh.dark} strokeWidth="1" opacity="0.45" />
 
       {/* printed label patch with the cryptic code */}
       <rect x="48" y="92" width="84" height="38" fill="#FFFFFF" opacity="0.95"
@@ -363,7 +363,7 @@ function CodedDateIllustration() {
 
       {/* right rail - the decode */}
       <text x="200" y="48" {...ANNOT.hed} fill={sh.dark}>DECODE REQUIRED</text>
-      <line x1="200" y1="56" x2="344" y2="56" stroke={sh.dark} strokeWidth="0.5" opacity="0.4" />
+      <line x1="200" y1="56" x2="344" y2="56" stroke={sh.dark} strokeWidth="1" opacity="0.4" />
 
       <text x="200" y="86" fontFamily="'Space Mono', monospace" fontSize="14"
         fontWeight="700" fill={sh.dark} letterSpacing="0.10em">213</text>
@@ -379,7 +379,7 @@ function CodedDateIllustration() {
 
       {/* mini key block */}
       <rect x="200" y="186" width="144" height="22" fill="none"
-        stroke={sh.dark} strokeWidth="0.5" opacity="0.45" />
+        stroke={sh.dark} strokeWidth="1" opacity="0.45" />
       <text x="208" y="201" {...ANNOT.small} fill={sh.dark} opacity="0.65">
         KEY · DAY OF YEAR 1 TO 365
       </text>
@@ -428,7 +428,7 @@ function YogurtCupIllustration() {
         fontWeight="700" fill={sh.dark} letterSpacing="0.04em">EXP 04/29/25</text>
       <text x="226" y="128" fontFamily="'Space Mono', monospace" fontSize="10"
         fill={sh.dark} opacity="0.65" letterSpacing="0.08em">LOT 4178</text>
-      <line x1="216" y1="138" x2="344" y2="138" stroke={sh.primary} strokeWidth="0.5" opacity="0.5" />
+      <line x1="216" y1="138" x2="344" y2="138" stroke={sh.primary} strokeWidth="1" opacity="0.5" />
       <text x="226" y="146" {...ANNOT.small} fill={sh.dark} opacity="0.6">
         SOURCE · FOIL RIM
       </text>
@@ -1163,7 +1163,7 @@ function ShelfieAppIllustration() {
               {r.days}
             </text>
             {i < items.length - 1 && (
-              <line x1="14" y1={r.y + 13} x2="116" y2={r.y + 13} stroke={sh.subtle} strokeWidth="0.5" />
+              <line x1="14" y1={r.y + 13} x2="116" y2={r.y + 13} stroke={sh.subtle} strokeWidth="1" />
             )}
           </g>
         ))}
@@ -1203,7 +1203,7 @@ function HeroVisual() {
       <div aria-hidden style={{
         position: "absolute", inset: "-10%",
         background: `radial-gradient(50% 50% at 50% 50%, ${sh.light} 0%, ${sh.primary} 38%, rgba(31,95,92,0) 72%)`,
-        filter: "blur(80px)", opacity: 0.30, zIndex: 0, pointerEvents: "none",
+        filter: "blur(40px)", opacity: 0.30, zIndex: 0, pointerEvents: "none",
       }} />
 
       <motion.img

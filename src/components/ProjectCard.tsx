@@ -63,7 +63,7 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
             style={{
               position: "absolute",
               inset: 10,
-              border: `0.75px dashed ${hovered ? accent.primary + "55" : "var(--construction)"}`,
+              border: `1px dashed ${hovered ? accent.primary + "55" : "var(--construction)"}`,
               pointerEvents: "none",
               transitionProperty: "border-color",
               transitionDuration: "300ms",
@@ -83,7 +83,7 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
                   ...mono,
                   fontSize: 10,
                   padding: "4px 9px",
-                  border: `0.75px solid ${hovered ? accent.primary + "77" : "var(--border)"}`,
+                  border: `1px solid ${hovered ? accent.primary + "77" : "var(--border)"}`,
                   backgroundColor: hovered ? accent.surface : "var(--bg-primary)",
                   transitionProperty: "background-color, border-color",
                   transitionDuration: "300ms",
@@ -116,7 +116,7 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
               aria-hidden
               style={{
                 height: 0,
-                borderTop: "0.75px solid var(--border)",
+                borderTop: "1px solid var(--border)",
                 marginBottom: 18,
                 position: "relative",
               }}
@@ -169,7 +169,7 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
                       letterSpacing: "0.2em",
                       color: accent.dark,
                       backgroundColor: accent.surface,
-                      border: `0.75px solid ${accent.primary}55`,
+                      border: `1px solid ${accent.primary}55`,
                       padding: "3px 8px",
                       whiteSpace: "nowrap",
                     }}
@@ -247,7 +247,7 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
                         color: "var(--text-muted)",
                         letterSpacing: "0.14em",
                         padding: "2px 7px",
-                        border: "0.5px solid var(--border)",
+                        border: "1px solid var(--border)",
                       }}
                     >
                       {tag}
@@ -276,7 +276,7 @@ function CornerTicks({ hovered, color }: { hovered: boolean; color: string }) {
     transitionDuration: "300ms",
     opacity: hovered ? 0.9 : 0,
   };
-  const stroke = `0.75px solid ${color}`;
+  const stroke = `1px solid ${color}`;
   return (
     <>
       <span aria-hidden style={{ ...base, top: 4, left: 4, borderTop: stroke, borderLeft: stroke }} />

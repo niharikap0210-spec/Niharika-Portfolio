@@ -153,7 +153,7 @@ function EdgeAnnotations() {
         style={{ top: 20, left: 20, opacity: 0.3, pointerEvents: "none" }}
       >
         <svg width="18" height="22" viewBox="0 0 18 22" fill="none">
-          <path d="M9 2 L9 18" stroke="var(--text-muted)" strokeWidth="0.75" strokeLinecap="round" />
+          <path d="M9 2 L9 18" stroke="var(--text-muted)" strokeWidth="1" strokeLinecap="round" />
           <path d="M9 2 L6 8 L9 6.5 L12 8 Z" fill="var(--text-muted)" />
           <text x="9" y="21" textAnchor="middle" style={{ fontFamily: "'Space Mono', monospace", fontSize: "6px", fill: "var(--text-muted)" }}>N</text>
         </svg>
@@ -196,7 +196,7 @@ function GridSVGPattern({ id, offsetX, offsetY }: {
             d="M 20 0 L 0 0 0 20"
             fill="none"
             stroke="rgba(180,180,180,1)"
-            strokeWidth="0.5"
+            strokeWidth="1"
           />
         </pattern>
       </defs>
@@ -472,15 +472,15 @@ export default function HeroSection() {
         >
           <svg width="80" height="80" viewBox="0 0 80 80" fill="none" aria-hidden>
             {/* Top arm */}
-            <line x1="40" y1="0" x2="40" y2="33" stroke="var(--text-secondary)" strokeWidth="0.75" strokeLinecap="round" />
+            <line x1="40" y1="0" x2="40" y2="33" stroke="var(--text-secondary)" strokeWidth="1" strokeLinecap="round" />
             {/* Bottom arm */}
-            <line x1="40" y1="47" x2="40" y2="80" stroke="var(--text-secondary)" strokeWidth="0.75" strokeLinecap="round" />
+            <line x1="40" y1="47" x2="40" y2="80" stroke="var(--text-secondary)" strokeWidth="1" strokeLinecap="round" />
             {/* Left arm */}
-            <line x1="0" y1="40" x2="33" y2="40" stroke="var(--text-secondary)" strokeWidth="0.75" strokeLinecap="round" />
+            <line x1="0" y1="40" x2="33" y2="40" stroke="var(--text-secondary)" strokeWidth="1" strokeLinecap="round" />
             {/* Right arm */}
-            <line x1="47" y1="40" x2="80" y2="40" stroke="var(--text-secondary)" strokeWidth="0.75" strokeLinecap="round" />
+            <line x1="47" y1="40" x2="80" y2="40" stroke="var(--text-secondary)" strokeWidth="1" strokeLinecap="round" />
             {/* Center square */}
-            <rect x="33" y="33" width="14" height="14" stroke="var(--text-secondary)" strokeWidth="0.75" fill="none" />
+            <rect x="33" y="33" width="14" height="14" stroke="var(--text-secondary)" strokeWidth="1" fill="none" />
           </svg>
         </div>
 

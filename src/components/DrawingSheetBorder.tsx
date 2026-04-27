@@ -30,7 +30,7 @@ export default function DrawingSheetBorder({
         style={{
           position: "absolute",
           inset: 10,
-          border: "0.75px solid var(--construction)",
+          border: "1px solid var(--construction)",
           pointerEvents: "none",
           zIndex: 1,
         }}
@@ -45,7 +45,7 @@ export default function DrawingSheetBorder({
             position: "absolute",
             bottom: 14,
             right: 14,
-            border: "0.75px solid var(--construction)",
+            border: "1px solid var(--construction)",
             padding: "6px 10px",
             pointerEvents: "none",
             zIndex: 2,

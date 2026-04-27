@@ -78,7 +78,7 @@ export default function ArchitectureCard({
             style={{
               position: "absolute",
               inset: 10,
-              border: `0.75px dashed ${hovered ? accent.primary + "55" : "var(--construction)"}`,
+              border: `1px dashed ${hovered ? accent.primary + "55" : "var(--construction)"}`,
               pointerEvents: "none",
               transitionProperty: "border-color",
               transitionDuration: "300ms",
@@ -98,7 +98,7 @@ export default function ArchitectureCard({
                   ...mono,
                   fontSize: 10,
                   padding: "4px 9px",
-                  border: `0.75px solid ${hovered ? accent.primary + "77" : "var(--border)"}`,
+                  border: `1px solid ${hovered ? accent.primary + "77" : "var(--border)"}`,
                   backgroundColor: hovered ? accent.surface : "var(--bg-primary)",
                   transitionProperty: "background-color, border-color",
                   transitionDuration: "300ms",
@@ -118,7 +118,7 @@ export default function ArchitectureCard({
             </div>
 
             {/* Drafting line */}
-            <div aria-hidden style={{ height: 0, borderTop: "0.75px solid var(--border)", marginBottom: 18, position: "relative" }}>
+            <div aria-hidden style={{ height: 0, borderTop: "1px solid var(--border)", marginBottom: 18, position: "relative" }}>
               <span style={{ position: "absolute", top: -3, left: 0, width: 1, height: 6, backgroundColor: "var(--construction)" }} />
               <span style={{ position: "absolute", top: -3, right: 0, width: 1, height: 6, backgroundColor: "var(--construction)" }} />
             </div>
@@ -205,7 +205,7 @@ export default function ArchitectureCard({
                     <span key={tag} style={{
                       ...mono, fontSize: 8, color: "var(--text-muted)",
                       letterSpacing: "0.14em", padding: "2px 7px",
-                      border: "0.5px solid var(--border)",
+                      border: "1px solid var(--border)",
                     }}>
                       {tag}
                     </span>
@@ -283,7 +283,7 @@ function CornerTicks({ hovered, color }: { hovered: boolean; color: string }) {
     transitionProperty: "opacity", transitionDuration: "300ms",
     opacity: hovered ? 0.9 : 0,
   };
-  const stroke = `0.75px solid ${color}`;
+  const stroke = `1px solid ${color}`;
   return (
     <>
       <span aria-hidden style={{ ...base, top: 4, left: 4, borderTop: stroke, borderLeft: stroke }} />

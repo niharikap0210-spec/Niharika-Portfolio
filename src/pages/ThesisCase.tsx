@@ -727,7 +727,7 @@ export default function ThesisCase() {
       </div>
 
       {/* ── Navigation ──────────────────────────────────────────────── */}
-      <nav style={{ borderTop: "0.75px solid var(--border)" }}>
+      <nav style={{ borderTop: "1px solid var(--border)" }}>
         <div
           className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10"
           style={{ display: "flex", justifyContent: "space-between" }}

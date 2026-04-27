@@ -114,7 +114,7 @@ function ContactCard({ contact, index }: { contact: Contact; index: number }) {
         textDecoration: "none",
         color: "inherit",
         padding: "26px 4px",
-        borderTop: "0.75px solid var(--border)",
+        borderTop: "1px solid var(--border)",
         gap: 24,
       }}
     >
@@ -256,7 +256,7 @@ export default function ConnectSection() {
         <div
           className="flex items-center justify-between"
           style={{
-            borderTop: "0.75px solid var(--border)",
+            borderTop: "1px solid var(--border)",
             paddingTop: 14,
             marginBottom: 28,
             position: "relative",
@@ -337,7 +337,7 @@ export default function ConnectSection() {
         </div>
 
         {/* Contact list */}
-        <div style={{ borderBottom: "0.75px solid var(--border)" }}>
+        <div style={{ borderBottom: "1px solid var(--border)" }}>
           {contacts.map((c, i) => (
             <ContactCard key={c.label} contact={c} index={i} />
           ))}
@@ -346,7 +346,7 @@ export default function ConnectSection() {
         {/* Bottom rule + sheet marker */}
         <div
           className="flex items-center justify-between"
-          style={{ marginTop: 56, paddingTop: 18, borderTop: "0.75px solid var(--border)", position: "relative" }}
+          style={{ marginTop: 56, paddingTop: 18, borderTop: "1px solid var(--border)", position: "relative" }}
         >
           <span style={{ position: "absolute", top: -4, left: 0, width: 1, height: 9, backgroundColor: "var(--construction)" }} />
           <span style={{ position: "absolute", top: -4, right: 0, width: 1, height: 9, backgroundColor: "var(--construction)" }} />

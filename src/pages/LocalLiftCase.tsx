@@ -636,7 +636,7 @@ function HeroMockup() {
           position: "absolute",
           inset: "-6% -4%",
           background: `radial-gradient(50% 55% at 50% 50%, ${ll.light}66 0%, ${ll.primary}33 40%, rgba(59,79,123,0) 72%)`,
-          filter: "blur(64px)",
+          filter: "blur(40px)",
           opacity: 0.9,
           zIndex: 0,
         }}
@@ -649,7 +649,7 @@ function HeroMockup() {
           right: "6%", bottom: "8%",
           width: "42%", height: "42%",
           background: `radial-gradient(circle, ${ll.warm}44 0%, rgba(196,123,58,0) 70%)`,
-          filter: "blur(52px)",
+          filter: "blur(40px)",
           opacity: 0.6,
           zIndex: 0,
         }}

@@ -80,7 +80,7 @@ function PerspectiveSketch({ delay }: { delay: number }) {
         <motion.path
           key={i}
           d={d}
-          strokeWidth="0.75"
+          strokeWidth="1"
           opacity={0.14}
           variants={pathVariants(delay + i * 0.08)}
           initial="hidden"

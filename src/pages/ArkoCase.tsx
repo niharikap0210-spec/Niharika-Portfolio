@@ -630,7 +630,7 @@ function WebGallery({
               maxWidth: 420,
               padding: "6px 12px",
               background: "var(--bg-primary)",
-              border: "0.75px solid var(--border)",
+              border: "1px solid var(--border)",
               borderRadius: 5,
               display: "flex",
               alignItems: "center",
@@ -1462,10 +1462,10 @@ function ScanFlowStepper({
 
             {/* Corner brackets · top-left / top-right / bottom-left / bottom-right */}
             {[
-              { top: -16, left: -16, br: "2px 0 0 2px", bt: "0.75px solid" },
-              { top: -16, right: -16, bl: "0 2px 2px 0", bt: "0.75px solid" },
-              { bottom: -16, left: -16, br: "0 0 0 2px", bt: "0.75px solid" },
-              { bottom: -16, right: -16, bl: "0 0 2px 0", bt: "0.75px solid" },
+              { top: -16, left: -16, br: "2px 0 0 2px", bt: "1px solid" },
+              { top: -16, right: -16, bl: "0 2px 2px 0", bt: "1px solid" },
+              { bottom: -16, left: -16, br: "0 0 0 2px", bt: "1px solid" },
+              { bottom: -16, right: -16, bl: "0 0 2px 0", bt: "1px solid" },
             ].map((_, ci) => {
               const isTop = ci < 2;
               const isLeft = ci % 2 === 0;
@@ -1568,7 +1568,7 @@ function ScanFlowStepper({
             justifyContent: "space-between",
             gap: 14,
             paddingTop: 14,
-            borderTop: "0.75px solid var(--border)",
+            borderTop: "1px solid var(--border)",
           }}
         >
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
@@ -2319,7 +2319,7 @@ export default function ArkoCase() {
                   position: "absolute",
                   inset: "-8% -6%",
                   background: `radial-gradient(55% 55% at 55% 50%, ${arko.light} 0%, ${arko.primary} 40%, rgba(110,143,78,0) 72%)`,
-                  filter: "blur(60px)",
+                  filter: "blur(40px)",
                   opacity: 0.55,
                   zIndex: 0,
                   pointerEvents: "none",
@@ -2334,7 +2334,7 @@ export default function ArkoCase() {
                   width: "55%",
                   height: "55%",
                   background: `radial-gradient(circle, ${arko.primary} 0%, rgba(110,143,78,0) 70%)`,
-                  filter: "blur(48px)",
+                  filter: "blur(40px)",
                   opacity: 0.4,
                   zIndex: 0,
                   pointerEvents: "none",
@@ -2494,7 +2494,7 @@ export default function ArkoCase() {
                 <div style={{
                   display: "flex", justifyContent: "space-between", alignItems: "center",
                   paddingBottom: 12,
-                  borderBottom: "0.75px solid var(--border)",
+                  borderBottom: "1px solid var(--border)",
                   marginBottom: 24,
                 }}>
                   <span style={{ ...mono, fontSize: 10, color: arko.dark, letterSpacing: "0.22em" }}>
@@ -2549,7 +2549,7 @@ export default function ArkoCase() {
                 <div style={{
                   display: "flex", flexDirection: "column", gap: 10,
                   paddingTop: 20,
-                  borderTop: "0.75px solid var(--border)",
+                  borderTop: "1px solid var(--border)",
                 }}>
                   <p style={{ ...mono, fontSize: 9.5, color: "var(--text-muted)", letterSpacing: "0.22em", marginBottom: 4 }}>
                     Where the hours go
@@ -2934,7 +2934,7 @@ export default function ArkoCase() {
             <div style={{
               marginTop: 64,
               paddingTop: 24,
-              borderTop: "0.75px solid rgba(250,250,250,0.22)",
+              borderTop: "1px solid rgba(250,250,250,0.22)",
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",

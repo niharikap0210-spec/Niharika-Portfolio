@@ -33,7 +33,7 @@ export function ProjectHeroStage({ project, hovered = false, textOverlay = false
               radial-gradient(120% 80% at 50% 0%, ${accent.surface} 0%, ${accent.primary}0d 60%, transparent 100%),
               linear-gradient(180deg, ${accent.surface} 0%, ${accent.primary}0a 100%)
             `,
-        border: bare || textOverlay ? "none" : `0.75px solid ${accent.primary}22`,
+        border: bare || textOverlay ? "none" : `1px solid ${accent.primary}22`,
       }}
     >
       {!bare && (
@@ -189,7 +189,7 @@ function ShelfieComposition({ accent }: { accent: ProjectAccent }) {
           position: "absolute",
           inset: "-10%",
           background: `radial-gradient(50% 50% at 50% 50%, ${accent.light} 0%, ${accent.primary} 38%, transparent 72%)`,
-          filter: "blur(80px)",
+          filter: "blur(40px)",
           opacity: 0.28,
           zIndex: 1,
         }}
@@ -230,7 +230,7 @@ export function LaptopFrame({ src, alt, accent }: { src: string; alt: string; ac
           backgroundColor: "#1A1A1A",
           borderRadius: "10px 10px 2px 2px",
           padding: 6,
-          boxShadow: `0 0 0 0.75px rgba(0,0,0,0.2), 0 14px 36px ${accent}22, 0 4px 10px rgba(0,0,0,0.10)`,
+          boxShadow: `0 0 0 1px rgba(0,0,0,0.2), 0 14px 36px ${accent}22, 0 4px 10px rgba(0,0,0,0.10)`,
           position: "relative",
         }}
       >
@@ -299,7 +299,7 @@ export function TabletFrame({ src, alt, accent }: { src: string; alt: string; ac
         backgroundColor: "#141414",
         borderRadius: 14,
         padding: 8,
-        boxShadow: `0 0 0 0.75px rgba(0,0,0,0.25), 0 20px 48px ${accent}22, 0 6px 14px rgba(0,0,0,0.12)`,
+        boxShadow: `0 0 0 1px rgba(0,0,0,0.25), 0 20px 48px ${accent}22, 0 6px 14px rgba(0,0,0,0.12)`,
       }}
     >
       <span

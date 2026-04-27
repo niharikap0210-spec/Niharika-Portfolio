@@ -135,7 +135,7 @@ html {
   content: '';
   position: absolute;
   inset: 12px;
-  border: 0.75px solid var(--construction);
+  border: 1px solid var(--construction);
   pointer-events: none;
   z-index: 1;
 }

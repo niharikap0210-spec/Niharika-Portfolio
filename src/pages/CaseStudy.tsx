@@ -162,7 +162,7 @@ export default function CaseStudy() {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.25, duration: 0.5 }}
             className="grid grid-cols-2 sm:grid-cols-4 gap-6 py-6"
-            style={{ borderTop: "0.75px solid var(--border)", borderBottom: "0.75px solid var(--border)" }}
+            style={{ borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)" }}
           >
             {[
               { label: "Role", value: project.role },
@@ -399,7 +399,7 @@ export default function CaseStudy() {
                     width: 28,
                     height: 28,
                     borderRadius: "50%",
-                    border: "0.75px solid var(--construction)",
+                    border: "1px solid var(--construction)",
                     backgroundColor: "var(--bg-elevated)",
                     display: "flex",
                     alignItems: "center",
