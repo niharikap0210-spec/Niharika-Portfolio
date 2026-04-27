@@ -796,8 +796,7 @@ const stops = [
     period: "2022",
     blurb:
       "Built a full design system from zero: tokens, components, and patterns for a fledgling product team.",
-    logo: null,
-    initials: "QN",
+    logo: "/logos/qnaptics.jpg",
   },
 ];
 
