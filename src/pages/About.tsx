@@ -760,7 +760,7 @@ const stops = [
   {
     role: "UX/UI Designer",
     company: "PyCube",
-    period: "2025 – Now",
+    period: "Jul 2025 – Present",
     blurb:
       "Healthcare specimen-tracking suite, end-to-end. Reduced lab handoff errors and shipped a clinician-trusted dashboard.",
     logo: "/logos/pycube.png",
@@ -768,7 +768,7 @@ const stops = [
   {
     role: "Product Designer",
     company: "Mercor",
-    period: "2025 – Now",
+    period: "Sep 2025 – Present",
     blurb:
       "AI-driven flows for the talent marketplace, connecting candidates and companies through smart matching and review.",
     logo: "/logos/mercor.png",
@@ -776,7 +776,7 @@ const stops = [
   {
     role: "HCI Org Lead",
     company: "Iowa State University",
-    period: "2024 – 2025",
+    period: "Jul 2024 – May 2025",
     blurb:
       "Led the HCI student org: workshops, mentorship, and Figma craft sessions for incoming designers.",
     logo: "/logos/isu.png",
@@ -784,7 +784,7 @@ const stops = [
   {
     role: "UI/UX Designer",
     company: "Sixth Sense Tech",
-    period: "2022 – 2023",
+    period: "Oct 2022 – Jan 2023",
     blurb:
       "Consumer interfaces and engineering handoff. Owned design specs from concept through QA.",
     logo: null,
@@ -793,7 +793,7 @@ const stops = [
   {
     role: "UX Designer",
     company: "Qnaptics",
-    period: "2022",
+    period: "Feb 2023 – Jun 2023",
     blurb:
       "Built a full design system from zero: tokens, components, and patterns for a fledgling product team.",
     logo: "/logos/qnaptics.jpg",
