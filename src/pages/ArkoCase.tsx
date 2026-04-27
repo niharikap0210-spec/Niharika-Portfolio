@@ -522,11 +522,6 @@ function WebGallery({
               role="tab"
               aria-selected={isActive}
               onClick={() => setActive(i)}
-              onFocus={(e) => {
-                (e.currentTarget as HTMLElement).style.outline = `2px solid ${arko.primary}`;
-                (e.currentTarget as HTMLElement).style.outlineOffset = "-2px";
-              }}
-              onBlur={(e) => { (e.currentTarget as HTMLElement).style.outline = "none"; }}
               style={{
                 position: "relative",
                 padding: isMobile ? "14px 16px" : "18px 20px",
@@ -1080,11 +1075,6 @@ function DecisionStepper() {
                 transitionDuration: "220ms",
                 minWidth: 0,
               }}
-              onFocus={(e) => {
-                (e.currentTarget as HTMLElement).style.outline = `2px solid ${arko.primary}`;
-                (e.currentTarget as HTMLElement).style.outlineOffset = "-2px";
-              }}
-              onBlur={(e) => { (e.currentTarget as HTMLElement).style.outline = "none"; }}
             >
               {isActive && (
                 <motion.span
@@ -1939,11 +1929,6 @@ function ArEditorStepper({
                 transitionDuration: "220ms",
                 minWidth: 0,
               }}
-              onFocus={(e) => {
-                (e.currentTarget as HTMLElement).style.outline = `2px solid ${arko.primary}`;
-                (e.currentTarget as HTMLElement).style.outlineOffset = "-2px";
-              }}
-              onBlur={(e) => { (e.currentTarget as HTMLElement).style.outline = "none"; }}
             >
               {isActive && (
                 <motion.span

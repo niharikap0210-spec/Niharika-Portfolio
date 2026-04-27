@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Remove focus outline on mouse click, keep for keyboard nav */
+*:focus:not(:focus-visible) { outline: none; }
+*:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
 /* ── Design Tokens ─────────────────────────────────────────────── */
 :root {
   /* Backgrounds */
@@ -25,8 +29,8 @@
   --border-light: #F0F0F0;
 
   /* Blueprint Grid */
-  --grid-primary: rgba(200, 200, 200, 0.55);
-  --grid-secondary: rgba(220, 220, 220, 0.35);
+  --grid-primary: rgba(200, 200, 200, 0.45);
+  --grid-secondary: rgba(220, 220, 220, 0.28);
 
   /* Architectural */
   --construction: rgba(180, 180, 180, 0.6);
@@ -93,19 +97,19 @@ body {
 .blueprint-grid {
   background-color: var(--bg-primary);
   background-image:
-    repeating-linear-gradient(0deg, var(--grid-secondary) 0, var(--grid-secondary) 0.5px, transparent 0.5px, transparent 20px),
-    repeating-linear-gradient(90deg, var(--grid-secondary) 0, var(--grid-secondary) 0.5px, transparent 0.5px, transparent 20px),
-    repeating-linear-gradient(0deg, var(--grid-primary) 0, var(--grid-primary) 0.5px, transparent 0.5px, transparent 80px),
-    repeating-linear-gradient(90deg, var(--grid-primary) 0, var(--grid-primary) 0.5px, transparent 0.5px, transparent 80px);
+    repeating-linear-gradient(0deg, var(--grid-secondary) 0, var(--grid-secondary) 1px, transparent 1px, transparent 20px),
+    repeating-linear-gradient(90deg, var(--grid-secondary) 0, var(--grid-secondary) 1px, transparent 1px, transparent 20px),
+    repeating-linear-gradient(0deg, var(--grid-primary) 0, var(--grid-primary) 1px, transparent 1px, transparent 80px),
+    repeating-linear-gradient(90deg, var(--grid-primary) 0, var(--grid-primary) 1px, transparent 1px, transparent 80px);
 }
 
 .blueprint-grid-subtle {
   background-color: var(--bg-secondary);
   background-image:
-    repeating-linear-gradient(0deg, rgba(220,220,220,0.2) 0, rgba(220,220,220,0.2) 0.5px, transparent 0.5px, transparent 20px),
-    repeating-linear-gradient(90deg, rgba(220,220,220,0.2) 0, rgba(220,220,220,0.2) 0.5px, transparent 0.5px, transparent 20px),
-    repeating-linear-gradient(0deg, rgba(200,200,200,0.3) 0, rgba(200,200,200,0.3) 0.5px, transparent 0.5px, transparent 80px),
-    repeating-linear-gradient(90deg, rgba(200,200,200,0.3) 0, rgba(200,200,200,0.3) 0.5px, transparent 0.5px, transparent 80px);
+    repeating-linear-gradient(0deg, rgba(220,220,220,0.18) 0, rgba(220,220,220,0.18) 1px, transparent 1px, transparent 20px),
+    repeating-linear-gradient(90deg, rgba(220,220,220,0.18) 0, rgba(220,220,220,0.18) 1px, transparent 1px, transparent 20px),
+    repeating-linear-gradient(0deg, rgba(200,200,200,0.25) 0, rgba(200,200,200,0.25) 1px, transparent 1px, transparent 80px),
+    repeating-linear-gradient(90deg, rgba(200,200,200,0.25) 0, rgba(200,200,200,0.25) 1px, transparent 1px, transparent 80px);
 }
 
 /* ── Hero Cursor ────────────────────────────────────────────────── */
