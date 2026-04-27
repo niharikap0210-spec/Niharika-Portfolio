@@ -908,7 +908,7 @@ function Experience() {
                     <p
                       style={{
                         fontFamily: sans,
-                        fontSize: 15,
+                        fontSize: 17,
                         color: "var(--text-secondary)",
                         lineHeight: 1.7,
                         margin: 0,
