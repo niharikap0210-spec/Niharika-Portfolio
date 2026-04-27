@@ -1552,8 +1552,8 @@ function NavCard({ project }: { project: Project }) {
           position: "absolute",
           inset: 0,
           backgroundImage: `
-            repeating-linear-gradient(0deg, ${pa.primary}10 0, ${pa.primary}10 0.5px, transparent 0.5px, transparent 48px),
-            repeating-linear-gradient(90deg, ${pa.primary}10 0, ${pa.primary}10 0.5px, transparent 0.5px, transparent 48px)
+            repeating-linear-gradient(0deg, ${pa.primary}10 0, ${pa.primary}10 1px, transparent 1px, transparent 48px),
+            repeating-linear-gradient(90deg, ${pa.primary}10 0, ${pa.primary}10 1px, transparent 1px, transparent 48px)
           `,
           opacity: hover ? 0.7 : 0.45,
           transitionProperty: "opacity",
@@ -1673,10 +1673,10 @@ export default function ShelfieCase() {
         <div aria-hidden style={{
           position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none",
           backgroundImage: `
-            repeating-linear-gradient(0deg, ${sh.subtle} 0 0.5px, transparent 0.5px 20px),
-            repeating-linear-gradient(90deg, ${sh.subtle} 0 0.5px, transparent 0.5px 20px),
-            repeating-linear-gradient(0deg, ${sh.muted} 0 0.5px, transparent 0.5px 80px),
-            repeating-linear-gradient(90deg, ${sh.muted} 0 0.5px, transparent 0.5px 80px)
+            repeating-linear-gradient(0deg, ${sh.subtle} 0 1px, transparent 1px 20px),
+            repeating-linear-gradient(90deg, ${sh.subtle} 0 1px, transparent 1px 20px),
+            repeating-linear-gradient(0deg, ${sh.muted} 0 1px, transparent 1px 80px),
+            repeating-linear-gradient(90deg, ${sh.muted} 0 1px, transparent 1px 80px)
           `,
           opacity: 0.42,
           maskImage: "radial-gradient(ellipse 80% 80% at 50% 45%, #000 40%, transparent 100%)",

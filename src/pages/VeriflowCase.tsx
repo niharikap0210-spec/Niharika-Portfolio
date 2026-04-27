@@ -1432,8 +1432,8 @@ function CoolerSketch() {
       <div aria-hidden style={{
         position: "absolute", inset: 0,
         backgroundImage:
-          "repeating-linear-gradient(0deg, rgba(30,64,175,0.05) 0, rgba(30,64,175,0.05) 0.5px, transparent 0.5px, transparent 24px)," +
-          "repeating-linear-gradient(90deg, rgba(30,64,175,0.05) 0, rgba(30,64,175,0.05) 0.5px, transparent 0.5px, transparent 24px)",
+          "repeating-linear-gradient(0deg, rgba(30,64,175,0.05) 0, rgba(30,64,175,0.05) 1px, transparent 1px, transparent 24px)," +
+          "repeating-linear-gradient(90deg, rgba(30,64,175,0.05) 0, rgba(30,64,175,0.05) 1px, transparent 1px, transparent 24px)",
         pointerEvents: "none",
       }} />
       <div style={{
@@ -1572,8 +1572,8 @@ function NavCard({ project }: { project: Project }) {
           position: "absolute",
           inset: 0,
           backgroundImage: `
-            repeating-linear-gradient(0deg, ${pa.primary}10 0, ${pa.primary}10 0.5px, transparent 0.5px, transparent 48px),
-            repeating-linear-gradient(90deg, ${pa.primary}10 0, ${pa.primary}10 0.5px, transparent 0.5px, transparent 48px)
+            repeating-linear-gradient(0deg, ${pa.primary}10 0, ${pa.primary}10 1px, transparent 1px, transparent 48px),
+            repeating-linear-gradient(90deg, ${pa.primary}10 0, ${pa.primary}10 1px, transparent 1px, transparent 48px)
           `,
           opacity: hover ? 0.7 : 0.45,
           transitionProperty: "opacity",

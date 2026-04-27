@@ -88,10 +88,10 @@ const IMG   = "/locallift";
 const gridSurface: React.CSSProperties = {
   backgroundColor: ll.surface,
   backgroundImage: [
-    "repeating-linear-gradient(0deg, rgba(59,79,123,0.06) 0, rgba(59,79,123,0.06) 0.5px, transparent 0.5px, transparent 20px)",
-    "repeating-linear-gradient(90deg, rgba(59,79,123,0.06) 0, rgba(59,79,123,0.06) 0.5px, transparent 0.5px, transparent 20px)",
-    "repeating-linear-gradient(0deg, rgba(59,79,123,0.14) 0, rgba(59,79,123,0.14) 0.5px, transparent 0.5px, transparent 80px)",
-    "repeating-linear-gradient(90deg, rgba(59,79,123,0.14) 0, rgba(59,79,123,0.14) 0.5px, transparent 0.5px, transparent 80px)",
+    "repeating-linear-gradient(0deg, rgba(59,79,123,0.06) 0, rgba(59,79,123,0.06) 1px, transparent 1px, transparent 20px)",
+    "repeating-linear-gradient(90deg, rgba(59,79,123,0.06) 0, rgba(59,79,123,0.06) 1px, transparent 1px, transparent 20px)",
+    "repeating-linear-gradient(0deg, rgba(59,79,123,0.14) 0, rgba(59,79,123,0.14) 1px, transparent 1px, transparent 80px)",
+    "repeating-linear-gradient(90deg, rgba(59,79,123,0.14) 0, rgba(59,79,123,0.14) 1px, transparent 1px, transparent 80px)",
   ].join(", "),
 };
 
@@ -99,10 +99,10 @@ const gridSurface: React.CSSProperties = {
 const gridDark: React.CSSProperties = {
   backgroundColor: ll.dark,
   backgroundImage: [
-    "repeating-linear-gradient(0deg, rgba(255,255,255,0.04) 0, rgba(255,255,255,0.04) 0.5px, transparent 0.5px, transparent 20px)",
-    "repeating-linear-gradient(90deg, rgba(255,255,255,0.04) 0, rgba(255,255,255,0.04) 0.5px, transparent 0.5px, transparent 20px)",
-    "repeating-linear-gradient(0deg, rgba(255,255,255,0.09) 0, rgba(255,255,255,0.09) 0.5px, transparent 0.5px, transparent 80px)",
-    "repeating-linear-gradient(90deg, rgba(255,255,255,0.09) 0, rgba(255,255,255,0.09) 0.5px, transparent 0.5px, transparent 80px)",
+    "repeating-linear-gradient(0deg, rgba(255,255,255,0.04) 0, rgba(255,255,255,0.04) 1px, transparent 1px, transparent 20px)",
+    "repeating-linear-gradient(90deg, rgba(255,255,255,0.04) 0, rgba(255,255,255,0.04) 1px, transparent 1px, transparent 20px)",
+    "repeating-linear-gradient(0deg, rgba(255,255,255,0.09) 0, rgba(255,255,255,0.09) 1px, transparent 1px, transparent 80px)",
+    "repeating-linear-gradient(90deg, rgba(255,255,255,0.09) 0, rgba(255,255,255,0.09) 1px, transparent 1px, transparent 80px)",
   ].join(", "),
 };
 
@@ -744,8 +744,8 @@ function NavCard({ project }: { project: Project }) {
           position: "absolute",
           inset: 0,
           backgroundImage: `
-            repeating-linear-gradient(0deg, ${pa.primary}10 0, ${pa.primary}10 0.5px, transparent 0.5px, transparent 48px),
-            repeating-linear-gradient(90deg, ${pa.primary}10 0, ${pa.primary}10 0.5px, transparent 0.5px, transparent 48px)
+            repeating-linear-gradient(0deg, ${pa.primary}10 0, ${pa.primary}10 1px, transparent 1px, transparent 48px),
+            repeating-linear-gradient(90deg, ${pa.primary}10 0, ${pa.primary}10 1px, transparent 1px, transparent 48px)
           `,
           opacity: hover ? 0.7 : 0.45,
           transitionProperty: "opacity",
@@ -1822,10 +1822,10 @@ export default function LocalLiftCase() {
         <div aria-hidden style={{
           position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none",
           backgroundImage: `
-            repeating-linear-gradient(0deg,  ${ll.subtle} 0 0.5px, transparent 0.5px 22px),
-            repeating-linear-gradient(90deg, ${ll.subtle} 0 0.5px, transparent 0.5px 22px),
-            repeating-linear-gradient(0deg,  ${ll.line}  0 0.5px, transparent 0.5px 88px),
-            repeating-linear-gradient(90deg, ${ll.line}  0 0.5px, transparent 0.5px 88px)
+            repeating-linear-gradient(0deg,  ${ll.subtle} 0 1px, transparent 1px 22px),
+            repeating-linear-gradient(90deg, ${ll.subtle} 0 1px, transparent 1px 22px),
+            repeating-linear-gradient(0deg,  ${ll.line}  0 1px, transparent 1px 88px),
+            repeating-linear-gradient(90deg, ${ll.line}  0 1px, transparent 1px 88px)
           `,
           opacity: 0.55,
           maskImage: "radial-gradient(ellipse 85% 85% at 55% 50%, #000 40%, transparent 100%)",

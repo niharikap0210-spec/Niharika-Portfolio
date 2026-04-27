@@ -43,8 +43,8 @@ export function ProjectHeroStage({ project, hovered = false, textOverlay = false
             position: "absolute",
             inset: 0,
             backgroundImage: `
-              repeating-linear-gradient(0deg, ${accent.primary}10 0, ${accent.primary}10 0.5px, transparent 0.5px, transparent 48px),
-              repeating-linear-gradient(90deg, ${accent.primary}10 0, ${accent.primary}10 0.5px, transparent 0.5px, transparent 48px)
+              repeating-linear-gradient(0deg, ${accent.primary}10 0, ${accent.primary}10 1px, transparent 1px, transparent 48px),
+              repeating-linear-gradient(90deg, ${accent.primary}10 0, ${accent.primary}10 1px, transparent 1px, transparent 48px)
             `,
             opacity: hovered ? 0.8 : 0.5,
             transitionProperty: "opacity",
@@ -130,7 +130,7 @@ function LocalLiftComposition({ accent }: { accent: ProjectAccent }) {
   const phoneShadow = `drop-shadow(0 16px 28px ${accent.primary}3a) drop-shadow(0 6px 12px rgba(0,0,0,0.16))`;
 
   return (
-    <div style={{ position: "absolute", inset: 0, perspective: "1600px" }}>
+    <div style={{ position: "absolute", inset: 0 }}>
       <div style={{ position: "absolute", left: "15%", top: "50%", width: "26%", transform: "translateY(-50%)", zIndex: 1 }}>
         <motion.img
           src="/locallift/hifi/hifi-session.png"
@@ -141,10 +141,10 @@ function LocalLiftComposition({ accent }: { accent: ProjectAccent }) {
           style={{
             width: "100%",
             display: "block",
-            rotateY: 24,
+            transform: "perspective(800px) rotateY(24deg)",
             transformOrigin: "right center",
             filter: `${phoneShadow} brightness(0.96)`,
-          } as React.CSSProperties}
+          }}
         />
       </div>
 
@@ -169,10 +169,10 @@ function LocalLiftComposition({ accent }: { accent: ProjectAccent }) {
           style={{
             width: "100%",
             display: "block",
-            rotateY: -24,
+            transform: "perspective(800px) rotateY(-24deg)",
             transformOrigin: "left center",
             filter: `${phoneShadow} brightness(0.96)`,
-          } as React.CSSProperties}
+          }}
         />
       </div>
     </div>

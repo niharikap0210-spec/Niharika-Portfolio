@@ -2053,7 +2053,9 @@ function NavCard({ project }: { project: Project }) {
           radial-gradient(140% 60% at 50% 0%, ${pa.surface} 0%, ${pa.primary}0d 55%, ${pa.surface} 100%),
           linear-gradient(180deg, ${pa.surface} 0%, ${pa.primary}10 100%)
         `,
-        transition: "transform 320ms cubic-bezier(0.16, 1, 0.3, 1)",
+        transitionProperty: "transform",
+        transitionDuration: "320ms",
+        transitionTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)",
         transform: hover ? "translateY(-4px)" : "translateY(0)",
       }}
     >
@@ -2063,8 +2065,8 @@ function NavCard({ project }: { project: Project }) {
           position: "absolute",
           inset: 0,
           backgroundImage: `
-            repeating-linear-gradient(0deg, ${pa.primary}10 0, ${pa.primary}10 0.5px, transparent 0.5px, transparent 48px),
-            repeating-linear-gradient(90deg, ${pa.primary}10 0, ${pa.primary}10 0.5px, transparent 0.5px, transparent 48px)
+            repeating-linear-gradient(0deg, ${pa.primary}10 0, ${pa.primary}10 1px, transparent 1px, transparent 48px),
+            repeating-linear-gradient(90deg, ${pa.primary}10 0, ${pa.primary}10 1px, transparent 1px, transparent 48px)
           `,
           opacity: hover ? 0.7 : 0.45,
           transitionProperty: "opacity",
@@ -2666,10 +2668,10 @@ export default function ArkoCase() {
       <section style={{
         backgroundColor: "var(--text-primary)",
         backgroundImage: `
-          repeating-linear-gradient(0deg, rgba(255,255,255,0.035) 0, rgba(255,255,255,0.035) 0.5px, transparent 0.5px, transparent 20px),
-          repeating-linear-gradient(90deg, rgba(255,255,255,0.035) 0, rgba(255,255,255,0.035) 0.5px, transparent 0.5px, transparent 20px),
-          repeating-linear-gradient(0deg, rgba(255,255,255,0.07) 0, rgba(255,255,255,0.07) 0.5px, transparent 0.5px, transparent 80px),
-          repeating-linear-gradient(90deg, rgba(255,255,255,0.07) 0, rgba(255,255,255,0.07) 0.5px, transparent 0.5px, transparent 80px)
+          repeating-linear-gradient(0deg, rgba(255,255,255,0.035) 0, rgba(255,255,255,0.035) 1px, transparent 1px, transparent 20px),
+          repeating-linear-gradient(90deg, rgba(255,255,255,0.035) 0, rgba(255,255,255,0.035) 1px, transparent 1px, transparent 20px),
+          repeating-linear-gradient(0deg, rgba(255,255,255,0.07) 0, rgba(255,255,255,0.07) 1px, transparent 1px, transparent 80px),
+          repeating-linear-gradient(90deg, rgba(255,255,255,0.07) 0, rgba(255,255,255,0.07) 1px, transparent 1px, transparent 80px)
         `,
         padding: "clamp(88px, 12vw, 140px) 0",
         position: "relative", overflow: "hidden",
@@ -2845,10 +2847,10 @@ export default function ArkoCase() {
         padding: SECTION_PAD,
         backgroundColor: arko.dark,
         backgroundImage: `
-          repeating-linear-gradient(0deg, rgba(255,255,255,0.045) 0, rgba(255,255,255,0.045) 0.5px, transparent 0.5px, transparent 20px),
-          repeating-linear-gradient(90deg, rgba(255,255,255,0.045) 0, rgba(255,255,255,0.045) 0.5px, transparent 0.5px, transparent 20px),
-          repeating-linear-gradient(0deg, rgba(255,255,255,0.09) 0, rgba(255,255,255,0.09) 0.5px, transparent 0.5px, transparent 80px),
-          repeating-linear-gradient(90deg, rgba(255,255,255,0.09) 0, rgba(255,255,255,0.09) 0.5px, transparent 0.5px, transparent 80px)
+          repeating-linear-gradient(0deg, rgba(255,255,255,0.045) 0, rgba(255,255,255,0.045) 1px, transparent 1px, transparent 20px),
+          repeating-linear-gradient(90deg, rgba(255,255,255,0.045) 0, rgba(255,255,255,0.045) 1px, transparent 1px, transparent 20px),
+          repeating-linear-gradient(0deg, rgba(255,255,255,0.09) 0, rgba(255,255,255,0.09) 1px, transparent 1px, transparent 80px),
+          repeating-linear-gradient(90deg, rgba(255,255,255,0.09) 0, rgba(255,255,255,0.09) 1px, transparent 1px, transparent 80px)
         `,
         position: "relative",
         overflow: "hidden",

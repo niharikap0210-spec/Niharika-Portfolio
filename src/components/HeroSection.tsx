@@ -55,7 +55,7 @@ function GuideLineH({ y, delay }: { y: string | number; delay: number }) {
         left: 0,
         right: 0,
         top: y,
-        height: "0.5px",
+        height: "1px",
         backgroundColor: "var(--construction)",
         transformOrigin: "left",
         pointerEvents: "none",
