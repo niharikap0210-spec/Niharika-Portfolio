@@ -17,7 +17,7 @@ const navItems: NavItem[] = [
   { label: "Work",     href: "/#projects",     external: false },
   { label: "About",    href: "/about",         external: false },
   { label: "Resume",   href: "https://drive.google.com/file/d/1gzV1UkzDv2-DndTFPsqzfXLW4CPCtlwP/view?usp=sharing", external: true },
-  { label: "LinkedIn", href: "https://linkedin.com/in/niharika-pundlik", external: true },
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/niharika-pundlik-63a9a1288/", external: true },
 ];
 
 /* ─── Color tokens ───────────────────────────────────────────────── */
