@@ -30,7 +30,7 @@ const socialLinks: SocialLink[] = [
   },
   {
     icon: <FileArrowDown size={18} weight="regular" color="currentColor" />,
-    href: "https://drive.google.com/file/d/1WbopauZ0xwmOnLNuEb1XZX5TmzxQCA6K/view?usp=sharing",
+    href: "https://drive.google.com/file/d/1gzV1UkzDv2-DndTFPsqzfXLW4CPCtlwP/view?usp=sharing",
     label: "Resume",
   },
 ];

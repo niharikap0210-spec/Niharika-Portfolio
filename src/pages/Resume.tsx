@@ -22,7 +22,7 @@ const contactItems = [
   {
     label: "Resume",
     value: "View full resume (PDF)",
-    href: "https://drive.google.com/file/d/1WbopauZ0xwmOnLNuEb1XZX5TmzxQCA6K/view?usp=sharing",
+    href: "https://drive.google.com/file/d/1gzV1UkzDv2-DndTFPsqzfXLW4CPCtlwP/view?usp=sharing",
   },
 ];
 
@@ -244,7 +244,7 @@ export default function Resume() {
                 ))}
 
                 <a
-                  href="https://drive.google.com/file/d/1WbopauZ0xwmOnLNuEb1XZX5TmzxQCA6K/view?usp=sharing"
+                  href="https://drive.google.com/file/d/1gzV1UkzDv2-DndTFPsqzfXLW4CPCtlwP/view?usp=sharing"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 mt-6 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
