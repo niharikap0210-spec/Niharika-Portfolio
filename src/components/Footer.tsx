@@ -38,7 +38,7 @@ const socialLinks: SocialLink[] = [
 const mainLinks: NavLink[] = [
   { href: "/#projects", label: "Work", internal: true },
   { href: "/about", label: "About", internal: true },
-  { href: "/resume", label: "Resume", internal: true },
+  { href: "https://drive.google.com/file/d/1gzV1UkzDv2-DndTFPsqzfXLW4CPCtlwP/view?usp=sharing", label: "Resume" },
   { href: "mailto:niharikap0210@gmail.com", label: "Contact" },
 ];
 
