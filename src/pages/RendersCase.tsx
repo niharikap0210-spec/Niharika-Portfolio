@@ -273,13 +273,13 @@ export default function RendersCase() {
             </span>
           </RendersNavLink>
 
-          <RendersNavLink to="/architecture" align="right">
+          <RendersNavLink to="/" align="right">
             <span style={{ textAlign: "right" }}>
               <span style={{ ...mono, fontSize: 9, color: "var(--text-muted)", letterSpacing: "0.22em", display: "block", marginBottom: 5 }}>
                 Next
               </span>
               <span style={{ ...mono, fontSize: 13, letterSpacing: "0.18em" }}>
-                Architecture
+                Home
               </span>
             </span>
             <ArrowRight size={14} weight="regular" />
