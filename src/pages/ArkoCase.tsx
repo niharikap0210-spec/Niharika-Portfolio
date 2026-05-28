@@ -2692,7 +2692,7 @@ export default function ArkoCase() {
       {/* ══════════════════════════════════════════════════════════════
           05 · WORKSPACE · WEB - desk-side platform for the designer
       ══════════════════════════════════════════════════════════════ */}
-      <section className="blueprint-grid" style={{ padding: SECTION_PAD }}>
+      <section style={{ padding: SECTION_PAD }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <Reveal>
             <SectionHeader num="05" title="Workspace · Web" phase="Weeks 05 · 08" />
