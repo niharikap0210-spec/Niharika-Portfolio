@@ -390,7 +390,7 @@ function LoopCard() {
               <p style={{
                 fontFamily: serif, fontWeight: 700,
                 fontSize: "clamp(22px, 2vw, 30px)",
-                color: isActive || s.bad ? arko.dark : "var(--text-primary)",
+                color: isActive ? arko.dark : "var(--text-primary)",
                 letterSpacing: "-0.02em", lineHeight: 1.1,
                 marginBottom: 20,
                 transition: "color 250ms ease-out",
