@@ -152,7 +152,7 @@ export default function RendersCase() {
                 }}
               >
                 Rendered{" "}
-                <span style={{ fontStyle: "italic", color: accent.primary }}>Realities</span>
+                <span style={{ fontStyle: "italic", color: "var(--accent)" }}>Realities</span>
               </motion.h1>
 
               <motion.p
@@ -201,7 +201,7 @@ export default function RendersCase() {
                       fontWeight: 700,
                       fontSize: "clamp(24px, 3vw, 40px)",
                       letterSpacing: "-0.03em",
-                      color: "var(--text-primary)",
+                      color: "var(--accent)",
                       lineHeight: 1,
                       marginBottom: 8,
                     }}>
