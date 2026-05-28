@@ -2652,12 +2652,6 @@ export default function ArkoCase() {
       ══════════════════════════════════════════════════════════════ */}
       <section style={{
         backgroundColor: "var(--text-primary)",
-        backgroundImage: `
-          repeating-linear-gradient(0deg, rgba(255,255,255,0.035) 0, rgba(255,255,255,0.035) 1px, transparent 1px, transparent 20px),
-          repeating-linear-gradient(90deg, rgba(255,255,255,0.035) 0, rgba(255,255,255,0.035) 1px, transparent 1px, transparent 20px),
-          repeating-linear-gradient(0deg, rgba(255,255,255,0.07) 0, rgba(255,255,255,0.07) 1px, transparent 1px, transparent 80px),
-          repeating-linear-gradient(90deg, rgba(255,255,255,0.07) 0, rgba(255,255,255,0.07) 1px, transparent 1px, transparent 80px)
-        `,
         padding: "clamp(88px, 12vw, 140px) 0",
         position: "relative", overflow: "hidden",
       }}>
@@ -2692,7 +2686,7 @@ export default function ArkoCase() {
       {/* ══════════════════════════════════════════════════════════════
           05 · WORKSPACE · WEB - desk-side platform for the designer
       ══════════════════════════════════════════════════════════════ */}
-      <section style={{ padding: SECTION_PAD }}>
+      <section className="blueprint-grid" style={{ padding: SECTION_PAD }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <Reveal>
             <SectionHeader num="05" title="Workspace · Web" phase="Weeks 05 · 08" />
