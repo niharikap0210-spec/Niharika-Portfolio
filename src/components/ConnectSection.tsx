@@ -37,7 +37,7 @@ const contacts: Contact[] = [
   {
     label: "Resume",
     display: "View PDF",
-    href: "https://drive.google.com/file/d/1cPyKXtBVSlycSc40xnKvsxlVOxqffwzw/view?usp=sharing",
+    href: "https://drive.google.com/file/d/1wXRAfG2Os-Kbt9WtR1W2ET0YSC9HRoaf/view?usp=sharing",
     icon: FileText,
     external: true,
   },

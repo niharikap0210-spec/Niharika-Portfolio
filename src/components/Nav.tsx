@@ -16,7 +16,7 @@ const navItems: NavItem[] = [
   { label: "Home",     href: "/",              external: false },
   { label: "Work",     href: "/#projects",     external: false },
   { label: "About",    href: "/about",         external: false },
-  { label: "Resume",   href: "https://drive.google.com/file/d/1cPyKXtBVSlycSc40xnKvsxlVOxqffwzw/view?usp=sharing", external: true },
+  { label: "Resume",   href: "https://drive.google.com/file/d/1wXRAfG2Os-Kbt9WtR1W2ET0YSC9HRoaf/view?usp=sharing", external: true },
   { label: "LinkedIn", href: "https://www.linkedin.com/in/niharika-pundlik-63a9a1288/", external: true },
 ];
 
