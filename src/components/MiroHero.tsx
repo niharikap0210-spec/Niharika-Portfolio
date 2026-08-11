@@ -25,6 +25,7 @@ import {
   SidebarSimpleIcon as SidebarSimple,
   QuestionIcon as Question,
   SparkleIcon as Sparkle,
+  HandWavingIcon as HandWaving,
 } from "@phosphor-icons/react";
 
 gsap.registerPlugin(TextPlugin, DrawSVGPlugin);
@@ -230,8 +231,8 @@ export default function MiroHero() {
         .from(".chrome-fade", { autoAlpha: 0, duration: 0.5 }, 0.2)
         // Whole text block rises + fades in
         .from(".hero-stage", { y: 30, autoAlpha: 0, duration: 0.9, ease: "power3.out" }, 0.1)
-        // Decorative Miro elements pop in around the board
-        .from(".decor-item", { autoAlpha: 0, scale: 0.5, y: 14, duration: 0.55, stagger: 0.08, ease: "back.out(1.7)" }, 0.55)
+        // Waving-hand chip pops in above the greeting
+        .from(".hero-wave", { autoAlpha: 0, scale: 0.4, y: 10, duration: 0.5, ease: "back.out(1.9)" }, 0.4)
         .from(".hero-eyebrow", { autoAlpha: 0, y: 10, duration: 0.5 }, 0.45)
         // Eyebrow marker underline draws itself in
         .from(".hero-eyebrow-underline path", { drawSVG: "0%", duration: 0.5, ease: "power1.inOut" }, 0.65)
@@ -248,11 +249,13 @@ export default function MiroHero() {
 
       // ── Soft, endless life ──
       gsap.to(".hero-sparkles", { scale: 1.14, rotation: 6, transformOrigin: "50% 50%", duration: 1.7, repeat: -1, yoyo: true, ease: "sine.inOut", delay: 2.8 });
-      // Gentle float on the decorative elements
-      const floats = self.selector!(".decor-float") as HTMLElement[];
-      floats.forEach((el, i) => {
-        gsap.to(el, { y: i % 2 ? 9 : -9, duration: 3 + (i % 3) * 0.6, repeat: -1, yoyo: true, ease: "sine.inOut", delay: 1.9 + i * 0.12 });
-      });
+      // The hand gives a small, periodic wave (a couple of tilts, then rests) — subtle, on-theme
+      gsap.set(".hero-wave-hand", { transformOrigin: "62% 88%" });
+      gsap.timeline({ repeat: -1, repeatDelay: 3.4, delay: 1.4 })
+        .to(".hero-wave-hand", { rotation: 17, duration: 0.2, ease: "sine.inOut" })
+        .to(".hero-wave-hand", { rotation: -11, duration: 0.28, ease: "sine.inOut" })
+        .to(".hero-wave-hand", { rotation: 14, duration: 0.26, ease: "sine.inOut" })
+        .to(".hero-wave-hand", { rotation: 0, duration: 0.22, ease: "sine.inOut" });
 
       // Floating cursor drift — smooth, endless
       const cursors = self.selector!(".collab-cursor") as HTMLElement[];
@@ -508,21 +511,17 @@ export default function MiroHero() {
           {/* SVG: drawings + connectors */}
           <svg className="absolute inset-0" width="100%" height="100%" style={{ overflow: "visible" }} aria-hidden>{renderDrawOverlay()}</svg>
 
-          {/* ── Decorative Miro elements — flowy arrows, mini stickies, doodles ── */}
-          <div className="hero-decor hidden lg:block" aria-hidden>
-            {/* mini sticky · research */}
-            <div className="decor-item decor-float decor-sticky" style={{ left: "16%", top: "25%", rotate: "-6deg", background: "#FCE9A6" }}>research</div>
-            {/* mini sticky · systems */}
-            <div className="decor-item decor-float decor-sticky" style={{ left: "78%", top: "38%", rotate: "5deg", background: "#C4DCF6" }}>systems</div>
-            {/* mini sticky · structure */}
-            <div className="decor-item decor-float decor-sticky" style={{ left: "70%", top: "72%", rotate: "-4deg", background: "#CBE8B6" }}>structure</div>
-          </div>
-
           {/* Centre heading — centred text stack */}
           <div className="hero-layout absolute inset-0">
             <div className="hero-stage">
               {/* ── eyebrow · name (all centred) ── */}
               <div className="hero-left">
+                {/* subtle waving-hand chip — greets above "hello, my name is" */}
+                <div className="hero-wave-wrap" aria-hidden style={{ marginBottom: 20 }}>
+                  <span className="hero-wave" style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 46, height: 46, borderRadius: 999, background: "#fff", border: "1px solid rgba(9,30,66,0.05)", boxShadow: "var(--miro-shadow)" }}>
+                    <HandWaving className="hero-wave-hand" size={24} weight="fill" color="#E39B3C" style={{ transformOrigin: "62% 88%" }} />
+                  </span>
+                </div>
                 <p className="hero-eyebrow" style={{ fontFamily: FONT, margin: 0 }}>
                   <span style={{ position: "relative", display: "inline-block", textTransform: "uppercase", letterSpacing: "0.26em", fontSize: "clamp(12px, 1.2vw, 15px)", color: "#6A6470", fontWeight: 700 }}>
                     {COPY.eyebrow}
