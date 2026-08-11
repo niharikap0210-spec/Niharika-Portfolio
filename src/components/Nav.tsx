@@ -21,9 +21,10 @@ const navItems: NavItem[] = [
 ];
 
 /* ─── Color tokens ───────────────────────────────────────────────── */
-const C_DEFAULT = "#6B6B6B";
-const C_ACTIVE  = "#1A1A1A";
-const C_HOVER   = "#B5924C";
+const C_DEFAULT  = "#6B6B6B";
+const C_ACTIVE   = "#1A1A1A";
+const C_HOVER    = "#1A1A1A";                     // hover text — ink (reads on the light peach pill)
+const C_HOVER_BG = "rgba(255,190,128,0.38)";     // hover pill — soft, LIGHT peach (slides between links)
 
 /* ─── Scroll thresholds ─────────────────────────────────────────── */
 const COLLAPSE_AT  = 150;
@@ -39,17 +40,12 @@ const pillVariants = {
     },
   },
   collapsed: {
-    width: "2.75rem",
+    width: "3.25rem",
     transition: {
       type: "spring" as const, damping: 30, stiffness: 220,
       when: "afterChildren" as const, staggerChildren: 0.04, staggerDirection: -1 as const,
     },
   },
-};
-
-const brandVar = {
-  expanded:  { opacity: 1, transition: { duration: 0.2,  ease: [0.25, 1, 0.4, 1] } },
-  collapsed: { opacity: 0, transition: { duration: 0.15, ease: [0.4, 0, 1, 1] } },
 };
 
 const itemVar = {
@@ -115,16 +111,18 @@ export default function Nav() {
     return C_DEFAULT;
   };
 
-  const linkWeight = (item: NavItem) => isActive(item) ? 500 : 400;
+  const linkWeight = (item: NavItem) => isActive(item) ? 600 : 400;
 
-  /* ── Shared link style ── */
+  /* ── Shared link style (sits above the sliding hover pill) ── */
   const linkBase: React.CSSProperties = {
-    fontFamily: "'Inter', system-ui, sans-serif",
+    position: "relative",
+    zIndex: 1,
+    fontFamily: "'Manrope', system-ui, sans-serif",
     fontSize: 14,
     letterSpacing: "0.01em",
     textDecoration: "none",
-    padding: "4px 12px",
-    borderRadius: 4,
+    padding: "7px 15px",
+    borderRadius: 999,
     display: "inline-flex",
     alignItems: "center",
     gap: 5,
@@ -137,7 +135,7 @@ export default function Nav() {
   return (
     <>
       {/* ── Desktop: floating pill ─────────────────────────────────── */}
-      <div className="hidden md:flex fixed top-6 left-1/2 -translate-x-1/2 z-50">
+      <div className="hidden md:flex fixed top-4 left-1/2 -translate-x-1/2 z-50">
         <motion.div
           initial={{ y: -52, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
@@ -154,66 +152,24 @@ export default function Nav() {
             style={{
               display: "flex",
               alignItems: "center",
-              height: 48,
-              borderRadius: 9999,
-              border: "1px solid #E5E5E5",
-              backgroundColor: "rgba(250,250,250,0.92)",
-              backdropFilter: "blur(20px)",
-              WebkitBackdropFilter: "blur(20px)",
-              boxShadow: "0 2px 8px rgba(0,0,0,0.04), 0 12px 40px rgba(0,0,0,0.07)",
+              height: 52,
+              borderRadius: 14,
+              border: "1px solid rgba(9,30,66,0.05)",
+              backgroundColor: "#fff",
+              boxShadow: "var(--miro-shadow)",
               cursor: isExpanded ? "default" : "pointer",
               overflow: "hidden",
               position: "relative",
               whiteSpace: "nowrap",
             }}
           >
-            {/* ── Brand mark ── */}
-            <motion.div
-              variants={brandVar}
-              style={{
-                flexShrink: 0,
-                display: "flex",
-                alignItems: "center",
-                paddingLeft: 20,
-                paddingRight: 14,
-              }}
-            >
-              <Link
-                to="/"
-                onClick={(e) => e.stopPropagation()}
-                aria-label="Niharika Pundlik - home"
-                style={{
-                  fontFamily: "'Playfair Display', Georgia, serif",
-                  fontStyle: "italic",
-                  fontWeight: 700,
-                  fontSize: 18,
-                  letterSpacing: "-0.01em",
-                  color: C_ACTIVE,
-                  textDecoration: "none",
-                }}
-                className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded"
-              >
-                NP
-              </Link>
-              <span
-                aria-hidden
-                style={{
-                  width: 1,
-                  height: 18,
-                  backgroundColor: "#E5E5E5",
-                  marginLeft: 14,
-                  flexShrink: 0,
-                }}
-              />
-            </motion.div>
-
             {/* ── Nav links ── */}
             <motion.ul
               style={{
                 display: "flex",
                 alignItems: "center",
-                gap: 0,
-                padding: "0 12px 0 0",
+                gap: 2,
+                padding: "0 10px",
                 margin: 0,
                 listStyle: "none",
                 pointerEvents: isExpanded ? "auto" : "none",
@@ -228,10 +184,18 @@ export default function Nav() {
                   <motion.li
                     key={item.label}
                     variants={itemVar}
-                    style={{ position: "relative" }}
+                    style={{ position: "relative", display: "flex" }}
                     onMouseEnter={() => setHovered(item.label)}
                     onMouseLeave={() => setHovered(null)}
                   >
+                    {/* light peach pill that slides between links on hover */}
+                    {hovered === item.label && (
+                      <motion.div
+                        layoutId="navHoverPill"
+                        transition={{ type: "spring", stiffness: 520, damping: 42 }}
+                        style={{ position: "absolute", inset: 0, background: C_HOVER_BG, borderRadius: 999, zIndex: 0 }}
+                      />
+                    )}
                     {item.external ? (
                       <a
                         href={item.href}
@@ -293,22 +257,7 @@ export default function Nav() {
           boxShadow: "0 1px 2px rgba(0,0,0,0.04)",
         }}
       >
-        <div className="flex items-center justify-between px-6 h-14">
-          <Link
-            to="/"
-            style={{
-              fontFamily: "'Playfair Display', Georgia, serif",
-              fontStyle: "italic",
-              fontWeight: 700,
-              fontSize: 18,
-              letterSpacing: "-0.01em",
-              color: C_ACTIVE,
-              textDecoration: "none",
-            }}
-            aria-label="Niharika Pundlik - home"
-          >
-            NP
-          </Link>
+        <div className="flex items-center justify-end px-6 h-14">
           <button
             onClick={() => setMenuOpen((o) => !o)}
             aria-label={menuOpen ? "Close menu" : "Open menu"}
@@ -363,7 +312,7 @@ export default function Nav() {
                         target="_blank"
                         rel="noopener noreferrer"
                         style={{
-                          fontFamily: "'Playfair Display', Georgia, serif",
+                          fontFamily: "'Manrope', Georgia, serif",
                           fontSize: 36,
                           fontWeight: 700,
                           color: C_DEFAULT,
@@ -382,7 +331,7 @@ export default function Nav() {
                       <Link
                         to={item.href}
                         style={{
-                          fontFamily: "'Playfair Display', Georgia, serif",
+                          fontFamily: "'Manrope', Georgia, serif",
                           fontSize: 36,
                           fontWeight: 700,
                           color: active ? C_ACTIVE : C_DEFAULT,
@@ -401,7 +350,7 @@ export default function Nav() {
 
             <div className="p-8 flex justify-center">
               <p style={{
-                fontFamily: "'Space Mono', monospace",
+                fontFamily: "'Manrope', monospace",
                 letterSpacing: "0.12em",
                 fontSize: 10,
                 textTransform: "uppercase",

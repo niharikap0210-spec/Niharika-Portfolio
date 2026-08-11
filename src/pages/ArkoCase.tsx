@@ -17,14 +17,14 @@ const arko = {
 };
 
 const mono: React.CSSProperties = {
-  fontFamily: "'Space Mono', monospace",
+  fontFamily: "'Manrope', monospace",
   textTransform: "uppercase" as const,
   letterSpacing: "0.12em",
 };
-const serif = "'Playfair Display', Georgia, serif";
-const sans  = "'Inter', system-ui, sans-serif";
+const serif = "'Manrope', Georgia, serif";
+const sans  = "'Manrope', system-ui, sans-serif";
 const caption: React.CSSProperties = {
-  fontFamily: "'Playfair Display', Georgia, serif",
+  fontFamily: "'Manrope', Georgia, serif",
   fontStyle: "italic",
   fontSize: 15,
   color: "var(--text-muted)",

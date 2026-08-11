@@ -44,10 +44,10 @@ const config: Config = {
         },
       },
       fontFamily: {
-        display: ['"Playfair Display"', 'Georgia', 'serif'],
-        sans: ['Inter', 'system-ui', 'sans-serif'],
-        mono: ['"Space Mono"', 'Menlo', 'monospace'],
-        hand: ['Caveat', 'cursive'],
+        display: ['Manrope', 'system-ui', 'sans-serif'],
+        sans: ['Manrope', 'system-ui', 'sans-serif'],
+        mono: ['Manrope', 'system-ui', 'sans-serif'],
+        hand: ['Manrope', 'system-ui', 'sans-serif'],
       },
       letterSpacing: {
         display: "-0.02em",

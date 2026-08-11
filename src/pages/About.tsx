@@ -11,15 +11,15 @@ import HandDrawnSketch from "../components/HandDrawnSketch";
 import ConnectSection from "../components/ConnectSection";
 
 const mono: React.CSSProperties = {
-  fontFamily: "'Space Mono', monospace",
+  fontFamily: "'Manrope', monospace",
   textTransform: "uppercase",
   letterSpacing: "0.16em",
 };
 const caveat: React.CSSProperties = {
-  fontFamily: "'Caveat', cursive",
+  fontFamily: "'Manrope', cursive",
 };
-const serif = "'Playfair Display', Georgia, serif";
-const sans = "'Inter', system-ui, sans-serif";
+const serif = "'Manrope', Georgia, serif";
+const sans = "'Manrope', system-ui, sans-serif";
 
 /* ─── Section Header — small label + numbered title ─────────────── */
 function SectionHeader({

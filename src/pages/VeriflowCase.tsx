@@ -35,12 +35,12 @@ const vf = {
 };
 
 const mono: React.CSSProperties = {
-  fontFamily: "'Space Mono', monospace",
+  fontFamily: "'Manrope', monospace",
   textTransform: "uppercase" as const,
   letterSpacing: "0.12em",
 };
-const serif = "'Playfair Display', Georgia, serif";
-const sans  = "'Inter', system-ui, sans-serif";
+const serif = "'Manrope', Georgia, serif";
+const sans  = "'Manrope', system-ui, sans-serif";
 const t = {
   h2Section: {
     fontFamily: serif, fontWeight: 700,

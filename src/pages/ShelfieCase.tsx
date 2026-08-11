@@ -47,12 +47,12 @@ const sh = {
 };
 
 const mono: React.CSSProperties = {
-  fontFamily: "'Space Mono', monospace",
+  fontFamily: "'Manrope', monospace",
   textTransform: "uppercase",
   letterSpacing: "0.12em",
 };
-const serif = "'Playfair Display', Georgia, serif";
-const sans  = "'Inter', system-ui, sans-serif";
+const serif = "'Manrope', Georgia, serif";
+const sans  = "'Manrope', system-ui, sans-serif";
 
 const t = {
   eyebrow: {
@@ -214,10 +214,10 @@ function PointerRule({ x1, y1, x2, y2, color = sh.dark }: { x1: number; y1: numb
    Larger sizes here read clearly without crowding. */
 type SvgTextProps = React.SVGProps<SVGTextElement>;
 const ANNOT: Record<"hed" | "body" | "small" | "fig", SvgTextProps> = {
-  hed:    { fontFamily: "'Space Mono', monospace", fontSize: 11,  fontWeight: 700, letterSpacing: "0.18em" },
-  body:   { fontFamily: "'Space Mono', monospace", fontSize: 9.5,                  letterSpacing: "0.16em" },
-  small:  { fontFamily: "'Space Mono', monospace", fontSize: 8.5,                  letterSpacing: "0.16em" },
-  fig:    { fontFamily: "'Space Mono', monospace", fontSize: 8,                    letterSpacing: "0.2em"  },
+  hed:    { fontFamily: "'Manrope', monospace", fontSize: 11,  fontWeight: 700, letterSpacing: "0.18em" },
+  body:   { fontFamily: "'Manrope', monospace", fontSize: 9.5,                  letterSpacing: "0.16em" },
+  small:  { fontFamily: "'Manrope', monospace", fontSize: 8.5,                  letterSpacing: "0.16em" },
+  fig:    { fontFamily: "'Manrope', monospace", fontSize: 8,                    letterSpacing: "0.2em"  },
 };
 
 /* 01 · CONTRAST - yellow stamp on yellow oil */
@@ -237,7 +237,7 @@ function OilBottleIllustration() {
 
       {/* the invisible date - same yellow as oil, pointer line attaches to it */}
       <text x="90" y="142" textAnchor="middle"
-        fontFamily="'Space Mono', monospace" fontSize="9"
+        fontFamily="'Manrope', monospace" fontSize="9"
         fill={sh.caution} opacity="0.75" letterSpacing="0.08em" fontWeight="700">
         USE BY 05/24
       </text>
@@ -299,7 +299,7 @@ function BreadBagIllustration() {
         <g key={d.n}>
           <circle cx={d.x} cy={d.y} r="9" fill={sh.primary} />
           <text x={d.x} y={d.y + 4} textAnchor="middle"
-            fontFamily="'Space Mono', monospace" fontSize="11" fontWeight="700"
+            fontFamily="'Manrope', monospace" fontSize="11" fontWeight="700"
             fill="#fff">{d.n}</text>
         </g>
       ))}
@@ -312,7 +312,7 @@ function BreadBagIllustration() {
         <g key={r.n}>
           <circle cx="214" cy={r.y} r="9" fill={sh.primary} />
           <text x="214" y={r.y + 4} textAnchor="middle"
-            fontFamily="'Space Mono', monospace" fontSize="11" fontWeight="700"
+            fontFamily="'Manrope', monospace" fontSize="11" fontWeight="700"
             fill="#fff">{r.n}</text>
           <text x="232" y={r.y - 1} {...ANNOT.body} fill={sh.dark}>
             {r.t}
@@ -349,7 +349,7 @@ function CodedDateIllustration() {
       {/* printed label patch with the cryptic code */}
       <rect x="48" y="92" width="84" height="38" fill="#FFFFFF" opacity="0.95"
         stroke={sh.dark} strokeWidth="0.7" />
-      <text x="60" y="118" fontFamily="'Space Mono', monospace" fontSize="17"
+      <text x="60" y="118" fontFamily="'Manrope', monospace" fontSize="17"
         fontWeight="700" fill={sh.dark} letterSpacing="0.10em">mfg 213</text>
 
       {/* faux ingredient panel below - blurred lines */}
@@ -365,7 +365,7 @@ function CodedDateIllustration() {
       <text x="200" y="48" {...ANNOT.hed} fill={sh.dark}>DECODE REQUIRED</text>
       <line x1="200" y1="56" x2="344" y2="56" stroke={sh.dark} strokeWidth="1" opacity="0.4" />
 
-      <text x="200" y="86" fontFamily="'Space Mono', monospace" fontSize="14"
+      <text x="200" y="86" fontFamily="'Manrope', monospace" fontSize="14"
         fontWeight="700" fill={sh.dark} letterSpacing="0.10em">213</text>
       <text x="240" y="86" {...ANNOT.body} fill={sh.dark} opacity="0.7">JULIAN DAY</text>
 
@@ -404,13 +404,13 @@ function YogurtCupIllustration() {
       <rect x="56" y="108" width="90" height="38" fill={sh.primary} opacity="0.94" />
       <text x="101" y="128" textAnchor="middle" fontFamily={serif} fontSize="14"
         fontWeight="700" fill="#fff" letterSpacing="-0.01em">YOGURT</text>
-      <text x="101" y="140" textAnchor="middle" fontFamily="'Space Mono', monospace"
+      <text x="101" y="140" textAnchor="middle" fontFamily="'Manrope', monospace"
         fontSize="6" fill="#fff" opacity="0.85" letterSpacing="0.18em">
         PROBIOTIC · 150 G
       </text>
 
       {/* micro-printed rim date - purposely tiny + faint */}
-      <text x="64" y="46" fontFamily="'Space Mono', monospace" fontSize="3"
+      <text x="64" y="46" fontFamily="'Manrope', monospace" fontSize="3"
         fill={sh.dark} opacity="0.55" letterSpacing="0.04em">
         EXP 04/29/25 LOT 4178
       </text>
@@ -424,9 +424,9 @@ function YogurtCupIllustration() {
       <text x="226" y="86" {...ANNOT.body} fill={sh.primary} fontWeight="700">
         ENLARGED 4×
       </text>
-      <text x="226" y="112" fontFamily="'Space Mono', monospace" fontSize="14"
+      <text x="226" y="112" fontFamily="'Manrope', monospace" fontSize="14"
         fontWeight="700" fill={sh.dark} letterSpacing="0.04em">EXP 04/29/25</text>
-      <text x="226" y="128" fontFamily="'Space Mono', monospace" fontSize="10"
+      <text x="226" y="128" fontFamily="'Manrope', monospace" fontSize="10"
         fill={sh.dark} opacity="0.65" letterSpacing="0.08em">LOT 4178</text>
       <line x1="216" y1="138" x2="344" y2="138" stroke={sh.primary} strokeWidth="1" opacity="0.5" />
       <text x="226" y="146" {...ANNOT.small} fill={sh.dark} opacity="0.6">
@@ -1038,7 +1038,7 @@ function UniversalIconIllustration() {
             </g>
           )}
           <text x={s.x} y={cy + 70} textAnchor="middle"
-            fontFamily="'Space Mono', monospace" fontSize="11"
+            fontFamily="'Manrope', monospace" fontSize="11"
             fill={s.color} letterSpacing="0.2em" fontWeight="700">
             {s.label}
           </text>
@@ -1069,7 +1069,7 @@ function TimeStripIllustration() {
 
         {/* MILK label area */}
         <text x="50" y="64" textAnchor="middle"
-          fontFamily="'Playfair Display', serif" fontSize="14" fontWeight="700" fill={sh.dark}>
+          fontFamily="'Manrope', serif" fontSize="14" fontWeight="700" fill={sh.dark}>
           MILK
         </text>
 
@@ -1080,11 +1080,11 @@ function TimeStripIllustration() {
         <g transform="translate(36 92)">
           <polygon points="0,8 5,0 10,8" fill={sh.dark} />
           <text x="5" y="-2" textAnchor="middle"
-            fontFamily="'Space Mono', monospace" fontSize="8" fill={sh.dark} letterSpacing="0.18em">NOW</text>
+            fontFamily="'Manrope', monospace" fontSize="8" fill={sh.dark} letterSpacing="0.18em">NOW</text>
         </g>
         {/* scale labels */}
-        <text x="14" y="132" fontFamily="'Space Mono', monospace" fontSize="8" fill={sh.fresh} letterSpacing="0.16em">FRESH</text>
-        <text x="86" y="132" textAnchor="end" fontFamily="'Space Mono', monospace" fontSize="8" fill={sh.expired} letterSpacing="0.16em">EXPIRED</text>
+        <text x="14" y="132" fontFamily="'Manrope', monospace" fontSize="8" fill={sh.fresh} letterSpacing="0.16em">FRESH</text>
+        <text x="86" y="132" textAnchor="end" fontFamily="'Manrope', monospace" fontSize="8" fill={sh.expired} letterSpacing="0.16em">EXPIRED</text>
       </g>
     </svg>
   );
@@ -1111,15 +1111,15 @@ function OpenByIllustration() {
           {/* corner peel mark */}
           <path d="M 92 48 L 84 42 L 76 48 Z" fill={sh.primary} opacity="0.3" />
           <text x="50" y="72" textAnchor="middle"
-            fontFamily="'Space Mono', monospace" fontSize="8.5"
+            fontFamily="'Manrope', monospace" fontSize="8.5"
             fill={sh.dark} letterSpacing="0.22em" fontWeight="700">OPEN BY</text>
           <text x="50" y="104" textAnchor="middle"
-            fontFamily="'Playfair Display', serif" fontSize="20" fontWeight="700" fill={sh.primary}>
+            fontFamily="'Manrope', serif" fontSize="20" fontWeight="700" fill={sh.primary}>
             7 DAYS
           </text>
           <line x1="20" y1="116" x2="80" y2="116" stroke={sh.primary} strokeWidth="0.6" opacity="0.5" />
           <text x="50" y="130" textAnchor="middle"
-            fontFamily="'Space Mono', monospace" fontSize="6.5" fill={sh.muted} letterSpacing="0.18em">FROM SEAL BREAK</text>
+            fontFamily="'Manrope', monospace" fontSize="6.5" fill={sh.muted} letterSpacing="0.18em">FROM SEAL BREAK</text>
         </g>
       </g>
     </svg>
@@ -1142,10 +1142,10 @@ function ShelfieAppIllustration() {
         {/* status bar */}
         <rect x="50" y="6" width="30" height="6" rx="3" fill={sh.dark} opacity="0.3" />
         {/* app title */}
-        <text x="14" y="42" fontFamily="'Playfair Display', serif" fontSize="16" fontWeight="700" fill={sh.dark}>
+        <text x="14" y="42" fontFamily="'Manrope', serif" fontSize="16" fontWeight="700" fill={sh.dark}>
           Shelfie
         </text>
-        <text x="14" y="58" fontFamily="'Space Mono', monospace" fontSize="7" letterSpacing="0.2em" fill={sh.muted}>
+        <text x="14" y="58" fontFamily="'Manrope', monospace" fontSize="7" letterSpacing="0.2em" fill={sh.muted}>
           4 ITEMS · 1 EXPIRING
         </text>
         <line x1="14" y1="66" x2="116" y2="66" stroke={sh.subtle} strokeWidth="0.8" />
@@ -1155,11 +1155,11 @@ function ShelfieAppIllustration() {
           <g key={i}>
             <circle cx="22" cy={r.y} r="3.5" fill={r.color} />
             <text x="32" y={r.y + 3.5}
-              fontFamily="'Inter', system-ui, sans-serif" fontSize="10" fill={sh.dark} fontWeight="500">
+              fontFamily="'Manrope', system-ui, sans-serif" fontSize="10" fill={sh.dark} fontWeight="500">
               {r.label}
             </text>
             <text x="116" y={r.y + 3.5} textAnchor="end"
-              fontFamily="'Space Mono', monospace" fontSize="9" fill={r.color} fontWeight="700" letterSpacing="0.05em">
+              fontFamily="'Manrope', monospace" fontSize="9" fill={r.color} fontWeight="700" letterSpacing="0.05em">
               {r.days}
             </text>
             {i < items.length - 1 && (
@@ -1171,7 +1171,7 @@ function ShelfieAppIllustration() {
         {/* CTA pill */}
         <rect x="22" y="178" width="86" height="14" rx="7" fill={sh.primary} />
         <text x="65" y="187" textAnchor="middle"
-          fontFamily="'Space Mono', monospace" fontSize="7" fill="#fff" letterSpacing="0.22em" fontWeight="700">
+          fontFamily="'Manrope', monospace" fontSize="7" fill="#fff" letterSpacing="0.22em" fontWeight="700">
           + SCAN SHELF
         </text>
       </g>

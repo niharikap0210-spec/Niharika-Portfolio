@@ -48,7 +48,7 @@ const copyright = {
 };
 
 const mono: React.CSSProperties = {
-  fontFamily: "'Space Mono', monospace",
+  fontFamily: "'Manrope', monospace",
   letterSpacing: "0.12em",
   textTransform: "uppercase",
 };
@@ -78,7 +78,7 @@ function LogoMark() {
         x="14"
         y="18"
         textAnchor="middle"
-        fontFamily="'Playfair Display', Georgia, serif"
+        fontFamily="'Manrope', Georgia, serif"
         fontSize="13"
         fontWeight="700"
         fill="currentColor"
@@ -111,7 +111,7 @@ export default function Footer() {
             <LogoMark />
             <span
               style={{
-                fontFamily: "'Playfair Display', Georgia, serif",
+                fontFamily: "'Manrope', Georgia, serif",
                 fontWeight: 700,
                 fontSize: 22,
                 color: "var(--text-primary)",
@@ -264,7 +264,7 @@ export default function Footer() {
             {copyright.license && (
               <div
                 style={{
-                  fontFamily: "'Inter', system-ui, sans-serif",
+                  fontFamily: "'Manrope', system-ui, sans-serif",
                   fontSize: 14,
                   fontStyle: "normal",
                   fontWeight: 400,

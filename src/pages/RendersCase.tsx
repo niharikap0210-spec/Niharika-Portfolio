@@ -13,11 +13,11 @@ const accent = {
 };
 
 const mono: React.CSSProperties = {
-  fontFamily: "'Space Mono', monospace",
+  fontFamily: "'Manrope', monospace",
   textTransform: "uppercase",
   letterSpacing: "0.12em",
 };
-const serif = "'Playfair Display', Georgia, serif";
+const serif = "'Manrope', Georgia, serif";
 
 
 const allImages = [
@@ -160,7 +160,7 @@ export default function RendersCase() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.25, duration: 0.6 }}
                 style={{
-                  fontFamily: "'Inter', system-ui, sans-serif",
+                  fontFamily: "'Manrope', system-ui, sans-serif",
                   fontSize: "clamp(16px, 1.4vw, 19px)",
                   color: "var(--text-secondary)",
                   lineHeight: 1.75,

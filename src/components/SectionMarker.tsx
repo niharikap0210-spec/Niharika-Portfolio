@@ -50,7 +50,7 @@ export default function SectionMarker({
         <span style={{ position: "absolute", bottom: 3, right: 3, width: 5, height: 5, borderBottom: `1px solid ${accentColor}`, borderRight: `1px solid ${accentColor}` }} />
         <span
           style={{
-            fontFamily: "'Playfair Display', Georgia, serif",
+            fontFamily: "'Manrope', Georgia, serif",
             fontStyle: "italic",
             fontWeight: 700,
             fontSize: 17,
@@ -69,7 +69,7 @@ export default function SectionMarker({
       {/* Label */}
       <span
         style={{
-          fontFamily: "'Space Mono', monospace",
+          fontFamily: "'Manrope', monospace",
           fontSize: 11,
           color: "var(--text-primary)",
           letterSpacing: "0.26em",
@@ -106,7 +106,7 @@ export default function SectionMarker({
       >
         <span
           style={{
-            fontFamily: "'Space Mono', monospace",
+            fontFamily: "'Manrope', monospace",
             fontSize: 9,
             color: "var(--text-muted)",
             letterSpacing: "0.22em",
@@ -122,7 +122,7 @@ export default function SectionMarker({
         </span>
         <span
           style={{
-            fontFamily: "'Space Mono', monospace",
+            fontFamily: "'Manrope', monospace",
             fontSize: 11,
             letterSpacing: "0.12em",
             fontWeight: 600,

@@ -13,7 +13,7 @@ import {
   CubeIcon as Cube,
   MapPinIcon as MapPin,
 } from "@phosphor-icons/react";
-import HeroSection from "../components/HeroSection";
+import MiroHero from "../components/MiroHero";
 import ProjectCard from "../components/ProjectCard";
 import ArchitectureCard from "../components/ArchitectureCard";
 import HandDrawnSketch from "../components/HandDrawnSketch";
@@ -56,7 +56,7 @@ const archProjects = [
 ];
 
 const mono: React.CSSProperties = {
-  fontFamily: "'Space Mono', monospace",
+  fontFamily: "'Manrope', monospace",
   textTransform: "uppercase",
   letterSpacing: "0.12em",
 };
@@ -105,7 +105,7 @@ export default function Home() {
       className=""
     >
       {/* Hero */}
-      <HeroSection />
+      <MiroHero />
 
       {/* Projects Grid */}
       <section
@@ -207,7 +207,7 @@ export default function Home() {
               viewport={{ once: true, margin: "-40px" }}
               transition={{ duration: 0.55, ease: [0.25, 1, 0.4, 1] }}
               style={{
-                fontFamily: "'Playfair Display', Georgia, serif",
+                fontFamily: "'Manrope', Georgia, serif",
                 fontWeight: 700,
                 fontSize: "clamp(40px, 4.6vw, 56px)",
                 color: "var(--text-primary)",
@@ -231,7 +231,7 @@ export default function Home() {
               viewport={{ once: true, margin: "-40px" }}
               transition={{ duration: 0.6, ease: [0.25, 1, 0.4, 1], delay: 0.1 }}
               style={{
-                fontFamily: "'Playfair Display', Georgia, serif",
+                fontFamily: "'Manrope', Georgia, serif",
                 fontStyle: "italic",
                 fontSize: "clamp(18px, 1.5vw, 22px)",
                 lineHeight: 1.55,
@@ -265,7 +265,7 @@ export default function Home() {
                 <div key={s.label} style={{ display: "flex", flexDirection: "column", gap: 6 }}>
                   <span
                     style={{
-                      fontFamily: "'Playfair Display', Georgia, serif",
+                      fontFamily: "'Manrope', Georgia, serif",
                       fontSize: "clamp(22px, 2vw, 28px)",
                       fontWeight: 700,
                       color: "var(--text-primary)",

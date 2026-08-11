@@ -6,7 +6,7 @@ import SectionMarker from "../components/SectionMarker";
 import DrawingSheetBorder from "../components/DrawingSheetBorder";
 
 const mono: React.CSSProperties = {
-  fontFamily: "'Space Mono', monospace",
+  fontFamily: "'Manrope', monospace",
   textTransform: "uppercase",
   letterSpacing: "0.12em",
 };
@@ -83,7 +83,7 @@ export default function CaseStudy() {
             to="/#projects"
             className="inline-flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded"
             style={{
-              fontFamily: "'Space Mono', monospace",
+              fontFamily: "'Manrope', monospace",
               fontSize: 10,
               letterSpacing: "0.12em",
               textTransform: "uppercase",
@@ -128,7 +128,7 @@ export default function CaseStudy() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1, duration: 0.6, ease: [0.25, 1, 0.4, 1] }}
             style={{
-              fontFamily: "'Playfair Display', Georgia, serif",
+              fontFamily: "'Manrope', Georgia, serif",
               fontWeight: 700,
               fontSize: "clamp(40px, 5.5vw, 68px)",
               color: "var(--text-primary)",
@@ -145,7 +145,7 @@ export default function CaseStudy() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.18, duration: 0.5 }}
             style={{
-              fontFamily: "'Inter', system-ui, sans-serif",
+              fontFamily: "'Manrope', system-ui, sans-serif",
               fontSize: "clamp(16px, 1.6vw, 20px)",
               color: "var(--text-secondary)",
               lineHeight: 1.6,
@@ -172,7 +172,7 @@ export default function CaseStudy() {
             ].map((meta) => (
               <div key={meta.label}>
                 <p style={{ ...mono, fontSize: 8, color: "var(--text-muted)", marginBottom: 6 }}>{meta.label}</p>
-                <p style={{ fontFamily: "'Inter', system-ui, sans-serif", fontSize: 14, fontWeight: 500, color: "var(--text-primary)", lineHeight: 1.4 }}>{meta.value}</p>
+                <p style={{ fontFamily: "'Manrope', system-ui, sans-serif", fontSize: 14, fontWeight: 500, color: "var(--text-primary)", lineHeight: 1.4 }}>{meta.value}</p>
               </div>
             ))}
           </motion.div>
@@ -238,7 +238,7 @@ export default function CaseStudy() {
       <DrawingSheet sheetNumber="01 OF 04" sheetTitle="Overview" letter="A">
         <h2
           style={{
-            fontFamily: "'Playfair Display', Georgia, serif",
+            fontFamily: "'Manrope', Georgia, serif",
             fontWeight: 700,
             fontSize: "clamp(28px, 3vw, 38px)",
             color: "var(--text-primary)",
@@ -248,7 +248,7 @@ export default function CaseStudy() {
         >
           Overview
         </h2>
-        <p style={{ fontFamily: "'Inter', system-ui, sans-serif", fontSize: 17, color: "var(--text-secondary)", lineHeight: 1.8, marginBottom: 32 }}>
+        <p style={{ fontFamily: "'Manrope', system-ui, sans-serif", fontSize: 17, color: "var(--text-secondary)", lineHeight: 1.8, marginBottom: 32 }}>
           {project.overview}
         </p>
 
@@ -260,7 +260,7 @@ export default function CaseStudy() {
           }}
         >
           <p style={{ ...mono, fontSize: 9, color: "var(--accent)", marginBottom: 8 }}>The Problem</p>
-          <p style={{ fontFamily: "'Inter', system-ui, sans-serif", fontSize: 16, color: "var(--text-primary)", fontWeight: 500, lineHeight: 1.7 }}>
+          <p style={{ fontFamily: "'Manrope', system-ui, sans-serif", fontSize: 16, color: "var(--text-primary)", fontWeight: 500, lineHeight: 1.7 }}>
             {project.problem}
           </p>
         </div>
@@ -276,7 +276,7 @@ export default function CaseStudy() {
                     borderRadius: "50%",
                     backgroundColor: "rgba(124,58,237,0.1)",
                     color: "var(--accent)",
-                    fontFamily: "'Space Mono', monospace",
+                    fontFamily: "'Manrope', monospace",
                     fontSize: 8,
                     display: "flex",
                     alignItems: "center",
@@ -287,7 +287,7 @@ export default function CaseStudy() {
                 >
                   {i + 1}
                 </div>
-                <p style={{ fontFamily: "'Inter', system-ui, sans-serif", fontSize: 15, color: "var(--text-secondary)", lineHeight: 1.65 }}>{stat}</p>
+                <p style={{ fontFamily: "'Manrope', system-ui, sans-serif", fontSize: 15, color: "var(--text-secondary)", lineHeight: 1.65 }}>{stat}</p>
               </div>
             ))}
           </div>
@@ -296,7 +296,7 @@ export default function CaseStudy() {
 
       {/* Handwritten note between sheets */}
       <div className="flex justify-center py-4" aria-hidden>
-        <span style={{ fontFamily: "'Caveat', cursive", fontSize: 13, color: "var(--text-secondary)", opacity: 0.35 }}>
+        <span style={{ fontFamily: "'Manrope', cursive", fontSize: 13, color: "var(--text-secondary)", opacity: 0.35 }}>
           see next sheet →
         </span>
       </div>
@@ -305,7 +305,7 @@ export default function CaseStudy() {
       <DrawingSheet sheetNumber="02 OF 04" sheetTitle="Research" letter="B">
         <h2
           style={{
-            fontFamily: "'Playfair Display', Georgia, serif",
+            fontFamily: "'Manrope', Georgia, serif",
             fontWeight: 700,
             fontSize: "clamp(28px, 3vw, 38px)",
             color: "var(--text-primary)",
@@ -332,17 +332,17 @@ export default function CaseStudy() {
                   boxShadow: "0 1px 3px rgba(0,0,0,0.03)",
                 }}
               >
-                <p style={{ fontFamily: "'Inter', system-ui, sans-serif", fontSize: 15, fontWeight: 500, color: "var(--text-primary)", marginBottom: 10, lineHeight: 1.4 }}>
+                <p style={{ fontFamily: "'Manrope', system-ui, sans-serif", fontSize: 15, fontWeight: 500, color: "var(--text-primary)", marginBottom: 10, lineHeight: 1.4 }}>
                   {item.finding}
                 </p>
-                <p style={{ fontFamily: "'Inter', system-ui, sans-serif", fontSize: 14, color: "var(--text-secondary)", fontStyle: "italic", lineHeight: 1.7 }}>
+                <p style={{ fontFamily: "'Manrope', system-ui, sans-serif", fontSize: 14, color: "var(--text-secondary)", fontStyle: "italic", lineHeight: 1.7 }}>
                   &ldquo;{item.quote}&rdquo;
                 </p>
               </motion.div>
             ))}
           </div>
         ) : (
-          <p style={{ fontFamily: "'Inter', system-ui, sans-serif", fontSize: 16, color: "var(--text-secondary)", lineHeight: 1.8 }}>
+          <p style={{ fontFamily: "'Manrope', system-ui, sans-serif", fontSize: 16, color: "var(--text-secondary)", lineHeight: 1.8 }}>
             Research insights and findings will be detailed here.
           </p>
         )}
@@ -361,7 +361,7 @@ export default function CaseStudy() {
       </DrawingSheet>
 
       <div className="flex justify-center py-4" aria-hidden>
-        <span style={{ fontFamily: "'Caveat', cursive", fontSize: 13, color: "var(--text-secondary)", opacity: 0.35 }}>
+        <span style={{ fontFamily: "'Manrope', cursive", fontSize: 13, color: "var(--text-secondary)", opacity: 0.35 }}>
           continued...
         </span>
       </div>
@@ -370,7 +370,7 @@ export default function CaseStudy() {
       <DrawingSheet sheetNumber="03 OF 04" sheetTitle="Design Process" letter="C">
         <h2
           style={{
-            fontFamily: "'Playfair Display', Georgia, serif",
+            fontFamily: "'Manrope', Georgia, serif",
             fontWeight: 700,
             fontSize: "clamp(28px, 3vw, 38px)",
             color: "var(--text-primary)",
@@ -407,16 +407,16 @@ export default function CaseStudy() {
                     marginTop: 1,
                   }}
                 >
-                  <span style={{ fontFamily: "'Space Mono', monospace", fontSize: 9, color: "var(--text-muted)" }}>
+                  <span style={{ fontFamily: "'Manrope', monospace", fontSize: 9, color: "var(--text-muted)" }}>
                     {String(i + 1).padStart(2, "0")}
                   </span>
                 </div>
                 <div>
-                  <p style={{ fontFamily: "'Inter', system-ui, sans-serif", fontSize: 15, fontWeight: 500, color: "var(--text-primary)", marginBottom: 3 }}>
+                  <p style={{ fontFamily: "'Manrope', system-ui, sans-serif", fontSize: 15, fontWeight: 500, color: "var(--text-primary)", marginBottom: 3 }}>
                     {label}
                   </p>
                   {rest.length > 0 && (
-                    <p style={{ fontFamily: "'Inter', system-ui, sans-serif", fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.65 }}>
+                    <p style={{ fontFamily: "'Manrope', system-ui, sans-serif", fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.65 }}>
                       {rest.join(": ")}
                     </p>
                   )}
@@ -440,7 +440,7 @@ export default function CaseStudy() {
       </DrawingSheet>
 
       <div className="flex justify-center py-4" aria-hidden>
-        <span style={{ fontFamily: "'Caveat', cursive", fontSize: 13, color: "var(--text-secondary)", opacity: 0.35 }}>
+        <span style={{ fontFamily: "'Manrope', cursive", fontSize: 13, color: "var(--text-secondary)", opacity: 0.35 }}>
           see next sheet →
         </span>
       </div>
@@ -449,7 +449,7 @@ export default function CaseStudy() {
       <DrawingSheet sheetNumber="04 OF 04" sheetTitle="Outcome & Learnings" letter="D">
         <h2
           style={{
-            fontFamily: "'Playfair Display', Georgia, serif",
+            fontFamily: "'Manrope', Georgia, serif",
             fontWeight: 700,
             fontSize: "clamp(28px, 3vw, 38px)",
             color: "var(--text-primary)",
@@ -468,7 +468,7 @@ export default function CaseStudy() {
             marginBottom: 40,
           }}
         >
-          <p style={{ fontFamily: "'Inter', system-ui, sans-serif", fontSize: 17, color: "var(--text-primary)", fontWeight: 500, lineHeight: 1.75 }}>
+          <p style={{ fontFamily: "'Manrope', system-ui, sans-serif", fontSize: 17, color: "var(--text-primary)", fontWeight: 500, lineHeight: 1.75 }}>
             {project.outcome}
           </p>
         </div>
@@ -496,7 +496,7 @@ export default function CaseStudy() {
             >
               <span
                 style={{
-                  fontFamily: "'Space Mono', monospace",
+                  fontFamily: "'Manrope', monospace",
                   fontSize: 9,
                   color: "var(--accent)",
                   flexShrink: 0,
@@ -506,7 +506,7 @@ export default function CaseStudy() {
               >
                 {String(i + 1).padStart(2, "0")}
               </span>
-              <p style={{ fontFamily: "'Inter', system-ui, sans-serif", fontSize: 15, color: "var(--text-secondary)", lineHeight: 1.65 }}>
+              <p style={{ fontFamily: "'Manrope', system-ui, sans-serif", fontSize: 15, color: "var(--text-secondary)", lineHeight: 1.65 }}>
                 {item}
               </p>
             </motion.div>
@@ -533,7 +533,7 @@ export default function CaseStudy() {
               <p
                 className="truncate"
                 style={{
-                  fontFamily: "'Playfair Display', Georgia, serif",
+                  fontFamily: "'Manrope', Georgia, serif",
                   fontSize: "clamp(14px, 2.5vw, 20px)",
                   color: "var(--text-secondary)",
                   transitionProperty: "color",
@@ -561,7 +561,7 @@ export default function CaseStudy() {
               <p
                 className="truncate"
                 style={{
-                  fontFamily: "'Playfair Display', Georgia, serif",
+                  fontFamily: "'Manrope', Georgia, serif",
                   fontSize: "clamp(14px, 2.5vw, 20px)",
                   color: "var(--text-secondary)",
                   transitionProperty: "color",

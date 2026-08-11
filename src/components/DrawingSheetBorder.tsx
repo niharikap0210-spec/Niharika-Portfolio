@@ -52,37 +52,37 @@ export default function DrawingSheetBorder({
           }}
         >
           {titleBlock.project && (
-            <p style={{ fontFamily: "'Space Mono', monospace", fontSize: 8, color: "var(--text-muted)", letterSpacing: "0.12em", textTransform: "uppercase", lineHeight: 1.6 }}>
+            <p style={{ fontFamily: "'Manrope', monospace", fontSize: 8, color: "var(--text-muted)", letterSpacing: "0.12em", textTransform: "uppercase", lineHeight: 1.6 }}>
               PROJECT: {titleBlock.project}
             </p>
           )}
           {titleBlock.name && (
-            <p style={{ fontFamily: "'Space Mono', monospace", fontSize: 8, color: "var(--text-muted)", letterSpacing: "0.12em", textTransform: "uppercase", lineHeight: 1.6 }}>
+            <p style={{ fontFamily: "'Manrope', monospace", fontSize: 8, color: "var(--text-muted)", letterSpacing: "0.12em", textTransform: "uppercase", lineHeight: 1.6 }}>
               {titleBlock.name}
             </p>
           )}
           {titleBlock.title && (
-            <p style={{ fontFamily: "'Space Mono', monospace", fontSize: 7, color: "var(--text-muted)", letterSpacing: "0.1em", textTransform: "uppercase", lineHeight: 1.6, opacity: 0.7 }}>
+            <p style={{ fontFamily: "'Manrope', monospace", fontSize: 7, color: "var(--text-muted)", letterSpacing: "0.1em", textTransform: "uppercase", lineHeight: 1.6, opacity: 0.7 }}>
               {titleBlock.title}
             </p>
           )}
           {titleBlock.role && (
-            <p style={{ fontFamily: "'Space Mono', monospace", fontSize: 7, color: "var(--text-muted)", letterSpacing: "0.1em", textTransform: "uppercase", lineHeight: 1.6, opacity: 0.7 }}>
+            <p style={{ fontFamily: "'Manrope', monospace", fontSize: 7, color: "var(--text-muted)", letterSpacing: "0.1em", textTransform: "uppercase", lineHeight: 1.6, opacity: 0.7 }}>
               ROLE: {titleBlock.role}
             </p>
           )}
           {titleBlock.duration && (
-            <p style={{ fontFamily: "'Space Mono', monospace", fontSize: 7, color: "var(--text-muted)", letterSpacing: "0.1em", textTransform: "uppercase", lineHeight: 1.6, opacity: 0.7 }}>
+            <p style={{ fontFamily: "'Manrope', monospace", fontSize: 7, color: "var(--text-muted)", letterSpacing: "0.1em", textTransform: "uppercase", lineHeight: 1.6, opacity: 0.7 }}>
               DURATION: {titleBlock.duration}
             </p>
           )}
           {titleBlock.scale && (
-            <p style={{ fontFamily: "'Space Mono', monospace", fontSize: 7, color: "var(--text-muted)", letterSpacing: "0.1em", textTransform: "uppercase", lineHeight: 1.6, opacity: 0.7 }}>
+            <p style={{ fontFamily: "'Manrope', monospace", fontSize: 7, color: "var(--text-muted)", letterSpacing: "0.1em", textTransform: "uppercase", lineHeight: 1.6, opacity: 0.7 }}>
               {titleBlock.scale}
             </p>
           )}
           {titleBlock.sheet && (
-            <p style={{ fontFamily: "'Space Mono', monospace", fontSize: 7, color: "var(--text-muted)", letterSpacing: "0.1em", textTransform: "uppercase", lineHeight: 1.6, opacity: 0.7 }}>
+            <p style={{ fontFamily: "'Manrope', monospace", fontSize: 7, color: "var(--text-muted)", letterSpacing: "0.1em", textTransform: "uppercase", lineHeight: 1.6, opacity: 0.7 }}>
               SHEET: {titleBlock.sheet}
             </p>
           )}

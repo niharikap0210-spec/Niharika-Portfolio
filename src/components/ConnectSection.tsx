@@ -4,7 +4,7 @@ import { EnvelopeSimple, LinkedinLogo, FileText, ArrowUpRight } from "@phosphor-
 import type { Icon } from "@phosphor-icons/react";
 
 const mono: React.CSSProperties = {
-  fontFamily: "'Space Mono', monospace",
+  fontFamily: "'Manrope', monospace",
   textTransform: "uppercase",
   letterSpacing: "0.14em",
 };
@@ -150,7 +150,7 @@ function ContactCard({ contact, index }: { contact: Contact; index: number }) {
         >
           <span
             style={{
-              fontFamily: "'Playfair Display', Georgia, serif",
+              fontFamily: "'Manrope', Georgia, serif",
               fontSize: "clamp(22px, 2.2vw, 30px)",
               fontWeight: 500,
               color: hovered ? accent : "var(--text-primary)",
@@ -298,7 +298,7 @@ export default function ConnectSection() {
             viewport={{ once: true, margin: "-40px" }}
             transition={{ duration: 0.7, ease: [0.25, 1, 0.4, 1] }}
             style={{
-              fontFamily: "'Playfair Display', Georgia, serif",
+              fontFamily: "'Manrope', Georgia, serif",
               fontWeight: 700,
               fontSize: "clamp(44px, 5.4vw, 72px)",
               color: "var(--text-primary)",
@@ -321,7 +321,7 @@ export default function ConnectSection() {
           >
             <p
               style={{
-                fontFamily: "'Playfair Display', Georgia, serif",
+                fontFamily: "'Manrope', Georgia, serif",
                 fontStyle: "italic",
                 fontSize: "clamp(18px, 1.5vw, 22px)",
                 lineHeight: 1.55,
