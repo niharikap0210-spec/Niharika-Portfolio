@@ -357,7 +357,7 @@ html {
 .pboard-heading-hl { position: relative; display: inline-block; }
 .pboard-heading-mark {
   position: absolute; left: -5px; right: -8px; top: 20%; bottom: 9%;
-  background: rgba(255, 186, 120, 0.72);
+  background: rgba(66, 98, 255, 0.26);
   border-radius: 8px 13px 8px 12px;
   transform: rotate(-1.2deg);
   z-index: 0;
@@ -547,30 +547,42 @@ html {
   font-size: clamp(36px, 5vw, 66px);
   font-weight: 800;
   letter-spacing: -0.035em;
-  line-height: 1.02;
+  line-height: 1.06;
   color: #1A1A2E;
-  max-width: 16ch;
 }
 .cfooter-hl { position: relative; display: inline-block; }
-.cfooter-hl-mark { position: absolute; left: -6px; right: -9px; top: 22%; bottom: 10%; background: rgba(255, 186, 120, 0.72); border-radius: 8px 13px 8px 12px; transform: rotate(-1.5deg); z-index: 0; }
+.cfooter-hl-mark { position: absolute; left: -6px; right: -9px; top: 22%; bottom: 10%; background: rgba(66, 98, 255, 0.26); border-radius: 8px 13px 8px 12px; transform: rotate(-1.5deg); z-index: 0; }
 .cfooter-hl-text { position: relative; z-index: 1; }
 .cfooter-sub { margin: 22px 0 0; max-width: 520px; font-family: 'Manrope', system-ui, sans-serif; font-style: italic; font-size: clamp(16px, 1.4vw, 19px); line-height: 1.55; color: #54545F; }
 .cfooter-btn {
+  position: relative; overflow: hidden;
   display: inline-flex; align-items: center; gap: 9px;
   margin-top: 28px; padding: 14px 24px; border-radius: 12px;
   background: #4262FF; color: #fff; text-decoration: none;
   font-family: 'Manrope', system-ui, sans-serif; font-size: 14.5px; font-weight: 600; letter-spacing: -0.01em;
-  box-shadow: 0 4px 14px rgba(66,98,255,0.30);
+  box-shadow: 0 4px 14px rgba(66,98,255,0.30), inset 0 1px 0 rgba(255,255,255,0.22);
   transition: transform 240ms cubic-bezier(0.16,1,0.3,1), background-color 220ms ease, box-shadow 220ms ease;
 }
-.cfooter-btn:hover { background: #3350E0; transform: translateY(-2px); box-shadow: 0 9px 24px rgba(66,98,255,0.34); }
+.cfooter-btn-label { position: relative; z-index: 1; display: inline-flex; align-items: center; gap: 9px; }
+/* frozen, grainy frost over the blue */
+.cfooter-btn::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  opacity: 0.5; mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='cf'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23cf)'/%3E%3C/svg%3E");
+  background-size: 100px 100px;
+}
+.cfooter-btn:hover { background: #3350E0; transform: translateY(-2px); box-shadow: 0 9px 24px rgba(66,98,255,0.34), inset 0 1px 0 rgba(255,255,255,0.24); }
 
-/* nav columns */
-.cfooter-cols { display: flex; gap: clamp(44px, 7vw, 96px); }
-.cfooter-col { display: flex; flex-direction: column; gap: 13px; }
-.cfooter-col-title { font-family: 'Manrope', system-ui, sans-serif; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.16em; color: #9A9AA6; margin-bottom: 3px; }
-.cfooter-link { font-family: 'Manrope', system-ui, sans-serif; font-size: 15px; font-weight: 500; color: #54545F; text-decoration: none; width: max-content; transition: color 180ms ease; }
-.cfooter-link:hover { color: #4262FF; }
+/* nav columns — larger links with a slide-in arrow on hover */
+.cfooter-cols { display: flex; gap: clamp(40px, 6vw, 84px); }
+.cfooter-col { display: flex; flex-direction: column; gap: 12px; }
+.cfooter-col-title { display: inline-flex; align-items: baseline; gap: 8px; font-family: 'Manrope', system-ui, sans-serif; font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.16em; color: #9A9AA6; margin-bottom: 5px; }
+.cfooter-col-num { font-size: 10px; font-weight: 700; color: #4262FF; letter-spacing: 0.04em; }
+.cfooter-link { position: relative; display: inline-flex; align-items: center; width: max-content; padding-right: 24px; font-family: 'Manrope', system-ui, sans-serif; font-size: 17px; font-weight: 600; letter-spacing: -0.012em; color: #1A1A2E; text-decoration: none; }
+.cfooter-link-txt { transition: color 180ms ease; }
+.cfooter-link-arrow { position: absolute; right: 2px; top: 50%; color: #4262FF; opacity: 0; transform: translate(-6px, -50%); transition: opacity 220ms ease, transform 260ms cubic-bezier(0.16,1,0.3,1); }
+.cfooter-link:hover .cfooter-link-txt { color: #4262FF; }
+.cfooter-link:hover .cfooter-link-arrow { opacity: 1; transform: translate(0, -50%); }
 
 /* bottom bar */
 .cfooter-bottom {

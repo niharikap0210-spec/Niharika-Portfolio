@@ -23,8 +23,8 @@ const navItems: NavItem[] = [
 /* ─── Color tokens ───────────────────────────────────────────────── */
 const C_DEFAULT  = "#6B6B6B";
 const C_ACTIVE   = "#1A1A1A";
-const C_HOVER    = "#1A1A1A";                     // hover text — ink (reads on the light peach pill)
-const C_HOVER_BG = "rgba(255,190,128,0.38)";     // hover pill — soft, LIGHT peach (slides between links)
+const C_HOVER    = "#1A1A1A";                     // hover text — ink (reads on the light blue pill)
+const C_HOVER_BG = "rgba(66,98,255,0.14)";       // hover pill — soft, LIGHT blue (slides between links)
 
 /* ─── Scroll thresholds ─────────────────────────────────────────── */
 const COLLAPSE_AT  = 150;

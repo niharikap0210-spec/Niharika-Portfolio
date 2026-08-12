@@ -54,7 +54,7 @@ const INK = "#1A1A2E";
 /* One typeface everywhere + a livelier accent (replaces the muted gold) */
 const FONT = "'Manrope', system-ui, sans-serif";
 const ACCENT = "#8A8078";                        // muted warm-grey — the little nametag label
-const HIGHLIGHT = "rgba(255, 186, 120, 0.72)";   // soft peach marker highlight
+const HIGHLIGHT = "rgba(66, 98, 255, 0.26)";     // soft light-blue marker highlight (brand blue, lightened)
 
 /* ─── Types ─────────────────────────────────────────────────────── */
 type Tool = "select" | "text" | "sticky" | "shape" | "connector" | "pen";

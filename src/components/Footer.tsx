@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import {
   EnvelopeSimpleIcon as EnvelopeSimple,
   ArrowUpIcon as ArrowUp,
+  ArrowRightIcon as ArrowRight,
+  ArrowUpRightIcon as ArrowUpRight,
 } from "@phosphor-icons/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -53,7 +55,7 @@ export default function Footer() {
           <div className="cfooter-cta cfooter-reveal">
             <span className="cfooter-kicker"><span className="cfooter-kicker-dot" />Let's Connect</span>
             <h2 className="cfooter-heading">
-              Let's build something{" "}
+              Let's build something<br />
               <span className="cfooter-hl">
                 <span className="cfooter-hl-mark" aria-hidden />
                 <span className="cfooter-hl-text">together.</span>
@@ -63,24 +65,32 @@ export default function Footer() {
               Open to full-time Product Design roles, thoughtful side projects, and good conversations about turning architectural thinking into digital products.
             </p>
             <a className="cfooter-btn" href={EMAIL}>
-              <EnvelopeSimple size={18} weight="bold" aria-hidden /> Get in touch
+              <span className="cfooter-btn-label">
+                <EnvelopeSimple size={18} weight="bold" aria-hidden /> Get in touch
+              </span>
             </a>
           </div>
 
-          {/* nav columns */}
+          {/* nav columns — larger links with a slide-in arrow on hover */}
           <div className="cfooter-cols cfooter-reveal">
-            <div className="cfooter-col">
-              <span className="cfooter-col-title">Pages</span>
+            <nav className="cfooter-col" aria-label="Site pages">
+              <span className="cfooter-col-title"><span className="cfooter-col-num">01</span> Explore</span>
               {pages.map((p) => (
-                <Link key={p.label} to={p.href} className="cfooter-link">{p.label}</Link>
+                <Link key={p.label} to={p.href} className="cfooter-link">
+                  <span className="cfooter-link-txt">{p.label}</span>
+                  <ArrowRight className="cfooter-link-arrow" size={15} weight="bold" aria-hidden />
+                </Link>
               ))}
-            </div>
-            <div className="cfooter-col">
-              <span className="cfooter-col-title">Elsewhere</span>
+            </nav>
+            <nav className="cfooter-col" aria-label="Find me elsewhere">
+              <span className="cfooter-col-title"><span className="cfooter-col-num">02</span> Find me</span>
               {elsewhere.map((l) => (
-                <a key={l.label} href={l.href} target={isHttp(l.href) ? "_blank" : undefined} rel={isHttp(l.href) ? "noopener noreferrer" : undefined} className="cfooter-link">{l.label}</a>
+                <a key={l.label} href={l.href} target={isHttp(l.href) ? "_blank" : undefined} rel={isHttp(l.href) ? "noopener noreferrer" : undefined} className="cfooter-link">
+                  <span className="cfooter-link-txt">{l.label}</span>
+                  <ArrowUpRight className="cfooter-link-arrow" size={15} weight="bold" aria-hidden />
+                </a>
               ))}
-            </div>
+            </nav>
           </div>
         </div>
 
