@@ -526,7 +526,7 @@ export default function MiroHero() {
                   <span style={{ position: "relative", display: "inline-block", textTransform: "uppercase", letterSpacing: "0.26em", fontSize: "clamp(12px, 1.2vw, 15px)", color: "#6A6470", fontWeight: 700 }}>
                     {COPY.eyebrow}
                     <svg className="hero-eyebrow-underline" aria-hidden viewBox="0 0 100 10" preserveAspectRatio="none" style={{ position: "absolute", left: "-3%", width: "106%", bottom: -12, height: 10, overflow: "visible", pointerEvents: "none" }}>
-                      <path d="M1 6 C 20 3, 52 3, 84 5 C 92 5.4, 97 4, 100 1.5" fill="none" stroke="#E39B3C" strokeWidth={2.6} strokeLinecap="round" vectorEffect="non-scaling-stroke" />
+                      <path d="M1 6 C 20 3, 52 3, 84 5 C 92 5.4, 97 4, 100 1.5" fill="none" stroke="#6E86FF" strokeWidth={2.6} strokeLinecap="round" vectorEffect="non-scaling-stroke" />
                     </svg>
                   </span>
                 </p>
