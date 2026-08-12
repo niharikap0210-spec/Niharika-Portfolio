@@ -669,9 +669,9 @@ export default function MiroHero() {
           onMouseEnter={(e) => (e.currentTarget.style.background = "#3350E0")} onMouseLeave={(e) => (e.currentTarget.style.background = MIRO_BLUE)}><Sparkle size={22} weight="fill" /></button>
       </div>
 
-      {/* Hint pill (always visible) */}
+      {/* Hint pill (always visible) — light frosted chrome, matches the toolbar/nav */}
       <div className="chrome-fade absolute left-1/2 hidden md:flex items-center gap-2"
-        style={{ bottom: 22, transform: "translateX(-50%)", padding: "9px 16px", background: INK, color: "#fff", borderRadius: 999, boxShadow: "var(--miro-shadow-lg)", zIndex: 30, fontFamily: FONT, fontSize: 12.5, fontWeight: 500, whiteSpace: "nowrap" }}>
+        style={{ bottom: 22, transform: "translateX(-50%)", padding: "9px 16px", background: "#fff", color: "#54545F", border: "1px solid rgba(9,30,66,0.06)", borderRadius: 999, boxShadow: "var(--miro-shadow-lg)", zIndex: 30, fontFamily: FONT, fontSize: 12.5, fontWeight: 500, whiteSpace: "nowrap" }}>
         Pick a tool, then click the canvas to add · drag to move
       </div>
 

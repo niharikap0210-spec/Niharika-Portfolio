@@ -137,18 +137,16 @@ const ARCH_TICKER: Tool[] = [
 ];
 
 /* Section framing copy — no em dashes; headline highlight is the last phrase. */
-const DECK_META: Record<Deck, { intro: string; stats: [string, string][]; headStart: string; headEnd: string }> = {
+const DECK_META: Record<Deck, { intro: string; headStart: string; headEnd: string }> = {
   product: {
     intro:
       "A live board of end-to-end product work across enterprise SaaS, consumer onboarding, and research-led discovery. Each frame is a study in turning a specific constraint into something people actually reach for.",
-    stats: [["04", "Case Studies"], ["2022–26", "Active Span"], ["Web + iOS", "Surfaces"]],
     headStart: "Hard problems,",
     headEnd: "quietly solved.",
   },
   arch: {
     intro:
       "Architecture and urban design from my prior training: a thesis on public space and a body of 3D visualization work, plus the structural eye I still bring to every product I design.",
-    stats: [["02", "Projects"], ["2024", "Year"], ["Physical + 3D", "Media"]],
     headStart: "Space, structure,",
     headEnd: "and story.",
   },
@@ -332,7 +330,7 @@ export default function ProjectsBoard() {
     const ctx = gsap.context(() => {
       const mm = gsap.matchMedia();
       mm.add("(prefers-reduced-motion: no-preference)", () => {
-        gsap.from(".pboard-kicker, .pboard-heading, .pboard-notes, .pboard-stats, .pboard-switcher", {
+        gsap.from(".pboard-kicker, .pboard-heading, .pboard-notes, .pboard-switcher", {
           y: 22, autoAlpha: 0, duration: 0.7, ease: "power3.out", stagger: 0.08,
           scrollTrigger: { trigger: rootRef.current, start: "top 80%", once: true },
         });
@@ -370,8 +368,8 @@ export default function ProjectsBoard() {
           });
         } else {
           gsap.from(frameEls, { y: 30, autoAlpha: 0, duration: 0.55, ease: "power3.out", stagger: 0.1 });
-          // re-reveal the swapped intro + stats so they always reappear on deck switch
-          gsap.from(".pboard-notes, .pboard-stats", { autoAlpha: 0, y: 10, duration: 0.45, ease: "power3.out", stagger: 0.05 });
+          // re-reveal the swapped intro so it always reappears on deck switch
+          gsap.from(".pboard-notes", { autoAlpha: 0, y: 10, duration: 0.45, ease: "power3.out" });
         }
         gsap.utils.toArray<HTMLElement>(".pboard-mockup").forEach((el) => {
           gsap.fromTo(el, { yPercent: -4 }, {
@@ -433,17 +431,9 @@ export default function ProjectsBoard() {
           </h2>
         </div>
 
-        {/* intro + stat pills (keyed by deck so they always re-reveal on switch) */}
+        {/* intro line (keyed by deck so it always re-reveals on switch) */}
         <div className="pboard-intro">
           <p className="pboard-notes" key={deck}>{meta.intro}</p>
-          <div className="pboard-stats" key={deck + "-stats"}>
-            {meta.stats.map(([v, l]) => (
-              <div key={l} className="pboard-stat">
-                <span className="pboard-stat-v">{v}</span>
-                <span className="pboard-stat-l" style={mono}>{l}</span>
-              </div>
-            ))}
-          </div>
         </div>
 
         {/* Product / Architecture switcher — frosted pill with a GSAP sliding indicator */}

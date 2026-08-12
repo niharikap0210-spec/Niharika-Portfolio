@@ -372,11 +372,6 @@ html {
   font-family: 'Manrope', system-ui, sans-serif; font-style: italic;
   font-size: clamp(16px, 1.4vw, 20px); line-height: 1.55; color: #54545F;
 }
-/* subtle plain-text stat group — no pills, no staircase */
-.pboard-stats { display: flex; gap: clamp(24px, 3vw, 42px); flex-shrink: 0; }
-.pboard-stat { display: flex; flex-direction: column; gap: 4px; }
-.pboard-stat-v { font-family: 'Manrope', system-ui, sans-serif; font-size: 15px; font-weight: 700; letter-spacing: -0.01em; line-height: 1; color: #3A3A46; white-space: nowrap; }
-.pboard-stat-l { font-size: 8.5px; color: #9A9AA6; white-space: nowrap; }
 
 /* Switcher — frosted pill with a sliding indicator */
 .pboard-switcher {
