@@ -14,9 +14,6 @@ gsap.registerPlugin(ScrollTrigger);
 
 /* ─── Miro palette (matches MiroHero) ─────────────────────────────── */
 const FONT = "'Manrope', system-ui, sans-serif";
-const INK = "#1A1A2E";
-const INK_SUB = "#54545F";
-const MIRO_BLUE = "#4262FF";
 const STICKY = { yellow: "#FCE34E", blue: "#9EC5F6", pink: "#F6A9D0", green: "#B7E49B", purple: "#C8B4EF" };
 
 /* discipline → sticky colour (fixed map, keeps the board coherent) */
@@ -199,18 +196,20 @@ function BoardFrame({ frame, reduce }: { frame: Frame; reduce: boolean }) {
           <h3 className="pboard-title">{frame.name}</h3>
           <p className="pboard-sub">{frame.subtitle}</p>
 
-          {/* tag stickies — straight */}
-          <div className="pboard-stickies">
-            {frame.tags.map((t) => (
-              <span key={t} className="pboard-sticky" style={{ background: stik }}>{t}</span>
-            ))}
+          {/* tags (left) + CTA (right) on one row */}
+          <div className="pboard-cardfoot">
+            <div className="pboard-stickies">
+              {frame.tags.map((t) => (
+                <span key={t} className="pboard-sticky" style={{ background: stik }}>{t}</span>
+              ))}
+            </div>
+            <span className="pboard-cta">
+              <span className="pboard-cta-label">
+                View case study
+                <ArrowUpRight size={16} weight="bold" aria-hidden className="pboard-cta-arrow" data-on={hovered} />
+              </span>
+            </span>
           </div>
-
-          {/* CTA — frosted, grainy pill */}
-          <span className="pboard-cta">
-            View case study
-            <ArrowUpRight size={16} weight="bold" aria-hidden className="pboard-cta-arrow" data-on={hovered} />
-          </span>
         </Link>
       </div>
     </div>
@@ -222,6 +221,10 @@ export default function ProjectsBoard() {
   const reduce = useReducedMotion() ?? false;
   const rootRef = useRef<HTMLElement>(null);
   const revealedRef = useRef(false);
+  const switcherRef = useRef<HTMLDivElement>(null);
+  const indicatorRef = useRef<HTMLSpanElement>(null);
+  const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const switchReadyRef = useRef(false);
   const [deck, setDeck] = useState<Deck>("product");
   const frames = deck === "product" ? productFrames : archFrames;
   const tools = deck === "product" ? PRODUCT_TOOLS : ARCH_TOOLS;
@@ -236,12 +239,16 @@ export default function ProjectsBoard() {
           y: 22, autoAlpha: 0, duration: 0.7, ease: "power3.out", stagger: 0.08,
           scrollTrigger: { trigger: rootRef.current, start: "top 80%", once: true },
         });
-        // continuously drifting colour blobs — the moving background
-        gsap.utils.toArray<HTMLElement>(".pboard-blob").forEach((el, i) => {
+        // continuously drifting colour blobs — the moving background (paused when off-screen)
+        const blobTweens = gsap.utils.toArray<HTMLElement>(".pboard-blob").map((el, i) => {
           const b = BLOBS[i];
-          if (!b) return;
-          gsap.to(el, { x: b.dx, y: b.dy, scale: 1.15, duration: b.d, repeat: -1, yoyo: true, ease: "sine.inOut", delay: i * 0.5 });
+          return gsap.to(el, { x: b ? b.dx : 0, y: b ? b.dy : 0, scale: 1.14, duration: b ? b.d : 20, repeat: -1, yoyo: true, ease: "sine.inOut", delay: i * 0.5, paused: true });
         });
+        const blobST = ScrollTrigger.create({
+          trigger: rootRef.current, start: "top bottom", end: "bottom top",
+          onToggle: (self) => blobTweens.forEach((t) => (self.isActive ? t.play() : t.pause())),
+        });
+        if (blobST.isActive) blobTweens.forEach((t) => t.play());
         // slow parallax on the whole field as the section scrolls
         gsap.to(".pboard-bg", {
           yPercent: 14, ease: "none",
@@ -262,7 +269,9 @@ export default function ProjectsBoard() {
         if (!revealedRef.current) {
           gsap.from(frameEls, {
             y: 48, autoAlpha: 0, duration: 0.85, ease: "power3.out", stagger: 0.12,
-            scrollTrigger: { trigger: ".pboard-grid", start: "top 85%", once: true },
+            // flip the flag only when the reveal actually fires, so it survives StrictMode's
+            // double-invoke (a persistent ref set at setup time would skip the scroll reveal in dev)
+            scrollTrigger: { trigger: ".pboard-grid", start: "top 85%", once: true, onEnter: () => { revealedRef.current = true; } },
           });
         } else {
           gsap.from(frameEls, { y: 30, autoAlpha: 0, duration: 0.55, ease: "power3.out", stagger: 0.1 });
@@ -279,10 +288,30 @@ export default function ProjectsBoard() {
           gsap.to(el, { y: -5, duration: 3.2, repeat: -1, yoyo: true, ease: "sine.inOut" });
         });
       });
-      revealedRef.current = true;
     }, rootRef);
     return () => ctx.revert();
   }, [deck]);
+
+  /* GSAP — slide the switcher indicator to the active tab (and keep it in place on resize) */
+  useLayoutEffect(() => {
+    const place = (animate: boolean) => {
+      const btn = tabRefs.current[deck === "product" ? 0 : 1];
+      const ind = indicatorRef.current;
+      const box = switcherRef.current;
+      if (!btn || !ind || !box) return;
+      const b = btn.getBoundingClientRect();
+      const s = box.getBoundingClientRect();
+      const to = { x: b.left - s.left, width: b.width, autoAlpha: 1 };
+      if (animate && !reduce) gsap.to(ind, { ...to, duration: 0.42, ease: "power3.out" });
+      else gsap.set(ind, to);
+    };
+    place(switchReadyRef.current);
+    switchReadyRef.current = true;
+    if (document.fonts?.ready) document.fonts.ready.then(() => place(false));
+    const onResize = () => place(false);
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, [deck, reduce]);
 
   return (
     <section ref={rootRef} id="projects" className="pboard-section" style={{ scrollMarginTop: 96 }} aria-label="Selected work">
@@ -291,7 +320,7 @@ export default function ProjectsBoard() {
           <span
             key={i}
             className="pboard-blob"
-            style={{ left: b.x, top: b.y, width: b.s, height: b.s, background: `radial-gradient(circle, ${b.c} 0%, transparent 70%)` }}
+            style={{ left: b.x, top: b.y, width: b.s, height: b.s, marginLeft: -b.s / 2, marginTop: -b.s / 2, background: `radial-gradient(circle, ${b.c} 0%, transparent 70%)` }}
           />
         ))}
       </div>
@@ -322,23 +351,22 @@ export default function ProjectsBoard() {
           </div>
         </div>
 
-        {/* Product / Architecture switcher */}
-        <div className="pboard-switcher" role="group" aria-label="Choose a deck">
-          {([["product", "Product Design", productFrames.length], ["arch", "Architecture", archFrames.length]] as [Deck, string, number][]).map(([dk, label, count]) => {
-            const active = deck === dk;
-            return (
-              <button
-                key={dk}
-                aria-pressed={active}
-                onClick={() => setDeck(dk)}
-                className="pboard-tab"
-                style={{ color: active ? MIRO_BLUE : INK_SUB, background: active ? "var(--miro-blue-soft)" : "transparent" }}
-              >
-                {label}
-                <span style={{ ...mono, fontSize: 10, letterSpacing: "0.12em", opacity: 0.7 }}>{String(count).padStart(2, "0")}</span>
-              </button>
-            );
-          })}
+        {/* Product / Architecture switcher — frosted pill with a GSAP sliding indicator */}
+        <div ref={switcherRef} className="pboard-switcher" role="group" aria-label="Choose a deck">
+          <span ref={indicatorRef} className="pboard-switch-ind" aria-hidden />
+          {([["product", "Product Design", productFrames.length], ["arch", "Architecture", archFrames.length]] as [Deck, string, number][]).map(([dk, label, count], i) => (
+            <button
+              key={dk}
+              ref={(el) => { tabRefs.current[i] = el; }}
+              aria-pressed={deck === dk}
+              onClick={() => setDeck(dk)}
+              className="pboard-tab"
+              data-active={deck === dk}
+            >
+              {label}
+              <span className="pboard-tab-count">{String(count).padStart(2, "0")}</span>
+            </button>
+          ))}
         </div>
 
         {/* cards grid */}

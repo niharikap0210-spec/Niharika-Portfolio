@@ -326,7 +326,6 @@ html {
 }
 .pboard-blob {
   position: absolute;
-  transform: translate(-50%, -50%);
   border-radius: 50%;
   filter: blur(52px);
   will-change: transform;
@@ -348,12 +347,12 @@ html {
 .pboard-heading {
   margin: 15px 0 0;
   font-family: 'Manrope', system-ui, sans-serif;
-  font-size: clamp(34px, 4.8vw, 60px);
+  font-size: clamp(28px, 4.6vw, 58px);
   font-weight: 800;
   letter-spacing: -0.035em;
-  line-height: 1.02;
+  line-height: 1.05;
   color: #1A1A2E;
-  max-width: 15ch;
+  white-space: nowrap;   /* one line */
 }
 .pboard-heading-hl { position: relative; display: inline-block; }
 .pboard-heading-mark {
@@ -377,18 +376,48 @@ html {
 .pboard-stat {
   display: inline-flex; align-items: baseline; gap: 8px;
   padding: 10px 16px; border-radius: 999px;
-  background: rgba(255, 255, 255, 0.55);
+  background: rgba(255, 255, 255, 0.8);
   -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
   border: 1px solid rgba(9, 30, 66, 0.07);
   box-shadow: 0 1px 3px rgba(9, 30, 66, 0.05);
 }
 .pboard-stat-v { font-family: 'Manrope', system-ui, sans-serif; font-size: 15px; font-weight: 800; letter-spacing: -0.01em; color: #1A1A2E; }
-.pboard-stat-l { font-size: 9.5px; color: #6B6B75; white-space: nowrap; }
+.pboard-stat-l { font-size: 9.5px; color: #54545F; white-space: nowrap; }
 
-/* Switcher */
-.pboard-switcher { display: inline-flex; gap: 3px; padding: 4px; margin-bottom: clamp(40px, 5vw, 60px); background: rgba(9, 30, 66, 0.045); border-radius: 12px; }
-.pboard-tab { display: inline-flex; align-items: center; gap: 8px; padding: 9px 18px; border: none; border-radius: 9px; background: transparent; font-family: 'Manrope', system-ui, sans-serif; font-size: 13.5px; font-weight: 600; cursor: pointer; transition: background-color 180ms cubic-bezier(0.16,1,0.3,1), color 180ms ease; }
+/* Switcher — frosted pill with a sliding indicator */
+.pboard-switcher {
+  position: relative;
+  display: inline-flex;
+  gap: 2px;
+  padding: 5px;
+  margin-bottom: clamp(40px, 5vw, 60px);
+  background: rgba(255, 255, 255, 0.55);
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+  border: 1px solid rgba(9, 30, 66, 0.08);
+  border-radius: 999px;
+  box-shadow: 0 1px 3px rgba(9, 30, 66, 0.05);
+}
+.pboard-switch-ind {
+  position: absolute; top: 5px; left: 0; bottom: 5px;
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(9,30,66,0.14), 0 1px 2px rgba(9,30,66,0.08);
+  visibility: hidden;
+  z-index: 0;
+  pointer-events: none;
+}
+.pboard-tab {
+  position: relative; z-index: 1;
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 22px; border: none; border-radius: 999px; background: transparent;
+  font-family: 'Manrope', system-ui, sans-serif; font-size: 13.5px; font-weight: 600;
+  color: #6B6B75; cursor: pointer;
+  transition: color 220ms ease;
+}
+.pboard-tab[data-active="true"] { color: #1A1A2E; }
 .pboard-tab:hover { color: #1A1A2E; }
+.pboard-tab-count { font-family: 'Manrope', system-ui, sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 0.08em; color: #8A8F9C; }
+.pboard-tab[data-active="true"] .pboard-tab-count { color: #4262FF; }
 
 /* Cards grid */
 .pboard-grid { display: grid; grid-template-columns: 1fr; gap: clamp(44px, 4vw, 60px) clamp(28px, 3vw, 48px); }
@@ -421,23 +450,24 @@ html {
 .pboard-title { margin: 20px 0 0; font-family: 'Manrope', system-ui, sans-serif; font-size: clamp(22px, 2.4vw, 30px); font-weight: 700; letter-spacing: -0.025em; line-height: 1.12; color: #1A1A2E; }
 .pboard-sub { margin: 8px 0 0; font-family: 'Manrope', system-ui, sans-serif; font-style: italic; font-size: clamp(14px, 1.15vw, 16px); line-height: 1.5; color: #54545F; }
 
-/* Tag stickies — straight (no tilt) */
-.pboard-stickies { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+/* Card footer — tags (left) + CTA (right) on one row */
+.pboard-cardfoot { display: flex; align-items: center; justify-content: space-between; gap: 12px 16px; margin-top: 20px; flex-wrap: wrap; }
+.pboard-stickies { display: flex; flex-wrap: wrap; gap: 8px; }
 .pboard-sticky { padding: 5px 11px; border-radius: 4px; box-shadow: 0 3px 9px rgba(9,30,66,0.13); font-family: 'Manrope', system-ui, sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #1A1A2E; }
 
 /* CTA — frosted, grainy glass pill */
 .pboard-cta {
-  position: relative; overflow: hidden;
-  display: inline-flex; align-items: center; gap: 9px;
-  margin-top: 22px; padding: 12px 20px; border-radius: 12px;
-  background: rgba(66, 98, 255, 0.11);
-  -webkit-backdrop-filter: blur(7px); backdrop-filter: blur(7px);
+  position: relative; overflow: hidden; flex-shrink: 0;
+  display: inline-flex;
+  padding: 12px 20px; border-radius: 12px;
+  background: rgba(66, 98, 255, 0.12);
   border: 1px solid rgba(66, 98, 255, 0.24);
   box-shadow: 0 1px 2px rgba(66,98,255,0.10), inset 0 1px 0 rgba(255,255,255,0.55);
   font-family: 'Manrope', system-ui, sans-serif; font-size: 13.5px; font-weight: 700; letter-spacing: 0.01em;
   color: #2E44C9;
   transition: background 320ms ease, border-color 320ms ease, transform 320ms cubic-bezier(0.16,1,0.3,1), box-shadow 320ms ease;
 }
+.pboard-cta-label { position: relative; z-index: 1; display: inline-flex; align-items: center; gap: 9px; }
 .pboard-cta::before {
   content: ""; position: absolute; inset: 0; pointer-events: none;
   opacity: 0.55; mix-blend-mode: overlay;
@@ -456,9 +486,9 @@ html {
 /* Footer */
 .pboard-foot { display: flex; flex-direction: column; gap: 16px; margin-top: clamp(44px, 5vw, 64px); padding-top: 20px; border-top: 1px solid rgba(9, 30, 66, 0.08); }
 .pboard-tools { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-.pboard-tools-label { font-size: 9.5px; color: #6B6B75; white-space: nowrap; }
+.pboard-tools-label { font-size: 9.5px; color: #54545F; white-space: nowrap; }
 .pboard-tools-list { display: flex; flex-wrap: wrap; gap: 6px; flex: 1; }
-.pboard-tool-chip { padding: 5px 11px; background: rgba(255,255,255,0.6); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); border: 1px solid rgba(9, 30, 66, 0.06); border-radius: 8px; box-shadow: 0 1px 2px rgba(9,30,66,0.04); font-family: 'Manrope', system-ui, sans-serif; font-size: 11px; font-weight: 600; color: #6A6470; }
+.pboard-tool-chip { padding: 5px 11px; background: rgba(255,255,255,0.9); border: 1px solid rgba(9, 30, 66, 0.07); border-radius: 8px; box-shadow: 0 1px 2px rgba(9,30,66,0.04); font-family: 'Manrope', system-ui, sans-serif; font-size: 11px; font-weight: 600; color: #54545F; }
 
 /* Desktop: two-column cards */
 @media (min-width: 1024px) { .pboard-grid { grid-template-columns: 1fr 1fr; } }
@@ -466,6 +496,10 @@ html {
 @media (max-width: 640px) {
   .pboard-switcher { display: flex; width: 100%; }
   .pboard-tab { flex: 1; justify-content: center; }
+}
+/* Very small screens: let the headline wrap instead of overflowing */
+@media (max-width: 500px) {
+  .pboard-heading { white-space: normal; line-height: 1.1; }
 }
 
 
