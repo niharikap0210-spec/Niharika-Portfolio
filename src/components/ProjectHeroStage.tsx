@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import type { Project, ProjectAccent } from "../data/projects";
 
 interface ProjectHeroStageProps {
@@ -19,6 +19,7 @@ interface ProjectHeroStageProps {
 
 export function ProjectHeroStage({ project, hovered = false, textOverlay = false, bare = false }: ProjectHeroStageProps) {
   const { accent } = project;
+  const reduce = useReducedMotion() ?? false;
 
   return (
     <div
@@ -55,7 +56,7 @@ export function ProjectHeroStage({ project, hovered = false, textOverlay = false
 
       {/* Composition - swapped by slug */}
       <motion.div
-        animate={{ scale: hovered ? 1.03 : 1 }}
+        animate={{ scale: hovered && !reduce ? 1.03 : 1 }}
         transition={{ type: "spring", stiffness: 160, damping: 30, mass: 0.9 }}
         style={{
           position: "absolute",
@@ -63,21 +64,21 @@ export function ProjectHeroStage({ project, hovered = false, textOverlay = false
           zIndex: 2,
         }}
       >
-        {project.slug === "arko" && <ArkoComposition accent={accent} />}
-        {project.slug === "veriflow" && <VeriflowComposition accent={accent} />}
-        {project.slug === "locallift" && <LocalLiftComposition accent={accent} />}
-        {project.slug === "shelfie" && <ShelfieComposition accent={accent} />}
+        {project.slug === "arko" && <ArkoComposition accent={accent} reduce={reduce} />}
+        {project.slug === "veriflow" && <VeriflowComposition accent={accent} reduce={reduce} />}
+        {project.slug === "locallift" && <LocalLiftComposition accent={accent} reduce={reduce} />}
+        {project.slug === "shelfie" && <ShelfieComposition accent={accent} reduce={reduce} />}
       </motion.div>
     </div>
   );
 }
 
 /* ── Arko: laptop + overlapping phone (mirrors case-study hero) ── */
-function ArkoComposition({ accent }: { accent: ProjectAccent }) {
+function ArkoComposition({ accent, reduce }: { accent: ProjectAccent; reduce: boolean }) {
   return (
     <div style={{ position: "absolute", inset: 0, padding: "10% 12% 12%" }}>
       <motion.div
-        animate={{ y: [0, -5, 0] }}
+        animate={reduce ? undefined : { y: [0, -5, 0] }}
         transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
         style={{ position: "absolute", left: "6%", top: "12%", width: "72%", zIndex: 2 }}
       >
@@ -85,7 +86,7 @@ function ArkoComposition({ accent }: { accent: ProjectAccent }) {
       </motion.div>
 
       <motion.div
-        animate={{ y: [0, -6, 0] }}
+        animate={reduce ? undefined : { y: [0, -6, 0] }}
         transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
         style={{
           position: "absolute",
@@ -103,11 +104,11 @@ function ArkoComposition({ accent }: { accent: ProjectAccent }) {
 }
 
 /* ── Veriflow: laptop + overlapping tablet ── */
-function VeriflowComposition({ accent }: { accent: ProjectAccent }) {
+function VeriflowComposition({ accent, reduce }: { accent: ProjectAccent; reduce: boolean }) {
   return (
     <div style={{ position: "absolute", inset: 0, padding: "8% 14% 12%" }}>
       <motion.div
-        animate={{ y: [0, -5, 0] }}
+        animate={reduce ? undefined : { y: [0, -5, 0] }}
         transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
         style={{ position: "absolute", left: "2%", top: "10%", width: "68%", zIndex: 2 }}
       >
@@ -115,7 +116,7 @@ function VeriflowComposition({ accent }: { accent: ProjectAccent }) {
       </motion.div>
 
       <motion.div
-        animate={{ y: [0, -8, 0], rotate: [-1.2, -0.4, -1.2] }}
+        animate={reduce ? undefined : { y: [0, -8, 0], rotate: [-1.2, -0.4, -1.2] }}
         transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut", delay: 0.7 }}
         style={{ position: "absolute", right: "2%", bottom: "-2%", width: "38%", zIndex: 3 }}
       >
@@ -126,7 +127,7 @@ function VeriflowComposition({ accent }: { accent: ProjectAccent }) {
 }
 
 /* ── LocalLift: 3 phones, center in front, outer two overlap behind ── */
-function LocalLiftComposition({ accent }: { accent: ProjectAccent }) {
+function LocalLiftComposition({ accent, reduce }: { accent: ProjectAccent; reduce: boolean }) {
   const phoneShadow = `drop-shadow(0 16px 28px ${accent.primary}3a) drop-shadow(0 6px 12px rgba(0,0,0,0.16))`;
 
   return (
@@ -136,7 +137,7 @@ function LocalLiftComposition({ accent }: { accent: ProjectAccent }) {
           src="/locallift/hifi/hifi-session.png"
           alt="LocalLift live mentor session"
           loading="lazy"
-          animate={{ y: [0, -5, 0] }}
+          animate={reduce ? undefined : { y: [0, -5, 0] }}
           transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
           style={{
             width: "100%",
@@ -153,7 +154,7 @@ function LocalLiftComposition({ accent }: { accent: ProjectAccent }) {
           src="/locallift/hifi/hifi-explore.png"
           alt="LocalLift course browse feed"
           loading="lazy"
-          animate={{ y: [0, -6, 0] }}
+          animate={reduce ? undefined : { y: [0, -6, 0] }}
           transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
           style={{ width: "100%", display: "block", filter: phoneShadow }}
         />
@@ -164,7 +165,7 @@ function LocalLiftComposition({ accent }: { accent: ProjectAccent }) {
           src="/locallift/hifi/hifi-profile-founder.png"
           alt="LocalLift founder profile"
           loading="lazy"
-          animate={{ y: [0, -5, 0] }}
+          animate={reduce ? undefined : { y: [0, -5, 0] }}
           transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1.4 }}
           style={{
             width: "100%",
@@ -180,7 +181,7 @@ function LocalLiftComposition({ accent }: { accent: ProjectAccent }) {
 }
 
 /* ── Shelfie: feathered research photo with soft glow ── */
-function ShelfieComposition({ accent }: { accent: ProjectAccent }) {
+function ShelfieComposition({ accent, reduce }: { accent: ProjectAccent; reduce: boolean }) {
   return (
     <div style={{ position: "absolute", inset: 0 }}>
       <div
@@ -197,7 +198,7 @@ function ShelfieComposition({ accent }: { accent: ProjectAccent }) {
       <motion.img
         src="/shelfie/expiration-reader.jpg"
         alt="A shopper trying to read an expiration date"
-        animate={{ y: [0, -6, 0] }}
+        animate={reduce ? undefined : { y: [0, -6, 0] }}
         transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
         style={{
           position: "absolute",

@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import MiroHero from "../components/MiroHero";
-import ProjectsDeck from "../components/ProjectsDeck";
+import ProjectsBoard from "../components/ProjectsBoard";
 import ConnectSection from "../components/ConnectSection";
 
 /* ─── Home Page ──────────────────────────────────────────────────── */
@@ -15,8 +15,8 @@ export default function Home() {
       {/* Hero — interactive Miro canvas */}
       <MiroHero />
 
-      {/* Selected work — presentation-mode deck (continues the board) */}
-      <ProjectsDeck />
+      {/* Selected work — frames on a board */}
+      <ProjectsBoard />
 
       {/* Let's Connect */}
       <ConnectSection />
