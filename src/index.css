@@ -372,17 +372,20 @@ html {
   font-family: 'Manrope', system-ui, sans-serif; font-style: italic;
   font-size: clamp(16px, 1.4vw, 20px); line-height: 1.55; color: #54545F;
 }
-.pboard-stats { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; flex-shrink: 0; }
-.pboard-stat {
-  display: inline-flex; align-items: baseline; gap: 8px;
-  padding: 10px 16px; border-radius: 999px;
-  background: rgba(255, 255, 255, 0.8);
+/* one unified frosted "stat bar" (segments divided by thin lines) — no staircase */
+.pboard-stats {
+  display: inline-flex; align-items: stretch; flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.75);
   -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
-  border: 1px solid rgba(9, 30, 66, 0.07);
+  border: 1px solid rgba(9, 30, 66, 0.08);
+  border-radius: 16px;
   box-shadow: 0 1px 3px rgba(9, 30, 66, 0.05);
+  overflow: hidden;
 }
-.pboard-stat-v { font-family: 'Manrope', system-ui, sans-serif; font-size: 15px; font-weight: 800; letter-spacing: -0.01em; color: #1A1A2E; }
-.pboard-stat-l { font-size: 9.5px; color: #54545F; white-space: nowrap; }
+.pboard-stat { display: flex; flex-direction: column; gap: 5px; padding: 14px 22px; border-left: 1px solid rgba(9, 30, 66, 0.08); }
+.pboard-stat:first-child { border-left: none; }
+.pboard-stat-v { font-family: 'Manrope', system-ui, sans-serif; font-size: 18px; font-weight: 800; letter-spacing: -0.01em; line-height: 1; color: #1A1A2E; white-space: nowrap; }
+.pboard-stat-l { font-size: 9px; color: #54545F; white-space: nowrap; }
 
 /* Switcher — frosted pill with a sliding indicator */
 .pboard-switcher {
@@ -491,10 +494,10 @@ html {
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
           mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
 }
-.pboard-ticker-track { display: inline-flex; gap: 12px; will-change: transform; }
+.pboard-ticker-track { display: inline-flex; will-change: transform; }
 .pboard-ticker-item {
   display: inline-flex; align-items: center; gap: 9px;
-  padding: 10px 16px; border-radius: 999px;
+  margin-right: 12px; padding: 10px 16px; border-radius: 999px;
   background: #fff; border: 1px solid rgba(9, 30, 66, 0.08);
   box-shadow: 0 1px 3px rgba(9,30,66,0.05);
   white-space: nowrap; flex-shrink: 0;
@@ -508,13 +511,101 @@ html {
   .pboard-switcher { display: flex; width: 100%; }
   .pboard-tab { flex: 1; justify-content: center; padding: 13px 16px; }
   .pboard-intro { flex-direction: column; align-items: flex-start; gap: 20px; }
-  .pboard-stats { flex-direction: row; flex-wrap: wrap; align-items: flex-start; }
 }
 /* Very small screens: let the headline wrap instead of overflowing */
 @media (max-width: 500px) {
   .pboard-heading { white-space: normal; line-height: 1.1; }
 }
 
+
+/* ══ Let's Connect — Miro-vibe redesign (bg blends up into the projects mesh) ══ */
+.connect-section {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: var(--bg-primary);
+  padding: clamp(72px, 12vh, 150px) 0 clamp(44px, 6vh, 76px);
+}
+.connect-bg {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  /* feathered in at the top so it melts into the projects section's fading mesh */
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 13%, #000 90%, transparent 100%);
+          mask-image: linear-gradient(to bottom, transparent 0%, #000 13%, #000 90%, transparent 100%);
+}
+.connect-blob { position: absolute; border-radius: 50%; filter: blur(54px); will-change: transform; }
+
+.connect-inner { position: relative; z-index: 1; width: min(1180px, 92vw); margin: 0 auto; }
+
+.connect-kicker { display: inline-flex; align-items: center; gap: 9px; font-family: 'Manrope', system-ui, sans-serif; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.16em; color: #6B6B75; }
+.connect-kicker-dot { width: 7px; height: 7px; border-radius: 999px; background: #4262FF; }
+
+.connect-heading {
+  margin: 16px 0 0;
+  font-family: 'Manrope', system-ui, sans-serif;
+  font-size: clamp(40px, 6vw, 82px);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1.0;
+  color: #1A1A2E;
+  max-width: 15ch;
+}
+.connect-hl { position: relative; display: inline-block; }
+.connect-hl-mark { position: absolute; left: -6px; right: -9px; top: 22%; bottom: 10%; background: rgba(255, 186, 120, 0.72); border-radius: 8px 13px 8px 12px; transform: rotate(-1.5deg); z-index: 0; }
+.connect-hl-text { position: relative; z-index: 1; }
+
+.connect-status {
+  display: inline-flex; align-items: center; gap: 8px;
+  margin-top: 26px; padding: 8px 15px;
+  background: rgba(63, 185, 80, 0.10); border-radius: 999px;
+  font-family: 'Manrope', system-ui, sans-serif; font-size: 12.5px; font-weight: 600; color: #2E7D46;
+}
+.connect-status-dot { width: 8px; height: 8px; border-radius: 999px; background: #3FB950; }
+
+.connect-intro {
+  margin: 22px 0 0; max-width: 580px;
+  font-family: 'Manrope', system-ui, sans-serif; font-style: italic;
+  font-size: clamp(17px, 1.5vw, 21px); line-height: 1.55; color: #54545F;
+}
+
+.connect-cards { display: grid; grid-template-columns: 1fr; gap: 16px; margin-top: clamp(44px, 6vw, 68px); }
+.connect-card {
+  display: flex; align-items: center; gap: 16px;
+  padding: 22px 24px; border-radius: 16px;
+  background: rgba(255, 255, 255, 0.7);
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+  border: 1px solid rgba(9, 30, 66, 0.08);
+  box-shadow: 0 1px 3px rgba(9, 30, 66, 0.05);
+  text-decoration: none; color: inherit;
+  transition: transform 300ms cubic-bezier(0.16,1,0.3,1), box-shadow 300ms ease, border-color 300ms ease;
+}
+.connect-card:hover { transform: translateY(-4px); border-color: rgba(66, 98, 255, 0.30); box-shadow: 0 2px 8px rgba(9,30,66,0.06), 0 20px 46px rgba(9,30,66,0.10); }
+.connect-card-icon {
+  display: grid; place-items: center; flex-shrink: 0;
+  width: 46px; height: 46px; border-radius: 12px;
+  background: rgba(66, 98, 255, 0.10); color: #4262FF;
+  transition: background 300ms ease, color 300ms ease;
+}
+.connect-card:hover .connect-card-icon { background: #4262FF; color: #fff; }
+.connect-card-body { display: flex; flex-direction: column; gap: 3px; min-width: 0; flex: 1; }
+.connect-card-label { font-family: 'Manrope', system-ui, sans-serif; font-size: 9.5px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #8A8F9C; }
+.connect-card-value { font-family: 'Manrope', system-ui, sans-serif; font-size: clamp(15px, 1.4vw, 18px); font-weight: 600; color: #1A1A2E; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.connect-card-arrow { color: #9A9AA6; flex-shrink: 0; transition: transform 220ms cubic-bezier(0.16,1,0.3,1), color 220ms ease; }
+.connect-card:hover .connect-card-arrow { color: #4262FF; transform: translate(3px, -3px); }
+
+.connect-foot {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+  margin-top: clamp(48px, 6vw, 82px); padding-top: 22px;
+  border-top: 1px solid rgba(9, 30, 66, 0.08);
+  font-family: 'Manrope', system-ui, sans-serif; font-size: 11px; letter-spacing: 0.02em; color: #6B6B75;
+}
+
+@media (min-width: 768px) {
+  .connect-cards { grid-template-columns: repeat(3, 1fr); }
+}
 
 /* ── Prevent long words from overflowing on small screens ──────── */
 p, h1, h2, h3, h4, blockquote {

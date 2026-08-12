@@ -8,9 +8,13 @@ import {
   ChatCircleIcon as ChatCircle,
   CursorClickIcon as CursorClick,
   SunIcon as Sun,
-  CameraIcon as Camera,
+  CubeIcon as Cube,
 } from "@phosphor-icons/react";
-import { siFigma, siFramer, siSwift, siRive, siMiro, siNotion, siJira, siAutodesk, siSketchup, siBlender } from "simple-icons";
+import {
+  siFigma, siFramer, siSwift, siRive, siMiro, siNotion, siJira, siSketch,
+  siLinear, siLoom, siWebflow, siStorybook,
+  siAutodesk, siSketchup, siBlender, siAutodeskrevit, siAutodeskmaya, siTwinmotion, siUnrealengine,
+} from "simple-icons";
 import { projects, type Project, type ProjectAccent } from "../data/projects";
 import { ProjectHeroStage } from "./ProjectHeroStage";
 
@@ -111,17 +115,25 @@ const PRODUCT_TICKER: Tool[] = [
   { name: "ProtoPie", Fallback: CursorClick },
   { name: "Rive", icon: siRive },
   { name: "SwiftUI", icon: siSwift },
+  { name: "Sketch", icon: siSketch },
   { name: "Miro", icon: siMiro },
   { name: "Notion", icon: siNotion },
   { name: "Jira", icon: siJira },
+  { name: "Linear", icon: siLinear },
+  { name: "Loom", icon: siLoom },
+  { name: "Webflow", icon: siWebflow },
+  { name: "Storybook", icon: siStorybook },
 ];
 const ARCH_TICKER: Tool[] = [
   { name: "AutoCAD", icon: siAutodesk },
   { name: "SketchUp", icon: siSketchup },
+  { name: "Revit", icon: siAutodeskrevit },
+  { name: "Maya", icon: siAutodeskmaya },
   { name: "Blender", icon: siBlender },
+  { name: "Twinmotion", icon: siTwinmotion },
+  { name: "Unreal Engine", icon: siUnrealengine },
   { name: "Lumion", Fallback: Sun },
-  { name: "V-Ray", Fallback: Camera },
-  { name: "Autodesk", icon: siAutodesk },
+  { name: "V-Ray", Fallback: Cube },
 ];
 
 /* Section framing copy — no em dashes; headline highlight is the last phrase. */
@@ -172,7 +184,17 @@ function Ticker({ tools }: { tools: Tool[] }) {
     const ctx = gsap.context(() => {
       const mm = gsap.matchMedia();
       mm.add("(prefers-reduced-motion: no-preference)", () => {
-        tweenRef.current = gsap.to(el, { xPercent: -50, duration: 32, ease: "none", repeat: -1 });
+        // Measure ONE copy's exact width (item + its right margin) so the loop wraps
+        // perfectly with no jump/flicker at the seam.
+        const kids = Array.from(el.children) as HTMLElement[];
+        let copyW = 0;
+        for (let i = 0; i < tools.length; i++) {
+          const k = kids[i];
+          if (!k) break;
+          copyW += k.offsetWidth + parseFloat(getComputedStyle(k).marginRight || "0");
+        }
+        if (copyW <= 0) return;
+        tweenRef.current = gsap.fromTo(el, { x: 0 }, { x: -copyW, duration: copyW / 60, ease: "none", repeat: -1 });
       });
     });
     return () => ctx.revert();
@@ -310,7 +332,7 @@ export default function ProjectsBoard() {
     const ctx = gsap.context(() => {
       const mm = gsap.matchMedia();
       mm.add("(prefers-reduced-motion: no-preference)", () => {
-        gsap.from(".pboard-kicker, .pboard-heading, .pboard-notes, .pboard-stat, .pboard-switcher", {
+        gsap.from(".pboard-kicker, .pboard-heading, .pboard-notes, .pboard-stats, .pboard-switcher", {
           y: 22, autoAlpha: 0, duration: 0.7, ease: "power3.out", stagger: 0.08,
           scrollTrigger: { trigger: rootRef.current, start: "top 80%", once: true },
         });
@@ -352,7 +374,7 @@ export default function ProjectsBoard() {
         } else {
           gsap.from(frameEls, { y: 30, autoAlpha: 0, duration: 0.55, ease: "power3.out", stagger: 0.1 });
           // re-reveal the swapped intro + stats so they always reappear on deck switch
-          gsap.from(".pboard-notes, .pboard-stat", { autoAlpha: 0, y: 10, duration: 0.45, ease: "power3.out", stagger: 0.05 });
+          gsap.from(".pboard-notes, .pboard-stats", { autoAlpha: 0, y: 10, duration: 0.45, ease: "power3.out", stagger: 0.05 });
         }
         gsap.utils.toArray<HTMLElement>(".pboard-mockup").forEach((el) => {
           gsap.fromTo(el, { yPercent: -4 }, {
