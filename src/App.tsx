@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence, MotionConfig } from "framer-motion";
 import { useEffect } from "react";
+import { ScrollTrigger } from "./lib/gsap";
 import Nav from "./components/Nav";
 import Footer from "./components/Footer";
 import ScrollManager from "./components/ScrollManager";
@@ -19,7 +20,16 @@ import NotFound from "./pages/NotFound";
 function AnimatedRoutes() {
   const location = useLocation();
   return (
-    <AnimatePresence mode="sync">
+    // mode="wait": the outgoing page fully unmounts before the incoming one mounts,
+    // so ScrollTrigger reveals always measure against the correct single-page layout.
+    // onExitComplete + double-rAF: refresh all triggers once the new page has
+    // committed + painted (keeps the persistent Footer's trigger correct too).
+    <AnimatePresence
+      mode="wait"
+      onExitComplete={() =>
+        requestAnimationFrame(() => requestAnimationFrame(() => ScrollTrigger.refresh()))
+      }
+    >
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
@@ -50,14 +60,23 @@ function AppShell() {
   );
 }
 
-/* Sets --vh CSS variable to actual viewport height — fixes 100vh on iOS Safari */
+/* Sets --vh CSS variable to actual viewport height — fixes 100vh on iOS Safari.
+   rAF-throttled so the mobile address-bar resize stream writes at most once/frame. */
 function useViewportHeight() {
   useEffect(() => {
-    const set = () =>
+    let raf = 0;
+    const write = () =>
       document.documentElement.style.setProperty("--vh", `${window.innerHeight * 0.01}px`);
-    set();
-    window.addEventListener("resize", set);
-    return () => window.removeEventListener("resize", set);
+    const onResize = () => {
+      if (raf) return;
+      raf = requestAnimationFrame(() => { raf = 0; write(); });
+    };
+    write();
+    window.addEventListener("resize", onResize);
+    return () => {
+      window.removeEventListener("resize", onResize);
+      if (raf) cancelAnimationFrame(raf);
+    };
   }, []);
 }
 
@@ -87,7 +106,9 @@ export default function App() {
 
   return (
     <BrowserRouter>
-      <AppShell />
+      <MotionConfig reducedMotion="user">
+        <AppShell />
+      </MotionConfig>
     </BrowserRouter>
   );
 }

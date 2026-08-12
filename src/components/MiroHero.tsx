@@ -213,56 +213,76 @@ export default function MiroHero() {
   /* ── GSAP: entrance timeline + infinite cursor drift ── */
   useLayoutEffect(() => {
     const ctx = gsap.context((self) => {
-      // Lock the intro + subtext heights so typewriter reflow doesn't shift the layout
-      const center = (self.selector!(".hero-left") as HTMLElement[])[0];
-      if (center) center.style.height = `${center.offsetHeight}px`;
-      const subwrap = (self.selector!(".hero-subwrap") as HTMLElement[])[0];
-      if (subwrap) subwrap.style.height = `${subwrap.offsetHeight}px`;
+      const mm = gsap.matchMedia();
 
-      gsap.set(".hero-title-first", { text: "" });
-      gsap.set(".hero-title-last", { text: "" });
-      gsap.set(".hero-sub-text", { text: "" });
-
-      const tl = gsap.timeline({
-        defaults: { ease: "power3.out" },
-        onComplete: () => { if (center) center.style.height = ""; if (subwrap) subwrap.style.height = ""; },
+      // Reduced motion: no typewriter/drift — just show the final resting state.
+      mm.add("(prefers-reduced-motion: reduce)", () => {
+        gsap.set(".hero-title-first", { text: NAME_FIRST });
+        gsap.set(".hero-title-last", { text: NAME_LAST });
+        gsap.set(".hero-sub-text", { text: COPY.subheading });
       });
-      tl.from(".chrome-slide", { y: -12, autoAlpha: 0, duration: 0.55, stagger: 0.07 }, 0)
-        .from(".chrome-fade", { autoAlpha: 0, duration: 0.5 }, 0.2)
-        // Whole text block rises + fades in
-        .from(".hero-stage", { y: 30, autoAlpha: 0, duration: 0.9, ease: "power3.out" }, 0.1)
-        // Waving-hand chip pops in above the greeting
-        .from(".hero-wave", { autoAlpha: 0, scale: 0.4, y: 10, duration: 0.5, ease: "back.out(1.9)" }, 0.4)
-        .from(".hero-eyebrow", { autoAlpha: 0, y: 10, duration: 0.5 }, 0.45)
-        // Eyebrow marker underline draws itself in
-        .from(".hero-eyebrow-underline path", { drawSVG: "0%", duration: 0.5, ease: "power1.inOut" }, 0.65)
-        // Name — typewriter, both parts in ink
-        .to(".hero-title-first", { duration: 0.55, text: NAME_FIRST, ease: "none" }, 0.6)
-        .to(".hero-title-last", { duration: 0.5, text: NAME_LAST, ease: "none" }, 1.15)
-        // Highlighter swipes across the last name, like marking a key idea
-        .from(".hero-highlight", { scaleX: 0, transformOrigin: "0% 50%", duration: 0.45, ease: "power2.out" }, 1.6)
-        // Sparkle doodles pop on the highlighted word
-        .from(".hero-sparkles", { scale: 0, rotate: -35, transformOrigin: "50% 50%", duration: 0.5, ease: "back.out(2)" }, 1.9)
-        // Subheading fades up, then types in word-by-word
-        .from(".hero-subwrap", { autoAlpha: 0, y: 14, duration: 0.5 }, 1.5)
-        .to(".hero-sub-text", { duration: 1.2, text: { value: COPY.subheading, delimiter: " " }, ease: "none" }, 1.7);
 
-      // ── Soft, endless life ──
-      gsap.to(".hero-sparkles", { scale: 1.14, rotation: 6, transformOrigin: "50% 50%", duration: 1.7, repeat: -1, yoyo: true, ease: "sine.inOut", delay: 2.8 });
-      // The hand gives a small, periodic wave (a couple of tilts, then rests) — subtle, on-theme
-      gsap.set(".hero-wave-hand", { transformOrigin: "62% 88%" });
-      gsap.timeline({ repeat: -1, repeatDelay: 3.4, delay: 1.4 })
-        .to(".hero-wave-hand", { rotation: 17, duration: 0.2, ease: "sine.inOut" })
-        .to(".hero-wave-hand", { rotation: -11, duration: 0.28, ease: "sine.inOut" })
-        .to(".hero-wave-hand", { rotation: 14, duration: 0.26, ease: "sine.inOut" })
-        .to(".hero-wave-hand", { rotation: 0, duration: 0.22, ease: "sine.inOut" });
+      mm.add("(prefers-reduced-motion: no-preference)", () => {
+        // Lock the intro + subtext heights so typewriter reflow doesn't shift the layout.
+        // Set via GSAP so ctx.revert() restores them even if the intro is interrupted.
+        const center = (self.selector!(".hero-left") as HTMLElement[])[0];
+        const subwrap = (self.selector!(".hero-subwrap") as HTMLElement[])[0];
+        if (center) gsap.set(center, { height: center.offsetHeight });
+        if (subwrap) gsap.set(subwrap, { height: subwrap.offsetHeight });
+        const unlock = () => {
+          if (center) gsap.set(center, { clearProps: "height" });
+          if (subwrap) gsap.set(subwrap, { clearProps: "height" });
+        };
 
-      // Floating cursor drift — smooth, endless
-      const cursors = self.selector!(".collab-cursor") as HTMLElement[];
-      cursors.forEach((el, i) => {
-        const c = COLLABS[i];
-        if (!c) return;
-        gsap.to(el, { keyframes: { x: c.loop.x, y: c.loop.y }, duration: c.dur, repeat: -1, ease: "sine.inOut" });
+        gsap.set(".hero-title-first", { text: "" });
+        gsap.set(".hero-title-last", { text: "" });
+        gsap.set(".hero-sub-text", { text: "" });
+
+        const tl = gsap.timeline({ defaults: { ease: "power3.out" }, onComplete: unlock });
+        tl.from(".chrome-slide", { y: -12, autoAlpha: 0, duration: 0.55, stagger: 0.07 }, 0)
+          .from(".chrome-fade", { autoAlpha: 0, duration: 0.5 }, 0.2)
+          // Whole text block rises + fades in
+          .from(".hero-stage", { y: 30, autoAlpha: 0, duration: 0.9, ease: "power3.out" }, 0.1)
+          // Waving-hand chip pops in above the greeting
+          .from(".hero-wave", { autoAlpha: 0, scale: 0.4, y: 10, duration: 0.5, ease: "back.out(1.9)" }, 0.4)
+          .from(".hero-eyebrow", { autoAlpha: 0, y: 10, duration: 0.5 }, 0.45)
+          // Eyebrow marker underline draws itself in
+          .from(".hero-eyebrow-underline path", { drawSVG: "0%", duration: 0.5, ease: "power1.inOut" }, 0.65)
+          // Name — typewriter, both parts in ink
+          .to(".hero-title-first", { duration: 0.55, text: NAME_FIRST, ease: "none" }, 0.6)
+          .to(".hero-title-last", { duration: 0.5, text: NAME_LAST, ease: "none" }, 1.15)
+          // Highlighter swipes across the last name AFTER it finishes typing, like marking a key idea
+          .from(".hero-highlight", { scaleX: 0, transformOrigin: "0% 50%", duration: 0.45, ease: "power2.out", force3D: true }, 1.7)
+          // Sparkle doodles pop on the highlighted word
+          .from(".hero-sparkles", { scale: 0, rotate: -35, transformOrigin: "50% 50%", duration: 0.5, ease: "back.out(2)" }, 1.95)
+          // Subheading fades up, then types in word-by-word
+          .from(".hero-subwrap", { autoAlpha: 0, y: 14, duration: 0.5 }, 1.5)
+          .to(".hero-sub-text", { duration: 1.2, text: { value: COPY.subheading, delimiter: " " }, ease: "none" }, 1.7);
+
+        // ── Soft, endless life ──
+        gsap.to(".hero-sparkles", { scale: 1.14, rotation: 6, transformOrigin: "50% 50%", duration: 1.7, repeat: -1, yoyo: true, ease: "sine.inOut", delay: 2.9, force3D: true });
+        // The hand gives a small, periodic wave — one keyframes tween so it carries
+        // momentum through center instead of stalling at each tilt.
+        gsap.set(".hero-wave-hand", { transformOrigin: "62% 88%" });
+        gsap.to(".hero-wave-hand", {
+          keyframes: [
+            { rotation: 17, duration: 0.2 },
+            { rotation: -11, duration: 0.28 },
+            { rotation: 14, duration: 0.26 },
+            { rotation: 0, duration: 0.22 },
+          ],
+          ease: "none", repeat: -1, repeatDelay: 3.4, delay: 1.4, force3D: true,
+        });
+
+        // Floating cursor drift — continuous through waypoints (ease:none per segment),
+        // phase-desynced so the cursors don't move in lockstep at launch.
+        const cursors = self.selector!(".collab-cursor") as HTMLElement[];
+        cursors.forEach((el, i) => {
+          const c = COLLABS[i];
+          if (!c) return;
+          const t = gsap.to(el, { keyframes: { x: c.loop.x, y: c.loop.y, ease: "none" }, duration: c.dur, repeat: -1, ease: "sine.inOut", force3D: true });
+          t.progress(i / Math.max(cursors.length, 1));
+        });
       });
     }, rootRef);
     return () => ctx.revert();

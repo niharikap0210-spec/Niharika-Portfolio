@@ -101,7 +101,7 @@ export default function Footer() {
             <span className="cfooter-name">Niharika Pundlik</span>
           </Link>
           <span className="cfooter-copy">© 2026 · Product Designer, architect by training</span>
-          <button className="cfooter-toptop" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
+          <button className="cfooter-toptop" onClick={() => window.scrollTo({ top: 0, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" })}>
             Back to top <ArrowUp size={14} weight="bold" aria-hidden />
           </button>
         </div>

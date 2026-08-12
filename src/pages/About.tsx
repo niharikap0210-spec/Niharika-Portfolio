@@ -1,4 +1,5 @@
 import { motion, useInView, AnimatePresence } from "framer-motion";
+import { pageTransition } from "../lib/pageTransition";
 import { useRef, useState } from "react";
 import {
   MusicNotesIcon,
@@ -1254,13 +1255,7 @@ function OffDuty() {
 /* ─── Page ──────────────────────────────────────────────────────── */
 export default function About() {
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.3 }}
-      className="pt-14"
-    >
+    <motion.div {...pageTransition} className="pt-14">
       <Hero />
       <MyStory />
       <MyApproach />

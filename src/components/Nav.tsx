@@ -111,7 +111,9 @@ export default function Nav() {
     return C_DEFAULT;
   };
 
-  const linkWeight = (item: NavItem) => isActive(item) ? 600 : 400;
+  /* Active link is shown by its darker ink color only — never bold (keeps a
+     constant weight so selecting a tab doesn't reflow the pill). */
+  const LINK_WEIGHT = 400;
 
   /* ── Shared link style (sits above the sliding hover pill) ── */
   const linkBase: React.CSSProperties = {
@@ -177,7 +179,6 @@ export default function Nav() {
             >
               {navItems.map((item) => {
                 const color    = linkColor(item);
-                const weight   = linkWeight(item);
                 const IconComp = item.icon;
 
                 return (
@@ -202,7 +203,7 @@ export default function Nav() {
                         target="_blank"
                         rel="noopener noreferrer"
                         onClick={(e) => e.stopPropagation()}
-                        style={{ ...linkBase, color, fontWeight: weight }}
+                        style={{ ...linkBase, color, fontWeight: LINK_WEIGHT }}
                         className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded"
                       >
                         {item.label}
@@ -212,7 +213,7 @@ export default function Nav() {
                       <Link
                         to={item.href}
                         onClick={(e) => e.stopPropagation()}
-                        style={{ ...linkBase, color, fontWeight: weight }}
+                        style={{ ...linkBase, color, fontWeight: LINK_WEIGHT }}
                         className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded"
                       >
                         {item.label}

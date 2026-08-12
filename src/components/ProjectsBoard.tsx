@@ -182,27 +182,28 @@ function Ticker({ tools }: { tools: Tool[] }) {
     const ctx = gsap.context(() => {
       const mm = gsap.matchMedia();
       mm.add("(prefers-reduced-motion: no-preference)", () => {
-        // Measure ONE copy's exact width (item + its right margin) so the loop wraps
-        // perfectly with no jump/flicker at the seam.
-        const kids = Array.from(el.children) as HTMLElement[];
-        let copyW = 0;
-        for (let i = 0; i < tools.length; i++) {
-          const k = kids[i];
-          if (!k) break;
-          copyW += k.offsetWidth + parseFloat(getComputedStyle(k).marginRight || "0");
-        }
-        if (copyW <= 0) return;
-        tweenRef.current = gsap.fromTo(el, { x: 0 }, { x: -copyW, duration: copyW / 60, ease: "none", repeat: -1 });
+        // The track is an exact 2x duplicate, so a -50% translate loops seamlessly.
+        // xPercent re-resolves against the live element width on every layout, so it
+        // stays seamless across font-load + resize with no measurement or reflow.
+        tweenRef.current = gsap.to(el, {
+          xPercent: -50, ease: "none", repeat: -1,
+          duration: el.scrollWidth / 2 / 60, force3D: true,
+        });
       });
     });
     return () => ctx.revert();
   }, [tools]);
 
+  // Ease the marquee to a stop on hover (and back up on leave) instead of snapping.
+  const glide = (ts: number) => {
+    if (tweenRef.current) gsap.to(tweenRef.current, { timeScale: ts, duration: 0.4, ease: "power2.out" });
+  };
+
   return (
     <div
       className="pboard-ticker"
-      onMouseEnter={() => tweenRef.current?.pause()}
-      onMouseLeave={() => tweenRef.current?.play()}
+      onMouseEnter={() => glide(0)}
+      onMouseLeave={() => glide(1)}
     >
       <div ref={trackRef} className="pboard-ticker-track">
         {items.map((t, i) => (
@@ -331,13 +332,16 @@ export default function ProjectsBoard() {
       const mm = gsap.matchMedia();
       mm.add("(prefers-reduced-motion: no-preference)", () => {
         gsap.from(".pboard-kicker, .pboard-heading, .pboard-notes, .pboard-switcher", {
-          y: 22, autoAlpha: 0, duration: 0.7, ease: "power3.out", stagger: 0.08,
+          y: 20, autoAlpha: 0, duration: 0.9, ease: "power2.out", stagger: 0.09,
+          clearProps: "transform,opacity,visibility",
           scrollTrigger: { trigger: rootRef.current, start: "top 80%", once: true },
         });
         // continuously drifting colour blobs — the moving background (paused when off-screen)
         const blobTweens = gsap.utils.toArray<HTMLElement>(".pboard-blob").map((el, i) => {
           const b = BLOBS[i];
-          return gsap.to(el, { x: b ? b.dx : 0, y: b ? b.dy : 0, scale: 1.2, duration: b ? b.d : 15, repeat: -1, yoyo: true, ease: "sine.inOut", delay: i * 0.4 });
+          // translate only — scaling a 52px-blurred layer re-rasterizes the blur every
+          // frame; drifting it does not, so this is far cheaper and just as alive.
+          return gsap.to(el, { x: b ? b.dx : 0, y: b ? b.dy : 0, duration: b ? b.d : 15, repeat: -1, yoyo: true, ease: "sine.inOut", delay: i * 0.4, force3D: true });
         });
         const blobST = ScrollTrigger.create({
           trigger: rootRef.current, start: "top bottom", end: "bottom top",
@@ -361,24 +365,25 @@ export default function ProjectsBoard() {
         const frameEls = gsap.utils.toArray<HTMLElement>(".pboard-frame-wrap");
         if (!revealedRef.current) {
           gsap.from(frameEls, {
-            y: 48, autoAlpha: 0, duration: 0.85, ease: "power3.out", stagger: 0.12,
+            y: 34, autoAlpha: 0, duration: 0.9, ease: "power2.out", stagger: 0.12,
+            clearProps: "transform,opacity,visibility",
             // flip the flag only when the reveal actually fires, so it survives StrictMode's
             // double-invoke (a persistent ref set at setup time would skip the scroll reveal in dev)
             scrollTrigger: { trigger: ".pboard-grid", start: "top 85%", once: true, onEnter: () => { revealedRef.current = true; } },
           });
         } else {
-          gsap.from(frameEls, { y: 30, autoAlpha: 0, duration: 0.55, ease: "power3.out", stagger: 0.1 });
+          gsap.from(frameEls, { y: 24, autoAlpha: 0, duration: 0.6, ease: "power2.out", stagger: 0.1, clearProps: "transform,opacity,visibility" });
           // re-reveal the swapped intro so it always reappears on deck switch
-          gsap.from(".pboard-notes", { autoAlpha: 0, y: 10, duration: 0.45, ease: "power3.out" });
+          gsap.from(".pboard-notes", { autoAlpha: 0, y: 10, duration: 0.5, ease: "power2.out", clearProps: "transform,opacity,visibility" });
         }
         gsap.utils.toArray<HTMLElement>(".pboard-mockup").forEach((el) => {
           gsap.fromTo(el, { yPercent: -4 }, {
-            yPercent: 4, ease: "none",
-            scrollTrigger: { trigger: el, start: "top bottom", end: "bottom top", scrub: 0.5 },
+            yPercent: 4, ease: "none", force3D: true,
+            scrollTrigger: { trigger: el, start: "top bottom", end: "bottom top", scrub: 0.5, fastScrollEnd: true, invalidateOnRefresh: true },
           });
         });
         gsap.utils.toArray<HTMLElement>(".pboard-comment").forEach((el) => {
-          gsap.to(el, { y: -5, duration: 3.2, repeat: -1, yoyo: true, ease: "sine.inOut" });
+          gsap.to(el, { y: -5, duration: 3.2, repeat: -1, yoyo: true, ease: "sine.inOut", force3D: true });
         });
       });
     }, rootRef);
@@ -401,9 +406,10 @@ export default function ProjectsBoard() {
     place(switchReadyRef.current);
     switchReadyRef.current = true;
     if (document.fonts?.ready) document.fonts.ready.then(() => place(false));
-    const onResize = () => place(false);
+    let raf = 0;
+    const onResize = () => { if (raf) return; raf = requestAnimationFrame(() => { raf = 0; place(false); }); };
     window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
+    return () => { window.removeEventListener("resize", onResize); if (raf) cancelAnimationFrame(raf); };
   }, [deck, reduce]);
 
   return (
