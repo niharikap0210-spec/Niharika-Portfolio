@@ -1,9 +1,8 @@
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
-import { AnimatePresence, motion } from "framer-motion";
-import { useState, useCallback, useEffect } from "react";
+import { AnimatePresence } from "framer-motion";
+import { useEffect } from "react";
 import Nav from "./components/Nav";
 import Footer from "./components/Footer";
-import SplashScreen from "./components/SplashScreen";
 import ScrollManager from "./components/ScrollManager";
 import Home from "./pages/Home";
 import About from "./pages/About";
@@ -85,34 +84,10 @@ function useKeyboardNav() {
 export default function App() {
   useViewportHeight();
   useKeyboardNav();
-  const [showSplash, setShowSplash] = useState<boolean>(
-    () => !sessionStorage.getItem("np-splash-seen")
-  );
-  const [splashDone, setSplashDone] = useState<boolean>(
-    () => !!sessionStorage.getItem("np-splash-seen")
-  );
-
-  const handleSplashComplete = useCallback(() => {
-    sessionStorage.setItem("np-splash-seen", "1");
-    setShowSplash(false);
-    setSplashDone(true);
-  }, []);
 
   return (
     <BrowserRouter>
-      {/* App renders underneath — invisible until splash exits */}
-      <motion.div
-        initial={{ opacity: splashDone ? 1 : 0 }}
-        animate={{ opacity: splashDone ? 1 : 0 }}
-        transition={{ duration: 0.6, ease: [0.25, 1, 0.4, 1] }}
-      >
-        <AppShell />
-      </motion.div>
-      <AnimatePresence>
-        {showSplash && (
-          <SplashScreen key="splash" onComplete={handleSplashComplete} />
-        )}
-      </AnimatePresence>
+      <AppShell />
     </BrowserRouter>
   );
 }
