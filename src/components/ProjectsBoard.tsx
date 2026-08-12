@@ -1,6 +1,8 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useLayoutEffect } from "react";
 import { Link } from "react-router-dom";
-import { motion, AnimatePresence, useInView, useReducedMotion } from "framer-motion";
+import { useInView, useReducedMotion } from "framer-motion";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
   ArrowUpRightIcon as ArrowUpRight,
   SelectionIcon as Selection,
@@ -9,6 +11,8 @@ import {
 } from "@phosphor-icons/react";
 import { projects, type Project, type ProjectAccent } from "../data/projects";
 import { ProjectHeroStage } from "./ProjectHeroStage";
+
+gsap.registerPlugin(ScrollTrigger);
 
 /* ─── Miro palette (matches MiroHero) ─────────────────────────────── */
 const FONT = "'Manrope', system-ui, sans-serif";
@@ -138,10 +142,10 @@ function SelectionOverlay({ show }: { show: boolean }) {
 /* ─── One project frame ───────────────────────────────────────────── */
 function BoardFrame({ frame, index, reduce }: { frame: Frame; index: number; reduce: boolean }) {
   const ref = useRef<HTMLDivElement>(null);
+  const liftRef = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
   const [hovered, setHovered] = useState(false);
   const [demo, setDemo] = useState(false);
-  const [entered, setEntered] = useState(false);
   const stik = stickyColor(frame.discipline);
 
   // Featured frame briefly self-demos its selection ring on first reveal
@@ -152,84 +156,129 @@ function BoardFrame({ frame, index, reduce }: { frame: Frame; index: number; red
     return () => clearTimeout(t);
   }, [frame.featured, inView, reduce]);
 
-  // Once the reveal stagger has run, drop the delay so hover transitions stay snappy
-  useEffect(() => {
-    if (!inView) return;
-    const t = setTimeout(() => setEntered(true), 650);
-    return () => clearTimeout(t);
-  }, [inView]);
+  const lift = (to: number) => {
+    if (!reduce && liftRef.current) gsap.to(liftRef.current, { y: to, duration: to ? 0.35 : 0.4, ease: "power3.out" });
+  };
 
+  // GSAP reveals the outer .pboard-frame-wrap on scroll; GSAP also drives the hover
+  // lift on the inner element (separate transforms, no conflict).
   return (
-    <motion.div
+    <div
       ref={ref}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      initial={reduce ? { opacity: 0 } : { opacity: 0, y: 24 }}
-      animate={inView ? { opacity: 1, y: reduce ? 0 : hovered ? -4 : 0 } : undefined}
-      transition={{ type: "spring", stiffness: 180, damping: 22, delay: entered || reduce ? 0 : (index % 2) * 0.08 }}
+      className="pboard-frame-wrap"
+      onMouseEnter={() => { setHovered(true); lift(-5); }}
+      onMouseLeave={() => { setHovered(false); lift(0); }}
     >
-      {/* title-tab straddling the frame's top-left edge */}
-      <div className="pboard-frametab" style={{ borderBottom: `2px solid ${frame.accent.primary}` }}>
-        <span style={{ width: 8, height: 8, borderRadius: 999, background: frame.accent.primary, flexShrink: 0 }} />
-        <span className="pboard-frametab-name">Frame {String(index + 1).padStart(2, "0")} — {frame.name}</span>
-        {frame.featured && <Star size={13} weight="fill" color={AMBER} aria-hidden style={{ flexShrink: 0 }} />}
-        {frame.tabBadge && <span className="pboard-tabbadge" style={{ background: STICKY.yellow }}>{frame.tabBadge}</span>}
+      <div ref={liftRef}>
+        {/* title-tab straddling the frame's top-left edge */}
+        <div className="pboard-frametab" style={{ borderBottom: `2px solid ${frame.accent.primary}` }}>
+          <span style={{ width: 8, height: 8, borderRadius: 999, background: frame.accent.primary, flexShrink: 0 }} />
+          <span className="pboard-frametab-name">Frame {String(index + 1).padStart(2, "0")} — {frame.name}</span>
+          {frame.featured && <Star size={13} weight="fill" color={AMBER} aria-hidden style={{ flexShrink: 0 }} />}
+          {frame.tabBadge && <span className="pboard-tabbadge" style={{ background: STICKY.yellow }}>{frame.tabBadge}</span>}
+        </div>
+
+        <div className="pboard-frame">
+          <Link to={frame.href} className="pboard-link" aria-label={`View ${frame.name} case study`}>
+            {/* mockup (clip holds the image; selection overlay sits above, unclipped) */}
+            <div className="pboard-mockup">
+              <div className="pboard-mockup-clip"><FrameVisual frame={frame} hovered={hovered} /></div>
+              <SelectionOverlay show={hovered || demo} />
+              {frame.comment && (
+                <div aria-hidden className="pboard-comment hidden lg:flex">
+                  <span className="pboard-comment-avatar" style={{ background: frame.accent.primary }}>
+                    {frame.comment.who}
+                    <span className="pboard-comment-badge">{frame.comment.n}</span>
+                  </span>
+                  <span className="pboard-comment-text"><ChatCircle size={13} weight="fill" color={frame.accent.primary} /> Looks great</span>
+                </div>
+              )}
+            </div>
+
+            {/* title + subtitle */}
+            <h3 className="pboard-title">{frame.name}</h3>
+            <p className="pboard-sub">{frame.subtitle}</p>
+
+            {/* tag stickies */}
+            <div className="pboard-stickies">
+              {frame.tags.map((t, i) => (
+                <span key={t} className="pboard-sticky" style={{ background: stik, transform: `rotate(${i % 2 ? 2 : -2}deg)` }}>{t}</span>
+              ))}
+            </div>
+
+            {/* CTA */}
+            <span className="pboard-cta">
+              View case study
+              <span className="pboard-cta-line"><span className="pboard-cta-fill" data-on={hovered} /></span>
+              <ArrowUpRight size={16} weight="bold" aria-hidden className="pboard-cta-arrow" data-on={hovered} />
+            </span>
+          </Link>
+        </div>
       </div>
-
-      <div className="pboard-frame">
-        <Link to={frame.href} className="pboard-link" aria-label={`View ${frame.name} case study`}>
-          {/* mockup (clip holds the image; selection overlay sits above, unclipped) */}
-          <div className="pboard-mockup">
-            <div className="pboard-mockup-clip"><FrameVisual frame={frame} hovered={hovered} /></div>
-            <SelectionOverlay show={hovered || demo} />
-            {frame.comment && (
-              <motion.div
-                aria-hidden
-                className="pboard-comment hidden lg:flex"
-                animate={reduce ? undefined : { y: [0, -4, 0] }}
-                transition={{ duration: 3.2, repeat: Infinity, ease: "easeInOut" }}
-              >
-                <span className="pboard-comment-avatar" style={{ background: frame.accent.primary }}>
-                  {frame.comment.who}
-                  <span className="pboard-comment-badge">{frame.comment.n}</span>
-                </span>
-                <span className="pboard-comment-text"><ChatCircle size={13} weight="fill" color={frame.accent.primary} /> Looks great</span>
-              </motion.div>
-            )}
-          </div>
-
-          {/* title + subtitle */}
-          <h3 className="pboard-title">{frame.name}</h3>
-          <p className="pboard-sub">{frame.subtitle}</p>
-
-          {/* tag stickies */}
-          <div className="pboard-stickies">
-            {frame.tags.map((t, i) => (
-              <span key={t} className="pboard-sticky" style={{ background: stik, transform: `rotate(${i % 2 ? 2 : -2}deg)` }}>{t}</span>
-            ))}
-          </div>
-
-          {/* CTA */}
-          <span className="pboard-cta">
-            View case study
-            <span className="pboard-cta-line"><span className="pboard-cta-fill" data-on={hovered} /></span>
-            <ArrowUpRight size={16} weight="bold" aria-hidden className="pboard-cta-arrow" data-on={hovered} />
-          </span>
-        </Link>
-      </div>
-    </motion.div>
+    </div>
   );
 }
 
 /* ═══════════════════════════ Main ════════════════════════════════ */
 export default function ProjectsBoard() {
   const reduce = useReducedMotion() ?? false;
+  const rootRef = useRef<HTMLElement>(null);
+  const revealedRef = useRef(false);
   const [deck, setDeck] = useState<Deck>("product");
   const frames = deck === "product" ? productFrames : archFrames;
   const tools = deck === "product" ? PRODUCT_TOOLS : ARCH_TOOLS;
 
+  /* GSAP — header reveal (once) + background-mesh parallax. Targets persistent elements. */
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      const mm = gsap.matchMedia();
+      mm.add("(prefers-reduced-motion: no-preference)", () => {
+        gsap.from(".pboard-head, .pboard-notes, .pboard-stat, .pboard-switcher", {
+          y: 22, autoAlpha: 0, duration: 0.7, ease: "power3.out", stagger: 0.08,
+          scrollTrigger: { trigger: rootRef.current, start: "top 80%", once: true },
+        });
+        gsap.to(".pboard-bg", {
+          yPercent: 16, ease: "none",
+          scrollTrigger: { trigger: rootRef.current, start: "top bottom", end: "bottom top", scrub: true },
+        });
+      });
+    }, rootRef);
+    return () => ctx.revert();
+  }, []);
+
+  /* GSAP — frame reveals + per-mockup parallax + comment-pin bob. Re-bound on every deck
+     switch (the frames remount). First run waits for scroll; later runs animate at once. */
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      const mm = gsap.matchMedia();
+      mm.add("(prefers-reduced-motion: no-preference)", () => {
+        const frameEls = gsap.utils.toArray<HTMLElement>(".pboard-frame-wrap");
+        if (!revealedRef.current) {
+          gsap.from(frameEls, {
+            y: 48, autoAlpha: 0, duration: 0.85, ease: "power3.out", stagger: 0.12,
+            scrollTrigger: { trigger: ".pboard-grid", start: "top 85%", once: true },
+          });
+        } else {
+          gsap.from(frameEls, { y: 30, autoAlpha: 0, duration: 0.55, ease: "power3.out", stagger: 0.1 });
+          gsap.from(".pboard-count, .pboard-notes", { autoAlpha: 0, y: 8, duration: 0.4, stagger: 0.05 });
+        }
+        gsap.utils.toArray<HTMLElement>(".pboard-mockup").forEach((el) => {
+          gsap.fromTo(el, { yPercent: -4 }, {
+            yPercent: 4, ease: "none",
+            scrollTrigger: { trigger: el, start: "top bottom", end: "bottom top", scrub: 0.5 },
+          });
+        });
+        gsap.utils.toArray<HTMLElement>(".pboard-comment").forEach((el) => {
+          gsap.to(el, { y: -5, duration: 3.2, repeat: -1, yoyo: true, ease: "sine.inOut" });
+        });
+      });
+      revealedRef.current = true;
+    }, rootRef);
+    return () => ctx.revert();
+  }, [deck]);
+
   return (
-    <section id="projects" className="pboard-section" style={{ scrollMarginTop: 96 }} aria-label="Selected work">
+    <section ref={rootRef} id="projects" className="pboard-section" style={{ scrollMarginTop: 96 }} aria-label="Selected work">
       <div className="pboard-bg" aria-hidden />
       <div className="pboard-inner">
         {/* board header */}
@@ -238,34 +287,12 @@ export default function ProjectsBoard() {
             <Selection size={19} weight="bold" color={MIRO_BLUE} aria-hidden />
             <span>Selected Work</span>
           </div>
-          <AnimatePresence mode="wait">
-            <motion.span
-              key={deck}
-              className="pboard-count"
-              initial={{ opacity: 0, y: -4 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.22 }}
-            >
-              {String(frames.length).padStart(2, "0")} frames
-            </motion.span>
-          </AnimatePresence>
+          <span className="pboard-count">{String(frames.length).padStart(2, "0")} frames</span>
         </div>
 
         {/* intro + stats */}
         <div className="pboard-intro">
-          <AnimatePresence mode="wait">
-            <motion.p
-              key={deck}
-              className="pboard-notes"
-              initial={reduce ? { opacity: 0 } : { opacity: 0, y: 6 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.26 }}
-            >
-              {DECK_META[deck].intro}
-            </motion.p>
-          </AnimatePresence>
+          <p className="pboard-notes">{DECK_META[deck].intro}</p>
           <div className="pboard-stats">
             {DECK_META[deck].stats.map(([v, l]) => (
               <div key={l} className="pboard-stat">
@@ -296,18 +323,9 @@ export default function ProjectsBoard() {
         </div>
 
         {/* frames grid */}
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={deck}
-            className="pboard-grid"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.25 }}
-          >
-            {frames.map((f, i) => <BoardFrame key={f.slug} frame={f} index={i} reduce={reduce} />)}
-          </motion.div>
-        </AnimatePresence>
+        <div className="pboard-grid">
+          {frames.map((f, i) => <BoardFrame key={f.slug} frame={f} index={i} reduce={reduce} />)}
+        </div>
 
         {/* footer: tools + end marker */}
         <div className="pboard-foot">
