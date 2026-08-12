@@ -364,15 +364,15 @@ html {
 }
 .pboard-heading-text { position: relative; z-index: 1; }
 
-/* Intro + stat pills */
-.pboard-intro { display: flex; align-items: flex-end; justify-content: space-between; gap: 28px; flex-wrap: wrap; margin: 26px 0 30px; }
+/* Intro + stat pills (pills = right-aligned column; big gap before the switcher) */
+.pboard-intro { display: flex; align-items: flex-start; justify-content: space-between; gap: 40px; margin: 28px 0 clamp(48px, 6vw, 74px); }
 .pboard-notes {
-  max-width: 620px; margin: 0; padding-left: 16px;
+  flex: 1 1 auto; min-width: 0; max-width: 620px; margin: 0; padding-left: 16px;
   border-left: 2px solid rgba(9, 30, 66, 0.10);
   font-family: 'Manrope', system-ui, sans-serif; font-style: italic;
   font-size: clamp(16px, 1.4vw, 20px); line-height: 1.55; color: #54545F;
 }
-.pboard-stats { display: flex; flex-wrap: wrap; gap: 10px; }
+.pboard-stats { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; flex-shrink: 0; }
 .pboard-stat {
   display: inline-flex; align-items: baseline; gap: 8px;
   padding: 10px 16px; border-radius: 999px;
@@ -389,34 +389,34 @@ html {
   position: relative;
   display: inline-flex;
   gap: 2px;
-  padding: 5px;
+  padding: 6px;
   margin-bottom: clamp(40px, 5vw, 60px);
-  background: rgba(255, 255, 255, 0.55);
+  background: rgba(255, 255, 255, 0.6);
   -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
-  border: 1px solid rgba(9, 30, 66, 0.08);
+  border: 1px solid rgba(9, 30, 66, 0.09);
   border-radius: 999px;
-  box-shadow: 0 1px 3px rgba(9, 30, 66, 0.05);
+  box-shadow: 0 2px 6px rgba(9, 30, 66, 0.06);
 }
 .pboard-switch-ind {
-  position: absolute; top: 5px; left: 0; bottom: 5px;
+  position: absolute; top: 6px; left: 0; bottom: 6px;
   border-radius: 999px;
   background: #fff;
-  box-shadow: 0 2px 8px rgba(9,30,66,0.14), 0 1px 2px rgba(9,30,66,0.08);
+  box-shadow: 0 3px 10px rgba(9,30,66,0.15), 0 1px 2px rgba(9,30,66,0.09);
   visibility: hidden;
   z-index: 0;
   pointer-events: none;
 }
 .pboard-tab {
   position: relative; z-index: 1;
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 10px 22px; border: none; border-radius: 999px; background: transparent;
-  font-family: 'Manrope', system-ui, sans-serif; font-size: 13.5px; font-weight: 600;
+  display: inline-flex; align-items: center; gap: 9px;
+  padding: 13px 28px; border: none; border-radius: 999px; background: transparent;
+  font-family: 'Manrope', system-ui, sans-serif; font-size: 15px; font-weight: 600; letter-spacing: -0.01em;
   color: #6B6B75; cursor: pointer;
   transition: color 220ms ease;
 }
 .pboard-tab[data-active="true"] { color: #1A1A2E; }
 .pboard-tab:hover { color: #1A1A2E; }
-.pboard-tab-count { font-family: 'Manrope', system-ui, sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 0.08em; color: #8A8F9C; }
+.pboard-tab-count { font-family: 'Manrope', system-ui, sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; color: #8A8F9C; }
 .pboard-tab[data-active="true"] .pboard-tab-count { color: #4262FF; }
 
 /* Cards grid */
@@ -483,19 +483,32 @@ html {
 .pboard-cta-arrow { transition: transform 220ms cubic-bezier(0.16,1,0.3,1); }
 .pboard-cta-arrow[data-on="true"] { transform: translate(2px, -2px); }
 
-/* Footer */
-.pboard-foot { display: flex; flex-direction: column; gap: 16px; margin-top: clamp(44px, 5vw, 64px); padding-top: 20px; border-top: 1px solid rgba(9, 30, 66, 0.08); }
-.pboard-tools { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-.pboard-tools-label { font-size: 9.5px; color: #54545F; white-space: nowrap; }
-.pboard-tools-list { display: flex; flex-wrap: wrap; gap: 6px; flex: 1; }
-.pboard-tool-chip { padding: 5px 11px; background: rgba(255,255,255,0.9); border: 1px solid rgba(9, 30, 66, 0.07); border-radius: 8px; box-shadow: 0 1px 2px rgba(9,30,66,0.04); font-family: 'Manrope', system-ui, sans-serif; font-size: 11px; font-weight: 600; color: #54545F; }
+/* Footer — shared-stack ticker (auto-scrolling brand logos) */
+.pboard-foot { display: flex; flex-direction: column; gap: 16px; margin-top: clamp(44px, 5vw, 64px); padding-top: 22px; border-top: 1px solid rgba(9, 30, 66, 0.08); }
+.pboard-foot-label { font-size: 10px; color: #54545F; white-space: nowrap; }
+.pboard-ticker {
+  position: relative; overflow: hidden; width: 100%;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+          mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+}
+.pboard-ticker-track { display: inline-flex; gap: 12px; will-change: transform; }
+.pboard-ticker-item {
+  display: inline-flex; align-items: center; gap: 9px;
+  padding: 10px 16px; border-radius: 999px;
+  background: #fff; border: 1px solid rgba(9, 30, 66, 0.08);
+  box-shadow: 0 1px 3px rgba(9,30,66,0.05);
+  white-space: nowrap; flex-shrink: 0;
+}
+.pboard-ticker-item span { font-family: 'Manrope', system-ui, sans-serif; font-size: 13px; font-weight: 600; color: #1A1A2E; }
 
 /* Desktop: two-column cards */
 @media (min-width: 1024px) { .pboard-grid { grid-template-columns: 1fr 1fr; } }
-/* Small screens: full-width switcher */
+/* Small screens: full-width switcher; stack the intro, pills back to a row */
 @media (max-width: 640px) {
   .pboard-switcher { display: flex; width: 100%; }
-  .pboard-tab { flex: 1; justify-content: center; }
+  .pboard-tab { flex: 1; justify-content: center; padding: 13px 16px; }
+  .pboard-intro { flex-direction: column; align-items: flex-start; gap: 20px; }
+  .pboard-stats { flex-direction: row; flex-wrap: wrap; align-items: flex-start; }
 }
 /* Very small screens: let the headline wrap instead of overflowing */
 @media (max-width: 500px) {

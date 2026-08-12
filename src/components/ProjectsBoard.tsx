@@ -6,7 +6,11 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
   ArrowUpRightIcon as ArrowUpRight,
   ChatCircleIcon as ChatCircle,
+  CursorClickIcon as CursorClick,
+  SunIcon as Sun,
+  CameraIcon as Camera,
 } from "@phosphor-icons/react";
+import { siFigma, siFramer, siSwift, siRive, siMiro, siNotion, siJira, siAutodesk, siSketchup, siBlender } from "simple-icons";
 import { projects, type Project, type ProjectAccent } from "../data/projects";
 import { ProjectHeroStage } from "./ProjectHeroStage";
 
@@ -28,11 +32,11 @@ function stickyColor(discipline: string): string {
 
 /* ─── Moving background blobs (GSAP-animated cool-pastel field) ─────── */
 const BLOBS = [
-  { c: "rgba(158,197,246,0.60)", x: "14%", y: "22%", s: 520, dx: 46, dy: 34, d: 17 },
-  { c: "rgba(200,180,239,0.54)", x: "82%", y: "26%", s: 460, dx: -54, dy: 40, d: 20 },
-  { c: "rgba(183,228,155,0.46)", x: "70%", y: "80%", s: 520, dx: -40, dy: -44, d: 22 },
-  { c: "rgba(246,169,208,0.40)", x: "24%", y: "84%", s: 420, dx: 50, dy: -34, d: 19 },
-  { c: "rgba(150,190,255,0.34)", x: "50%", y: "52%", s: 460, dx: 34, dy: 46, d: 24 },
+  { c: "rgba(158,197,246,0.60)", x: "14%", y: "22%", s: 520, dx: 90, dy: 64, d: 13 },
+  { c: "rgba(200,180,239,0.54)", x: "82%", y: "26%", s: 460, dx: -104, dy: 74, d: 15 },
+  { c: "rgba(183,228,155,0.46)", x: "70%", y: "80%", s: 520, dx: -84, dy: -88, d: 16 },
+  { c: "rgba(246,169,208,0.40)", x: "24%", y: "84%", s: 420, dx: 96, dy: -66, d: 14 },
+  { c: "rgba(150,190,255,0.34)", x: "50%", y: "52%", s: 460, dx: 72, dy: 92, d: 17 },
 ];
 
 /* ─── Frame model (normalises product + architecture) ─────────────── */
@@ -97,8 +101,28 @@ const archFrames: Frame[] = [
   },
 ];
 
-const PRODUCT_TOOLS = ["Figma", "Framer", "ProtoPie", "SwiftUI", "Rive", "FigJam", "User Research", "Design Systems", "Prototyping"];
-const ARCH_TOOLS = ["AutoCAD", "SketchUp", "Lumion", "V-Ray", "Urban Planning", "Structural Drawing", "Physical Models", "Site Analysis"];
+/* Shared-stack ticker — real brand logos (simple-icons) where available, Phosphor fallback otherwise */
+type Brand = { path: string; hex: string; title: string };
+type Tool = { name: string; icon?: Brand; Fallback?: React.ElementType };
+const PRODUCT_TICKER: Tool[] = [
+  { name: "Figma", icon: siFigma },
+  { name: "FigJam", icon: siFigma },
+  { name: "Framer", icon: siFramer },
+  { name: "ProtoPie", Fallback: CursorClick },
+  { name: "Rive", icon: siRive },
+  { name: "SwiftUI", icon: siSwift },
+  { name: "Miro", icon: siMiro },
+  { name: "Notion", icon: siNotion },
+  { name: "Jira", icon: siJira },
+];
+const ARCH_TICKER: Tool[] = [
+  { name: "AutoCAD", icon: siAutodesk },
+  { name: "SketchUp", icon: siSketchup },
+  { name: "Blender", icon: siBlender },
+  { name: "Lumion", Fallback: Sun },
+  { name: "V-Ray", Fallback: Camera },
+  { name: "Autodesk", icon: siAutodesk },
+];
 
 /* Section framing copy — no em dashes; headline highlight is the last phrase. */
 const DECK_META: Record<Deck, { intro: string; stats: [string, string][]; headStart: string; headEnd: string }> = {
@@ -119,6 +143,58 @@ const DECK_META: Record<Deck, { intro: string; stats: [string, string][]; headSt
 };
 
 const mono: React.CSSProperties = { fontFamily: FONT, textTransform: "uppercase", letterSpacing: "0.16em" };
+
+/* ─── Brand logo (or Phosphor fallback) ───────────────────────────── */
+function BrandIcon({ tool, size = 18 }: { tool: Tool; size?: number }) {
+  if (tool.icon) {
+    return (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill={`#${tool.icon.hex}`} aria-hidden style={{ flexShrink: 0 }}>
+        <path d={tool.icon.path} />
+      </svg>
+    );
+  }
+  if (tool.Fallback) {
+    const F = tool.Fallback;
+    return <F size={size} weight="regular" color="#6B6B75" aria-hidden style={{ flexShrink: 0 }} />;
+  }
+  return null;
+}
+
+/* ─── Shared-stack ticker (seamless GSAP marquee, pauses on hover) ──── */
+function Ticker({ tools }: { tools: Tool[] }) {
+  const trackRef = useRef<HTMLDivElement>(null);
+  const tweenRef = useRef<gsap.core.Tween | null>(null);
+  const items = [...tools, ...tools]; // duplicated for a seamless -50% loop
+
+  useLayoutEffect(() => {
+    const el = trackRef.current;
+    if (!el) return;
+    const ctx = gsap.context(() => {
+      const mm = gsap.matchMedia();
+      mm.add("(prefers-reduced-motion: no-preference)", () => {
+        tweenRef.current = gsap.to(el, { xPercent: -50, duration: 32, ease: "none", repeat: -1 });
+      });
+    });
+    return () => ctx.revert();
+  }, [tools]);
+
+  return (
+    <div
+      className="pboard-ticker"
+      onMouseEnter={() => tweenRef.current?.pause()}
+      onMouseLeave={() => tweenRef.current?.play()}
+    >
+      <div ref={trackRef} className="pboard-ticker-track">
+        {items.map((t, i) => (
+          <div key={i} className="pboard-ticker-item" aria-hidden={i >= tools.length}>
+            <BrandIcon tool={t} />
+            <span>{t.name}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 /* ─── Mockup visual (product composition or arch photo) ───────────── */
 function FrameVisual({ frame, hovered }: { frame: Frame; hovered: boolean }) {
@@ -227,7 +303,6 @@ export default function ProjectsBoard() {
   const switchReadyRef = useRef(false);
   const [deck, setDeck] = useState<Deck>("product");
   const frames = deck === "product" ? productFrames : archFrames;
-  const tools = deck === "product" ? PRODUCT_TOOLS : ARCH_TOOLS;
   const meta = DECK_META[deck];
 
   /* GSAP — header reveal (once) + moving background blobs + mesh parallax. Persistent elements. */
@@ -242,13 +317,14 @@ export default function ProjectsBoard() {
         // continuously drifting colour blobs — the moving background (paused when off-screen)
         const blobTweens = gsap.utils.toArray<HTMLElement>(".pboard-blob").map((el, i) => {
           const b = BLOBS[i];
-          return gsap.to(el, { x: b ? b.dx : 0, y: b ? b.dy : 0, scale: 1.14, duration: b ? b.d : 20, repeat: -1, yoyo: true, ease: "sine.inOut", delay: i * 0.5, paused: true });
+          return gsap.to(el, { x: b ? b.dx : 0, y: b ? b.dy : 0, scale: 1.2, duration: b ? b.d : 15, repeat: -1, yoyo: true, ease: "sine.inOut", delay: i * 0.4 });
         });
         const blobST = ScrollTrigger.create({
           trigger: rootRef.current, start: "top bottom", end: "bottom top",
           onToggle: (self) => blobTweens.forEach((t) => (self.isActive ? t.play() : t.pause())),
         });
-        if (blobST.isActive) blobTweens.forEach((t) => t.play());
+        // default to playing; pause only if the section isn't in view yet
+        if (!blobST.isActive) blobTweens.forEach((t) => t.pause());
         // slow parallax on the whole field as the section scrolls
         gsap.to(".pboard-bg", {
           yPercent: 14, ease: "none",
@@ -374,15 +450,10 @@ export default function ProjectsBoard() {
           {frames.map((f) => <BoardFrame key={f.slug} frame={f} reduce={reduce} />)}
         </div>
 
-        {/* footer: tools */}
+        {/* footer: shared-stack ticker */}
         <div className="pboard-foot">
-          <div className="pboard-tools">
-            <span className="pboard-tools-label" style={mono}>Shared&nbsp;Stack</span>
-            <div className="pboard-tools-list">
-              {tools.map((t) => <span key={t} className="pboard-tool-chip">{t}</span>)}
-            </div>
-            <span className="pboard-tools-label" style={mono}>{String(tools.length).padStart(2, "0")}&nbsp;Tools</span>
-          </div>
+          <span className="pboard-foot-label" style={mono}>Shared&nbsp;Stack</span>
+          <Ticker key={deck} tools={deck === "product" ? PRODUCT_TICKER : ARCH_TICKER} />
         </div>
       </div>
     </section>
