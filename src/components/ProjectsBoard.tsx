@@ -230,6 +230,7 @@ export default function ProjectsBoard() {
 
   return (
     <section id="projects" className="pboard-section" style={{ scrollMarginTop: 96 }} aria-label="Selected work">
+      <div className="pboard-bg" aria-hidden />
       <div className="pboard-inner">
         {/* board header */}
         <div className="pboard-head">

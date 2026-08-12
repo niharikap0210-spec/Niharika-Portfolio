@@ -675,6 +675,9 @@ export default function MiroHero() {
         Pick a tool, then click the canvas to add · drag to move
       </div>
 
+      {/* Soft fade-out at the hero's base so it feeds naturally into the next section */}
+      <div aria-hidden className="hero-fade-out" />
+
       {/* ── Custom collaborator-style cursor (a labelled Miro pointer) ── */}
       <CursorProvider>
         <HeroCursor>
