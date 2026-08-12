@@ -1,73 +1,99 @@
+import { useRef, useLayoutEffect } from "react";
 import { Link } from "react-router-dom";
 import {
-  LinkedinLogoIcon as LinkedinLogo,
   EnvelopeSimpleIcon as EnvelopeSimple,
-  FileArrowDownIcon as FileArrowDown,
   ArrowUpIcon as ArrowUp,
 } from "@phosphor-icons/react";
-import type { Icon } from "@phosphor-icons/react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-const socials: { icon: Icon; href: string; label: string }[] = [
-  { icon: LinkedinLogo, href: "https://www.linkedin.com/in/niharika-pundlik-63a9a1288/", label: "LinkedIn" },
-  { icon: EnvelopeSimple, href: "mailto:niharikap0210@gmail.com", label: "Email" },
-  { icon: FileArrowDown, href: "https://drive.google.com/file/d/1wXRAfG2Os-Kbt9WtR1W2ET0YSC9HRoaf/view?usp=sharing", label: "Resume" },
+gsap.registerPlugin(ScrollTrigger);
+
+const EMAIL = "mailto:niharikap0210@gmail.com";
+const LINKEDIN = "https://www.linkedin.com/in/niharika-pundlik-63a9a1288/";
+const RESUME = "https://drive.google.com/file/d/1wXRAfG2Os-Kbt9WtR1W2ET0YSC9HRoaf/view?usp=sharing";
+
+const pages = [
+  { label: "Home", href: "/" },
+  { label: "Work", href: "/#projects" },
+  { label: "About", href: "/about" },
+];
+const elsewhere = [
+  { label: "LinkedIn", href: LINKEDIN },
+  { label: "Email", href: EMAIL },
+  { label: "Resume", href: RESUME },
 ];
 
-const navLinks: { href: string; label: string; internal: boolean }[] = [
-  { href: "/#projects", label: "Work", internal: true },
-  { href: "/about", label: "About", internal: true },
-  { href: "https://drive.google.com/file/d/1wXRAfG2Os-Kbt9WtR1W2ET0YSC9HRoaf/view?usp=sharing", label: "Resume", internal: false },
-  { href: "mailto:niharikap0210@gmail.com", label: "Contact", internal: false },
-];
+const isHttp = (h: string) => h.startsWith("http");
 
-const isHttp = (href: string) => href.startsWith("http");
-
+/* Combined "Let's connect" + site footer (global, on every page) */
 export default function Footer() {
+  const rootRef = useRef<HTMLElement>(null);
+
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      const mm = gsap.matchMedia();
+      mm.add("(prefers-reduced-motion: no-preference)", () => {
+        gsap.from(".cfooter-reveal", {
+          y: 26, autoAlpha: 0, duration: 0.7, ease: "power3.out", stagger: 0.09,
+          scrollTrigger: { trigger: rootRef.current, start: "top 85%", once: true },
+        });
+      });
+    }, rootRef);
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <footer className="site-footer">
-      <div className="site-footer-inner">
-        {/* brand + nav */}
-        <div className="site-footer-top">
-          <Link to="/" className="site-footer-brand" aria-label="Niharika Pundlik — home">
-            <span className="site-footer-logo">NP</span>
-            <span className="site-footer-name">Niharika Pundlik</span>
-          </Link>
-          <nav className="site-footer-nav" aria-label="Footer">
-            {navLinks.map((l) =>
-              l.internal ? (
-                <Link key={l.label} to={l.href} className="site-footer-link">{l.label}</Link>
-              ) : (
-                <a key={l.label} href={l.href} target={isHttp(l.href) ? "_blank" : undefined} rel={isHttp(l.href) ? "noopener noreferrer" : undefined} className="site-footer-link">{l.label}</a>
-              )
-            )}
-          </nav>
+    <footer ref={rootRef} id="connect" className="cfooter" aria-label="Let's connect">
+      <span className="cfooter-mark" aria-hidden>Niharika</span>
+
+      <div className="cfooter-inner">
+        <div className="cfooter-grid">
+          {/* CTA */}
+          <div className="cfooter-cta cfooter-reveal">
+            <span className="cfooter-kicker"><span className="cfooter-kicker-dot" />Let's Connect</span>
+            <h2 className="cfooter-heading">
+              Let's build something{" "}
+              <span className="cfooter-hl">
+                <span className="cfooter-hl-mark" aria-hidden />
+                <span className="cfooter-hl-text">together.</span>
+              </span>
+            </h2>
+            <p className="cfooter-sub">
+              Open to full-time Product Design roles, thoughtful side projects, and good conversations about turning architectural thinking into digital products.
+            </p>
+            <a className="cfooter-btn" href={EMAIL}>
+              <EnvelopeSimple size={18} weight="bold" aria-hidden /> Get in touch
+            </a>
+          </div>
+
+          {/* nav columns */}
+          <div className="cfooter-cols cfooter-reveal">
+            <div className="cfooter-col">
+              <span className="cfooter-col-title">Pages</span>
+              {pages.map((p) => (
+                <Link key={p.label} to={p.href} className="cfooter-link">{p.label}</Link>
+              ))}
+            </div>
+            <div className="cfooter-col">
+              <span className="cfooter-col-title">Elsewhere</span>
+              {elsewhere.map((l) => (
+                <a key={l.label} href={l.href} target={isHttp(l.href) ? "_blank" : undefined} rel={isHttp(l.href) ? "noopener noreferrer" : undefined} className="cfooter-link">{l.label}</a>
+              ))}
+            </div>
+          </div>
         </div>
 
-        {/* copyright + socials + back to top */}
-        <div className="site-footer-bottom">
-          <span className="site-footer-copy">© 2026 Niharika Pundlik · Product Designer, architect by training</span>
-          <div className="site-footer-bottom-right">
-            <div className="site-footer-socials">
-              {socials.map((s) => {
-                const Ico = s.icon;
-                return (
-                  <a
-                    key={s.label}
-                    href={s.href}
-                    target={isHttp(s.href) ? "_blank" : undefined}
-                    rel={isHttp(s.href) ? "noopener noreferrer" : undefined}
-                    aria-label={s.label}
-                    className="site-footer-social"
-                  >
-                    <Ico size={18} weight="regular" aria-hidden />
-                  </a>
-                );
-              })}
-            </div>
-            <button className="site-footer-toptop" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
-              Back to top <ArrowUp size={14} weight="bold" aria-hidden />
-            </button>
-          </div>
+        {/* bottom bar */}
+        <div className="cfooter-bottom cfooter-reveal">
+          <Link to="/" className="cfooter-brand" aria-label="Niharika Pundlik — home">
+            <span className="cfooter-logo">NP</span>
+            <span className="cfooter-name">Niharika Pundlik</span>
+          </Link>
+          <span className="cfooter-copy">© 2026 · Product Designer, architect by training</span>
+          <button className="cfooter-toptop" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
+            Back to top <ArrowUp size={14} weight="bold" aria-hidden />
+          </button>
         </div>
       </div>
     </footer>

@@ -347,11 +347,8 @@ export default function ProjectsBoard() {
         });
         // default to playing; pause only if the section isn't in view yet
         if (!blobST.isActive) blobTweens.forEach((t) => t.pause());
-        // slow parallax on the whole field as the section scrolls
-        gsap.to(".pboard-bg", {
-          yPercent: 14, ease: "none",
-          scrollTrigger: { trigger: rootRef.current, start: "top bottom", end: "bottom top", scrub: true },
-        });
+        // NOTE: no scroll-parallax on .pboard-bg — translating it pushed the mask's bottom
+        // fade-out below the section, which read as a hard line at the seam below.
       });
     }, rootRef);
     return () => ctx.revert();

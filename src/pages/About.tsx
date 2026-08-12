@@ -8,7 +8,6 @@ import {
   MapPinIcon,
 } from "@phosphor-icons/react";
 import HandDrawnSketch from "../components/HandDrawnSketch";
-import ConnectSection from "../components/ConnectSection";
 
 const mono: React.CSSProperties = {
   fontFamily: "'Manrope', monospace",
@@ -1267,7 +1266,6 @@ export default function About() {
       <MyApproach />
       <Experience />
       <OffDuty />
-      <ConnectSection />
     </motion.div>
   );
 }
