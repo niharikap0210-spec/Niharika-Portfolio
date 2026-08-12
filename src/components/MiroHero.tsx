@@ -261,17 +261,17 @@ export default function MiroHero() {
 
         // ── Soft, endless life ──
         gsap.to(".hero-sparkles", { scale: 1.14, rotation: 6, transformOrigin: "50% 50%", duration: 1.7, repeat: -1, yoyo: true, ease: "sine.inOut", delay: 2.9, force3D: true });
-        // The hand gives a small, periodic wave — one keyframes tween so it carries
-        // momentum through center instead of stalling at each tilt.
+        // The hand gives a small, periodic wave — one keyframes tween, each tilt eased
+        // so the swing stays soft; rests at 0 between cycles via repeatDelay.
         gsap.set(".hero-wave-hand", { transformOrigin: "62% 88%" });
         gsap.to(".hero-wave-hand", {
           keyframes: [
-            { rotation: 17, duration: 0.2 },
-            { rotation: -11, duration: 0.28 },
-            { rotation: 14, duration: 0.26 },
-            { rotation: 0, duration: 0.22 },
+            { rotation: 17, duration: 0.2, ease: "sine.inOut" },
+            { rotation: -11, duration: 0.28, ease: "sine.inOut" },
+            { rotation: 14, duration: 0.26, ease: "sine.inOut" },
+            { rotation: 0, duration: 0.22, ease: "sine.inOut" },
           ],
-          ease: "none", repeat: -1, repeatDelay: 3.4, delay: 1.4, force3D: true,
+          repeat: -1, repeatDelay: 3.4, delay: 1.4, force3D: true,
         });
 
         // Floating cursor drift — continuous through waypoints (ease:none per segment),

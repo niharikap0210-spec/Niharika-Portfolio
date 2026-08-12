@@ -189,6 +189,12 @@ function Ticker({ tools }: { tools: Tool[] }) {
           xPercent: -50, ease: "none", repeat: -1,
           duration: el.scrollWidth / 2 / 60, force3D: true,
         });
+        // Recompute pacing once the web font swaps in (the seam stays correct regardless —
+        // xPercent is a live %; this only keeps the ~60px/s speed accurate).
+        document.fonts?.ready.then(() => {
+          const t = trackRef.current;
+          if (t && tweenRef.current) tweenRef.current.duration(t.scrollWidth / 2 / 60);
+        });
       });
     });
     return () => ctx.revert();

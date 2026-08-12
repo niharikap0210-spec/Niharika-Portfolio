@@ -213,6 +213,7 @@ export default function Nav() {
                       <Link
                         to={item.href}
                         onClick={(e) => e.stopPropagation()}
+                        aria-current={isActive(item) ? "page" : undefined}
                         style={{ ...linkBase, color, fontWeight: LINK_WEIGHT }}
                         className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded"
                       >
@@ -331,6 +332,7 @@ export default function Nav() {
                     ) : (
                       <Link
                         to={item.href}
+                        aria-current={active ? "page" : undefined}
                         style={{
                           fontFamily: "'Manrope', Georgia, serif",
                           fontSize: 36,

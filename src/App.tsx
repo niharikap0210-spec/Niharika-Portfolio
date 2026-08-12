@@ -26,9 +26,19 @@ function AnimatedRoutes() {
     // committed + painted (keeps the persistent Footer's trigger correct too).
     <AnimatePresence
       mode="wait"
-      onExitComplete={() =>
-        requestAnimationFrame(() => requestAnimationFrame(() => ScrollTrigger.refresh()))
-      }
+      onExitComplete={() => {
+        // Reset scroll AFTER the outgoing page has faded out (mode="wait"), so a page
+        // left while scrolled doesn't visibly snap to its top mid-transition. Force
+        // "instant": the root has scroll-behavior:smooth, and a smooth reset gets
+        // interrupted by the incoming mount and never lands. Skip anchor navigations —
+        // ScrollManager scrolls those to their #hash target.
+        const toTop = () => window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior });
+        if (!window.location.hash) {
+          toTop();
+          requestAnimationFrame(() => { if (!window.location.hash) toTop(); });
+        }
+        requestAnimationFrame(() => requestAnimationFrame(() => ScrollTrigger.refresh()));
+      }}
     >
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<Home />} />
