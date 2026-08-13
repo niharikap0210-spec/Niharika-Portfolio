@@ -1,6 +1,7 @@
-import { motion, AnimatePresence, useScroll, useSpring, useInView, useMotionValue, useTransform, animate } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useSpring, useInView } from "framer-motion";
 import { Link } from "react-router-dom";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { gsap, ScrollTrigger } from "../lib/gsap";
 import {
   ArrowUpIcon as ArrowUp,
   QuotesIcon as Quotes,
@@ -72,6 +73,77 @@ const SECTION_PAD = "clamp(72px, 9vw, 120px) 0";
 const TOTAL_SECTIONS = "08";
 
 /* ══════════════════════════════════════════════════════════════════
+   GRADIENT FIELD — grainy, light-blue drifting mesh (alternating section bg).
+   Mirrors the home "Selected Work" field, tinted to Veriflow blue. Sits behind
+   section content (z-index -1 inside an isolated section); GSAP-drifts, paused
+   off-screen. Feathered top & bottom so sections blend on the #FAFAFA base.
+══════════════════════════════════════════════════════════════════ */
+const VF_BLOBS = [
+  { c: "rgba(59,130,246,0.26)",  x: "16%", y: "24%", s: 460, dx: 72,  dy: 52,  d: 15 },
+  { c: "rgba(147,197,253,0.34)", x: "84%", y: "22%", s: 420, dx: -86, dy: 62,  d: 17 },
+  { c: "rgba(30,64,175,0.14)",   x: "72%", y: "82%", s: 480, dx: -66, dy: -74, d: 16 },
+  { c: "rgba(96,165,250,0.22)",  x: "26%", y: "84%", s: 400, dx: 80,  dy: -56, d: 14 },
+];
+
+function GradientField() {
+  const ref = useRef<HTMLDivElement>(null);
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const ctx = gsap.context(() => {
+      const mm = gsap.matchMedia();
+      mm.add("(prefers-reduced-motion: no-preference)", () => {
+        const blobs = gsap.utils.toArray<HTMLElement>(".vf-blob", el);
+        const tweens = blobs.map((b, i) => {
+          const cfg = VF_BLOBS[i];
+          return gsap.to(b, { x: cfg ? cfg.dx : 0, y: cfg ? cfg.dy : 0, duration: cfg ? cfg.d : 15, repeat: -1, yoyo: true, ease: "sine.inOut", delay: i * 0.4, force3D: true });
+        });
+        const st = ScrollTrigger.create({
+          trigger: el, start: "top bottom", end: "bottom top",
+          onToggle: (self) => tweens.forEach((tw) => (self.isActive ? tw.play() : tw.pause())),
+        });
+        if (!st.isActive) tweens.forEach((tw) => tw.pause());
+      });
+    }, ref);
+    return () => ctx.revert();
+  }, []);
+  return (
+    <div ref={ref} className="vf-field" aria-hidden>
+      {VF_BLOBS.map((b, i) => (
+        <span key={i} className="vf-blob" style={{
+          left: b.x, top: b.y, width: b.s, height: b.s, marginLeft: -b.s / 2, marginTop: -b.s / 2,
+          background: `radial-gradient(circle, ${b.c} 0%, transparent 70%)`,
+        }} />
+      ))}
+    </div>
+  );
+}
+
+/* A section that sits on the #FAFAFA base with the drifting blue field behind it. */
+function FieldSection({ children, id }: { children: React.ReactNode; id?: string }) {
+  return (
+    <section id={id} style={{
+      padding: SECTION_PAD, background: "var(--bg-primary)",
+      position: "relative", isolation: "isolate", overflow: "hidden",
+    }}>
+      <GradientField />
+      <div className="max-w-7xl mx-auto px-6 md:px-10" style={{ position: "relative", zIndex: 1 }}>
+        {children}
+      </div>
+    </section>
+  );
+}
+
+/* A plain section on the #FAFAFA base (alternates with FieldSection). */
+function PlainSection({ children, id }: { children: React.ReactNode; id?: string }) {
+  return (
+    <section id={id} style={{ padding: SECTION_PAD, background: "var(--bg-primary)" }}>
+      <div className="max-w-7xl mx-auto px-6 md:px-10">{children}</div>
+    </section>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════════════
    PRIMITIVES
 ══════════════════════════════════════════════════════════════════ */
 function Reveal({
@@ -90,22 +162,6 @@ function Reveal({
       {children}
     </motion.div>
   );
-}
-
-function CountUp({ value, suffix = "", duration = 1.4 }: { value: number; suffix?: string; duration?: number }) {
-  const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-40px" });
-  const mv = useMotionValue(0);
-  const [display, setDisplay] = useState("0");
-  useEffect(() => {
-    if (!inView) return;
-    const controls = animate(mv, value, {
-      duration, ease: [0.25, 1, 0.4, 1],
-      onUpdate: (v) => setDisplay(Math.round(v).toString()),
-    });
-    return () => controls.stop();
-  }, [inView, value, duration, mv]);
-  return <span ref={ref}>{display}{suffix}</span>;
 }
 
 function SectionHeader({
@@ -135,17 +191,12 @@ function SectionHeader({
         >
           {phase}
         </motion.span>
-        <motion.div
-          initial={{ scaleX: 0 }}
-          animate={inView ? { scaleX: 1 } : {}}
-          transition={{ delay: 0.15, duration: 0.9, ease: [0.25, 1, 0.4, 1] }}
-          style={{ flex: 1, height: 1, background: vf.primary, opacity: 0.55, transformOrigin: "left", minWidth: 40 }}
-        />
+        <div aria-hidden style={{ flex: 1, height: 1, background: vf.primary, opacity: 0.4, minWidth: 40 }} />
       </div>
       <motion.h2
         initial={{ opacity: 0, y: 12 }}
         animate={inView ? { opacity: 1, y: 0 } : {}}
-        transition={{ delay: 0.22, duration: 0.8, ease: [0.25, 1, 0.4, 1] }}
+        transition={{ delay: 0.12, duration: 0.7, ease: [0.25, 1, 0.4, 1] }}
         style={{ ...t.h2Section, marginTop: 20, maxWidth: 860 }}
       >
         {title}
@@ -219,10 +270,10 @@ function AnimatedTabletFrame({ src, alt }: { src: string; alt: string }) {
           <motion.img
             key={src}
             src={src} alt={alt} loading="lazy"
-            initial={{ opacity: 0, scale: 1.015 }}
-            animate={{ opacity: 1, scale: 1 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.45, ease: [0.25, 1, 0.4, 1] }}
+            transition={{ duration: 0.4, ease: [0.25, 1, 0.4, 1] }}
             style={{ position: "absolute", inset: 0, width: "100%", height: "100%", display: "block", objectFit: "cover" }}
           />
         </AnimatePresence>
@@ -301,10 +352,8 @@ function TVFrame({ src, alt }: { src: string; alt: string }) {
           padding: "3px 8px", borderRadius: 3, backdropFilter: "blur(2px)", WebkitBackdropFilter: "blur(2px)",
           display: "flex", alignItems: "center", gap: 6,
         }}>
-          <motion.span
+          <span
             aria-hidden
-            animate={{ opacity: [1, 0.3, 1] }}
-            transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
             style={{ width: 6, height: 6, borderRadius: "50%", background: vf.flag }}
           />
           LAB · LIVE
@@ -368,7 +417,6 @@ function TabletStepper({ steps, figPrefix }: { steps: Step[]; figPrefix: string 
               <li key={i}>
                 <button
                   onClick={() => setActive(i)}
-                  onMouseEnter={() => setActive(i)}
                   aria-current={isActive}
                   style={{
                     width: "100%", textAlign: "left",
@@ -442,20 +490,18 @@ function StepperBtn({ disabled, onClick, dir }: { disabled: boolean; onClick: ()
         display: "flex", alignItems: "center", justifyContent: "center",
         cursor: disabled ? "not-allowed" : "pointer",
         opacity: disabled ? 0.4 : 1,
-        transition: "background-color 200ms, border-color 200ms, transform 200ms",
+        transition: "background-color 200ms, border-color 200ms",
       }}
       onMouseEnter={(e) => {
         if (disabled) return;
         e.currentTarget.style.background = vf.primary;
         e.currentTarget.style.borderColor = vf.primary;
-        e.currentTarget.style.transform = "scale(1.05)";
         e.currentTarget.querySelector("svg")?.setAttribute("color", "#fff");
       }}
       onMouseLeave={(e) => {
         if (disabled) return;
         e.currentTarget.style.background = "var(--bg-elevated)";
         e.currentTarget.style.borderColor = vf.subtle;
-        e.currentTarget.style.transform = "scale(1)";
         e.currentTarget.querySelector("svg")?.setAttribute("color", vf.primary);
       }}
     >
@@ -496,11 +542,7 @@ function OverrideTimeline() {
             <div key={i} style={{
               display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "flex-start",
             }}>
-              <motion.span
-                initial={{ scale: 0 }}
-                whileInView={{ scale: 1 }}
-                viewport={{ once: true, margin: "-40px" }}
-                transition={{ delay: 0.1 * i + 0.2, duration: 0.5, ease: [0.25, 1, 0.4, 1] }}
+              <span
                 style={{
                   width: 14, height: 14, borderRadius: "50%",
                   background: "#fff", border: `2px solid ${s.color}`,
@@ -607,7 +649,6 @@ function OverrideTimeline() {
    BEFORE → AFTER BAND: wide editorial contrast
 ══════════════════════════════════════════════════════════════════ */
 function BeforeAfterBand() {
-  const [hover, setHover] = useState<"before" | "after" | null>(null);
   return (
     <div style={{ marginTop: "clamp(40px, 5vw, 64px)" }}>
       <div style={{ ...mono, fontSize: 13, color: vf.primary, letterSpacing: "0.22em", fontWeight: 700, marginBottom: 20, display: "flex", alignItems: "center", gap: 10 }}>
@@ -625,20 +666,12 @@ function BeforeAfterBand() {
         overflow: "hidden",
       }}>
         {/* BEFORE */}
-        <motion.div
-          onHoverStart={() => setHover("before")}
-          onHoverEnd={() => setHover(null)}
-          style={{
-            padding: "clamp(28px, 3.2vw, 44px)",
-            position: "relative",
-            background: hover === "before" ? `${vf.flag}08` : "transparent",
-            transition: "background 300ms",
-          }}
-        >
+        <div style={{
+          padding: "clamp(28px, 3.2vw, 44px)",
+          position: "relative",
+        }}>
           <span aria-hidden style={{
-            position: "absolute", top: 0, left: 0, bottom: 0, width: 3, background: vf.flag,
-            transform: hover === "before" ? "scaleY(1)" : "scaleY(0.25)",
-            transformOrigin: "top", transition: "transform 400ms ease-out",
+            position: "absolute", top: 0, left: 0, bottom: 0, width: 3, background: vf.flag, opacity: 0.5,
           }} />
           <div style={{
             ...mono, fontSize: 12, color: vf.flag, letterSpacing: "0.22em", fontWeight: 700,
@@ -646,7 +679,6 @@ function BeforeAfterBand() {
           }}>
             <span style={{
               width: 7, height: 7, borderRadius: "50%", background: vf.flag,
-              animation: hover === "before" ? "status-pulse 1.8s ease-in-out infinite" : "none",
             }} />
             BEFORE
           </div>
@@ -664,7 +696,7 @@ function BeforeAfterBand() {
           }}>
             Clipboards, phone calls, last-mile uncertainty. The cooler left at 9am and you hoped it arrived.
           </p>
-        </motion.div>
+        </div>
 
         {/* DIVIDER with arrow */}
         <div className="ba-divider" style={{
@@ -675,34 +707,22 @@ function BeforeAfterBand() {
           background: "var(--bg-primary)",
           minWidth: 72,
         }}>
-          <motion.div
-            animate={{ x: hover ? 4 : 0 }}
-            transition={{ duration: 0.35, ease: [0.25, 1, 0.4, 1] }}
-            style={{
-              width: 44, height: 44, borderRadius: "50%",
-              background: vf.primary, display: "flex", alignItems: "center", justifyContent: "center",
-              boxShadow: `0 4px 14px ${vf.primary}40`,
-            }}
-          >
+          <div style={{
+            width: 44, height: 44, borderRadius: "50%",
+            background: vf.primary, display: "flex", alignItems: "center", justifyContent: "center",
+            boxShadow: `0 4px 14px ${vf.primary}40`,
+          }}>
             <ArrowRight size={20} color="#fff" weight="bold" />
-          </motion.div>
+          </div>
         </div>
 
         {/* AFTER */}
-        <motion.div
-          onHoverStart={() => setHover("after")}
-          onHoverEnd={() => setHover(null)}
-          style={{
-            padding: "clamp(28px, 3.2vw, 44px)",
-            position: "relative",
-            background: hover === "after" ? `${vf.status}08` : "transparent",
-            transition: "background 300ms",
-          }}
-        >
+        <div style={{
+          padding: "clamp(28px, 3.2vw, 44px)",
+          position: "relative",
+        }}>
           <span aria-hidden style={{
-            position: "absolute", top: 0, right: 0, bottom: 0, width: 3, background: vf.status,
-            transform: hover === "after" ? "scaleY(1)" : "scaleY(0.25)",
-            transformOrigin: "top", transition: "transform 400ms ease-out",
+            position: "absolute", top: 0, right: 0, bottom: 0, width: 3, background: vf.status, opacity: 0.5,
           }} />
           <div style={{
             ...mono, fontSize: 12, color: vf.status, letterSpacing: "0.22em", fontWeight: 700,
@@ -710,7 +730,6 @@ function BeforeAfterBand() {
           }}>
             <span style={{
               width: 7, height: 7, borderRadius: "50%", background: vf.status,
-              animation: hover === "after" ? "status-pulse 1.8s ease-in-out infinite" : "none",
             }} />
             AFTER
           </div>
@@ -728,7 +747,7 @@ function BeforeAfterBand() {
           }}>
             Every handoff signed. Every sample watchable in real time. Every override an audit event.
           </p>
-        </motion.div>
+        </div>
       </div>
       <style>{`
         @media (max-width: 760px) {
@@ -754,19 +773,12 @@ function RoleRow({ index, line }: { index: number; line: string }) {
         gridTemplateColumns: "auto 1fr",
         gap: 20,
         alignItems: "center",
-        padding: "20px 18px 20px 0",
+        padding: "20px 0",
         borderBottom: `1px solid var(--border-light)`,
         position: "relative",
         cursor: "default",
-        transition: "padding-left 300ms ease-out",
-        paddingLeft: hovered ? 16 : 0,
       }}
     >
-      <span aria-hidden style={{
-        position: "absolute", left: 0, top: "50%", transform: "translateY(-50%)",
-        width: 3, height: hovered ? "70%" : "0%", background: vf.primary,
-        transition: "height 320ms ease-out",
-      }} />
       <span style={{
         ...mono, fontSize: 13, fontWeight: 700,
         color: hovered ? vf.primary : "var(--text-muted)",
@@ -778,8 +790,8 @@ function RoleRow({ index, line }: { index: number; line: string }) {
       <span style={{
         fontFamily: sans, fontSize: 18,
         color: hovered ? "var(--text-primary)" : "var(--text-secondary)",
-        lineHeight: 1.55, fontWeight: hovered ? 500 : 400,
-        transition: "color 240ms, font-weight 240ms",
+        lineHeight: 1.55,
+        transition: "color 240ms",
       }}>
         {line}
       </span>
@@ -793,9 +805,9 @@ function RoleRow({ index, line }: { index: number; line: string }) {
 function LessonCard({ index, title, body, tag }: { index: number; title: string; body: string; tag: string }) {
   const [hovered, setHovered] = useState(false);
   return (
-    <motion.div
-      onHoverStart={() => setHovered(true)}
-      onHoverEnd={() => setHovered(false)}
+    <div
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
       style={{
         position: "relative",
         padding: "clamp(20px, 2.4vw, 28px)",
@@ -806,14 +818,7 @@ function LessonCard({ index, title, body, tag }: { index: number; title: string;
         transition: "border-color 240ms",
         overflow: "hidden",
       }}
-      animate={{ y: hovered ? -3 : 0 }}
-      transition={{ duration: 0.35, ease: [0.25, 1, 0.4, 1] }}
     >
-      <span aria-hidden style={{
-        position: "absolute", top: 0, left: 0, bottom: 0, width: 3, background: vf.primary,
-        transform: hovered ? "scaleY(1)" : "scaleY(0)",
-        transformOrigin: "center", transition: "transform 380ms ease-out",
-      }} />
       <div style={{
         display: "flex", alignItems: "baseline", justifyContent: "space-between",
         marginBottom: 14, gap: 12,
@@ -824,16 +829,12 @@ function LessonCard({ index, title, body, tag }: { index: number; title: string;
         }}>
           L.0{index + 1}
         </span>
-        <motion.span
-          animate={{ opacity: hovered ? 1 : 0, x: hovered ? 0 : 6 }}
-          transition={{ duration: 0.3 }}
-          style={{
-            ...mono, fontSize: 11, fontWeight: 700,
-            color: vf.muted, letterSpacing: "0.22em",
-          }}
-        >
+        <span style={{
+          ...mono, fontSize: 11, fontWeight: 700,
+          color: vf.muted, letterSpacing: "0.22em",
+        }}>
           {tag}
-        </motion.span>
+        </span>
       </div>
       <div style={{
         fontFamily: serif, fontWeight: 700,
@@ -849,7 +850,7 @@ function LessonCard({ index, title, body, tag }: { index: number; title: string;
       }}>
         {body}
       </p>
-    </motion.div>
+    </div>
   );
 }
 
@@ -885,16 +886,15 @@ function SystemDiagram() {
         {nodes.map((n, i) => {
           const pad = "clamp(22px, 2.2vw, 30px)";
           return (
-          <motion.div
+          <div
             key={n.label}
-            onHoverStart={() => setHover(i)}
-            onHoverEnd={() => setHover(null)}
+            onMouseEnter={() => setHover(i)}
+            onMouseLeave={() => setHover(null)}
             style={{
               background: "#fff",
               border: `1px solid ${hover === i ? vf.primary : vf.subtle}`, borderRadius: 6,
               position: "relative",
-              transition: "border-color 240ms, transform 240ms",
-              transform: hover === i ? "translateY(-4px)" : "translateY(0)",
+              transition: "border-color 240ms",
               cursor: "default",
               overflow: "hidden",
             }}
@@ -940,11 +940,9 @@ function SystemDiagram() {
             }}>
               <img src={n.preview} alt="" style={{
                 width: "100%", height: "100%", objectFit: "cover",
-                transform: hover === i ? "scale(1.04)" : "scale(1)",
-                transition: "transform 500ms ease-out",
               }} />
             </div>
-          </motion.div>
+          </div>
           );
         })}
       </div>
@@ -1021,18 +1019,10 @@ function PrincipleCard({
         background: "var(--bg-elevated)",
         border: `1px solid ${hovered ? vf.primary : vf.subtle}`, borderRadius: 6,
         position: "relative", height: "100%",
-        transform: hovered ? "translateY(-4px)" : "translateY(0)",
-        transition: "border-color 240ms, transform 240ms",
+        transition: "border-color 240ms",
         cursor: "default",
       }}
     >
-      <span aria-hidden style={{
-        position: "absolute", top: 0, left: 0, right: 0, height: 2,
-        background: vf.primary,
-        transform: hovered ? "scaleX(1)" : "scaleX(0)",
-        transformOrigin: "left",
-        transition: "transform 320ms ease-out",
-      }} />
       <div style={{
         position: "absolute", top: 16, right: 18,
         ...mono, fontSize: 12, color: vf.muted, letterSpacing: "0.16em",
@@ -1070,14 +1060,11 @@ function GapRow({
 }: {
   index: number; Icon: Icon; k: string; t: string;
 }) {
-  const [hovered, setHovered] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-40px" });
   return (
     <motion.div
       ref={ref}
-      onHoverStart={() => setHovered(true)}
-      onHoverEnd={() => setHovered(false)}
       initial={{ opacity: 0, y: 16 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ delay: index * 0.12, duration: 0.7, ease: [0.25, 1, 0.4, 1] }}
@@ -1092,29 +1079,14 @@ function GapRow({
         position: "relative",
       }}
     >
-      {/* Sweep indicator on hover */}
-      <motion.span
-        aria-hidden
-        initial={false}
-        animate={{ scaleX: hovered ? 1 : 0 }}
-        transition={{ duration: 0.5, ease: [0.25, 1, 0.4, 1] }}
-        style={{
-          position: "absolute", left: 0, right: 0, bottom: -1, height: 2,
-          background: vf.flag, transformOrigin: "left",
-        }}
-      />
       {/* Big serif numeral in flag color */}
-      <motion.div
-        animate={{ x: hovered ? 6 : 0 }}
-        transition={{ duration: 0.4, ease: [0.25, 1, 0.4, 1] }}
-        style={{
-          fontFamily: serif, fontWeight: 700,
-          fontSize: "clamp(64px, 7.5vw, 104px)",
-          color: vf.flag, letterSpacing: "-0.045em", lineHeight: 0.9,
-        }}
-      >
+      <div style={{
+        fontFamily: serif, fontWeight: 700,
+        fontSize: "clamp(64px, 7.5vw, 104px)",
+        color: vf.flag, letterSpacing: "-0.045em", lineHeight: 0.9,
+      }}>
         {String(index + 1).padStart(2, "0")}
-      </motion.div>
+      </div>
 
       {/* Title + body */}
       <div>
@@ -1138,19 +1110,14 @@ function GapRow({
       </div>
 
       {/* Icon ornament, circular outlined */}
-      <motion.div
-        animate={{ rotate: hovered ? 8 : 0, scale: hovered ? 1.05 : 1 }}
-        transition={{ duration: 0.45, ease: [0.25, 1, 0.4, 1] }}
-        style={{
-          width: 60, height: 60, borderRadius: "50%",
-          border: `1px solid ${hovered ? vf.flag : vf.subtle}`,
-          display: "flex", alignItems: "center", justifyContent: "center",
-          flexShrink: 0,
-          transition: "border-color 240ms",
-        }}
-      >
-        <IconComp size={24} color={hovered ? vf.flag : vf.primary} weight="regular" />
-      </motion.div>
+      <div style={{
+        width: 60, height: 60, borderRadius: "50%",
+        border: `1px solid ${vf.subtle}`,
+        display: "flex", alignItems: "center", justifyContent: "center",
+        flexShrink: 0,
+      }}>
+        <IconComp size={24} color={vf.primary} weight="regular" />
+      </div>
 
       <style>{`
         @media (max-width: 720px) {
@@ -1279,30 +1246,6 @@ function JourneyIllustration() {
           />
         ))}
 
-        {/* Travelling cooler: sits at Hand 01 → travels to Hand 03 → Hand 05 → loops */}
-        <motion.g
-          initial={{ x: 0, opacity: 0 }}
-          animate={inView ? {
-            x:       [0, 0,    nodes[1].x - nodes[0].x, nodes[1].x - nodes[0].x, nodes[2].x - nodes[0].x, nodes[2].x - nodes[0].x, nodes[2].x - nodes[0].x],
-            opacity: [1, 1,    1,                        1,                        1,                        1,                        0],
-          } : {}}
-          transition={{
-            duration: 6.4,
-            times:   [0, 0.08, 0.38,                     0.5,                      0.82,                     0.92,                     1],
-            ease: [0.25, 1, 0.4, 1],
-            repeat: Infinity,
-            repeatDelay: 0.4,
-            delay: 1.6,
-          }}
-        >
-          <rect x={nodes[0].x - 18} y="155" width="36" height="30" rx="3"
-            fill={vf.primary} opacity="0.95" />
-          <rect x={nodes[0].x - 11} y="150" width="22" height="5" rx="1" fill={vf.primary} />
-          <line x1={nodes[0].x - 7} y1="167" x2={nodes[0].x + 7} y2="167"
-            stroke="#fff" strokeWidth="1.3" strokeLinecap="round" />
-          <line x1={nodes[0].x - 7} y1="175" x2={nodes[0].x + 7} y2="175"
-            stroke="#fff" strokeWidth="1.3" strokeLinecap="round" />
-        </motion.g>
       </svg>
       <div style={{
         marginTop: 18, ...mono, fontSize: 13, color: vf.primary, letterSpacing: "0.22em",
@@ -1317,105 +1260,6 @@ function JourneyIllustration() {
 /* ══════════════════════════════════════════════════════════════════
    HERO MOCKUPS: laptop + tablet with mouse-parallax
 ══════════════════════════════════════════════════════════════════ */
-function HeroMockups() {
-  const wrapRef = useRef<HTMLDivElement>(null);
-  const mx = useMotionValue(0);
-  const my = useMotionValue(0);
-  const laptopX = useSpring(mx, { stiffness: 60, damping: 18 });
-  const laptopY = useSpring(my, { stiffness: 60, damping: 18 });
-  const tabletX = useSpring(mx, { stiffness: 80, damping: 16 });
-  const tabletY = useSpring(my, { stiffness: 80, damping: 16 });
-
-  const handleMove = (e: React.MouseEvent) => {
-    const el = wrapRef.current;
-    if (!el) return;
-    const r = el.getBoundingClientRect();
-    const nx = ((e.clientX - r.left) / r.width - 0.5) * 2;
-    const ny = ((e.clientY - r.top) / r.height - 0.5) * 2;
-    mx.set(nx);
-    my.set(ny);
-  };
-  const handleLeave = () => { mx.set(0); my.set(0); };
-
-  return (
-    <motion.div
-      ref={wrapRef}
-      onMouseMove={handleMove}
-      onMouseLeave={handleLeave}
-      className="md:col-span-7"
-      initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.6, duration: 1.0, ease: [0.25, 1, 0.4, 1] }}
-      style={{ position: "relative", width: "100%", minWidth: 0 }}
-    >
-      <div aria-hidden style={{
-        position: "absolute", inset: "-8% -6%",
-        background: `radial-gradient(55% 55% at 55% 50%, ${vf.light} 0%, ${vf.primary} 40%, rgba(30,64,175,0) 72%)`,
-        filter: "blur(40px)", opacity: 0.4, zIndex: 0, pointerEvents: "none",
-      }} />
-      <div aria-hidden style={{
-        position: "absolute", left: "-10%", top: "15%",
-        width: "55%", height: "55%",
-        background: `radial-gradient(circle, ${vf.primary} 0%, rgba(30,64,175,0) 70%)`,
-        filter: "blur(40px)", opacity: 0.35, zIndex: 0, pointerEvents: "none",
-      }} />
-
-      {/* Laptop: main focal object, subtle cursor-parallax */}
-      <motion.div
-        style={{
-          position: "relative", zIndex: 2,
-          width: "94%", marginLeft: "6%",
-          willChange: "transform",
-          x: useTransform(laptopX, (v) => v * 10),
-          y: useTransform(laptopY, (v) => v * 8),
-          rotateX: useTransform(laptopY, (v) => v * -2),
-          rotateY: useTransform(laptopX, (v) => v * 2),
-          transformPerspective: 1200,
-        }}
-      >
-        <motion.div
-          animate={{ y: [0, -6, 0] }}
-          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-          style={{ filter: "drop-shadow(0 24px 48px rgba(15,42,120,0.2))" }}
-        >
-          <LaptopFrame src="/veriflow/home.png" alt="Veriflow admin, multi-hospital dashboard" />
-        </motion.div>
-      </motion.div>
-
-      {/* Tablet, overlaps bottom-right, larger to feel proportionate to the laptop */}
-      <motion.div
-        className="vf-hero-tablet"
-        style={{
-          position: "absolute",
-          right: "-5%", bottom: "-18%",
-          width: "50%",
-          zIndex: 3,
-          willChange: "transform",
-          transformOrigin: "center",
-          x: useTransform(tabletX, (v) => v * -16),
-          y: useTransform(tabletY, (v) => v * -14),
-          rotateX: useTransform(tabletY, (v) => v * 3),
-          rotateY: useTransform(tabletX, (v) => v * -3),
-          transformPerspective: 1000,
-        }}
-      >
-        <motion.div
-          animate={{ y: [0, -10, 0], rotate: [-1.2, -0.4, -1.2] }}
-          transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
-          style={{ filter: "drop-shadow(0 28px 56px rgba(15,42,120,0.32))" }}
-        >
-          <TabletFrame src="/veriflow/start-scanning.png" alt="Veriflow clinic tablet" />
-        </motion.div>
-      </motion.div>
-      <style>{`
-        @media (max-width: 767px) {
-          .vf-hero-section { height: auto !important; min-height: calc(100svh - 56px); overflow: visible !important; padding-bottom: 28px; }
-          .vf-hero-tablet { bottom: -4% !important; right: 0% !important; }
-        }
-      `}</style>
-    </motion.div>
-  );
-}
-
 /* ══════════════════════════════════════════════════════════════════
    COOLER SKETCH: hand-drawn blueprint-style illustration
 ══════════════════════════════════════════════════════════════════ */
@@ -1575,9 +1419,7 @@ function NavCard({ project }: { project: Project }) {
             repeating-linear-gradient(0deg, ${pa.primary}10 0, ${pa.primary}10 1px, transparent 1px, transparent 48px),
             repeating-linear-gradient(90deg, ${pa.primary}10 0, ${pa.primary}10 1px, transparent 1px, transparent 48px)
           `,
-          opacity: hover ? 0.7 : 0.45,
-          transitionProperty: "opacity",
-          transitionDuration: "400ms",
+          opacity: 0.45,
           pointerEvents: "none",
           zIndex: 1,
         }}
@@ -1594,22 +1436,18 @@ function NavCard({ project }: { project: Project }) {
           padding: "clamp(18px, 2vw, 26px) clamp(22px, 2.4vw, 32px) clamp(22px, 2.4vw, 30px)",
         }}
       >
-        <motion.p
-          animate={{ y: hover ? -2 : 0 }}
-          transition={{ type: "spring", stiffness: 240, damping: 22 }}
-          style={{
-            fontFamily: serif,
-            fontWeight: 700,
-            fontSize: "clamp(28px, 3vw, 42px)",
-            letterSpacing: "-0.025em",
-            lineHeight: 1.05,
-            color: "var(--text-primary)",
-            margin: 0,
-            marginBottom: 14,
-          }}
-        >
+        <p style={{
+          fontFamily: serif,
+          fontWeight: 700,
+          fontSize: "clamp(28px, 3vw, 42px)",
+          letterSpacing: "-0.025em",
+          lineHeight: 1.05,
+          color: "var(--text-primary)",
+          margin: 0,
+          marginBottom: 14,
+        }}>
           {project.title}
-        </motion.p>
+        </p>
 
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <span
@@ -1675,14 +1513,24 @@ export default function VeriflowCase() {
       {/* ══════════════════════════════════════════════════════════════
           00 · HERO: laptop (admin web) + tablet overlay
       ══════════════════════════════════════════════════════════════ */}
-      <section className="blueprint-grid vf-hero-section" style={{
+      <section className="vf-hero-section" style={{
         position: "relative",
+        isolation: "isolate",
         height: "calc(var(--vh, 1vh) * 100 - 56px)",
         minHeight: 640,
         display: "flex",
         flexDirection: "column",
         overflow: "hidden",
+        background: "var(--bg-primary)",
       }}>
+        <GradientField />
+        <style>{`
+          @media (max-width: 767px) {
+            .vf-hero-section { height: auto !important; min-height: calc(100svh - 56px); overflow: visible !important; padding-bottom: 28px; }
+            .vf-hero-devices { padding-bottom: 8px !important; margin-top: 12px; }
+            .vf-hero-tablet { bottom: -4% !important; right: 0% !important; }
+          }
+        `}</style>
         <motion.div
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.05, duration: 0.5 }}
           className="max-w-7xl mx-auto px-6 md:px-10"
@@ -1779,7 +1627,7 @@ export default function VeriflowCase() {
                   letterSpacing: "-0.01em",
                 }}
               >
-                Specimen chain-of-custody. <span style={{ color: vf.primary }}>Tap, verify, hand off</span>
+                Specimen chain-of-custody. <span style={{ color: vf.primary }}>Tap, verify, hand off</span>{" "}
                 across a clinic tablet, a web control tower, and a lab wall.
               </motion.p>
 
@@ -1813,8 +1661,29 @@ export default function VeriflowCase() {
               </motion.div>
             </div>
 
-            {/* RIGHT: laptop (admin web) + floating tablet overlay, both react to cursor */}
-            <HeroMockups />
+            {/* RIGHT: composed, static laptop + tablet — one gentle entrance, no parallax/float */}
+            <motion.div
+              className="md:col-span-7 vf-hero-devices"
+              initial={{ opacity: 0, y: 26 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.35, duration: 0.95, ease: [0.25, 1, 0.4, 1] }}
+              style={{ position: "relative", minWidth: 0, paddingBottom: "clamp(24px, 6vw, 64px)" }}
+            >
+              <div aria-hidden style={{
+                position: "absolute", inset: "-8% -6%",
+                background: `radial-gradient(56% 56% at 56% 44%, ${vf.light} 0%, ${vf.primary} 42%, rgba(30,64,175,0) 72%)`,
+                filter: "blur(48px)", opacity: 0.16, zIndex: 0, pointerEvents: "none",
+              }} />
+              <div style={{ position: "relative", zIndex: 1, width: "min(100%, 620px)", marginLeft: "auto" }}>
+                <LaptopFrame src="/veriflow/dashboard.png" alt="Veriflow web control tower" />
+                <div className="vf-hero-tablet" style={{
+                  position: "absolute", right: "-3%", bottom: "-12%",
+                  width: "42%", maxWidth: 300, zIndex: 2, transform: "rotate(-3deg)",
+                }}>
+                  <TabletFrame src="/veriflow/start-scanning.png" alt="Veriflow clinic tablet" />
+                </div>
+              </div>
+            </motion.div>
           </div>
         </div>
 
@@ -1827,20 +1696,16 @@ export default function VeriflowCase() {
             paddingBottom: "clamp(14px, 1.6vw, 22px)",
           }}
         >
-          <motion.div
-            animate={{ y: [0, 5, 0] }}
-            transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-            style={{
-              display: "inline-flex", alignItems: "center", gap: 10,
-              ...mono, fontSize: 10, letterSpacing: "0.22em",
-              color: "var(--text-secondary)",
-            }}
-          >
+          <div style={{
+            display: "inline-flex", alignItems: "center", gap: 10,
+            ...mono, fontSize: 10, letterSpacing: "0.22em",
+            color: "var(--text-secondary)",
+          }}>
             Scroll
             <svg width="12" height="12" viewBox="0 0 16 16" fill="none">
               <path d="M8 3v10M4 9l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
-          </motion.div>
+          </div>
         </motion.div>
       </section>
 
@@ -1952,7 +1817,7 @@ export default function VeriflowCase() {
                     fontSize: "clamp(56px, 7vw, 96px)",
                     color: vf.flag, letterSpacing: "-0.045em", lineHeight: 0.95,
                   }}>
-                    <CountUp value={c.n} suffix={c.suffix} />
+                    {c.n}{c.suffix}
                   </div>
                   <div style={{ ...mono, fontSize: 13, color: vf.flag, letterSpacing: "0.22em", fontWeight: 700 }}>
                     {c.k}
@@ -1996,8 +1861,9 @@ export default function VeriflowCase() {
       {/* ══════════════════════════════════════════════════════════════
           02 · SYSTEM
       ══════════════════════════════════════════════════════════════ */}
-      <section className="blueprint-grid-subtle" style={{ padding: SECTION_PAD }}>
-        <div className="max-w-7xl mx-auto px-6 md:px-10">
+      <section style={{ padding: SECTION_PAD, background: "var(--bg-primary)", position: "relative", isolation: "isolate", overflow: "hidden" }}>
+        <GradientField />
+        <div className="max-w-7xl mx-auto px-6 md:px-10" style={{ position: "relative", zIndex: 1 }}>
           <Reveal><SectionHeader num="02" phase="The system" title="Three surfaces, one unbroken chain." /></Reveal>
 
           <Reveal>
@@ -2056,8 +1922,9 @@ export default function VeriflowCase() {
       {/* ══════════════════════════════════════════════════════════════
           04 · CLINIC FLOW
       ══════════════════════════════════════════════════════════════ */}
-      <section className="blueprint-grid-subtle" style={{ padding: SECTION_PAD }}>
-        <div className="max-w-7xl mx-auto px-6 md:px-10">
+      <section style={{ padding: SECTION_PAD, background: "var(--bg-primary)", position: "relative", isolation: "isolate", overflow: "hidden" }}>
+        <GradientField />
+        <div className="max-w-7xl mx-auto px-6 md:px-10" style={{ position: "relative", zIndex: 1 }}>
           <Reveal>
             <SectionHeader num="04" phase="Flow · Clinic" title="A. Association. Tube becomes a trackable object." />
           </Reveal>
@@ -2142,8 +2009,9 @@ export default function VeriflowCase() {
       {/* ══════════════════════════════════════════════════════════════
           06 · BEYOND THE KIOSKS (web, laptop mockups)
       ══════════════════════════════════════════════════════════════ */}
-      <section className="blueprint-grid-subtle" style={{ padding: SECTION_PAD }}>
-        <div className="max-w-7xl mx-auto px-6 md:px-10">
+      <section style={{ padding: SECTION_PAD, background: "var(--bg-primary)", position: "relative", isolation: "isolate", overflow: "hidden" }}>
+        <GradientField />
+        <div className="max-w-7xl mx-auto px-6 md:px-10" style={{ position: "relative", zIndex: 1 }}>
           <Reveal>
             <SectionHeader num="06" phase="Beyond the kiosks" title="The kiosks handle the handoff. Everything else lives on the web." />
           </Reveal>
@@ -2190,25 +2058,25 @@ export default function VeriflowCase() {
       {/* ══════════════════════════════════════════════════════════════
           07 · AMBIENT TV
       ══════════════════════════════════════════════════════════════ */}
-      <section style={{ padding: SECTION_PAD, background: vf.ink, color: "#fff" }}>
+      <section style={{ padding: SECTION_PAD, background: "var(--bg-primary)" }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <div style={{ marginBottom: "clamp(40px, 5vw, 64px)" }}>
             <div style={{
               display: "flex", alignItems: "baseline", gap: 18, flexWrap: "wrap", paddingBottom: 14,
             }}>
-              <span style={{ ...mono, fontSize: 14, color: vf.light, letterSpacing: "0.22em", fontWeight: 700 }}>
-                07 <span style={{ color: "rgba(255,255,255,0.4)", fontWeight: 400 }}>/ {TOTAL_SECTIONS}</span>
+              <span style={{ ...mono, fontSize: 14, color: vf.primary, letterSpacing: "0.22em", fontWeight: 700 }}>
+                07 <span style={{ color: "var(--text-muted)", fontWeight: 400 }}>/ {TOTAL_SECTIONS}</span>
               </span>
-              <span style={{ ...mono, fontSize: 14, color: "#fff", letterSpacing: "0.22em", fontWeight: 600 }}>
+              <span style={{ ...mono, fontSize: 14, color: "var(--text-primary)", letterSpacing: "0.22em", fontWeight: 600 }}>
                 AMBIENT · THE WALL
               </span>
-              <div style={{ flex: 1, height: 1, background: vf.light, opacity: 0.4, minWidth: 40 }} />
+              <div aria-hidden style={{ flex: 1, height: 1, background: vf.primary, opacity: 0.4, minWidth: 40 }} />
             </div>
             <h2 style={{
               fontFamily: serif, fontWeight: 700,
               fontSize: "clamp(30px, 3.6vw, 44px)",
               letterSpacing: "-0.025em", lineHeight: 1.2,
-              color: "#fff", marginTop: 20, maxWidth: 860,
+              color: "var(--text-primary)", marginTop: 20, maxWidth: 860,
             }}>
               Readable across the room.
             </h2>
@@ -2225,24 +2093,24 @@ export default function VeriflowCase() {
               <div>
                 <h3 style={{
                   fontFamily: serif, fontWeight: 700, fontSize: "clamp(26px, 2.8vw, 34px)",
-                  letterSpacing: "-0.02em", lineHeight: 1.25, color: "#fff", marginBottom: 18,
+                  letterSpacing: "-0.02em", lineHeight: 1.25, color: "var(--text-primary)", marginBottom: 18,
                 }}>
                   Glance, don't click.
                 </h3>
-                <p style={{ fontFamily: sans, fontSize: 18, lineHeight: 1.75, color: "rgba(255,255,255,0.82)", marginBottom: 20 }}>
+                <p style={{ fontFamily: sans, fontSize: 18, lineHeight: 1.75, color: "var(--text-secondary)", marginBottom: 20 }}>
                   Break room, specimen receiving, the corridor outside the analyzer bay. No login, no filter.
                 </p>
-                <p style={{ fontFamily: sans, fontSize: 17, lineHeight: 1.7, color: "rgba(255,255,255,0.68)", marginBottom: 28 }}>
+                <p style={{ fontFamily: sans, fontSize: 17, lineHeight: 1.7, color: "var(--text-secondary)", marginBottom: 28 }}>
                   Color carries the pattern. Red overdue, green arrived, yellow in-transit, blue picked up.
                 </p>
                 <div style={{
-                  padding: "18px 22px", background: "rgba(255,255,255,0.05)",
-                  border: `1px solid rgba(255,255,255,0.12)`, borderRadius: 4,
+                  padding: "18px 22px", background: "var(--bg-elevated)",
+                  border: `1px solid ${vf.subtle}`, borderRadius: 4,
                 }}>
-                  <div style={{ ...mono, fontSize: 12, color: vf.light, letterSpacing: "0.2em", fontWeight: 700, marginBottom: 10 }}>
+                  <div style={{ ...mono, fontSize: 12, color: vf.primary, letterSpacing: "0.2em", fontWeight: 700, marginBottom: 10 }}>
                     DESIGN NOTE
                   </div>
-                  <div style={{ fontFamily: sans, fontSize: 17, color: "rgba(255,255,255,0.85)", lineHeight: 1.65 }}>
+                  <div style={{ fontFamily: sans, fontSize: 17, color: "var(--text-primary)", lineHeight: 1.65 }}>
                     Type sized for a six-foot viewing distance first. The table structure followed the type, not the other way around.
                   </div>
                 </div>
@@ -2258,8 +2126,9 @@ export default function VeriflowCase() {
       {/* ══════════════════════════════════════════════════════════════
           08 · ROLE + TAKEAWAYS
       ══════════════════════════════════════════════════════════════ */}
-      <section className="blueprint-grid-subtle" style={{ padding: SECTION_PAD }}>
-        <div className="max-w-7xl mx-auto px-6 md:px-10">
+      <section style={{ padding: SECTION_PAD, background: "var(--bg-primary)", position: "relative", isolation: "isolate", overflow: "hidden" }}>
+        <GradientField />
+        <div className="max-w-7xl mx-auto px-6 md:px-10" style={{ position: "relative", zIndex: 1 }}>
           <Reveal><SectionHeader num="08" phase="Role · Takeaways" title="What I owned, and what this project taught me." /></Reveal>
 
           {/* ── BEFORE → AFTER: wide contrast band ─────────────────── */}
