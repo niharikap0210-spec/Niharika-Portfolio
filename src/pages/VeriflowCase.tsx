@@ -173,6 +173,29 @@ function Reveal({
   return <div ref={ref} className={className}>{children}</div>;
 }
 
+/* GSAP number count-up on scroll (reduced-motion → final value). */
+function CountUp({ to, suffix = "", style }: { to: number; suffix?: string; style?: React.CSSProperties }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const ctx = gsap.context(() => {
+      const mm = gsap.matchMedia();
+      mm.add("(prefers-reduced-motion: no-preference)", () => {
+        const obj = { v: 0 };
+        el.textContent = "0" + suffix;
+        gsap.to(obj, {
+          v: to, duration: 1.5, ease: "power2.out",
+          onUpdate: () => { el.textContent = Math.round(obj.v) + suffix; },
+          scrollTrigger: { trigger: el, start: "top 90%", once: true },
+        });
+      });
+    }, ref);
+    return () => ctx.revert();
+  }, [to, suffix]);
+  return <span ref={ref} style={style}>{to}{suffix}</span>;
+}
+
 function SectionHeader({
   num, title, phase, total = TOTAL_SECTIONS,
 }: { num: string; title: string; phase: string; total?: string }) {
@@ -1766,18 +1789,63 @@ export default function VeriflowCase() {
             </Reveal>
           </div>
 
+          {/* The cost of invisibility — giant count-up stats */}
+          <Reveal delay={0.05}>
+            <div style={{
+              marginTop: "clamp(56px, 7vw, 88px)",
+              display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap", marginBottom: 24,
+            }}>
+              <span style={{ ...mono, fontSize: 12, color: vf.flag, letterSpacing: "0.22em", fontWeight: 700 }}>
+                THE COST OF INVISIBILITY
+              </span>
+              <span aria-hidden style={{ flex: 1, height: 1, background: vf.subtle, minWidth: 40 }} />
+            </div>
+          </Reveal>
+          <div className="vf-stat-band" style={{
+            display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+            borderTop: `1px solid ${vf.subtle}`, borderBottom: `1px solid ${vf.subtle}`,
+          }}>
+            {[
+              { n: 5,  suffix: "",  k: "Hands per sample", v: "between patient draw and pathologist screen." },
+              { n: 40, suffix: "m", k: "Invisible delay",  v: "before anyone notices a cooler is late." },
+              { n: 3,  suffix: "",  k: "Buildings",        v: "clinic, transit, lab. Three custody zones." },
+            ].map((c, i) => (
+              <Reveal key={c.k} delay={i * 0.08}>
+                <div className="vf-stat-cell" style={{
+                  padding: "clamp(34px, 4vw, 56px) clamp(18px, 3vw, 40px)",
+                  borderLeft: i > 0 ? `1px solid ${vf.subtle}` : undefined,
+                  display: "flex", flexDirection: "column", gap: 12, height: "100%",
+                }}>
+                  <div style={{
+                    fontFamily: serif, fontWeight: 700,
+                    fontSize: "clamp(64px, 8vw, 112px)",
+                    color: vf.flag, letterSpacing: "-0.05em", lineHeight: 0.88,
+                  }}>
+                    <CountUp to={c.n} suffix={c.suffix} />
+                  </div>
+                  <div style={{ ...mono, fontSize: 13, color: vf.flag, letterSpacing: "0.22em", fontWeight: 700 }}>
+                    {c.k}
+                  </div>
+                  <p style={{ fontFamily: sans, fontSize: 18, color: "var(--text-primary)", lineHeight: 1.6, margin: 0 }}>
+                    {c.v}
+                  </p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+
           {/* Journey illustration: clinic → courier → lab */}
-          <Reveal delay={0.08}>
-            <div style={{ marginTop: "clamp(56px, 7vw, 80px)" }}>
+          <Reveal delay={0.05}>
+            <div style={{ marginTop: "clamp(56px, 7vw, 88px)" }}>
               <JourneyIllustration />
             </div>
           </Reveal>
 
-          {/* Three gaps */}
+          {/* Three gaps — card grid (bold numerals + icon) */}
           <Reveal>
             <div style={{
-              marginTop: "clamp(56px, 7vw, 80px)",
-              display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap", marginBottom: 24,
+              marginTop: "clamp(56px, 7vw, 88px)",
+              display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap", marginBottom: 28,
             }}>
               <WarningCircle size={20} color={vf.flag} weight="regular" />
               <span style={{ ...mono, fontSize: 12, color: vf.flag, letterSpacing: "0.22em", fontWeight: 700 }}>
@@ -1786,75 +1854,54 @@ export default function VeriflowCase() {
               <span aria-hidden style={{ flex: 1, height: 1, background: vf.subtle, minWidth: 40 }} />
             </div>
           </Reveal>
-
-          {/* Editorial gap list: big numerals, horizontal rules, not cards */}
-          <div style={{ borderTop: `1px solid ${vf.subtle}` }}>
+          <div className="vf-gap-grid" style={{
+            display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+            gap: "clamp(16px, 2vw, 28px)",
+          }}>
             {[
               { Icon: FileText, k: "No trail",            t: "Handoffs had no record. Couriers scribbled cooler numbers on the same sheet every day." },
               { Icon: HandTap,  k: "Manual verification", t: "Pathologists matched sample IDs by eye. One digit off and the wrong lab received the tube." },
               { Icon: EyeSlash, k: "No live view",        t: "Labs had no forecast of incoming work. Staffing and storage were guesswork until a cooler arrived." },
             ].map((g, i) => (
-              <GapRow key={g.k} index={i} {...g} />
+              <Reveal key={g.k} delay={i * 0.1}>
+                <div style={{
+                  height: "100%", padding: "clamp(24px, 2.8vw, 34px)",
+                  background: "var(--bg-elevated)",
+                  border: `1px solid ${vf.subtle}`, borderTop: `2px solid ${vf.flag}`,
+                  display: "flex", flexDirection: "column",
+                }}>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 22 }}>
+                    <span style={{
+                      fontFamily: serif, fontWeight: 700, fontSize: "clamp(40px, 4.5vw, 60px)",
+                      color: vf.flag, letterSpacing: "-0.04em", lineHeight: 0.9,
+                    }}>
+                      0{i + 1}
+                    </span>
+                    <span style={{
+                      width: 48, height: 48, borderRadius: "50%", border: `1px solid ${vf.subtle}`,
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                    }}>
+                      <g.Icon size={22} color={vf.primary} weight="regular" />
+                    </span>
+                  </div>
+                  <h3 style={{
+                    fontFamily: serif, fontWeight: 700, fontSize: "clamp(20px, 2.1vw, 26px)",
+                    letterSpacing: "-0.02em", lineHeight: 1.25, color: "var(--text-primary)", marginBottom: 12,
+                  }}>
+                    {g.k}
+                  </h3>
+                  <p style={{ fontFamily: sans, fontSize: 17, lineHeight: 1.65, color: "var(--text-secondary)", margin: 0 }}>
+                    {g.t}
+                  </p>
+                </div>
+              </Reveal>
             ))}
           </div>
 
-          {/* Stat band: one flat horizontal band with thin dividers, no cards */}
-          <Reveal delay={0.08}>
-            <div className="vf-stat-band" style={{
-              marginTop: "clamp(40px, 5vw, 64px)",
-              display: "grid",
-              gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
-              padding: "clamp(32px, 4vw, 56px) 0",
-              borderTop: `1px solid ${vf.subtle}`,
-              borderBottom: `1px solid ${vf.subtle}`,
-              position: "relative",
-            }}>
-              {[
-                { n: 5,  suffix: "",   k: "Hands per sample",    v: "between patient draw and pathologist screen." },
-                { n: 40, suffix: "m",  k: "Invisible delay",     v: "before anyone notices a cooler is late." },
-                { n: 3,  suffix: "",   k: "Buildings",           v: "clinic, transit, lab. Three custody zones." },
-              ].map((c, i) => (
-                <motion.div
-                  key={c.k}
-                  initial={{ opacity: 0, y: 12 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-40px" }}
-                  transition={{ delay: i * 0.1, duration: 0.7, ease: [0.25, 1, 0.4, 1] }}
-                  style={{
-                    padding: "0 clamp(18px, 3vw, 40px)",
-                    borderLeft: i > 0 ? `1px solid ${vf.subtle}` : undefined,
-                    display: "flex", flexDirection: "column", gap: 12,
-                  }}
-                >
-                  <div style={{
-                    fontFamily: serif, fontWeight: 700,
-                    fontSize: "clamp(56px, 7vw, 96px)",
-                    color: vf.flag, letterSpacing: "-0.045em", lineHeight: 0.95,
-                  }}>
-                    {c.n}{c.suffix}
-                  </div>
-                  <div style={{ ...mono, fontSize: 13, color: vf.flag, letterSpacing: "0.22em", fontWeight: 700 }}>
-                    {c.k}
-                  </div>
-                  <p style={{ fontFamily: sans, fontSize: 18, color: "var(--text-primary)", lineHeight: 1.6, margin: 0 }}>
-                    {c.v}
-                  </p>
-                </motion.div>
-              ))}
-              <style>{`
-                @media (max-width: 820px) {
-                  .vf-stat-band { grid-template-columns: minmax(0, 1fr) !important; }
-                  .vf-stat-band > div { border-left: none !important; padding: 24px 0 !important; }
-                  .vf-stat-band > div + div { border-top: 1px solid ${vf.subtle}; }
-                }
-              `}</style>
-            </div>
-          </Reveal>
-
           {/* Mission rule */}
-          <Reveal delay={0.1}>
+          <Reveal delay={0.05}>
             <div style={{
-              marginTop: "clamp(48px, 6vw, 72px)",
+              marginTop: "clamp(48px, 6vw, 80px)",
               display: "flex", alignItems: "flex-start", gap: 16,
               paddingTop: 22, borderTop: "1px solid var(--border)",
             }}>
@@ -1862,13 +1909,20 @@ export default function VeriflowCase() {
               <p style={{
                 fontFamily: serif, fontStyle: "italic",
                 fontSize: "clamp(20px, 1.9vw, 26px)",
-                lineHeight: 1.45, color: "var(--text-primary)", margin: 0,
-                maxWidth: 820,
+                lineHeight: 1.45, color: "var(--text-primary)", margin: 0, maxWidth: 820,
               }}>
                 Veriflow replaces the clipboard with a verified tap at every handoff.
               </p>
             </div>
           </Reveal>
+
+          <style>{`
+            @media (max-width: 820px) {
+              .vf-stat-band { grid-template-columns: minmax(0, 1fr) !important; }
+              .vf-stat-cell { border-left: none !important; }
+              .vf-gap-grid { grid-template-columns: minmax(0, 1fr) !important; }
+            }
+          `}</style>
         </div>
       </section>
 
@@ -1888,7 +1942,66 @@ export default function VeriflowCase() {
             </p>
           </Reveal>
 
-          <Reveal delay={0.1}><SystemDiagram /></Reveal>
+          {/* Three surfaces — alternating editorial rows (one chain) */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "clamp(44px, 6vw, 80px)", marginTop: "clamp(8px, 2vw, 24px)" }}>
+            {[
+              { label: "Tablet",     role: "The action. PIN, scan, verify, exit.",                  Icon: Tablet,     qty: "KIOSK · 10\"",    preview: "/veriflow/start-scanning.png" },
+              { label: "Web",        role: "The memory. Dashboards, registry, per-sample journey.", Icon: Monitor,    qty: "CONTROL TOWER",   preview: "/veriflow/dashboard.png" },
+              { label: "Ambient TV", role: "The state. Glance, don't click.",                       Icon: Television, qty: "WALL MOUNT",      preview: "/veriflow/tv-dashboard-1.png" },
+            ].map((s, i) => (
+              <Reveal key={s.label} delay={i * 0.05}>
+                <div className="vf-surface-row" style={{
+                  display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1.18fr)",
+                  gap: "clamp(28px, 4vw, 56px)", alignItems: "center",
+                  direction: i % 2 === 1 ? "rtl" : "ltr",
+                }}>
+                  <div style={{ direction: "ltr" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 22 }}>
+                      <span style={{ ...mono, fontSize: 13, color: vf.primary, letterSpacing: "0.22em", fontWeight: 700 }}>S.0{i + 1}</span>
+                      <span aria-hidden style={{ flex: 1, height: 1, background: vf.subtle }} />
+                    </div>
+                    <div style={{
+                      width: 56, height: 56, borderRadius: 12, background: "rgba(30,64,175,0.08)",
+                      display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 22,
+                    }}>
+                      <s.Icon size={28} color={vf.primary} weight="regular" />
+                    </div>
+                    <h3 style={{
+                      fontFamily: serif, fontWeight: 700, fontSize: "clamp(30px, 3.4vw, 44px)",
+                      letterSpacing: "-0.025em", lineHeight: 1.15, color: "var(--text-primary)", marginBottom: 14,
+                    }}>
+                      {s.label}
+                    </h3>
+                    <p style={{ fontFamily: sans, fontSize: 19, lineHeight: 1.7, color: "var(--text-secondary)", marginBottom: 16, maxWidth: 420 }}>
+                      {s.role}
+                    </p>
+                    <div style={{ ...mono, fontSize: 12, color: vf.primary, letterSpacing: "0.2em", fontWeight: 700 }}>
+                      {s.qty}
+                    </div>
+                  </div>
+                  <div style={{ direction: "ltr", position: "relative" }}>
+                    <div aria-hidden style={{
+                      position: "absolute", inset: "-6% -4%",
+                      background: `radial-gradient(60% 60% at 50% 50%, ${vf.light} 0%, ${vf.primary} 45%, rgba(30,64,175,0) 75%)`,
+                      filter: "blur(40px)", opacity: 0.14, zIndex: 0, pointerEvents: "none",
+                    }} />
+                    <div style={{
+                      position: "relative", zIndex: 1, borderRadius: 14, overflow: "hidden",
+                      border: `1px solid ${vf.subtle}`, background: "#fff",
+                      boxShadow: "0 1px 2px rgba(0,0,0,0.05), 0 24px 60px rgba(15,42,120,0.14)",
+                    }}>
+                      <img src={s.preview} alt={s.label} loading="lazy" style={{ width: "100%", display: "block", aspectRatio: "16 / 10", objectFit: "cover" }} />
+                    </div>
+                  </div>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+          <style>{`
+            @media (max-width: 860px) {
+              .vf-surface-row { grid-template-columns: minmax(0, 1fr) !important; direction: ltr !important; }
+            }
+          `}</style>
         </div>
       </section>
 
