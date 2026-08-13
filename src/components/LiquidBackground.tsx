@@ -9,9 +9,10 @@ interface Props {
   c0?: string;   // lightest
   c1?: string;   // mid
   c2?: string;   // deep
-  fade?: number; // how hard the top fades out (0 = none)
-  lift?: number; // scales the specular terms for pale palettes
+  fade?: number;  // how hard the top fades out (0 = none)
+  lift?: number;  // scales the specular terms for pale palettes
   grain?: number;
+  speed?: number; // how fast the flow evolves (original shader used 0.06)
   className?: string;
 }
 
@@ -26,6 +27,7 @@ const FRAG = [
   "uniform float u_grain;",
   "uniform float u_fade;",
   "uniform float u_lift;",
+  "uniform float u_speed;",
   "float h(vec2 n){return fract(sin(dot(n,vec2(12.9898,78.233)))*43758.5453);}",
   "float noise(vec2 x){vec2 i=floor(x),f=fract(x);f=f*f*(3.-2.*f);",
   "  return mix(mix(h(i),h(i+vec2(1,0)),f.x),mix(h(i+vec2(0,1)),h(i+vec2(1,1)),f.x),f.y);}",
@@ -34,7 +36,7 @@ const FRAG = [
   "void main(){",
   "  vec2 uv=gl_FragCoord.xy/u_res.xy;",
   "  vec2 q=vec2(uv.x*(u_res.x/u_res.y),uv.y)*2.9;",
-  "  float t=u_t*0.06;",
+  "  float t=u_t*u_speed;",
   "  vec2 w1=vec2(fbm(q+vec2(0.,t)),fbm(q+vec2(5.2,1.3-t)));",
   "  vec2 w2=vec2(fbm(q+3.5*w1+vec2(1.7,9.2)+t*0.7),fbm(q+3.5*w1+vec2(8.3,2.8)-t*0.5));",
   "  float n=fbm(q+3.0*w2);",
@@ -66,7 +68,7 @@ function compile(gl: WebGLRenderingContext, type: number, src: string): WebGLSha
 }
 
 export default function LiquidBackground({
-  c0 = "f0f5fe", c1 = "dfe9fb", c2 = "c6d9f5", fade = 0, lift = 0.28, grain = 0.055, className = "",
+  c0 = "f0f5fe", c1 = "dfe9fb", c2 = "c6d9f5", fade = 0, lift = 0.28, grain = 0.055, speed = 0.06, className = "",
 }: Props) {
   const ref = useRef<HTMLCanvasElement>(null);
 
@@ -104,6 +106,7 @@ export default function LiquidBackground({
     G.uniform1f(G.getUniformLocation(prog, "u_grain"), grain);
     G.uniform1f(G.getUniformLocation(prog, "u_fade"), fade);
     G.uniform1f(G.getUniformLocation(prog, "u_lift"), lift);
+    G.uniform1f(G.getUniformLocation(prog, "u_speed"), speed);
 
     // Half resolution — the image is all low-frequency, so it holds up.
     const size = () => {
@@ -143,7 +146,7 @@ export default function LiquidBackground({
       io.disconnect();
       window.removeEventListener("resize", onResize);
     };
-  }, [c0, c1, c2, fade, lift, grain]);
+  }, [c0, c1, c2, fade, lift, grain, speed]);
 
   return <canvas ref={ref} className={`liquid ${className}`.trim()} aria-hidden />;
 }

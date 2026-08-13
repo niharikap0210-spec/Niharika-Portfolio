@@ -313,7 +313,7 @@ html {
   padding: clamp(64px, 10vh, 128px) 0;
   /* Fallback gradient — the finished look if WebGL is unavailable, and it sits
      behind the (semi-transparent) liquid canvas. */
-  background: linear-gradient(180deg, var(--bg-primary) 0%, #ecebfc 14%, #ecebfc 86%, var(--bg-primary) 100%);
+  background: linear-gradient(180deg, var(--bg-primary) 0%, #eef4fd 14%, #eef4fd 86%, var(--bg-primary) 100%);
 }
 
 /* Liquid WebGL background — feathered top & bottom, fades in once the shader draws */

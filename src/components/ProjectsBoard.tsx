@@ -397,8 +397,7 @@ export default function ProjectsBoard() {
 
   return (
     <section ref={rootRef} id="projects" className="pboard-section" style={{ scrollMarginTop: 96 }} aria-label="Selected work">
-      {/* palette: light → periwinkle (a tint of the hero highlight #4262FF, blue-led) */}
-      <LiquidBackground c0="f1f2fe" c1="dddcfb" c2="c6c3f3" fade={0} lift={0.28} grain={0.055} />
+      <LiquidBackground c0="f0f5fe" c1="dfe9fb" c2="c6d9f5" fade={0} lift={0.28} grain={0.055} speed={0.1} />
 
       <div className="pboard-inner">
         {/* header */}
