@@ -78,14 +78,16 @@ const TOTAL_SECTIONS = "08";
    section content (z-index -1 inside an isolated section); GSAP-drifts, paused
    off-screen. Feathered top & bottom so sections blend on the #FAFAFA base.
 ══════════════════════════════════════════════════════════════════ */
-const VF_BLOBS = [
-  { c: "rgba(59,130,246,0.26)",  x: "16%", y: "24%", s: 460, dx: 72,  dy: 52,  d: 15 },
-  { c: "rgba(147,197,253,0.34)", x: "84%", y: "22%", s: 420, dx: -86, dy: 62,  d: 17 },
-  { c: "rgba(30,64,175,0.14)",   x: "72%", y: "82%", s: 480, dx: -66, dy: -74, d: 16 },
-  { c: "rgba(96,165,250,0.22)",  x: "26%", y: "84%", s: 400, dx: 80,  dy: -56, d: 14 },
+const MESH_BLOBS = [
+  { c: "rgba(59,130,246,0.42)",  x: "14%", y: "20%", s: 560, dx: 92,   dy: 62,  sc: 1.22, d: 18 },
+  { c: "rgba(147,197,253,0.50)", x: "82%", y: "16%", s: 520, dx: -104, dy: 76,  sc: 1.26, d: 21 },
+  { c: "rgba(30,64,175,0.24)",   x: "72%", y: "84%", s: 600, dx: -82,  dy: -92, sc: 1.18, d: 20 },
+  { c: "rgba(96,165,250,0.40)",  x: "24%", y: "86%", s: 480, dx: 98,   dy: -66, sc: 1.24, d: 17 },
+  { c: "rgba(191,214,250,0.55)", x: "50%", y: "48%", s: 540, dx: 64,   dy: 84,  sc: 1.20, d: 23 },
 ];
 
-function GradientField() {
+/* Living blue mesh gradient — blobs drift AND breathe (scale), paused off-screen. */
+function AnimatedMesh() {
   const ref = useRef<HTMLDivElement>(null);
   useLayoutEffect(() => {
     const el = ref.current;
@@ -93,10 +95,14 @@ function GradientField() {
     const ctx = gsap.context(() => {
       const mm = gsap.matchMedia();
       mm.add("(prefers-reduced-motion: no-preference)", () => {
-        const blobs = gsap.utils.toArray<HTMLElement>(".vf-blob", el);
+        const blobs = gsap.utils.toArray<HTMLElement>(".vf-mesh-blob", el);
         const tweens = blobs.map((b, i) => {
-          const cfg = VF_BLOBS[i];
-          return gsap.to(b, { x: cfg ? cfg.dx : 0, y: cfg ? cfg.dy : 0, duration: cfg ? cfg.d : 15, repeat: -1, yoyo: true, ease: "sine.inOut", delay: i * 0.4, force3D: true });
+          const cfg = MESH_BLOBS[i];
+          return gsap.to(b, {
+            x: cfg ? cfg.dx : 0, y: cfg ? cfg.dy : 0, scale: cfg ? cfg.sc : 1.2,
+            duration: cfg ? cfg.d : 20, repeat: -1, yoyo: true, ease: "sine.inOut",
+            delay: i * 0.6, force3D: true,
+          });
         });
         const st = ScrollTrigger.create({
           trigger: el, start: "top bottom", end: "bottom top",
@@ -108,11 +114,11 @@ function GradientField() {
     return () => ctx.revert();
   }, []);
   return (
-    <div ref={ref} className="vf-field" aria-hidden>
-      {VF_BLOBS.map((b, i) => (
-        <span key={i} className="vf-blob" style={{
+    <div ref={ref} className="vf-mesh" aria-hidden>
+      {MESH_BLOBS.map((b, i) => (
+        <span key={i} className="vf-mesh-blob" style={{
           left: b.x, top: b.y, width: b.s, height: b.s, marginLeft: -b.s / 2, marginTop: -b.s / 2,
-          background: `radial-gradient(circle, ${b.c} 0%, transparent 70%)`,
+          background: `radial-gradient(circle, ${b.c} 0%, transparent 68%)`,
         }} />
       ))}
     </div>
@@ -126,7 +132,7 @@ function FieldSection({ children, id }: { children: React.ReactNode; id?: string
       padding: SECTION_PAD, background: "var(--bg-primary)",
       position: "relative", isolation: "isolate", overflow: "hidden",
     }}>
-      <GradientField />
+      <AnimatedMesh />
       <div className="max-w-7xl mx-auto px-6 md:px-10" style={{ position: "relative", zIndex: 1 }}>
         {children}
       </div>
@@ -146,61 +152,68 @@ function PlainSection({ children, id }: { children: React.ReactNode; id?: string
 /* ══════════════════════════════════════════════════════════════════
    PRIMITIVES
 ══════════════════════════════════════════════════════════════════ */
+/* GSAP scroll reveal — soft fade + rise, once, reduced-motion aware. */
 function Reveal({
-  children, delay = 0, y = 20, className = "",
+  children, delay = 0, y = 24, className = "",
 }: { children: React.ReactNode; delay?: number; y?: number; className?: string }) {
   const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-60px" });
-  return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.7, delay, ease: [0.25, 1, 0.4, 1] }}
-      className={className}
-    >
-      {children}
-    </motion.div>
-  );
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const ctx = gsap.context(() => {
+      gsap.matchMedia().add("(prefers-reduced-motion: no-preference)", () => {
+        gsap.from(el, {
+          autoAlpha: 0, y, duration: 0.9, delay, ease: "power3.out",
+          scrollTrigger: { trigger: el, start: "top 86%", once: true },
+        });
+      });
+    }, ref);
+    return () => ctx.revert();
+  }, [delay, y]);
+  return <div ref={ref} className={className}>{children}</div>;
 }
 
 function SectionHeader({
   num, title, phase, total = TOTAL_SECTIONS,
 }: { num: string; title: string; phase: string; total?: string }) {
   const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-40px" });
+  const lineRef = useRef<HTMLDivElement>(null);
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const ctx = gsap.context(() => {
+      gsap.matchMedia().add("(prefers-reduced-motion: no-preference)", () => {
+        gsap.from(el.querySelectorAll("[data-rise]"), {
+          autoAlpha: 0, y: 16, duration: 0.85, ease: "power3.out", stagger: 0.09,
+          scrollTrigger: { trigger: el, start: "top 84%", once: true },
+        });
+        if (lineRef.current) {
+          gsap.from(lineRef.current, {
+            scaleX: 0, transformOrigin: "left center", duration: 0.9, ease: "power3.out", delay: 0.15,
+            scrollTrigger: { trigger: el, start: "top 84%", once: true },
+          });
+        }
+      });
+    }, ref);
+    return () => ctx.revert();
+  }, []);
   return (
     <div ref={ref} style={{ marginBottom: "clamp(40px, 5vw, 64px)" }}>
       <div style={{
         display: "flex", alignItems: "baseline", gap: 18, flexWrap: "wrap",
         paddingBottom: 14,
       }}>
-        <motion.span
-          initial={{ opacity: 0, y: 8 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.55, ease: [0.25, 1, 0.4, 1] }}
-          style={{ ...mono, fontSize: 14, color: vf.primary, letterSpacing: "0.22em", fontWeight: 700 }}
-        >
+        <span data-rise style={{ ...mono, fontSize: 14, color: vf.primary, letterSpacing: "0.22em", fontWeight: 700 }}>
           {num} <span style={{ color: "var(--text-muted)", fontWeight: 400 }}>/ {total}</span>
-        </motion.span>
-        <motion.span
-          initial={{ opacity: 0, y: 8 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.08, duration: 0.55, ease: [0.25, 1, 0.4, 1] }}
-          style={{ ...mono, fontSize: 14, color: "var(--text-primary)", letterSpacing: "0.22em", fontWeight: 600 }}
-        >
+        </span>
+        <span data-rise style={{ ...mono, fontSize: 14, color: "var(--text-primary)", letterSpacing: "0.22em", fontWeight: 600 }}>
           {phase}
-        </motion.span>
-        <div aria-hidden style={{ flex: 1, height: 1, background: vf.primary, opacity: 0.4, minWidth: 40 }} />
+        </span>
+        <div ref={lineRef} aria-hidden style={{ flex: 1, height: 1, background: vf.primary, opacity: 0.4, minWidth: 40 }} />
       </div>
-      <motion.h2
-        initial={{ opacity: 0, y: 12 }}
-        animate={inView ? { opacity: 1, y: 0 } : {}}
-        transition={{ delay: 0.12, duration: 0.7, ease: [0.25, 1, 0.4, 1] }}
-        style={{ ...t.h2Section, marginTop: 20, maxWidth: 860 }}
-      >
+      <h2 data-rise style={{ ...t.h2Section, marginTop: 20, maxWidth: 860 }}>
         {title}
-      </motion.h2>
+      </h2>
     </div>
   );
 }
@@ -1523,7 +1536,8 @@ export default function VeriflowCase() {
         overflow: "hidden",
         background: "var(--bg-primary)",
       }}>
-        <GradientField />
+        <div className="vf-hero-dots" aria-hidden />
+        <div className="vf-hero-aura" aria-hidden />
         <style>{`
           @media (max-width: 767px) {
             .vf-hero-section { height: auto !important; min-height: calc(100svh - 56px); overflow: visible !important; padding-bottom: 28px; }
@@ -1862,7 +1876,7 @@ export default function VeriflowCase() {
           02 · SYSTEM
       ══════════════════════════════════════════════════════════════ */}
       <section style={{ padding: SECTION_PAD, background: "var(--bg-primary)", position: "relative", isolation: "isolate", overflow: "hidden" }}>
-        <GradientField />
+        <AnimatedMesh />
         <div className="max-w-7xl mx-auto px-6 md:px-10" style={{ position: "relative", zIndex: 1 }}>
           <Reveal><SectionHeader num="02" phase="The system" title="Three surfaces, one unbroken chain." /></Reveal>
 
@@ -1923,7 +1937,7 @@ export default function VeriflowCase() {
           04 · CLINIC FLOW
       ══════════════════════════════════════════════════════════════ */}
       <section style={{ padding: SECTION_PAD, background: "var(--bg-primary)", position: "relative", isolation: "isolate", overflow: "hidden" }}>
-        <GradientField />
+        <AnimatedMesh />
         <div className="max-w-7xl mx-auto px-6 md:px-10" style={{ position: "relative", zIndex: 1 }}>
           <Reveal>
             <SectionHeader num="04" phase="Flow · Clinic" title="A. Association. Tube becomes a trackable object." />
@@ -2010,7 +2024,7 @@ export default function VeriflowCase() {
           06 · BEYOND THE KIOSKS (web, laptop mockups)
       ══════════════════════════════════════════════════════════════ */}
       <section style={{ padding: SECTION_PAD, background: "var(--bg-primary)", position: "relative", isolation: "isolate", overflow: "hidden" }}>
-        <GradientField />
+        <AnimatedMesh />
         <div className="max-w-7xl mx-auto px-6 md:px-10" style={{ position: "relative", zIndex: 1 }}>
           <Reveal>
             <SectionHeader num="06" phase="Beyond the kiosks" title="The kiosks handle the handoff. Everything else lives on the web." />
@@ -2127,7 +2141,7 @@ export default function VeriflowCase() {
           08 · ROLE + TAKEAWAYS
       ══════════════════════════════════════════════════════════════ */}
       <section style={{ padding: SECTION_PAD, background: "var(--bg-primary)", position: "relative", isolation: "isolate", overflow: "hidden" }}>
-        <GradientField />
+        <AnimatedMesh />
         <div className="max-w-7xl mx-auto px-6 md:px-10" style={{ position: "relative", zIndex: 1 }}>
           <Reveal><SectionHeader num="08" phase="Role · Takeaways" title="What I owned, and what this project taught me." /></Reveal>
 
