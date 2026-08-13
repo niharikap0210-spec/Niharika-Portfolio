@@ -311,8 +311,19 @@ html {
   isolation: isolate;
   overflow: hidden;
   padding: clamp(64px, 10vh, 128px) 0;
-  background: var(--bg-primary);
+  /* Fallback gradient — the finished look if WebGL is unavailable, and it sits
+     behind the (semi-transparent) liquid canvas. */
+  background: linear-gradient(180deg, var(--bg-primary) 0%, #eef4fd 14%, #eef4fd 86%, var(--bg-primary) 100%);
 }
+
+/* Liquid WebGL background — feathered top & bottom, fades in once the shader draws */
+.liquid {
+  position: absolute; inset: 0; width: 100%; height: 100%; display: block;
+  z-index: 0; pointer-events: none; opacity: 0; transition: opacity 0.9s ease;
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 12%, #000 88%, transparent 100%);
+          mask-image: linear-gradient(180deg, transparent 0%, #000 12%, #000 88%, transparent 100%);
+}
+.liquid.is-on { opacity: 0.85; }
 
 /* Moving, organic colour field — GSAP-drifting soft blobs, feathered in/out top & bottom */
 .pboard-bg {

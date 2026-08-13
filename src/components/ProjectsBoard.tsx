@@ -17,6 +17,7 @@ import {
 } from "simple-icons";
 import { projects, type Project, type ProjectAccent } from "../data/projects";
 import { ProjectHeroStage } from "./ProjectHeroStage";
+import LiquidBackground from "./LiquidBackground";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -33,15 +34,6 @@ function stickyColor(discipline: string): string {
   if (d.includes("PRODUCT")) return STICKY.green;
   return STICKY.purple; // architecture / urban / visualization
 }
-
-/* ─── Moving background blobs (GSAP-animated cool-pastel field) ─────── */
-const BLOBS = [
-  { c: "rgba(158,197,246,0.60)", x: "14%", y: "22%", s: 520, dx: 90, dy: 64, d: 13 },
-  { c: "rgba(200,180,239,0.54)", x: "82%", y: "26%", s: 460, dx: -104, dy: 74, d: 15 },
-  { c: "rgba(183,228,155,0.46)", x: "70%", y: "80%", s: 520, dx: -84, dy: -88, d: 16 },
-  { c: "rgba(246,169,208,0.40)", x: "24%", y: "84%", s: 420, dx: 96, dy: -66, d: 14 },
-  { c: "rgba(150,190,255,0.34)", x: "50%", y: "52%", s: 460, dx: 72, dy: 92, d: 17 },
-];
 
 /* ─── Frame model (normalises product + architecture) ─────────────── */
 type Deck = "product" | "arch";
@@ -342,21 +334,6 @@ export default function ProjectsBoard() {
           clearProps: "transform,opacity,visibility",
           scrollTrigger: { trigger: rootRef.current, start: "top 80%", once: true },
         });
-        // continuously drifting colour blobs — the moving background (paused when off-screen)
-        const blobTweens = gsap.utils.toArray<HTMLElement>(".pboard-blob").map((el, i) => {
-          const b = BLOBS[i];
-          // translate only — scaling a 52px-blurred layer re-rasterizes the blur every
-          // frame; drifting it does not, so this is far cheaper and just as alive.
-          return gsap.to(el, { x: b ? b.dx : 0, y: b ? b.dy : 0, duration: b ? b.d : 15, repeat: -1, yoyo: true, ease: "sine.inOut", delay: i * 0.4, force3D: true });
-        });
-        const blobST = ScrollTrigger.create({
-          trigger: rootRef.current, start: "top bottom", end: "bottom top",
-          onToggle: (self) => blobTweens.forEach((t) => (self.isActive ? t.play() : t.pause())),
-        });
-        // default to playing; pause only if the section isn't in view yet
-        if (!blobST.isActive) blobTweens.forEach((t) => t.pause());
-        // NOTE: no scroll-parallax on .pboard-bg — translating it pushed the mask's bottom
-        // fade-out below the section, which read as a hard line at the seam below.
       });
     }, rootRef);
     return () => ctx.revert();
@@ -420,15 +397,7 @@ export default function ProjectsBoard() {
 
   return (
     <section ref={rootRef} id="projects" className="pboard-section" style={{ scrollMarginTop: 96 }} aria-label="Selected work">
-      <div className="pboard-bg" aria-hidden>
-        {BLOBS.map((b, i) => (
-          <span
-            key={i}
-            className="pboard-blob"
-            style={{ left: b.x, top: b.y, width: b.s, height: b.s, marginLeft: -b.s / 2, marginTop: -b.s / 2, background: `radial-gradient(circle, ${b.c} 0%, transparent 70%)` }}
-          />
-        ))}
-      </div>
+      <LiquidBackground c0="f0f5fe" c1="dfe9fb" c2="c6d9f5" fade={0} lift={0.28} grain={0.055} />
 
       <div className="pboard-inner">
         {/* header */}
