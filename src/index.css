@@ -364,7 +364,7 @@ html {
 /* Header — kicker + intriguing headline */
 .pboard-head { margin-bottom: 22px; }
 /* Title-block overline eyebrow: a short blue rule drawn above a sentence-case label */
-.pboard-kicker { display: inline-flex; flex-direction: column; align-items: flex-start; font-family: 'Manrope', system-ui, sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.02em; text-transform: none; color: #6B6B75; }
+.pboard-kicker { display: inline-flex; flex-direction: column; align-items: flex-start; font-family: 'Manrope', system-ui, sans-serif; font-size: 15px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #6B6B75; }
 .pboard-kicker::before { content: ""; width: 26px; height: 2px; border-radius: 2px; background: #4262FF; margin-bottom: 10px; }
 .pboard-heading {
   margin: 15px 0 0;
@@ -556,7 +556,7 @@ html {
 .cfooter-grid { display: grid; grid-template-columns: 1fr; gap: clamp(40px, 6vw, 64px); }
 
 /* CTA */
-.cfooter-kicker { display: inline-flex; flex-direction: column; align-items: flex-start; font-family: 'Manrope', system-ui, sans-serif; font-size: 12px; font-weight: 600; text-transform: none; letter-spacing: 0.02em; color: #6B6B75; }
+.cfooter-kicker { display: inline-flex; flex-direction: column; align-items: flex-start; font-family: 'Manrope', system-ui, sans-serif; font-size: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #6B6B75; }
 .cfooter-kicker::before { content: ""; width: 26px; height: 2px; border-radius: 2px; background: #4262FF; margin-bottom: 10px; }
 .cfooter-heading {
   margin: 15px 0 0;
@@ -593,7 +593,7 @@ html {
 /* nav columns — larger links with a slide-in arrow on hover */
 .cfooter-cols { display: flex; gap: clamp(40px, 6vw, 84px); }
 .cfooter-col { display: flex; flex-direction: column; gap: 12px; }
-.cfooter-col-title { display: inline-flex; flex-direction: column; align-items: flex-start; font-family: 'Manrope', system-ui, sans-serif; font-size: 12px; font-weight: 600; text-transform: none; letter-spacing: 0.02em; color: #8A8A95; margin-bottom: 10px; }
+.cfooter-col-title { display: inline-flex; flex-direction: column; align-items: flex-start; font-family: 'Manrope', system-ui, sans-serif; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #8A8A95; margin-bottom: 10px; }
 .cfooter-col-title::before { content: ""; width: 20px; height: 1px; background: currentColor; opacity: 0.55; margin-bottom: 9px; }
 .cfooter-link { position: relative; display: inline-flex; align-items: center; width: max-content; padding-right: 24px; font-family: 'Manrope', system-ui, sans-serif; font-size: 17px; font-weight: 600; letter-spacing: -0.012em; color: #1A1A2E; text-decoration: none; }
 .cfooter-link-txt { transition: color 180ms ease; }
