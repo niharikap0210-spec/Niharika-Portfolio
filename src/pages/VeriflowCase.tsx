@@ -480,7 +480,7 @@ function OverrideTimeline() {
         {stages.map((s, i) => (
           <div key={i} className="ovr-col">
             <div className="ovr-badge" style={{ color: s.color }}>{s.badge}</div>
-            <div className="ovr-screen"><TabletMock src={s.src} alt={`${s.label} — ${s.badge}`} /></div>
+            <div className="ovr-screen"><TabletMock src={s.src} alt={`${s.label}, ${s.badge}`} /></div>
             <h4 className="ovr-title">{s.label}</h4>
             <p className="ovr-caption">{s.caption}</p>
             <div className="ovr-actor" style={{ color: s.color }}>
@@ -569,7 +569,7 @@ function SystemDiagram() {
   const rootRef = useRef<HTMLDivElement>(null);
   const [hover, setHover] = useState<number | null>(null);
   const surfaces: { role: string; name: string; desc: string; tag: string; Mock: (p: { src: string; alt: string }) => JSX.Element; src: string }[] = [
-    { role: "Action", name: "Tablet",     desc: "PIN, scan, verify, exit — the clinic's kiosk.",     tag: "Kiosk · 10\"",  Mock: TabletMock,  src: "/veriflow/sample-association-4.png" },
+    { role: "Action", name: "Tablet",     desc: "PIN, scan, verify, exit. The clinic's kiosk.",      tag: "Kiosk · 10\"",  Mock: TabletMock,  src: "/veriflow/sample-association-4.png" },
     { role: "Memory", name: "Web",        desc: "Dashboards, registry, and every sample's journey.", tag: "Control tower", Mock: LaptopMock,  src: "/veriflow/dashboard.png" },
     { role: "State",  name: "Ambient TV", desc: "The live state of the lab. Glance, don't click.",   tag: "Lab · 55\"",    Mock: TVMock,      src: "/veriflow/tv-dashboard-1.png" },
   ];
@@ -608,7 +608,7 @@ function SystemDiagram() {
             >
               <div className="vf-surf-glow" aria-hidden style={{ opacity: hover === i ? 0.42 : 0 }} />
               <div className="vf-surf-device" style={{ transform: hover === i ? "translateY(-9px)" : "none" }}>
-                <s.Mock src={s.src} alt={`${s.name} — ${s.role}`} />
+                <s.Mock src={s.src} alt={`${s.name}, ${s.role}`} />
               </div>
             </div>
             <div
@@ -931,7 +931,7 @@ function DiagramTickPath() {
     { x: 120, n: "01", verb: "draw",    detail: "Blood drawn, tube labelled by hand." },
     { x: 250, n: "02", verb: "log",     detail: "Cooler number written on the day's sheet." },
     { x: 470, n: "03", verb: "pickup",  detail: "Courier collects the cooler from reception." },
-    { x: 600, n: "04", verb: "transit", detail: "In the van — no scan, no signal." },
+    { x: 600, n: "04", verb: "transit", detail: "In the van. No scan, no signal." },
     { x: 880, n: "05", verb: "receive", detail: "Lab logs the tube, if the paperwork survived." },
   ];
   const zones = [
@@ -1494,7 +1494,7 @@ export default function VeriflowCase() {
                 across a clinic tablet, a web control tower, and a lab wall.
               </motion.p>
 
-              {/* Meta — airy 2-column: label whispers above value, no ornament */}
+              {/* Meta - airy 2-column: label whispers above value, no ornament */}
               <motion.div
                 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7, duration: 0.6 }}
                 style={{
@@ -1569,13 +1569,13 @@ export default function VeriflowCase() {
             </Reveal>
           </div>
 
-          {/* Journey — tick-measured path */}
+          {/* Journey - tick-measured path */}
           <DiagramTickPath />
 
-          {/* Three gaps — blind-spot audit */}
+          {/* Three gaps - blind-spot audit */}
           <GapCards />
 
-          {/* Stats + mission — measured ruler */}
+          {/* Stats + mission - measured ruler */}
           <StatRuler />
         </div>
       </section>
@@ -1770,7 +1770,7 @@ export default function VeriflowCase() {
       ══════════════════════════════════════════════════════════════ */}
       <section style={{ padding: SECTION_PAD, background: vf.ink, color: "#fff" }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
-          <SectionHeader num="07" phase="Ambient · the wall" title="Readable across the room." accent={vf.light} titleColor="#fff" />
+          <SectionHeader num="07" phase="Ambient · the wall" title="Readable across the room." accent="#fff" titleColor="#fff" />
 
 
           <div className="tv-grid" style={{
@@ -1822,7 +1822,7 @@ export default function VeriflowCase() {
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <Reveal><SectionHeader num="08" phase="Role · Takeaways" title="What I owned, and what this project taught me." /></Reveal>
 
-          {/* Impact — before → after, distilled */}
+          {/* Impact - before → after, distilled */}
           <Reveal>
             <div className="vf-impact">
               <div className="vf-impact-cell">
@@ -1840,7 +1840,7 @@ export default function VeriflowCase() {
           <div className="vf-close-grid">
             <Reveal>
               <div>
-                <div className="vf-close-eyebrow">Role — Product Designer</div>
+                <div className="vf-close-eyebrow">Role · Product Designer</div>
                 <ol className="vf-owned">
                   {[
                     "Mapped the clinic, courier, and lab chain across three roles.",
@@ -1902,10 +1902,12 @@ export default function VeriflowCase() {
       ══════════════════════════════════════════════════════════════ */}
       <section style={{ padding: "clamp(64px, 8vw, 104px) 0", borderTop: "1px solid var(--border)" }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
-          <div style={{ display: "flex", alignItems: "baseline", gap: 14, marginBottom: 36 }}>
-            <span aria-hidden style={{ width: 3, height: 14, background: vf.primary }} />
-            <p style={{ ...mono, fontSize: 12, color: vf.primary, letterSpacing: "0.22em", fontWeight: 600 }}>
-              More case studies
+          <div style={{ marginBottom: "clamp(36px, 4.5vw, 56px)", maxWidth: 560 }}>
+            <h2 style={{ fontFamily: serif, fontWeight: 700, fontSize: "clamp(30px, 3.4vw, 44px)", letterSpacing: "-0.03em", lineHeight: 1.12, color: "var(--text-primary)", margin: 0 }}>
+              Keep exploring<span style={{ color: vf.primary, fontStyle: "italic" }}>.</span>
+            </h2>
+            <p style={{ fontFamily: sans, fontSize: "clamp(17px, 1.4vw, 19px)", color: "var(--text-secondary)", lineHeight: 1.6, margin: "16px 0 0" }}>
+              Two more case studies, start to finish.
             </p>
           </div>
 
