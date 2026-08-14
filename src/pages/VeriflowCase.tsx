@@ -1436,18 +1436,15 @@ function HeroMockups() {
    COOLER SKETCH: hand-drawn blueprint-style illustration
 ══════════════════════════════════════════════════════════════════ */
 function PrincipleRow({
-  num, title, description, IconComp,
+  title, description, IconComp,
 }: {
-  num: string; title: string; description: string; IconComp: Icon;
+  title: string; description: string; IconComp: Icon;
 }) {
   return (
     <div className="vf-prin-row" tabIndex={0}>
       <span className="vf-prin-icon"><IconComp size={22} weight="regular" color="currentColor" /></span>
       <div className="vf-prin-main">
-        <div className="vf-prin-head">
-          <span className="vf-prin-num">{num}</span>
-          <h3 className="vf-prin-title">{title}</h3>
-        </div>
+        <h3 className="vf-prin-title">{title}</h3>
         <p className="vf-prin-desc">{description}</p>
       </div>
     </div>
@@ -1489,7 +1486,7 @@ function CoolerBlueprint() {
 
   return (
     <div ref={rootRef} className="vf-cooler">
-      <div className="vf-cooler-cap">FIG. 02 · THE COOLER</div>
+      <div className="vf-cooler-cap">The cooler</div>
       <svg viewBox="0 0 460 360" preserveAspectRatio="xMidYMid meet" style={{ width: "100%", height: "auto", display: "block" }}>
         {/* cooler */}
         <g className="cb-cooler">
@@ -1552,8 +1549,7 @@ function CoolerBlueprint() {
 
       <style>{`
         .vf-cooler { position: relative; padding: clamp(22px, 3vw, 40px); border: 1px solid ${vf.subtle}; border-radius: 10px; background:
-          repeating-linear-gradient(0deg, rgba(30,64,175,0.045) 0, rgba(30,64,175,0.045) 1px, transparent 1px, transparent 26px),
-          repeating-linear-gradient(90deg, rgba(30,64,175,0.045) 0, rgba(30,64,175,0.045) 1px, transparent 1px, transparent 26px),
+          radial-gradient(circle, rgba(30,64,175,0.08) 1px, transparent 1.6px) -11px -11px / 22px 22px,
           var(--bg-elevated); overflow: hidden; }
         .vf-cooler-cap { position: absolute; top: clamp(18px, 2.2vw, 26px); left: clamp(22px, 3vw, 40px); font-family: 'Manrope', monospace; text-transform: uppercase; font-size: 12px; color: ${vf.primary}; letter-spacing: 0.2em; font-weight: 700; }
 
@@ -1570,10 +1566,8 @@ function CoolerBlueprint() {
         .vf-prin-row:hover, .vf-prin-row:focus-visible { background: ${vf.surface}; }
         .vf-prin-icon { width: 46px; height: 46px; border-radius: 8px; background: ${vf.subtle}; color: ${vf.primary}; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background 260ms, color 260ms; }
         .vf-prin-row:hover .vf-prin-icon, .vf-prin-row:focus-visible .vf-prin-icon { background: ${vf.primary}; color: #fff; }
-        .vf-prin-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 8px; flex-wrap: wrap; }
-        .vf-prin-num { font-family: 'Manrope', monospace; text-transform: uppercase; font-size: 12px; color: ${vf.muted}; letter-spacing: 0.14em; font-weight: 700; }
-        .vf-prin-title { font-family: ${serif}; font-weight: 700; font-size: clamp(20px, 1.9vw, 24px); letter-spacing: -0.015em; line-height: 1.2; color: var(--text-primary); margin: 0; }
-        .vf-prin-desc { font-family: ${sans}; font-size: 16px; line-height: 1.6; color: var(--text-secondary); margin: 0; }
+        .vf-prin-title { font-family: ${serif}; font-weight: 700; font-size: clamp(21px, 2vw, 25px); letter-spacing: -0.015em; line-height: 1.2; color: var(--text-primary); margin: 0 0 10px; }
+        .vf-prin-desc { font-family: ${sans}; font-size: 18px; line-height: 1.6; color: var(--text-secondary); margin: 0; }
       `}</style>
     </div>
   );
@@ -1900,16 +1894,16 @@ export default function VeriflowCase() {
             </Reveal>
             <Reveal delay={0.12}>
               <div className="vf-prin-list">
-                <PrincipleRow num="P.01" title="Linear, not branching"
+                <PrincipleRow title="Linear, not branching"
                   description="A fork in a flow is an error waiting to happen. One next step, always visible."
                   IconComp={ArrowRight} />
-                <PrincipleRow num="P.02" title="Gate at every handoff"
+                <PrincipleRow title="Gate at every handoff"
                   description="A sample leaves one custody only when the next is confirmed. Small gate, always there."
                   IconComp={ShieldCheck} />
-                <PrincipleRow num="P.03" title="Forgive the hurry"
+                <PrincipleRow title="Forgive the hurry"
                   description="A missed scan is a retry, not a failure. Override exists, with a PIN and a record."
                   IconComp={HandTap} />
-                <PrincipleRow num="P.04" title="Ambient over alert"
+                <PrincipleRow title="Ambient over alert"
                   description="A wall replaces the phone on the counter. Glance, know. No notifications."
                   IconComp={Television} />
               </div>
