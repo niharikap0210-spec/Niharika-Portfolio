@@ -1749,26 +1749,26 @@ export default function VeriflowCase() {
                 across a clinic tablet, a web control tower, and a lab wall.
               </motion.p>
 
-              {/* Meta — accent-bar spec grid */}
+              {/* Meta — dot-leader spec sheet */}
               <motion.div
                 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7, duration: 0.6 }}
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-                  gap: "clamp(26px, 3.2vw, 38px) clamp(28px, 3.5vw, 52px)",
-                  maxWidth: 450,
-                }}
+                style={{ maxWidth: 480, borderTop: `1px solid ${vf.subtle}` }}
               >
                 {([
-                  { label: "Role",     value: "Product Designer" },
-                  { label: "Surfaces", value: "Web · Tablet · TV" },
-                  { label: "Timeline", value: "3 months" },
-                  { label: "Tools",    value: "Figma · FigJam" },
-                ] as { label: string; value: string }[]).map((m) => (
-                  <div key={m.label}>
-                    <span aria-hidden style={{ display: "block", width: 26, height: 3, borderRadius: 2, background: vf.primary, marginBottom: 15 }} />
-                    <div style={{ ...mono, fontSize: 10, color: vf.muted, letterSpacing: "0.2em", fontWeight: 700, marginBottom: 9 }}>{m.label}</div>
-                    <div style={{ fontFamily: sans, fontSize: "clamp(17px, 1.5vw, 21px)", fontWeight: 600, color: "var(--text-primary)", letterSpacing: "-0.01em", lineHeight: 1.25 }}>{m.value}</div>
+                  { n: "01", label: "Role",     value: "Product Designer" },
+                  { n: "02", label: "Surfaces", value: "Web · Tablet · TV" },
+                  { n: "03", label: "Timeline", value: "3 months" },
+                  { n: "04", label: "Tools",    value: "Figma · FigJam" },
+                ] as { n: string; label: string; value: string }[]).map((m) => (
+                  <div key={m.label} style={{
+                    display: "flex", alignItems: "baseline", gap: 12,
+                    padding: "clamp(15px, 1.6vw, 20px) 0",
+                    borderBottom: `1px solid ${vf.subtle}`,
+                  }}>
+                    <span style={{ ...mono, fontSize: 11, color: "rgba(30,64,175,0.45)", letterSpacing: "0.05em", fontWeight: 700, flexShrink: 0, width: 22 }}>{m.n}</span>
+                    <span style={{ ...mono, fontSize: 11, color: vf.primary, letterSpacing: "0.16em", fontWeight: 700, flexShrink: 0 }}>{m.label}</span>
+                    <span aria-hidden style={{ flex: 1, borderBottom: "1.5px dotted rgba(30,64,175,0.28)", transform: "translateY(-4px)", minWidth: 20 }} />
+                    <span style={{ fontFamily: sans, fontSize: "clamp(16px, 1.45vw, 20px)", fontWeight: 600, color: "var(--text-primary)", flexShrink: 0, letterSpacing: "-0.01em" }}>{m.value}</span>
                   </div>
                 ))}
               </motion.div>
