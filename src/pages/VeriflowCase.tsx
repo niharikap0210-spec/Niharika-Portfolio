@@ -977,62 +977,6 @@ function LaptopSpread({
 /* ══════════════════════════════════════════════════════════════════
    PRINCIPLE CARD
 ══════════════════════════════════════════════════════════════════ */
-function PrincipleCard({
-  num, title, description, IconComp,
-}: {
-  num: string; title: string; description: string; IconComp: Icon;
-}) {
-  const [hovered, setHovered] = useState(false);
-  return (
-    <div
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={{
-        padding: "clamp(24px, 3vw, 32px)",
-        background: "var(--bg-elevated)",
-        border: `1px solid ${hovered ? vf.primary : vf.subtle}`, borderRadius: 6,
-        position: "relative", height: "100%",
-        transform: hovered ? "translateY(-4px)" : "translateY(0)",
-        transition: "border-color 240ms, transform 240ms",
-        cursor: "default",
-      }}
-    >
-      <span aria-hidden style={{
-        position: "absolute", top: 0, left: 0, right: 0, height: 2,
-        background: vf.primary,
-        transform: hovered ? "scaleX(1)" : "scaleX(0)",
-        transformOrigin: "left",
-        transition: "transform 320ms ease-out",
-      }} />
-      <div style={{
-        position: "absolute", top: 16, right: 18,
-        ...mono, fontSize: 12, color: vf.muted, letterSpacing: "0.16em",
-      }}>
-        {num}
-      </div>
-      <div style={{
-        width: 48, height: 48, borderRadius: 6,
-        background: hovered ? vf.primary : vf.subtle,
-        display: "flex", alignItems: "center", justifyContent: "center",
-        marginBottom: 22, transition: "background 240ms",
-      }}>
-        <IconComp size={24} color={hovered ? "#fff" : vf.primary} weight="regular" />
-      </div>
-      <div style={{
-        fontFamily: serif, fontWeight: 600, fontSize: "clamp(20px, 1.9vw, 24px)",
-        color: "var(--text-primary)", marginBottom: 12, letterSpacing: "-0.01em", lineHeight: 1.25,
-      }}>
-        {title}
-      </div>
-      <div style={{
-        fontFamily: sans, fontSize: 18, color: "var(--text-secondary)", lineHeight: 1.75,
-      }}>
-        {description}
-      </div>
-    </div>
-  );
-}
-
 /* ══════════════════════════════════════════════════════════════════
    STAT RULER: three problem metrics measured out by a swept caliper
 ══════════════════════════════════════════════════════════════════ */
@@ -1491,118 +1435,145 @@ function HeroMockups() {
 /* ══════════════════════════════════════════════════════════════════
    COOLER SKETCH: hand-drawn blueprint-style illustration
 ══════════════════════════════════════════════════════════════════ */
-function CoolerSketch() {
-  const ref = useRef<SVGSVGElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-60px" });
+function PrincipleRow({
+  num, title, description, IconComp,
+}: {
+  num: string; title: string; description: string; IconComp: Icon;
+}) {
   return (
-    <div style={{
-      padding: "clamp(28px, 3.5vw, 44px)",
-      background: "var(--bg-elevated)",
-      border: `1px solid ${vf.subtle}`,
-      borderRadius: 6, position: "relative", overflow: "hidden",
-    }}>
-      <div aria-hidden style={{
-        position: "absolute", inset: 0,
-        backgroundImage:
-          "repeating-linear-gradient(0deg, rgba(30,64,175,0.05) 0, rgba(30,64,175,0.05) 1px, transparent 1px, transparent 24px)," +
-          "repeating-linear-gradient(90deg, rgba(30,64,175,0.05) 0, rgba(30,64,175,0.05) 1px, transparent 1px, transparent 24px)",
-        pointerEvents: "none",
-      }} />
-      <div style={{
-        position: "relative", zIndex: 1,
-        display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(180px, 260px)",
-        gap: "clamp(24px, 3vw, 40px)", alignItems: "center",
-      }} className="sketch-grid">
-        <svg ref={ref} viewBox="0 0 400 260" preserveAspectRatio="xMidYMid meet" style={{
-          width: "100%", height: "auto", display: "block",
-        }}>
-          <defs>
-            <pattern id="vf-hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-              <line x1="0" y1="0" x2="0" y2="6" stroke={vf.primary} strokeWidth="0.6" opacity="0.3" />
-            </pattern>
-          </defs>
-
-          {/* Cooler body */}
-          <motion.g
-            initial={{ opacity: 0, y: 12 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8, ease: [0.25, 1, 0.4, 1] }}
-          >
-            <rect x="80" y="90" width="240" height="140" rx="6"
-              fill="url(#vf-hatch)" stroke={vf.primary} strokeWidth="1.4" />
-            {/* Lid */}
-            <rect x="76" y="78" width="248" height="20" rx="4"
-              fill={vf.surface} stroke={vf.primary} strokeWidth="1.4" />
-            {/* Handle */}
-            <path d="M 160 78 Q 160 56, 200 56 Q 240 56, 240 78"
-              fill="none" stroke={vf.primary} strokeWidth="1.4" strokeLinecap="round" />
-            {/* QR sticker */}
-            <rect x="110" y="132" width="44" height="44" rx="2"
-              fill="#fff" stroke={vf.primary} strokeWidth="1" />
-            <rect x="116" y="138" width="12" height="12" fill={vf.primary} />
-            <rect x="136" y="138" width="12" height="12" fill={vf.primary} />
-            <rect x="116" y="158" width="12" height="12" fill={vf.primary} />
-            <rect x="138" y="158" width="4"  height="4"  fill={vf.primary} />
-            <rect x="146" y="160" width="4"  height="4"  fill={vf.primary} />
-            {/* Label */}
-            <rect x="180" y="148" width="110" height="18" rx="2"
-              fill="#fff" stroke={vf.primary} strokeWidth="0.8" />
-            <line x1="186" y1="156" x2="280" y2="156" stroke={vf.primary} strokeWidth="0.6" opacity="0.5" />
-            <line x1="186" y1="160" x2="260" y2="160" stroke={vf.primary} strokeWidth="0.6" opacity="0.5" />
-          </motion.g>
-
-          {/* Callout lines */}
-          <motion.g
-            initial={{ opacity: 0 }}
-            animate={inView ? { opacity: 1 } : {}}
-            transition={{ duration: 0.6, delay: 0.8 }}
-          >
-            <line x1="132" y1="132" x2="60" y2="60" stroke={vf.primary} strokeWidth="0.8" strokeDasharray="2 3" />
-            <circle cx="60" cy="60" r="3" fill={vf.primary} />
-            <text x="18" y="50" style={{ ...mono, fontSize: 9, fill: vf.primary, letterSpacing: "0.2em", fontWeight: 700 }}>
-              QR · PAIRED
-            </text>
-
-            <line x1="235" y1="157" x2="370" y2="50" stroke={vf.primary} strokeWidth="0.8" strokeDasharray="2 3" />
-            <circle cx="370" cy="50" r="3" fill={vf.primary} />
-            <text x="316" y="40" style={{ ...mono, fontSize: 9, fill: vf.primary, letterSpacing: "0.2em", fontWeight: 700 }}>
-              COOLER ID
-            </text>
-
-            <line x1="200" y1="78" x2="200" y2="30" stroke={vf.primary} strokeWidth="0.8" strokeDasharray="2 3" />
-            <circle cx="200" cy="30" r="3" fill={vf.primary} />
-            <text x="160" y="22" style={{ ...mono, fontSize: 9, fill: vf.primary, letterSpacing: "0.2em", fontWeight: 700 }}>
-              TEMP-LOCK
-            </text>
-          </motion.g>
-
-          {/* Dimension ticks */}
-          <motion.g
-            initial={{ opacity: 0 }}
-            animate={inView ? { opacity: 1 } : {}}
-            transition={{ duration: 0.6, delay: 1.1 }}
-          >
-            <line x1="80" y1="248" x2="320" y2="248" stroke={vf.muted} strokeWidth="0.6" />
-            <line x1="80" y1="244" x2="80" y2="252" stroke={vf.muted} strokeWidth="0.6" />
-            <line x1="320" y1="244" x2="320" y2="252" stroke={vf.muted} strokeWidth="0.6" />
-            <text x="200" y="258" textAnchor="middle" style={{ ...mono, fontSize: 8, fill: vf.muted, letterSpacing: "0.22em" }}>
-              ONE UNIT OF TRUST
-            </text>
-          </motion.g>
-        </svg>
-        <div>
-          <div style={{ ...mono, fontSize: 13, color: vf.primary, letterSpacing: "0.22em", fontWeight: 700, marginBottom: 14 }}>
-            FIG. 02 · THE COOLER
-          </div>
-          <p style={{ fontFamily: sans, fontSize: 18, color: "var(--text-secondary)", lineHeight: 1.65, margin: 0 }}>
-            Every rule on this page exists so this one object never disappears between two people.
-          </p>
+    <div className="vf-prin-row" tabIndex={0}>
+      <span className="vf-prin-icon"><IconComp size={22} weight="regular" color="currentColor" /></span>
+      <div className="vf-prin-main">
+        <div className="vf-prin-head">
+          <span className="vf-prin-num">{num}</span>
+          <h3 className="vf-prin-title">{title}</h3>
         </div>
+        <p className="vf-prin-desc">{description}</p>
       </div>
+    </div>
+  );
+}
+
+function CoolerBlueprint() {
+  const rootRef = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+    const ctx = gsap.context(() => {
+      const q = gsap.utils.selector(root);
+      const cooler = q(".cb-cooler");
+      const leaders = q(".cb-leader");
+      const labels = q(".cb-label");
+      const dim = q(".cb-dim");
+      const mm = gsap.matchMedia();
+
+      mm.add("(prefers-reduced-motion: reduce)", () => {
+        gsap.set([cooler, labels, dim], { opacity: 1, y: 0 });
+        gsap.set(leaders, { strokeDashoffset: 0 });
+      });
+      mm.add("(prefers-reduced-motion: no-preference)", () => {
+        gsap.set(cooler, { opacity: 0, y: 16 });
+        gsap.set(leaders, { strokeDashoffset: 1 });
+        gsap.set(labels, { opacity: 0, y: 6 });
+        gsap.set(dim, { opacity: 0 });
+        const tl = gsap.timeline({ scrollTrigger: { trigger: root, start: "top 80%", once: true } });
+        tl.to(cooler, { opacity: 1, y: 0, duration: 0.7, ease: "power2.out" }, 0);
+        tl.to(leaders, { strokeDashoffset: 0, duration: 0.6, stagger: 0.12, ease: "power1.inOut" }, 0.35);
+        tl.to(labels, { opacity: 1, y: 0, duration: 0.4, stagger: 0.12, ease: "power2.out" }, 0.55);
+        tl.to(dim, { opacity: 1, duration: 0.5, ease: "power2.out" }, 0.9);
+      });
+    }, rootRef);
+    return () => ctx.revert();
+  }, []);
+
+  return (
+    <div ref={rootRef} className="vf-cooler">
+      <div className="vf-cooler-cap">FIG. 02 · THE COOLER</div>
+      <svg viewBox="0 0 460 360" preserveAspectRatio="xMidYMid meet" style={{ width: "100%", height: "auto", display: "block" }}>
+        {/* cooler */}
+        <g className="cb-cooler">
+          <rect x="98" y="152" width="264" height="156" rx="10" fill={vf.surface} stroke={vf.primary} strokeWidth="1.6" />
+          <line x1="106" y1="196" x2="354" y2="196" stroke={vf.primary} strokeWidth="0.7" opacity="0.3" />
+          <line x1="106" y1="288" x2="354" y2="288" stroke={vf.primary} strokeWidth="0.7" opacity="0.3" />
+          <rect x="90" y="130" width="280" height="28" rx="6" fill="#fff" stroke={vf.primary} strokeWidth="1.6" />
+          <path d="M 186 130 Q 186 102, 230 102 Q 274 102, 274 130" fill="none" stroke={vf.primary} strokeWidth="1.6" strokeLinecap="round" />
+          <rect x="94" y="154" width="9" height="14" rx="1.5" fill="#fff" stroke={vf.primary} strokeWidth="1.2" />
+          <rect x="357" y="154" width="9" height="14" rx="1.5" fill="#fff" stroke={vf.primary} strokeWidth="1.2" />
+          {/* QR sticker */}
+          <rect x="128" y="196" width="54" height="54" rx="3" fill="#fff" stroke={vf.primary} strokeWidth="1" />
+          <rect x="134" y="202" width="13" height="13" fill="none" stroke={vf.primary} strokeWidth="2" />
+          <rect x="138" y="206" width="5" height="5" fill={vf.primary} />
+          <rect x="163" y="202" width="13" height="13" fill="none" stroke={vf.primary} strokeWidth="2" />
+          <rect x="167" y="206" width="5" height="5" fill={vf.primary} />
+          <rect x="134" y="231" width="13" height="13" fill="none" stroke={vf.primary} strokeWidth="2" />
+          <rect x="138" y="235" width="5" height="5" fill={vf.primary} />
+          <rect x="163" y="231" width="4" height="4" fill={vf.primary} />
+          <rect x="171" y="231" width="4" height="4" fill={vf.primary} />
+          <rect x="163" y="239" width="4" height="4" fill={vf.primary} />
+          <rect x="171" y="239" width="4" height="4" fill={vf.primary} />
+          {/* label plate */}
+          <rect x="206" y="204" width="128" height="42" rx="3" fill="#fff" stroke={vf.primary} strokeWidth="0.9" />
+          <line x1="214" y1="216" x2="326" y2="216" stroke={vf.primary} strokeWidth="0.7" opacity="0.45" />
+          <line x1="214" y1="225" x2="300" y2="225" stroke={vf.primary} strokeWidth="0.7" opacity="0.45" />
+          <line x1="214" y1="234" x2="314" y2="234" stroke={vf.primary} strokeWidth="0.7" opacity="0.45" />
+          {/* temp pill */}
+          <rect x="266" y="262" width="76" height="25" rx="12.5" fill={vf.primary} />
+          <text x="304" y="279" textAnchor="middle" style={{ ...mono, fontSize: 11, fill: "#fff", letterSpacing: "0.06em", fontWeight: 700 }}>2–8°C</text>
+        </g>
+
+        {/* callout leaders */}
+        <line className="cb-leader" x1="155" y1="196" x2="82" y2="98" stroke={vf.primary} strokeWidth="0.9" strokeDasharray="1 1" pathLength={1} />
+        <line className="cb-leader" x1="270" y1="204" x2="392" y2="98" stroke={vf.primary} strokeWidth="0.9" strokeDasharray="1 1" pathLength={1} />
+        <line className="cb-leader" x1="342" y1="274" x2="408" y2="250" stroke={vf.primary} strokeWidth="0.9" strokeDasharray="1 1" pathLength={1} />
+
+        {/* callout dots + labels */}
+        <g className="cb-label">
+          <circle cx="82" cy="98" r="2.6" fill={vf.primary} />
+          <text x="40" y="90" style={{ ...mono, fontSize: 10, fill: vf.primary, letterSpacing: "0.18em", fontWeight: 700 }}>QR · PAIRED</text>
+        </g>
+        <g className="cb-label">
+          <circle cx="392" cy="98" r="2.6" fill={vf.primary} />
+          <text x="352" y="90" textAnchor="middle" style={{ ...mono, fontSize: 10, fill: vf.primary, letterSpacing: "0.18em", fontWeight: 700 }}>CHAIN · ID</text>
+        </g>
+        <g className="cb-label">
+          <circle cx="408" cy="250" r="2.6" fill={vf.primary} />
+          <text x="414" y="254" style={{ ...mono, fontSize: 10, fill: vf.primary, letterSpacing: "0.18em", fontWeight: 700 }}>TEMP · LOCK</text>
+        </g>
+
+        {/* dimension */}
+        <g className="cb-dim">
+          <line x1="98" y1="330" x2="362" y2="330" stroke={vf.muted} strokeWidth="0.7" />
+          <line x1="98" y1="325" x2="98" y2="335" stroke={vf.muted} strokeWidth="0.7" />
+          <line x1="362" y1="325" x2="362" y2="335" stroke={vf.muted} strokeWidth="0.7" />
+          <text x="230" y="348" textAnchor="middle" style={{ ...mono, fontSize: 9, fill: vf.muted, letterSpacing: "0.22em", fontWeight: 600 }}>ONE UNIT OF TRUST</text>
+        </g>
+      </svg>
+
       <style>{`
-        @media (max-width: 720px) {
-          .sketch-grid { grid-template-columns: minmax(0, 1fr) !important; }
-        }
+        .vf-cooler { position: relative; padding: clamp(22px, 3vw, 40px); border: 1px solid ${vf.subtle}; border-radius: 10px; background:
+          repeating-linear-gradient(0deg, rgba(30,64,175,0.045) 0, rgba(30,64,175,0.045) 1px, transparent 1px, transparent 26px),
+          repeating-linear-gradient(90deg, rgba(30,64,175,0.045) 0, rgba(30,64,175,0.045) 1px, transparent 1px, transparent 26px),
+          var(--bg-elevated); overflow: hidden; }
+        .vf-cooler-cap { position: absolute; top: clamp(18px, 2.2vw, 26px); left: clamp(22px, 3vw, 40px); font-family: 'Manrope', monospace; text-transform: uppercase; font-size: 12px; color: ${vf.primary}; letter-spacing: 0.2em; font-weight: 700; }
+
+        /* Principles layout */
+        .vf-prin-layout { display: grid; grid-template-columns: minmax(0, 1.04fr) minmax(0, 1fr); gap: clamp(32px, 4vw, 64px); align-items: start; }
+        .vf-cooler-lede { font-family: ${serif}; font-style: italic; font-size: clamp(18px, 1.6vw, 22px); line-height: 1.55; color: var(--text-primary); margin: clamp(22px, 2.6vw, 30px) 0 0; max-width: 460px; }
+        .vf-cooler-lede em { color: ${vf.primary}; font-style: italic; }
+        @media (max-width: 900px) { .vf-prin-layout { grid-template-columns: 1fr; gap: clamp(28px, 5vw, 44px); } .vf-cooler-lede { max-width: none; } }
+
+        /* Principles list */
+        .vf-prin-list { display: flex; flex-direction: column; }
+        .vf-prin-row { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: clamp(16px, 1.6vw, 22px); align-items: start; padding: clamp(20px, 2.2vw, 28px) clamp(8px, 1vw, 14px); border-top: 1px solid ${vf.subtle}; outline: none; transition: background 260ms; }
+        .vf-prin-row:last-child { border-bottom: 1px solid ${vf.subtle}; }
+        .vf-prin-row:hover, .vf-prin-row:focus-visible { background: ${vf.surface}; }
+        .vf-prin-icon { width: 46px; height: 46px; border-radius: 8px; background: ${vf.subtle}; color: ${vf.primary}; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background 260ms, color 260ms; }
+        .vf-prin-row:hover .vf-prin-icon, .vf-prin-row:focus-visible .vf-prin-icon { background: ${vf.primary}; color: #fff; }
+        .vf-prin-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 8px; flex-wrap: wrap; }
+        .vf-prin-num { font-family: 'Manrope', monospace; text-transform: uppercase; font-size: 12px; color: ${vf.muted}; letter-spacing: 0.14em; font-weight: 700; }
+        .vf-prin-title { font-family: ${serif}; font-weight: 700; font-size: clamp(20px, 1.9vw, 24px); letter-spacing: -0.015em; line-height: 1.2; color: var(--text-primary); margin: 0; }
+        .vf-prin-desc { font-family: ${sans}; font-size: 16px; line-height: 1.6; color: var(--text-secondary); margin: 0; }
       `}</style>
     </div>
   );
@@ -1920,35 +1891,28 @@ export default function VeriflowCase() {
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <Reveal><SectionHeader num="03" phase="Principles" title="Four rules that shaped every screen." /></Reveal>
 
-          <Reveal delay={0.05}>
-            <div style={{ marginBottom: "clamp(40px, 5vw, 64px)" }}>
-              <CoolerSketch />
-            </div>
-          </Reveal>
-
-          <div style={{
-            display: "grid", gap: 20,
-            gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
-          }}>
-            <Reveal delay={0}>
-              <PrincipleCard num="P.01" title="Linear, not branching"
-                description="A fork in a flow is an error waiting to happen. One next step, always visible."
-                IconComp={ArrowRight} />
+          <div className="vf-prin-layout">
+            <Reveal delay={0.05}>
+              <div>
+                <CoolerBlueprint />
+                <p className="vf-cooler-lede">Every rule on this page exists so this one object never <em>disappears</em> between two people.</p>
+              </div>
             </Reveal>
-            <Reveal delay={0.08}>
-              <PrincipleCard num="P.02" title="Gate at every handoff"
-                description="A sample leaves one custody only when the next is confirmed. Small gate, always there."
-                IconComp={ShieldCheck} />
-            </Reveal>
-            <Reveal delay={0.16}>
-              <PrincipleCard num="P.03" title="Forgive the hurry"
-                description="A missed scan is a retry, not a failure. Override exists, with a PIN and a record."
-                IconComp={HandTap} />
-            </Reveal>
-            <Reveal delay={0.24}>
-              <PrincipleCard num="P.04" title="Ambient over alert"
-                description="A wall replaces the phone on the counter. Glance, know. No notifications."
-                IconComp={Television} />
+            <Reveal delay={0.12}>
+              <div className="vf-prin-list">
+                <PrincipleRow num="P.01" title="Linear, not branching"
+                  description="A fork in a flow is an error waiting to happen. One next step, always visible."
+                  IconComp={ArrowRight} />
+                <PrincipleRow num="P.02" title="Gate at every handoff"
+                  description="A sample leaves one custody only when the next is confirmed. Small gate, always there."
+                  IconComp={ShieldCheck} />
+                <PrincipleRow num="P.03" title="Forgive the hurry"
+                  description="A missed scan is a retry, not a failure. Override exists, with a PIN and a record."
+                  IconComp={HandTap} />
+                <PrincipleRow num="P.04" title="Ambient over alert"
+                  description="A wall replaces the phone on the counter. Glance, know. No notifications."
+                  IconComp={Television} />
+              </div>
             </Reveal>
           </div>
         </div>
