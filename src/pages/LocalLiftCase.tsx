@@ -1742,12 +1742,6 @@ export default function LocalLiftCase() {
       transition={{ duration: 0.4 }}
       className="pt-14"
     >
-      {/* Top nav mask */}
-      <div style={{
-        position: "fixed", top: 0, left: 0, right: 0, height: 59,
-        background: "var(--bg-primary)", zIndex: 45, pointerEvents: "none",
-      }} />
-
       {/* Scroll progress */}
       <div style={{
         position: "fixed", top: 56, left: 0, right: 0, height: 2,
