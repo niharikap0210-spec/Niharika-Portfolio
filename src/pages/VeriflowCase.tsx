@@ -801,97 +801,117 @@ function LessonCard({ index, title, body, tag }: { index: number; title: string;
    SYSTEM DIAGRAM: three surfaces with preview thumbnails
 ══════════════════════════════════════════════════════════════════ */
 function SystemDiagram() {
-  const [hover, setHover] = useState<number | null>(null);
-  const nodes: { label: string; role: string; Icon: Icon; qty: string; preview: string }[] = [
-    { label: "Tablet",     role: "The action. PIN, scan, verify, exit.",                  Icon: Tablet,     qty: "kiosk · 10\"",    preview: "/veriflow/start-scanning.png" },
-    { label: "Web",        role: "The memory. Dashboards, registry, per-sample journey.", Icon: Monitor,    qty: "control tower",   preview: "/veriflow/dashboard.png" },
-    { label: "Ambient TV", role: "The state. Glance, don't click.",                       Icon: Television, qty: "wall mount",      preview: "/veriflow/tv-dashboard-1.png" },
+  const rootRef = useRef<HTMLDivElement>(null);
+  const surfaces: { role: string; name: string; desc: string; tag: string; Icon: Icon; src: string }[] = [
+    { role: "Action", name: "Tablet",     desc: "PIN, scan, verify, exit — the clinic's kiosk.",     tag: "Kiosk · 10\"",  Icon: Tablet,     src: "/veriflow/start-scanning.png" },
+    { role: "Memory", name: "Web",        desc: "Dashboards, registry, and every sample's journey.", tag: "Control tower", Icon: Monitor,    src: "/veriflow/dashboard.png" },
+    { role: "State",  name: "Ambient TV", desc: "The live state of the lab. Glance, don't click.",   tag: "Wall mount",    Icon: Television, src: "/veriflow/tv-dashboard-1.png" },
   ];
+
+  useLayoutEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+    const ctx = gsap.context(() => {
+      const q = gsap.utils.selector(root);
+      const line  = q(".vf-sys-line")[0] as HTMLElement;
+      const nodes = q(".vf-sys-node") as HTMLElement[];
+      const cards = q(".vf-sys-card") as HTMLElement[];
+      const pulse = q(".vf-sys-pulse")[0] as HTMLElement;
+      const chain = q(".vf-sys-chain")[0] as HTMLElement;
+
+      const mm = gsap.matchMedia();
+
+      mm.add("(prefers-reduced-motion: reduce)", () => {
+        gsap.set(line, { scaleX: 1 });
+        gsap.set(nodes, { scale: 1, opacity: 1 });
+        gsap.set(cards, { opacity: 1, y: 0 });
+        gsap.set(pulse, { opacity: 0 });
+      });
+
+      mm.add("(prefers-reduced-motion: no-preference)", () => {
+        gsap.set(line, { scaleX: 0, transformOrigin: "left center" });
+        gsap.set(nodes, { scale: 0, opacity: 0, transformOrigin: "50% 50%" });
+        gsap.set(cards, { opacity: 0, y: 26 });
+        gsap.set(pulse, { opacity: 0 });
+
+        const tl = gsap.timeline({ scrollTrigger: { trigger: root, start: "top 76%", once: true } });
+        tl.to(line, { scaleX: 1, duration: 0.9, ease: "power2.out" }, 0);
+        tl.to(nodes, { scale: 1, opacity: 1, duration: 0.45, stagger: 0.2, ease: "power3.out" }, 0.25);
+        tl.to(cards, { opacity: 1, y: 0, duration: 0.65, stagger: 0.2, ease: "power2.out" }, 0.35);
+
+        // A single token travels the chain, over and over — the sample flowing across the three surfaces.
+        const runPulse = () => {
+          const w = chain.clientWidth || 0;
+          if (!w) return;
+          const x0 = w * (1 / 6), x1 = w * (5 / 6);
+          gsap.timeline({ repeat: -1, repeatDelay: 0.9 })
+            .set(pulse, { x: x0, opacity: 0 })
+            .to(pulse, { opacity: 1, duration: 0.35 }, 0)
+            .to(pulse, { x: x1, duration: 2.6, ease: "none" }, 0)
+            .to(pulse, { opacity: 0, duration: 0.35 }, 2.3);
+        };
+        tl.call(runPulse, [], 1.1);
+      });
+    }, rootRef);
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <div style={{
-      padding: "clamp(28px, 4vw, 44px)",
-      background: "var(--bg-elevated)",
-      border: `1px solid ${vf.subtle}`,
-      borderRadius: 8, position: "relative",
-    }}>
-      <div style={{
-        ...mono, fontSize: 13, color: vf.primary, letterSpacing: "0.22em", fontWeight: 700,
-        marginBottom: 32, display: "flex", alignItems: "center", gap: 10,
-      }}>
-        <span aria-hidden style={{ width: 3, height: 14, background: vf.primary }} />
-        FIG. 03 · THREE SURFACES, ONE CHAIN
+    <div ref={rootRef} className="vf-sys">
+      <div className="vf-sys-chain" aria-hidden>
+        <div className="vf-sys-line" />
+        {surfaces.map((s, i) => (
+          <span key={s.name} className="vf-sys-node" style={{ left: `${((2 * i + 1) / 6) * 100}%` }} />
+        ))}
+        <span className="vf-sys-pulse" />
       </div>
-      <div style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(340px, 1fr))",
-        gap: "clamp(20px, 2.2vw, 28px)",
-      }}>
-        {nodes.map((n, i) => {
-          const pad = "clamp(22px, 2.2vw, 30px)";
-          return (
-          <motion.div
-            key={n.label}
-            onHoverStart={() => setHover(i)}
-            onHoverEnd={() => setHover(null)}
-            style={{
-              background: "#fff",
-              border: `1px solid ${hover === i ? vf.primary : vf.subtle}`, borderRadius: 6,
-              position: "relative",
-              transition: "border-color 240ms, transform 240ms",
-              transform: hover === i ? "translateY(-4px)" : "translateY(0)",
-              cursor: "default",
-              overflow: "hidden",
-            }}
-          >
-            <div style={{ padding: pad, paddingBottom: 0 }}>
-              <div style={{
-                position: "absolute", top: 14, right: 16,
-                ...mono, fontSize: 11, color: vf.muted, letterSpacing: "0.14em",
-              }}>
-                S.0{i + 1}
+
+      <div className="vf-sys-grid">
+        {surfaces.map((s, i) => (
+          <div key={s.name} className="vf-sys-card" tabIndex={0}>
+            <div className="vf-sys-body">
+              <div className="vf-sys-head">
+                <span className="vf-sys-role">{String(i + 1).padStart(2, "0")} · {s.role}</span>
+                <span className="vf-sys-icon"><s.Icon size={22} weight="regular" color="currentColor" /></span>
               </div>
-              <div style={{
-                width: 52, height: 52, borderRadius: 6,
-                background: vf.subtle, display: "flex", alignItems: "center", justifyContent: "center",
-                marginBottom: 18,
-              }}>
-                <n.Icon size={26} color={vf.primary} weight="regular" />
-              </div>
-              <div style={{
-                fontFamily: serif, fontWeight: 600, fontSize: "clamp(22px, 2.2vw, 28px)",
-                color: "var(--text-primary)", marginBottom: 6, lineHeight: 1.2,
-              }}>
-                {n.label}
-              </div>
-              <div style={{
-                fontFamily: sans, fontSize: 18, color: "var(--text-secondary)", lineHeight: 1.75,
-                marginBottom: 16,
-              }}>
-                {n.role}
-              </div>
-              <div style={{
-                ...mono, fontSize: 12, color: vf.primary, letterSpacing: "0.18em", fontWeight: 700,
-                marginBottom: 20,
-              }}>
-                {n.qty}
-              </div>
+              <h3 className="vf-sys-name">{s.name}</h3>
+              <p className="vf-sys-desc">{s.desc}</p>
+              <div className="vf-sys-tag">{s.tag}</div>
             </div>
-            <div style={{
-              aspectRatio: "16/10",
-              overflow: "hidden",
-              borderTop: `1px solid ${vf.subtle}`,
-              background: "#FAFAFA",
-            }}>
-              <img src={n.preview} alt="" style={{
-                width: "100%", height: "100%", objectFit: "cover",
-                transform: hover === i ? "scale(1.04)" : "scale(1)",
-                transition: "transform 500ms ease-out",
-              }} />
+            <div className="vf-sys-screen">
+              <img src={s.src} alt={`${s.name} — ${s.role}`} loading="lazy" />
             </div>
-          </motion.div>
-          );
-        })}
+          </div>
+        ))}
       </div>
+
+      <div className="vf-sys-caption">Action → Memory → State · one unbroken chain</div>
+
+      <style>{`
+        .vf-sys { position: relative; }
+        .vf-sys-chain { position: relative; height: 40px; margin: 0 auto clamp(18px, 2.2vw, 30px); }
+        .vf-sys-line { position: absolute; left: 0; right: 0; top: 50%; height: 2px; margin-top: -1px; background: ${vf.primary}; opacity: 0.5; }
+        .vf-sys-node { position: absolute; top: 50%; width: 13px; height: 13px; margin-top: -6.5px; margin-left: -6.5px; border-radius: 50%; background: var(--bg-primary); border: 2px solid ${vf.primary}; }
+        .vf-sys-pulse { position: absolute; top: 50%; left: 0; width: 9px; height: 9px; margin-top: -4.5px; margin-left: -4.5px; border-radius: 50%; background: ${vf.primary}; box-shadow: 0 0 0 4px rgba(30,64,175,0.16); }
+        .vf-sys-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(16px, 1.8vw, 24px); }
+        .vf-sys-card { display: flex; flex-direction: column; background: var(--bg-elevated); border: 1px solid ${vf.subtle}; border-radius: 12px; overflow: hidden; outline: none; transition: transform 380ms cubic-bezier(0.25,1,0.4,1), border-color 300ms, box-shadow 380ms; }
+        .vf-sys-card:hover, .vf-sys-card:focus-visible { transform: translateY(-6px); border-color: ${vf.primary}; box-shadow: 0 1px 2px rgba(15,42,120,0.05), 0 20px 44px rgba(15,42,120,0.13); }
+        .vf-sys-body { padding: clamp(22px, 2.2vw, 30px); }
+        .vf-sys-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: clamp(18px, 2vw, 26px); }
+        .vf-sys-role { font-family: 'Manrope', monospace; text-transform: uppercase; font-size: 12px; color: ${vf.primary}; letter-spacing: 0.18em; font-weight: 700; }
+        .vf-sys-icon { color: ${vf.primary}; display: inline-flex; }
+        .vf-sys-name { font-family: ${serif}; font-weight: 700; font-size: clamp(24px, 2.4vw, 30px); letter-spacing: -0.02em; line-height: 1.15; color: var(--text-primary); margin: 0 0 10px; }
+        .vf-sys-desc { font-family: ${sans}; font-size: 16px; line-height: 1.6; color: var(--text-secondary); margin: 0 0 18px; }
+        .vf-sys-tag { font-family: 'Manrope', monospace; text-transform: uppercase; font-size: 11.5px; color: var(--text-muted); letter-spacing: 0.16em; font-weight: 700; }
+        .vf-sys-screen { aspect-ratio: 16 / 10; overflow: hidden; border-top: 1px solid ${vf.subtle}; background: #FAFAFA; }
+        .vf-sys-screen img { width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block; transition: transform 520ms ease-out; }
+        .vf-sys-card:hover .vf-sys-screen img, .vf-sys-card:focus-visible .vf-sys-screen img { transform: scale(1.04); }
+        .vf-sys-caption { font-family: 'Manrope', monospace; text-transform: uppercase; text-align: center; font-size: 12px; color: ${vf.muted}; letter-spacing: 0.2em; font-weight: 600; margin-top: clamp(24px, 3vw, 36px); }
+        @media (max-width: 820px) {
+          .vf-sys-grid { grid-template-columns: 1fr; }
+          .vf-sys-chain { display: none; }
+        }
+      `}</style>
     </div>
   );
 }
