@@ -32,6 +32,7 @@ import {
 import type { Icon } from "@phosphor-icons/react";
 import { projects, type Project } from "../data/projects";
 import { ProjectHeroStage } from "../components/ProjectHeroStage";
+import { SectionHeader, CASE_H2 } from "../components/CaseSectionHeader";
 
 /* ── Shelfie palette, scoped to this page ─────────────────────────── */
 const sh = {
@@ -67,8 +68,8 @@ const t = {
   } as React.CSSProperties,
   h2Section: {
     fontFamily: serif, fontWeight: 700,
-    fontSize: "clamp(30px, 3.6vw, 44px)",
-    letterSpacing: "-0.025em", lineHeight: 1.2,
+    fontSize: "clamp(32px, 3.9vw, 48px)",
+    letterSpacing: "-0.025em", lineHeight: 1.18,
     color: "var(--text-primary)",
   } as React.CSSProperties,
   h3Lede: {
@@ -92,7 +93,6 @@ const t = {
 };
 
 const SECTION_PAD = "clamp(72px, 9vw, 120px) 0";
-const TOTAL = "08";
 
 /* ══════════════════════════════════════════════════════════════════
    PRIMITIVES
@@ -130,60 +130,6 @@ function CountUp({ value, suffix = "", duration = 1.4 }: { value: number; suffix
   }, [inView, value, duration, mv]);
   return (
     <span ref={ref}>{display}{suffix}</span>
-  );
-}
-
-function SectionHeader({
-  num, title, phase,
-}: { num: string; title: string; phase: string }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-40px" });
-  return (
-    <div ref={ref} style={{ marginBottom: "clamp(40px, 5vw, 64px)" }}>
-      <div style={{
-        display: "flex", alignItems: "baseline", gap: 18, flexWrap: "wrap",
-        paddingBottom: 14,
-      }}>
-        <motion.span
-          initial={{ opacity: 0, y: 8 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.55, ease: [0.25, 1, 0.4, 1] }}
-          style={{
-            ...mono, fontSize: 14, color: sh.primary,
-            letterSpacing: "0.22em", fontWeight: 700,
-          }}>
-          {num} <span style={{ color: "var(--text-muted)", fontWeight: 400 }}>/ {TOTAL}</span>
-        </motion.span>
-        <motion.span
-          initial={{ opacity: 0, y: 8 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.08, duration: 0.55, ease: [0.25, 1, 0.4, 1] }}
-          style={{
-            ...mono, fontSize: 14, color: "var(--text-primary)",
-            letterSpacing: "0.22em", fontWeight: 600,
-          }}>
-          {title}
-        </motion.span>
-        <motion.span
-          initial={{ opacity: 0 }}
-          animate={inView ? { opacity: 1 } : {}}
-          transition={{ delay: 0.2, duration: 0.55 }}
-          style={{
-            ...mono, fontSize: 13, color: "var(--text-muted)",
-            letterSpacing: "0.2em", marginLeft: "auto",
-          }}>
-          {phase}
-        </motion.span>
-      </div>
-      <motion.div
-        initial={{ scaleX: 0 }}
-        animate={inView ? { scaleX: 1 } : {}}
-        transition={{ delay: 0.15, duration: 0.9, ease: [0.25, 1, 0.4, 1] }}
-        style={{
-          height: 1, background: sh.primary, transformOrigin: "left",
-          opacity: 0.6,
-        }} />
-    </div>
   );
 }
 
@@ -1773,7 +1719,7 @@ export default function ShelfieCase() {
                 transition={{ delay: 0.5, duration: 0.7 }}
                 style={{
                   fontFamily: serif, fontStyle: "italic",
-                  fontSize: "clamp(21px, 1.9vw, 28px)",
+                  fontSize: "clamp(18px, 1.7vw, 24px)",
                   color: "var(--text-secondary)",
                   lineHeight: 1.5, maxWidth: 520,
                   marginBottom: "clamp(28px, 3vw, 42px)",
@@ -1857,19 +1803,16 @@ export default function ShelfieCase() {
         borderBottom: "1px solid var(--border)",
       }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
-          <SectionHeader num="01" title="Premise" phase="The stakes" />
+          <SectionHeader
+            num="01"
+            phase="Premise"
+            title={<>A three-word<br /><span style={{ fontStyle: "italic", color: sh.primary }}>public-health</span><br />problem.</>}
+            meta="The stakes"
+            accent={sh.primary}
+          />
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mb-14 items-start">
             <div className="lg:col-span-6">
-              <Reveal>
-                <h2 style={{ ...t.h2Section, marginBottom: 20 }}>
-                  A three-word
-                  <br />
-                  <span style={{ fontStyle: "italic", color: sh.primary }}>public-health</span>
-                  <br />
-                  problem.
-                </h2>
-              </Reveal>
               <Reveal delay={0.12}>
                 <p style={{ ...t.bodyLg, maxWidth: 480 }}>
                   The last thing a shopper reads before a purchase. The first thing they
@@ -2064,17 +2007,16 @@ export default function ShelfieCase() {
       {/* ─── 02 THE PROBLEM ON THE SHELF ──────────────────────────── */}
       <section className="blueprint-grid-subtle" style={{ padding: SECTION_PAD }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
-          <SectionHeader num="02" title="What fails on the shelf" phase="Failure cases" />
+          <SectionHeader
+            num="02"
+            phase="What fails on the shelf"
+            title={<>Four ways a label<span style={{ fontStyle: "italic", color: sh.primary }}> disappears</span>, in plain sight.</>}
+            meta="Failure cases"
+            accent={sh.primary}
+          />
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mb-12 items-end">
             <div className="lg:col-span-7">
-              <Reveal>
-                <h2 style={{ ...t.h2Section, marginBottom: 16 }}>
-                  Four ways a label
-                  <span style={{ fontStyle: "italic", color: sh.primary }}> disappears</span>
-                  , in plain sight.
-                </h2>
-              </Reveal>
               <Reveal delay={0.1}>
                 <p style={{ ...t.bodyLg, maxWidth: 620 }}>
                   I pulled four representative products off the shelf, then timed
@@ -2099,16 +2041,16 @@ export default function ShelfieCase() {
         borderBottom: "1px solid var(--border)",
       }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
-          <SectionHeader num="03" title="How I studied it" phase="Method" />
+          <SectionHeader
+            num="03"
+            phase="How I studied it"
+            title={<>A mixed-methods study,<span style={{ fontStyle: "italic", color: sh.primary }}> grounded in the aisle.</span></>}
+            meta="Method"
+            accent={sh.primary}
+          />
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mb-12 items-end">
             <div className="lg:col-span-8">
-              <Reveal>
-                <h2 style={{ ...t.h2Section, marginBottom: 18 }}>
-                  A mixed-methods study,
-                  <span style={{ fontStyle: "italic", color: sh.primary }}> grounded in the aisle.</span>
-                </h2>
-              </Reveal>
               <Reveal delay={0.1}>
                 <p style={{ ...t.bodyLg, maxWidth: 640 }}>
                   Three complementary lenses: watch them, time them, ask them.
@@ -2172,17 +2114,17 @@ export default function ShelfieCase() {
       {/* ─── 04 VOICES FROM THE AISLE ─────────────────────────────── */}
       <section style={{ padding: SECTION_PAD, background: sh.surface }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
-          <SectionHeader num="04" title="Voices from the aisle" phase="Research highlights" />
+          <SectionHeader
+            num="04"
+            phase="Voices from the aisle"
+            title={<>Twenty-five shoppers,<span style={{ fontStyle: "italic", color: sh.primary }}> in their own words.</span></>}
+            meta="Research highlights"
+            accent={sh.primary}
+          />
 
           {/* Lede - text only, panel sits below */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mb-10 items-end">
             <div className="lg:col-span-8">
-              <Reveal>
-                <h2 style={{ ...t.h2Section, marginBottom: 16 }}>
-                  Twenty-five shoppers,
-                  <span style={{ fontStyle: "italic", color: sh.primary }}> in their own words.</span>
-                </h2>
-              </Reveal>
               <Reveal delay={0.1}>
                 <p style={{ ...t.bodyLg, maxWidth: 640 }}>
                   Semi-structured shop-alongs and post-task debriefs. Verbatim transcripts,
@@ -2249,16 +2191,16 @@ export default function ShelfieCase() {
       {/* ─── 05 PRINCIPLES APPLIED ────────────────────────────────── */}
       <section className="blueprint-grid-subtle" style={{ padding: SECTION_PAD }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
-          <SectionHeader num="05" title="Principles I pressed against" phase="Synthesis" />
+          <SectionHeader
+            num="05"
+            phase="Principles I pressed against"
+            title={<>Every failure traced back to a<span style={{ fontStyle: "italic", color: sh.primary }}> named principle.</span></>}
+            meta="Synthesis"
+            accent={sh.primary}
+          />
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mb-12 items-end">
             <div className="lg:col-span-7">
-              <Reveal>
-                <h2 style={{ ...t.h2Section, marginBottom: 16 }}>
-                  Every failure traced back to a
-                  <span style={{ fontStyle: "italic", color: sh.primary }}> named principle.</span>
-                </h2>
-              </Reveal>
               <Reveal delay={0.1}>
                 <p style={{ ...t.bodyLg, maxWidth: 580 }}>
                   Anecdotes don't change packaging. Principles do. I mapped each observation
@@ -2348,16 +2290,16 @@ export default function ShelfieCase() {
         borderBottom: "1px solid var(--border)",
       }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
-          <SectionHeader num="06" title="Design proposals" phase="Concepts" />
+          <SectionHeader
+            num="06"
+            phase="Design proposals"
+            title={<>Four concepts,<span style={{ fontStyle: "italic", color: sh.primary }}> two sides of the package.</span></>}
+            meta="Concepts"
+            accent={sh.primary}
+          />
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mb-14 items-end">
             <div className="lg:col-span-8">
-              <Reveal>
-                <h2 style={{ ...t.h2Section, marginBottom: 16 }}>
-                  Four concepts,
-                  <span style={{ fontStyle: "italic", color: sh.primary }}> two sides of the package.</span>
-                </h2>
-              </Reveal>
               <Reveal delay={0.1}>
                 <p style={{ ...t.bodyLg, maxWidth: 640 }}>
                   Better printing helps the aisle. Better tools help the pantry.
@@ -2431,16 +2373,16 @@ export default function ShelfieCase() {
       {/* ─── 07 OUTCOMES + TAKEAWAYS ──────────────────────────────── */}
       <section className="blueprint-grid-subtle" style={{ padding: SECTION_PAD }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
-          <SectionHeader num="07" title="What the work left me with" phase="Reflection" />
+          <SectionHeader
+            num="07"
+            phase="What the work left me with"
+            title={<>Research as a way<span style={{ fontStyle: "italic", color: sh.primary }}> to make the invisible arguable.</span></>}
+            meta="Reflection"
+            accent={sh.primary}
+          />
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mb-14 items-end">
             <div className="lg:col-span-9">
-              <Reveal>
-                <h2 style={{ ...t.h2Section, marginBottom: 16 }}>
-                  Research as a way
-                  <span style={{ fontStyle: "italic", color: sh.primary }}> to make the invisible arguable.</span>
-                </h2>
-              </Reveal>
               <Reveal delay={0.1}>
                 <p style={{ ...t.bodyLg, maxWidth: 640 }}>
                   The strongest thing this study left me with wasn't a single fix.

@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { ClockIcon as Clock, QuotesIcon as Quotes, DeviceMobileCameraIcon as DeviceMobileCamera, ApertureIcon as Aperture, LightbulbFilamentIcon as LightbulbFilament, CheckCircleIcon as CheckCircle, UsersThreeIcon as UsersThree, SparkleIcon as Sparkle, PushPinIcon as PushPin, CubeIcon as Cube, CompassIcon as Compass, ArrowUpIcon as ArrowUp, ArrowRightIcon as ArrowRight, MicrophoneIcon as Microphone, ChatCircleDotsIcon as ChatCircleDots, EyeIcon as Eye, EnvelopeSimpleIcon as Envelope, SquaresFourIcon as SquaresFour, FolderOpenIcon as FolderOpen, ClipboardTextIcon as ClipboardText } from "@phosphor-icons/react";
 import { projects, type Project } from "../data/projects";
 import { ProjectHeroStage } from "../components/ProjectHeroStage";
+import { SectionHeader, CASE_H2 } from "../components/CaseSectionHeader";
 
 /* ── Arko brand palette (scoped to this page only) ─────────────── */
 const arko = {
@@ -69,9 +70,9 @@ const t = {
   h2Section: {
     fontFamily: serif,
     fontWeight: 700,
-    fontSize: "clamp(30px, 3.6vw, 44px)",
+    fontSize: "clamp(32px, 3.9vw, 48px)",
     letterSpacing: "-0.025em",
-    lineHeight: 1.2,
+    lineHeight: 1.18,
     color: "var(--text-primary)",
   } as React.CSSProperties,
   h3Lede: {
@@ -143,66 +144,6 @@ function CountUp({
     <span ref={ref} className={className} style={style}>
       {prefix}{display}{suffix}
     </span>
-  );
-}
-
-/* ══════════════════════════════════════════════════════════════════
-   SECTION HEADER - replaces the old decorative ChapterMark
-   Clean editorial eyebrow: number · section · phase + rule line
-══════════════════════════════════════════════════════════════════ */
-function SectionHeader({
-  num, title, phase, total = "09",
-}: {
-  num: string; title: string; phase: string; total?: string;
-}) {
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-40px" });
-  return (
-    <div ref={ref} style={{ marginBottom: "clamp(40px, 5vw, 64px)" }}>
-      <div style={{
-        display: "flex", alignItems: "baseline", gap: 18, flexWrap: "wrap",
-        paddingBottom: 14,
-      }}>
-        <motion.span
-          initial={{ opacity: 0, y: 8 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.55, ease: [0.25, 1, 0.4, 1] }}
-          style={{
-            ...mono, fontSize: 14, color: arko.primary,
-            letterSpacing: "0.22em", fontWeight: 700,
-          }}>
-          {num} <span style={{ color: "var(--text-muted)", fontWeight: 400 }}>/ {total}</span>
-        </motion.span>
-        <motion.span
-          initial={{ opacity: 0, y: 8 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.08, duration: 0.55, ease: [0.25, 1, 0.4, 1] }}
-          style={{
-            ...mono, fontSize: 14, color: "var(--text-primary)",
-            letterSpacing: "0.22em", fontWeight: 600,
-          }}>
-          {title}
-        </motion.span>
-        <motion.span
-          initial={{ opacity: 0 }}
-          animate={inView ? { opacity: 1 } : {}}
-          transition={{ delay: 0.2, duration: 0.55 }}
-          style={{
-            ...mono, fontSize: 13, color: "var(--text-muted)",
-            letterSpacing: "0.2em", marginLeft: "auto",
-          }}>
-          {phase}
-        </motion.span>
-      </div>
-      <motion.div
-        initial={{ scaleX: 0 }}
-        animate={inView ? { scaleX: 1 } : {}}
-        transition={{ delay: 0.15, duration: 0.9, ease: [0.25, 1, 0.4, 1] }}
-        style={{
-          height: 1, background: arko.primary, transformOrigin: "left",
-          opacity: 0.6,
-        }} />
-    </div>
   );
 }
 
@@ -2262,7 +2203,7 @@ export default function ArkoCase() {
                 transition={{ delay: 0.5, duration: 0.7 }}
                 style={{
                   fontFamily: serif, fontStyle: "italic",
-                  fontSize: "clamp(21px, 1.9vw, 28px)",
+                  fontSize: "clamp(18px, 1.7vw, 24px)",
                   color: "var(--text-secondary)",
                   lineHeight: 1.5, maxWidth: 520,
                   marginBottom: "clamp(32px, 3.4vw, 48px)",
@@ -2420,17 +2361,20 @@ export default function ArkoCase() {
       <section style={{ padding: SECTION_PAD, background: "var(--bg-primary)" }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <Reveal>
-            <SectionHeader num="01" title="Premise" phase="Weeks 01 · 02" />
+            <SectionHeader
+              num="01"
+              phase="Premise"
+              title={<>One loop.{" "}
+                <em style={{ fontStyle: "italic", color: arko.primary }}>
+                  Zero back-and-forth.
+                </em></>}
+              meta="Weeks 01 · 02"
+              accent={arko.primary}
+            />
           </Reveal>
 
           <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-16 items-start">
             <Reveal className="md:col-span-7">
-              <h2 style={{ ...t.h2Section, marginBottom: 24 }}>
-                One loop.{" "}
-                <em style={{ fontStyle: "italic", color: arko.primary }}>
-                  Zero back-and-forth.
-                </em>
-              </h2>
               <p style={{ ...t.bodyLg, marginBottom: 40 }}>
                 Arko turns spatial design approvals from a week of emails into a single tap.
                 It is a B2B platform that replaces the three-tool handoff (design software, PDF exports,
@@ -2596,14 +2540,17 @@ export default function ArkoCase() {
       <section className="blueprint-grid-subtle" style={{ padding: SECTION_PAD }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <Reveal>
-            <SectionHeader num="02" title="Context" phase="Weeks 02 · 03" />
+            <SectionHeader
+              num="02"
+              phase="Context"
+              title={<>Clients can't visualize a space from a floor plan.{" "}
+              <em style={{ fontStyle: "italic", color: arko.primary }}>That gap costs real money.</em></>}
+              meta="Weeks 02 · 03"
+              accent={arko.primary}
+            />
           </Reveal>
 
           <Reveal>
-            <h2 style={{ ...t.h2Section, maxWidth: 820, marginBottom: 20 }}>
-              Clients can't visualize a space from a floor plan.{" "}
-              <em style={{ fontStyle: "italic", color: arko.primary }}>That gap costs real money.</em>
-            </h2>
             <p style={{ ...t.bodyLg, maxWidth: 760, marginBottom: 48 }}>
               A verbal yes in the meeting doesn't stick once the space is rendered. By the time
               the 3D visual arrives days later, the client's mental image has already drifted, and
@@ -2625,15 +2572,15 @@ export default function ArkoCase() {
       <section style={{ padding: SECTION_PAD, background: "var(--bg-primary)" }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <Reveal>
-            <SectionHeader num="03" title="Users & Research" phase="Weeks 03 · 04" />
-          </Reveal>
-
-          <Reveal>
-            <h2 style={{ ...t.h2Section, maxWidth: 720, marginBottom: 56 }}>
-              One platform.{" "}
+            <SectionHeader
+              num="03"
+              phase="Users & Research"
+              title={<>One platform.{" "}
               <em style={{ fontStyle: "italic", color: arko.primary }}>Two different contexts</em>{" "}
-              of use.
-            </h2>
+              of use.</>}
+              meta="Weeks 03 · 04"
+              accent={arko.primary}
+            />
           </Reveal>
 
           <Reveal delay={0.1}>
@@ -2689,15 +2636,18 @@ export default function ArkoCase() {
       <section className="blueprint-grid" style={{ padding: SECTION_PAD }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <Reveal>
-            <SectionHeader num="05" title="Workspace · Web" phase="Weeks 05 · 08" />
+            <SectionHeader
+              num="05"
+              phase="Workspace · Web"
+              title={<>A professional workspace.{" "}
+                <em style={{ fontStyle: "italic", color: arko.primary }}>Dense, powerful, built for daily use.</em></>}
+              meta="Weeks 05 · 08"
+              accent={arko.primary}
+            />
           </Reveal>
 
           <Reveal>
             <div style={{ maxWidth: 760, marginBottom: 56 }}>
-              <h2 style={{ ...t.h2Section, marginBottom: 22 }}>
-                A professional workspace.{" "}
-                <em style={{ fontStyle: "italic", color: arko.primary }}>Dense, powerful, built for daily use.</em>
-              </h2>
               <p style={{ ...t.bodyLg }}>
                 The designer interface doesn't compromise. Sidebar navigation, project management,
                 team activity, and AR editing tools, all accessible from a single workspace a design
@@ -2723,16 +2673,19 @@ export default function ArkoCase() {
       <section style={{ padding: SECTION_PAD, background: "var(--bg-secondary)" }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <Reveal>
-            <SectionHeader num="06" title="Capture · iOS" phase="Weeks 06 · 09" />
+            <SectionHeader
+              num="06"
+              phase="Capture · iOS"
+              title={<>From empty room to{" "}
+                <em style={{ fontStyle: "italic", color: arko.primary }}>furnished space</em>{" "}
+                in minutes.</>}
+              meta="Weeks 06 · 09"
+              accent={arko.primary}
+            />
           </Reveal>
 
           <Reveal>
             <div style={{ maxWidth: 760, marginBottom: 64 }}>
-              <h2 style={{ ...t.h2Section, marginBottom: 22 }}>
-                From empty room to{" "}
-                <em style={{ fontStyle: "italic", color: arko.primary }}>furnished space</em>{" "}
-                in minutes.
-              </h2>
               <p style={{ ...t.bodyLg }}>
                 A guided four-stage scan confirms spatial data before the AR editor opens.
               </p>
@@ -2976,16 +2929,14 @@ export default function ArkoCase() {
       <section style={{ padding: SECTION_PAD, background: "var(--bg-primary)" }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <Reveal>
-            <SectionHeader num="08" title="Design Decisions" phase="Weeks 10 · 12" />
-          </Reveal>
-
-          <Reveal>
-            <div style={{ maxWidth: 720, marginBottom: 48 }}>
-              <h2 style={{ ...t.h2Section }}>
-                <em style={{ fontStyle: "italic", color: arko.primary }}>Four decisions</em>{" "}
-                that defined the product.
-              </h2>
-            </div>
+            <SectionHeader
+              num="08"
+              phase="Design Decisions"
+              title={<><em style={{ fontStyle: "italic", color: arko.primary }}>Four decisions</em>{" "}
+                that defined the product.</>}
+              meta="Weeks 10 · 12"
+              accent={arko.primary}
+            />
           </Reveal>
 
           <Reveal delay={0.05}>
@@ -3000,15 +2951,18 @@ export default function ArkoCase() {
       <section className="blueprint-grid-subtle" style={{ padding: SECTION_PAD }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <Reveal>
-            <SectionHeader num="09" title="Outcomes & Reflection" phase="Weeks 13 · 14" />
+            <SectionHeader
+              num="09"
+              phase="Outcomes & Reflection"
+              title={<>Three workflows. One platform.{" "}
+              <em style={{ fontStyle: "italic", color: arko.primary }}>No compromise</em>{" "}
+              on either user.</>}
+              meta="Weeks 13 · 14"
+              accent={arko.primary}
+            />
           </Reveal>
 
           <Reveal>
-            <h2 style={{ ...t.h2Section, marginBottom: 22, maxWidth: 860 }}>
-              Three workflows. One platform.{" "}
-              <em style={{ fontStyle: "italic", color: arko.primary }}>No compromise</em>{" "}
-              on either user.
-            </h2>
             <p style={{ ...t.bodyLg, maxWidth: 760, marginBottom: 72 }}>
               Arko consolidates space scanning, interior design, and client approval into one
               platform. A single product that serves two very different users without compromising

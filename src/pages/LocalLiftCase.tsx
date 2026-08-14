@@ -22,6 +22,7 @@ import {
 import type { Icon } from "@phosphor-icons/react";
 import { projects, type Project } from "../data/projects";
 import { ProjectHeroStage } from "../components/ProjectHeroStage";
+import { SectionHeader, CASE_H2 } from "../components/CaseSectionHeader";
 
 /* ══════════════════════════════════════════════════════════════════
    LOCALLIFT - scoped palette + type tokens
@@ -53,8 +54,8 @@ const t = {
   } as React.CSSProperties,
   h2: {
     fontFamily: serif, fontWeight: 700,
-    fontSize: "clamp(32px, 3.8vw, 48px)",
-    letterSpacing: "-0.025em", lineHeight: 1.15,
+    fontSize: "clamp(32px, 3.9vw, 48px)",
+    letterSpacing: "-0.025em", lineHeight: 1.18,
     color: "var(--text-primary)",
   } as React.CSSProperties,
   h3: {
@@ -141,53 +142,6 @@ function CountUp({ value, suffix = "", duration = 1.6 }: { value: number; suffix
     return () => controls.stop();
   }, [inView, value, duration, mv]);
   return <span ref={ref}>{display}{suffix}</span>;
-}
-
-/* Minimal section header with numbered eyebrow */
-function SectionHeader({
-  num, title, phase,
-}: { num: string; title: string; phase: string }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-60px" });
-  return (
-    <div ref={ref} style={{ marginBottom: "clamp(44px, 5vw, 72px)" }}>
-      <div style={{
-        display: "flex", alignItems: "baseline", gap: 20, flexWrap: "wrap",
-        paddingBottom: 16,
-      }}>
-        <motion.span
-          initial={{ opacity: 0, y: 8 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.55, ease: [0.25, 1, 0.4, 1] }}
-          style={{ ...mono, fontSize: 13, color: ll.primary, letterSpacing: "0.24em", fontWeight: 700 }}
-        >
-          {num} <span style={{ color: ll.muted, fontWeight: 400 }}>/ {TOTAL}</span>
-        </motion.span>
-        <motion.span
-          initial={{ opacity: 0, y: 8 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.08, duration: 0.55, ease: [0.25, 1, 0.4, 1] }}
-          style={{ ...mono, fontSize: 13, color: "var(--text-primary)", letterSpacing: "0.24em", fontWeight: 600 }}
-        >
-          {title}
-        </motion.span>
-        <motion.span
-          initial={{ opacity: 0 }}
-          animate={inView ? { opacity: 1 } : {}}
-          transition={{ delay: 0.2, duration: 0.55 }}
-          style={{ ...mono, fontSize: 12, color: ll.muted, letterSpacing: "0.22em", marginLeft: "auto" }}
-        >
-          {phase}
-        </motion.span>
-      </div>
-      <motion.div
-        initial={{ scaleX: 0 }}
-        animate={inView ? { scaleX: 1 } : {}}
-        transition={{ delay: 0.15, duration: 1.0, ease: [0.25, 1, 0.4, 1] }}
-        style={{ height: 1, background: ll.primary, transformOrigin: "left", opacity: 0.7 }}
-      />
-    </div>
-  );
 }
 
 /* ──────────────────────────────────────────────────────────────
@@ -1147,16 +1101,16 @@ function PersonasSection() {
       borderBottom: `1px solid ${ll.line}`,
     }}>
       <div className="max-w-7xl mx-auto px-6 md:px-10">
-        <SectionHeader num="04" title="Personas" phase="Synthesis" />
+        <SectionHeader
+          num="04"
+          phase="Personas"
+          title={<>Two owners,<span style={{ fontStyle: "italic", color: ll.primary }}> one shared platform.</span></>}
+          meta="Synthesis"
+          accent={ll.primary}
+        />
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-12 items-end">
           <div className="lg:col-span-8">
-            <Reveal>
-              <h2 style={{ ...t.h2, marginBottom: 20 }}>
-                Two owners,
-                <span style={{ fontStyle: "italic", color: ll.primary }}> one shared platform.</span>
-              </h2>
-            </Reveal>
             <Reveal delay={0.1}>
               <p style={{ ...t.bodyLg, maxWidth: 640 }}>
                 The early-stage owner and the growth-oriented owner showed up in every interview with the
@@ -1928,7 +1882,7 @@ export default function LocalLiftCase() {
                 transition={{ delay: 0.5, duration: 0.7 }}
                 style={{
                   fontFamily: serif, fontStyle: "italic",
-                  fontSize: "clamp(21px, 1.9vw, 28px)",
+                  fontSize: "clamp(18px, 1.7vw, 24px)",
                   color: "var(--text-secondary)",
                   lineHeight: 1.5, maxWidth: 520,
                   marginBottom: "clamp(28px, 3vw, 40px)",
@@ -2010,15 +1964,15 @@ export default function LocalLiftCase() {
         borderTop: `1px solid ${ll.line}`,
       }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
-          <SectionHeader num="01" title="Context" phase="Setup" />
+          <SectionHeader
+            num="01"
+            phase="Context"
+            title={<>A mentorship platform,<span style={{ fontStyle: "italic", color: ll.primary }}> grounded in real owners across two markets.</span></>}
+            meta="Setup"
+            accent={ll.primary}
+          />
 
           <div style={{ maxWidth: 820 }}>
-            <Reveal>
-              <h2 style={{ ...t.h2, marginBottom: 22 }}>
-                A mentorship platform,
-                <span style={{ fontStyle: "italic", color: ll.primary }}> grounded in real owners across two markets.</span>
-              </h2>
-            </Reveal>
             <Reveal delay={0.1}>
               <p style={{ ...t.bodyLg, marginBottom: 20 }}>
                 LocalLift sits at the intersection of two growth markets for small business: the US Southeast
@@ -2044,16 +1998,15 @@ export default function LocalLiftCase() {
         borderBottom: `1px solid ${ll.line}`,
       }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
-          <SectionHeader num="02" title="The gap" phase="Problem" />
+          <SectionHeader
+            num="02"
+            phase="The gap"
+            title={<>Digital tools were built for scale.<br /><span style={{ fontStyle: "italic", color: ll.primary }}>Most small businesses are built for survival.</span></>}
+            meta="Problem"
+            accent={ll.primary}
+          />
 
           <div style={{ maxWidth: 820, marginBottom: "clamp(48px, 5vw, 72px)" }}>
-            <Reveal>
-              <h2 style={{ ...t.h2, marginBottom: 20 }}>
-                Digital tools were built for scale.
-                <br />
-                <span style={{ fontStyle: "italic", color: ll.primary }}>Most small businesses are built for survival.</span>
-              </h2>
-            </Reveal>
             <Reveal delay={0.12}>
               <p style={{ ...t.bodyLg }}>
                 SMB-facing platforms are either too technical, too abstract, or too generic to help a specific
@@ -2114,16 +2067,16 @@ export default function LocalLiftCase() {
       {/* ─── 03 · RESEARCH ──────────────────────────────────── */}
       <section style={{ padding: SECTION_PAD, background: "var(--bg-primary)" }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
-          <SectionHeader num="03" title="Research" phase="Method + synthesis" />
+          <SectionHeader
+            num="03"
+            phase="Research"
+            title={<>A cross-cultural study,<span style={{ fontStyle: "italic", color: ll.primary }}> shaped in partnership with local voices.</span></>}
+            meta="Method + synthesis"
+            accent={ll.primary}
+          />
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-16 items-end">
             <div className="lg:col-span-8">
-              <Reveal>
-                <h2 style={{ ...t.h2, marginBottom: 20 }}>
-                  A cross-cultural study,
-                  <span style={{ fontStyle: "italic", color: ll.primary }}> shaped in partnership with local voices.</span>
-                </h2>
-              </Reveal>
               <Reveal delay={0.1}>
                 <p style={{ ...t.bodyLg, maxWidth: 640 }}>
                   Three lenses: understand the owner's day, cluster what we heard across context, turn it into
@@ -2265,16 +2218,16 @@ export default function LocalLiftCase() {
       {/* ─── 05 · LOFI EXPLORATION ──────────────────────────── */}
       <section style={{ padding: SECTION_PAD, background: "var(--bg-primary)" }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
-          <SectionHeader num="05" title="Lo-fi exploration" phase="Wireframes" />
+          <SectionHeader
+            num="05"
+            phase="Lo-fi exploration"
+            title={<>Start in greyscale.<span style={{ fontStyle: "italic", color: ll.primary }}> Test structure before style.</span></>}
+            meta="Wireframes"
+            accent={ll.primary}
+          />
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-16 items-end">
             <div className="lg:col-span-7">
-              <Reveal>
-                <h2 style={{ ...t.h2, marginBottom: 20 }}>
-                  Start in greyscale.
-                  <span style={{ fontStyle: "italic", color: ll.primary }}> Test structure before style.</span>
-                </h2>
-              </Reveal>
               <Reveal delay={0.1}>
                 <p style={{ ...t.bodyLg, maxWidth: 620 }}>
                   Every flow began as a lo-fi wireframe: onboarding, auth, explore, search, community, profile.
@@ -2332,16 +2285,16 @@ export default function LocalLiftCase() {
         borderBottom: `1px solid ${ll.line}`,
       }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
-          <SectionHeader num="06" title="Final design" phase="Hi-fi UI" />
+          <SectionHeader
+            num="06"
+            phase="Final design"
+            title={<>A quiet UI for a loud week.<span style={{ fontStyle: "italic", color: ll.primary }}> Calm indigo, clear hierarchy, one action at a time.</span></>}
+            meta="Hi-fi UI"
+            accent={ll.primary}
+          />
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-16 items-end">
             <div className="lg:col-span-7">
-              <Reveal>
-                <h2 style={{ ...t.h2, marginBottom: 20 }}>
-                  A quiet UI for a loud week.
-                  <span style={{ fontStyle: "italic", color: ll.primary }}> Calm indigo, clear hierarchy, one action at a time.</span>
-                </h2>
-              </Reveal>
               <Reveal delay={0.1}>
                 <p style={{ ...t.bodyLg, maxWidth: 620 }}>
                   The hi-fi system layered type weight, gentle elevation, and an indigo accent on a near-white
@@ -2405,16 +2358,16 @@ export default function LocalLiftCase() {
       {/* ─── 07 · ITERATIONS ──────────────────────────────── */}
       <section style={{ padding: SECTION_PAD, background: "var(--bg-primary)" }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
-          <SectionHeader num="07" title="Iterations" phase="Usability rounds" />
+          <SectionHeader
+            num="07"
+            phase="Iterations"
+            title={<>Three rounds, three<span style={{ fontStyle: "italic", color: ll.primary }}> targeted changes.</span></>}
+            meta="Usability rounds"
+            accent={ll.primary}
+          />
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-16 items-end">
             <div className="lg:col-span-8">
-              <Reveal>
-                <h2 style={{ ...t.h2, marginBottom: 20 }}>
-                  Three rounds, three
-                  <span style={{ fontStyle: "italic", color: ll.primary }}> targeted changes.</span>
-                </h2>
-              </Reveal>
               <Reveal delay={0.1}>
                 <p style={{ ...t.bodyLg, maxWidth: 640 }}>
                   Each usability round surfaced a single friction. Each iteration answered that friction with one
@@ -2662,16 +2615,16 @@ export default function LocalLiftCase() {
       {/* ─── 09 · REFLECTION ───────────────────────────── */}
       <section style={{ padding: SECTION_PAD, background: "var(--bg-primary)" }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
-          <SectionHeader num="09" title="Reflection" phase="Takeaways" />
+          <SectionHeader
+            num="09"
+            phase="Reflection"
+            title={<>A platform<span style={{ fontStyle: "italic", color: ll.primary }}> isn't a tool. It's a community the tool keeps open.</span></>}
+            meta="Takeaways"
+            accent={ll.primary}
+          />
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-16 items-end">
             <div className="lg:col-span-9">
-              <Reveal>
-                <h2 style={{ ...t.h2, marginBottom: 18 }}>
-                  A platform
-                  <span style={{ fontStyle: "italic", color: ll.primary }}> isn't a tool. It's a community the tool keeps open.</span>
-                </h2>
-              </Reveal>
               <Reveal delay={0.1}>
                 <p style={{ ...t.bodyLg, maxWidth: 640 }}>
                   The strongest thing this project left me with was a quiet reframe: stop designing around
