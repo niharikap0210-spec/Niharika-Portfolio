@@ -1704,6 +1704,15 @@ export default function VeriflowCase() {
           noisePatternSize={100}
           style={{ zIndex: 0 }}
         />
+        {/* Subtle dotted Miro-canvas grid, over the gradient, behind the content */}
+        <div aria-hidden style={{
+          position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none",
+          backgroundImage: "radial-gradient(circle, rgba(30,64,175,0.07) 1px, transparent 1.5px)",
+          backgroundSize: "23px 23px",
+          backgroundPosition: "-11px -11px",
+          WebkitMaskImage: "linear-gradient(to bottom, #000 60%, transparent 100%)",
+          maskImage: "linear-gradient(to bottom, #000 60%, transparent 100%)",
+        }} />
         <div className="max-w-5xl mx-auto px-6 md:px-10" style={{ position: "relative", zIndex: 1, width: "100%", textAlign: "center" }}>
           {/* Title */}
           <div style={{ overflow: "hidden" }}>
