@@ -1207,7 +1207,6 @@ function BlindSpotAudit() {
       const leaders  = q(".vf-au-leader") as HTMLElement[];
       const statuses = q(".vf-au-status") as HTMLElement[];
       const icons    = q(".vf-au-icon") as HTMLElement[];
-      const scan     = q(".vf-au-scan")[0] as HTMLElement;
       const body     = q(".vf-au-body")[0] as HTMLElement;
       const dot      = q(".vf-au-dot")[0] as HTMLElement;
 
@@ -1217,30 +1216,20 @@ function BlindSpotAudit() {
         gsap.set(leaders, { scaleX: 1 });
         gsap.set(statuses, { opacity: 1, y: 0 });
         gsap.set(icons, { color: vf.primary });
-        gsap.set(scan, { opacity: 0 });
       });
 
       mm.add("(prefers-reduced-motion: no-preference)", () => {
         gsap.set(leaders, { scaleX: 0, transformOrigin: "left center" });
         gsap.set(statuses, { opacity: 0, y: 6 });
         gsap.set(icons, { color: vf.muted });
-        gsap.set(scan, { opacity: 0, y: 0 });
 
         gsap.to(dot, { scale: 1.35, opacity: 0.5, duration: 1.4, yoyo: true, repeat: -1, ease: "sine.inOut", transformOrigin: "50% 50%" });
 
-        const tl = gsap.timeline({
-          scrollTrigger: { trigger: body, start: "top 82%", end: "top 42%", scrub: 0.5, invalidateOnRefresh: true },
-        });
-        tl.set(scan, { opacity: 1 }, 0);
-        tl.fromTo(scan, { y: 0 }, { y: () => body.clientHeight, ease: "none", duration: 1 }, 0);
-        const rowOffsets = [0.16, 0.5, 0.84];
-        channels.forEach((_, i) => {
-          const off = rowOffsets[i];
-          tl.to(leaders[i], { scaleX: 1, duration: 0.1, ease: "power2.out" }, off);
-          tl.to(statuses[i], { opacity: 1, y: 0, duration: 0.12, ease: "power2.out" }, off);
-          tl.to(icons[i], { color: vf.primary, duration: 0.12 }, off);
-        });
-        tl.to(scan, { opacity: 0, duration: 0.08 }, 0.97);
+        // Simple staggered entrance — each row settles in turn. No sweeping line.
+        const tl = gsap.timeline({ scrollTrigger: { trigger: body, start: "top 80%", once: true } });
+        tl.to(leaders,  { scaleX: 1, duration: 0.55, stagger: 0.12, ease: "power2.out" }, 0);
+        tl.to(statuses, { opacity: 1, y: 0, duration: 0.5, stagger: 0.12, ease: "power2.out" }, 0.12);
+        tl.to(icons,    { color: vf.primary, duration: 0.5, stagger: 0.12 }, 0.12);
       });
     }, rootRef);
     return () => ctx.revert();
@@ -1260,7 +1249,6 @@ function BlindSpotAudit() {
       </div>
 
       <div className="vf-au-body">
-        <span className="vf-au-scan" aria-hidden />
         {channels.map((c, i) => (
           <div key={c.label} className="vf-au-row" tabIndex={0}>
             <div className="vf-au-main">
@@ -1292,7 +1280,6 @@ function BlindSpotAudit() {
         .vf-audit-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding-bottom: 18px; border-bottom: 1px solid ${vf.subtle}; }
         .vf-au-dot { width: 8px; height: 8px; border-radius: 50%; background: ${vf.primary}; display: inline-block; }
         .vf-au-body { position: relative; }
-        .vf-au-scan { position: absolute; left: 0; right: 0; top: 0; height: 2px; background: linear-gradient(90deg, ${vf.primary}, rgba(30,64,175,0)); opacity: 0; pointer-events: none; z-index: 2; }
         .vf-au-row { border-bottom: 1px solid ${vf.subtle}; outline: none; transition: background 240ms; }
         .vf-au-row:hover, .vf-au-row:focus-visible { background: ${vf.surface}; }
         .vf-au-main { display: grid; grid-template-columns: 34px minmax(110px, auto) minmax(40px, 1fr) auto; align-items: center; gap: 16px; padding: clamp(20px, 2.4vw, 28px) clamp(10px, 1.4vw, 18px); }
