@@ -413,137 +413,108 @@ function StepperBtn({ disabled, onClick, dir }: { disabled: boolean; onClick: ()
    OVERRIDE TIMELINE: failure path - forensic log treatment
 ══════════════════════════════════════════════════════════════════ */
 function OverrideTimeline() {
-  const stages: {
-    src: string; badge: string; color: string; label: string; caption: string; actor: string;
-  }[] = [
-    { src: "/veriflow/validation-failed-rotate-cooler-message.png", badge: "T+0s",  color: vf.flag,    label: "Validation fails",  caption: "Plain-language retry. No blame, no jargon.", actor: "Courier · retries" },
-    { src: "/veriflow/after-30-seconds-give-override-button.png",   badge: "T+30s", color: vf.warn,    label: "Override appears",  caption: "Pause is forced. Second attempt earns the option.", actor: "System · waits" },
-    { src: "/veriflow/override-pin-authentication.png",             badge: "T+35s", color: vf.primary, label: "Supervisor PIN",    caption: "A named person accepts responsibility for the exit.", actor: "Supervisor · signs" },
-    { src: "/veriflow/override-confirmation.png",                   badge: "T+40s", color: vf.status,  label: "Cleared",           caption: "The cooler leaves. The override leaves a trail.", actor: "Audit log · written" },
+  const rootRef = useRef<HTMLDivElement>(null);
+  const stages: { src: string; badge: string; color: string; label: string; caption: string; actor: string }[] = [
+    { src: "/veriflow/validation-failed-rotate-cooler-message.png", badge: "T + 0s",  color: vf.flag,    label: "Validation fails",  caption: "Plain-language retry. No blame, no jargon.",             actor: "Courier retries" },
+    { src: "/veriflow/after-30-seconds-give-override-button.png",   badge: "T + 30s", color: vf.warn,    label: "Override appears",  caption: "The pause is forced. A second attempt earns the option.", actor: "System waits" },
+    { src: "/veriflow/override-pin-authentication.png",             badge: "T + 35s", color: vf.primary, label: "Supervisor PIN",    caption: "A named person accepts responsibility for the exit.",     actor: "Supervisor signs" },
+    { src: "/veriflow/override-confirmation.png",                   badge: "T + 40s", color: vf.status,  label: "Cleared",           caption: "The cooler leaves — and the override leaves a trail.",    actor: "Audit log written" },
   ];
+  const gaps = ["30-second pause", "+5s", "+5s"];
+
+  useLayoutEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+    const ctx = gsap.context(() => {
+      const q = gsap.utils.selector(root);
+      const line = q(".ovr-line")[0] as HTMLElement;
+      const nodes = q(".ovr-node") as HTMLElement[];
+      const segs = q(".ovr-seg") as HTMLElement[];
+      const cols = q(".ovr-col") as HTMLElement[];
+      const dot = q(".ovr-pause-dot")[0] as HTMLElement;
+      const mm = gsap.matchMedia();
+
+      mm.add("(prefers-reduced-motion: reduce)", () => {
+        gsap.set(line, { scaleX: 1 });
+        gsap.set([nodes, segs, cols], { opacity: 1, y: 0, scale: 1 });
+      });
+      mm.add("(prefers-reduced-motion: no-preference)", () => {
+        gsap.set(line, { scaleX: 0, transformOrigin: "left center" });
+        gsap.set(nodes, { scale: 0, opacity: 0, transformOrigin: "50% 50%" });
+        gsap.set(segs, { opacity: 0, y: 4 });
+        gsap.set(cols, { opacity: 0, y: 24 });
+
+        const tl = gsap.timeline({ scrollTrigger: { trigger: root, start: "top 78%", once: true } });
+        tl.to(line, { scaleX: 1, duration: 0.9, ease: "power2.out" }, 0);
+        tl.to(nodes, { scale: 1, opacity: 1, duration: 0.4, stagger: 0.16, ease: "back.out(1.7)" }, 0.2);
+        tl.to(segs, { opacity: 1, y: 0, duration: 0.4, stagger: 0.16, ease: "power2.out" }, 0.3);
+        tl.to(cols, { opacity: 1, y: 0, duration: 0.65, stagger: 0.14, ease: "power2.out" }, 0.35);
+
+        if (dot) gsap.to(dot, { scale: 1.5, opacity: 0.4, duration: 1.3, yoyo: true, repeat: -1, ease: "sine.inOut", transformOrigin: "50% 50%" });
+      });
+    }, rootRef);
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <div style={{ position: "relative" }}>
-      {/* Top timeline rail with ticks */}
-      <div aria-hidden style={{
-        position: "relative", height: 44, marginBottom: 12,
-      }}>
-        <div style={{
-          position: "absolute", left: "6%", right: "6%", top: 22, height: 1,
-          background: `linear-gradient(90deg, ${vf.flag} 0%, ${vf.warn} 33%, ${vf.primary} 66%, ${vf.status} 100%)`,
-          opacity: 0.35,
-        }} />
-        <div className="timeline-ticks" style={{
-          position: "absolute", inset: 0,
-          display: "grid", gridTemplateColumns: `repeat(${stages.length}, minmax(0, 1fr))`,
-          gap: "clamp(14px, 1.8vw, 22px)",
-        }}>
-          {stages.map((s, i) => (
-            <div key={i} style={{
-              display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "flex-start",
-            }}>
-              <motion.span
-                initial={{ scale: 0 }}
-                whileInView={{ scale: 1 }}
-                viewport={{ once: true, margin: "-40px" }}
-                transition={{ delay: 0.1 * i + 0.2, duration: 0.5, ease: [0.25, 1, 0.4, 1] }}
-                style={{
-                  width: 14, height: 14, borderRadius: "50%",
-                  background: "#fff", border: `2px solid ${s.color}`,
-                  boxShadow: `0 0 0 4px ${s.color}14`,
-                  marginTop: 15,
-                }}
-              />
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="timeline-grid" style={{
-        display: "grid",
-        gridTemplateColumns: `repeat(${stages.length}, minmax(0, 1fr))`,
-        gap: "clamp(14px, 1.8vw, 22px)",
-      }}>
+    <div ref={rootRef} className="ovr">
+      <div className="ovr-rail" aria-hidden>
+        <div className="ovr-line" />
         {stages.map((s, i) => (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-40px" }}
-            transition={{ delay: 0.08 * i, duration: 0.6, ease: [0.25, 1, 0.4, 1] }}
-            style={{
-              background: "var(--bg-elevated)",
-              border: `1px solid ${vf.subtle}`,
-              borderRadius: 8,
-              padding: "clamp(18px, 1.8vw, 26px)",
-              position: "relative",
-              overflow: "hidden",
-            }}
-          >
-            <span aria-hidden style={{
-              position: "absolute", top: 0, left: 0, right: 0, height: 3, background: s.color,
-            }} />
-            <div style={{
-              display: "flex", alignItems: "center", justifyContent: "space-between",
-              marginBottom: 16, gap: 10,
-            }}>
-              <span style={{
-                ...mono, fontSize: 13, color: s.color, letterSpacing: "0.18em", fontWeight: 700,
-                padding: "4px 10px", border: `1px solid ${s.color}`, borderRadius: 3,
-                background: `${s.color}12`,
-              }}>
-                {s.badge}
-              </span>
-              <span style={{
-                ...mono, fontSize: 11, color: vf.muted, letterSpacing: "0.22em", fontWeight: 700,
-              }}>
-                STAGE · 0{i + 1}
-              </span>
-            </div>
-
-            <TabletFrame src={s.src} alt={s.label} slim />
-
-            <div style={{ marginTop: 20 }}>
-              <div style={{
-                fontFamily: serif, fontWeight: 600,
-                fontSize: "clamp(22px, 2.1vw, 26px)",
-                letterSpacing: "-0.01em", lineHeight: 1.25,
-                color: "var(--text-primary)", marginBottom: 10,
-              }}>
-                {s.label}
-              </div>
-              <p style={{
-                fontFamily: sans, fontSize: 18, lineHeight: 1.6,
-                color: "var(--text-secondary)", margin: 0, marginBottom: 16,
-              }}>
-                {s.caption}
-              </p>
-              <div style={{
-                display: "flex", alignItems: "center", gap: 10,
-                paddingTop: 14, borderTop: `1px dashed ${vf.subtle}`,
-              }}>
-                <span aria-hidden style={{
-                  width: 7, height: 7, borderRadius: "50%", background: s.color, flexShrink: 0,
-                }} />
-                <span style={{
-                  ...mono, fontSize: 12, color: vf.muted, letterSpacing: "0.16em",
-                  textTransform: "uppercase", fontWeight: 600,
-                }}>
-                  {s.actor}
-                </span>
-              </div>
-            </div>
-          </motion.div>
+          <span key={i} className="ovr-node" style={{ left: `${12.5 + i * 25}%`, borderColor: s.color, boxShadow: `0 0 0 4px ${s.color}1f` }} />
         ))}
-        <style>{`
-          @media (max-width: 980px) {
-            .timeline-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
-            .timeline-ticks { display: none !important; }
-          }
-          @media (max-width: 560px) {
-            .timeline-grid { grid-template-columns: minmax(0, 1fr) !important; }
-          }
-        `}</style>
+        {gaps.map((g, i) => (
+          <span key={i} className={`ovr-seg${i === 0 ? " ovr-seg-pause" : ""}`} style={{ left: `${25 + i * 25}%` }}>
+            {i === 0 ? (
+              <>
+                <ClockCountdown size={15} color={vf.warn} weight="regular" />
+                {g}
+                <span className="ovr-pause-dot" style={{ background: vf.warn }} />
+              </>
+            ) : g}
+          </span>
+        ))}
       </div>
+
+      <div className="ovr-grid">
+        {stages.map((s, i) => (
+          <div key={i} className="ovr-col">
+            <div className="ovr-badge" style={{ color: s.color }}>{s.badge}</div>
+            <div className="ovr-screen"><TabletMock src={s.src} alt={`${s.label} — ${s.badge}`} /></div>
+            <h4 className="ovr-title">{s.label}</h4>
+            <p className="ovr-caption">{s.caption}</p>
+            <div className="ovr-actor" style={{ color: s.color }}>
+              <span className="ovr-actor-dot" style={{ background: s.color }} />{s.actor}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <style>{`
+        .ovr { position: relative; }
+        .ovr-rail { position: relative; height: 46px; margin-bottom: clamp(8px, 1.2vw, 16px); }
+        .ovr-line { position: absolute; left: 12.5%; right: 12.5%; top: 30px; height: 2px; margin-top: -1px; border-radius: 2px;
+          background: linear-gradient(90deg, ${vf.flag} 0%, ${vf.warn} 34%, ${vf.primary} 67%, ${vf.status} 100%); opacity: 0.45; }
+        .ovr-node { position: absolute; top: 30px; width: 14px; height: 14px; margin-top: -7px; margin-left: -7px; border-radius: 50%; background: var(--bg-elevated); border: 2px solid; }
+        .ovr-seg { position: absolute; top: 0; transform: translateX(-50%); font-family: 'Manrope', monospace; text-transform: uppercase; font-size: 11px; letter-spacing: 0.14em; font-weight: 700; color: var(--text-muted); white-space: nowrap; }
+        .ovr-seg-pause { font-size: 12px; color: ${vf.warn}; letter-spacing: 0.12em; display: inline-flex; align-items: center; gap: 6px; }
+        .ovr-pause-dot { width: 5px; height: 5px; border-radius: 50%; display: inline-block; }
+        .ovr-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(18px, 2.4vw, 34px); }
+        .ovr-col { display: flex; flex-direction: column; outline: none; }
+        .ovr-badge { font-family: 'Manrope', monospace; text-transform: uppercase; font-size: 14px; letter-spacing: 0.14em; font-weight: 700; margin-bottom: clamp(12px, 1.4vw, 16px); }
+        .ovr-screen { margin-bottom: clamp(16px, 1.8vw, 22px); }
+        .ovr-title { font-family: ${serif}; font-weight: 700; font-size: clamp(22px, 2.1vw, 27px); letter-spacing: -0.015em; line-height: 1.2; color: var(--text-primary); margin: 0 0 10px; }
+        .ovr-caption { font-family: ${sans}; font-size: 18px; line-height: 1.55; color: var(--text-secondary); margin: 0 0 16px; }
+        .ovr-actor { margin-top: auto; font-family: 'Manrope', monospace; text-transform: uppercase; font-size: 12px; letter-spacing: 0.14em; font-weight: 700; display: inline-flex; align-items: center; gap: 8px; }
+        .ovr-actor-dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+        @media (max-width: 980px) {
+          .ovr-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(28px, 5vw, 40px); }
+          .ovr-rail { display: none; }
+        }
+        @media (max-width: 540px) {
+          .ovr-grid { grid-template-columns: 1fr; max-width: 400px; margin: 0 auto; }
+        }
+      `}</style>
     </div>
   );
 }
