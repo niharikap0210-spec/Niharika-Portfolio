@@ -802,10 +802,10 @@ function LessonCard({ index, title, body, tag }: { index: number; title: string;
 ══════════════════════════════════════════════════════════════════ */
 function SystemDiagram() {
   const rootRef = useRef<HTMLDivElement>(null);
-  const surfaces: { role: string; name: string; desc: string; tag: string; Icon: Icon; src: string }[] = [
-    { role: "Action", name: "Tablet",     desc: "PIN, scan, verify, exit — the clinic's kiosk.",     tag: "Kiosk · 10\"",  Icon: Tablet,     src: "/veriflow/start-scanning.png" },
-    { role: "Memory", name: "Web",        desc: "Dashboards, registry, and every sample's journey.", tag: "Control tower", Icon: Monitor,    src: "/veriflow/dashboard.png" },
-    { role: "State",  name: "Ambient TV", desc: "The live state of the lab. Glance, don't click.",   tag: "Wall mount",    Icon: Television, src: "/veriflow/tv-dashboard-1.png" },
+  const surfaces: { role: string; name: string; desc: string; tag: string; Frame: (p: { src: string; alt: string }) => JSX.Element; src: string }[] = [
+    { role: "Action", name: "Tablet",     desc: "PIN, scan, verify, exit — the clinic's kiosk.",     tag: "Kiosk · 10\"",  Frame: TabletFrame, src: "/veriflow/start-scanning.png" },
+    { role: "Memory", name: "Web",        desc: "Dashboards, registry, and every sample's journey.", tag: "Control tower", Frame: LaptopFrame, src: "/veriflow/dashboard.png" },
+    { role: "State",  name: "Ambient TV", desc: "The live state of the lab. Glance, don't click.",   tag: "Wall mount",    Frame: TVFrame,     src: "/veriflow/tv-dashboard-1.png" },
   ];
 
   useLayoutEffect(() => {
@@ -813,103 +813,61 @@ function SystemDiagram() {
     if (!root) return;
     const ctx = gsap.context(() => {
       const q = gsap.utils.selector(root);
-      const line  = q(".vf-sys-line")[0] as HTMLElement;
-      const nodes = q(".vf-sys-node") as HTMLElement[];
-      const cards = q(".vf-sys-card") as HTMLElement[];
-      const pulse = q(".vf-sys-pulse")[0] as HTMLElement;
-      const chain = q(".vf-sys-chain")[0] as HTMLElement;
-
+      const cols = q(".vf-surf") as HTMLElement[];
       const mm = gsap.matchMedia();
-
       mm.add("(prefers-reduced-motion: reduce)", () => {
-        gsap.set(line, { scaleX: 1 });
-        gsap.set(nodes, { scale: 1, opacity: 1 });
-        gsap.set(cards, { opacity: 1, y: 0 });
-        gsap.set(pulse, { opacity: 0 });
+        gsap.set(cols, { opacity: 1, y: 0 });
       });
-
       mm.add("(prefers-reduced-motion: no-preference)", () => {
-        gsap.set(line, { scaleX: 0, transformOrigin: "left center" });
-        gsap.set(nodes, { scale: 0, opacity: 0, transformOrigin: "50% 50%" });
-        gsap.set(cards, { opacity: 0, y: 26 });
-        gsap.set(pulse, { opacity: 0 });
-
-        const tl = gsap.timeline({ scrollTrigger: { trigger: root, start: "top 76%", once: true } });
-        tl.to(line, { scaleX: 1, duration: 0.9, ease: "power2.out" }, 0);
-        tl.to(nodes, { scale: 1, opacity: 1, duration: 0.45, stagger: 0.2, ease: "power3.out" }, 0.25);
-        tl.to(cards, { opacity: 1, y: 0, duration: 0.65, stagger: 0.2, ease: "power2.out" }, 0.35);
-
-        // A single token travels the chain, over and over — the sample flowing across the three surfaces.
-        const runPulse = () => {
-          const w = chain.clientWidth || 0;
-          if (!w) return;
-          const x0 = w * (1 / 6), x1 = w * (5 / 6);
-          gsap.timeline({ repeat: -1, repeatDelay: 0.9 })
-            .set(pulse, { x: x0, opacity: 0 })
-            .to(pulse, { opacity: 1, duration: 0.35 }, 0)
-            .to(pulse, { x: x1, duration: 2.6, ease: "none" }, 0)
-            .to(pulse, { opacity: 0, duration: 0.35 }, 2.3);
-        };
-        tl.call(runPulse, [], 1.1);
+        gsap.set(cols, { opacity: 0, y: 34 });
+        gsap.to(cols, {
+          opacity: 1, y: 0, duration: 0.75, stagger: 0.16, ease: "power2.out",
+          scrollTrigger: { trigger: root, start: "top 78%", once: true },
+        });
       });
     }, rootRef);
     return () => ctx.revert();
   }, []);
 
   return (
-    <div ref={rootRef} className="vf-sys">
-      <div className="vf-sys-chain" aria-hidden>
-        <div className="vf-sys-line" />
+    <div ref={rootRef} className="vf-surfaces">
+      <div className="vf-surf-grid">
         {surfaces.map((s, i) => (
-          <span key={s.name} className="vf-sys-node" style={{ left: `${((2 * i + 1) / 6) * 100}%` }} />
-        ))}
-        <span className="vf-sys-pulse" />
-      </div>
-
-      <div className="vf-sys-grid">
-        {surfaces.map((s, i) => (
-          <div key={s.name} className="vf-sys-card" tabIndex={0}>
-            <div className="vf-sys-body">
-              <div className="vf-sys-head">
-                <span className="vf-sys-role">{String(i + 1).padStart(2, "0")} · {s.role}</span>
-                <span className="vf-sys-icon"><s.Icon size={22} weight="regular" color="currentColor" /></span>
-              </div>
-              <h3 className="vf-sys-name">{s.name}</h3>
-              <p className="vf-sys-desc">{s.desc}</p>
-              <div className="vf-sys-tag">{s.tag}</div>
+          <div key={s.name} className="vf-surf" tabIndex={0}>
+            <div className="vf-surf-stage">
+              <div className="vf-surf-glow" aria-hidden />
+              <div className="vf-surf-device"><s.Frame src={s.src} alt={`${s.name} — ${s.role}`} /></div>
             </div>
-            <div className="vf-sys-screen">
-              <img src={s.src} alt={`${s.name} — ${s.role}`} loading="lazy" />
+            <div className="vf-surf-meta">
+              <div className="vf-surf-role">{"0" + (i + 1)} · {s.role}</div>
+              <h3 className="vf-surf-name">{s.name}</h3>
+              <p className="vf-surf-desc">{s.desc}</p>
+              <div className="vf-surf-tag">{s.tag}</div>
             </div>
           </div>
         ))}
       </div>
 
-      <div className="vf-sys-caption">Action → Memory → State · one unbroken chain</div>
-
       <style>{`
-        .vf-sys { position: relative; }
-        .vf-sys-chain { position: relative; height: 40px; margin: 0 auto clamp(18px, 2.2vw, 30px); }
-        .vf-sys-line { position: absolute; left: 0; right: 0; top: 50%; height: 2px; margin-top: -1px; background: ${vf.primary}; opacity: 0.5; }
-        .vf-sys-node { position: absolute; top: 50%; width: 13px; height: 13px; margin-top: -6.5px; margin-left: -6.5px; border-radius: 50%; background: var(--bg-primary); border: 2px solid ${vf.primary}; }
-        .vf-sys-pulse { position: absolute; top: 50%; left: 0; width: 9px; height: 9px; margin-top: -4.5px; margin-left: -4.5px; border-radius: 50%; background: ${vf.primary}; box-shadow: 0 0 0 4px rgba(30,64,175,0.16); }
-        .vf-sys-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(16px, 1.8vw, 24px); }
-        .vf-sys-card { display: flex; flex-direction: column; background: var(--bg-elevated); border: 1px solid ${vf.subtle}; border-radius: 12px; overflow: hidden; outline: none; transition: transform 380ms cubic-bezier(0.25,1,0.4,1), border-color 300ms, box-shadow 380ms; }
-        .vf-sys-card:hover, .vf-sys-card:focus-visible { transform: translateY(-6px); border-color: ${vf.primary}; box-shadow: 0 1px 2px rgba(15,42,120,0.05), 0 20px 44px rgba(15,42,120,0.13); }
-        .vf-sys-body { padding: clamp(22px, 2.2vw, 30px); }
-        .vf-sys-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: clamp(18px, 2vw, 26px); }
-        .vf-sys-role { font-family: 'Manrope', monospace; text-transform: uppercase; font-size: 12px; color: ${vf.primary}; letter-spacing: 0.18em; font-weight: 700; }
-        .vf-sys-icon { color: ${vf.primary}; display: inline-flex; }
-        .vf-sys-name { font-family: ${serif}; font-weight: 700; font-size: clamp(24px, 2.4vw, 30px); letter-spacing: -0.02em; line-height: 1.15; color: var(--text-primary); margin: 0 0 10px; }
-        .vf-sys-desc { font-family: ${sans}; font-size: 16px; line-height: 1.6; color: var(--text-secondary); margin: 0 0 18px; }
-        .vf-sys-tag { font-family: 'Manrope', monospace; text-transform: uppercase; font-size: 11.5px; color: var(--text-muted); letter-spacing: 0.16em; font-weight: 700; }
-        .vf-sys-screen { aspect-ratio: 16 / 10; overflow: hidden; border-top: 1px solid ${vf.subtle}; background: #FAFAFA; }
-        .vf-sys-screen img { width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block; transition: transform 520ms ease-out; }
-        .vf-sys-card:hover .vf-sys-screen img, .vf-sys-card:focus-visible .vf-sys-screen img { transform: scale(1.04); }
-        .vf-sys-caption { font-family: 'Manrope', monospace; text-transform: uppercase; text-align: center; font-size: 12px; color: ${vf.muted}; letter-spacing: 0.2em; font-weight: 600; margin-top: clamp(24px, 3vw, 36px); }
-        @media (max-width: 820px) {
-          .vf-sys-grid { grid-template-columns: 1fr; }
-          .vf-sys-chain { display: none; }
+        .vf-surfaces { position: relative; }
+        .vf-surf-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(22px, 3vw, 48px); align-items: stretch; }
+        .vf-surf { display: flex; flex-direction: column; outline: none; }
+        .vf-surf-stage { flex: 1 1 auto; position: relative; display: flex; align-items: flex-end; justify-content: center; margin-bottom: clamp(24px, 2.8vw, 34px); }
+        .vf-surf-glow { position: absolute; left: -6%; right: -6%; top: 4%; bottom: -6%; z-index: 0; pointer-events: none;
+          background: radial-gradient(55% 55% at 50% 60%, ${vf.light} 0%, ${vf.primary} 42%, rgba(30,64,175,0) 74%);
+          filter: blur(38px); opacity: 0; transition: opacity 420ms ease; }
+        .vf-surf-device { position: relative; z-index: 1; width: 100%; transition: transform 420ms cubic-bezier(0.25,1,0.4,1); }
+        .vf-surf:hover .vf-surf-device, .vf-surf:focus-visible .vf-surf-device { transform: translateY(-9px); }
+        .vf-surf:hover .vf-surf-glow, .vf-surf:focus-visible .vf-surf-glow { opacity: 0.42; }
+        .vf-surf-meta { flex: 0 0 auto; min-height: clamp(132px, 12vw, 162px); }
+        .vf-surf-role { font-family: 'Manrope', monospace; text-transform: uppercase; font-size: 12px; color: ${vf.primary}; letter-spacing: 0.2em; font-weight: 700; margin-bottom: 12px; }
+        .vf-surf-name { font-family: ${serif}; font-weight: 700; font-size: clamp(24px, 2.4vw, 30px); letter-spacing: -0.02em; line-height: 1.15; color: var(--text-primary); margin: 0 0 10px; transition: color 240ms; }
+        .vf-surf:hover .vf-surf-name, .vf-surf:focus-visible .vf-surf-name { color: ${vf.primary}; }
+        .vf-surf-desc { font-family: ${sans}; font-size: 16px; line-height: 1.6; color: var(--text-secondary); margin: 0 0 14px; max-width: 320px; }
+        .vf-surf-tag { font-family: 'Manrope', monospace; text-transform: uppercase; font-size: 11.5px; color: var(--text-muted); letter-spacing: 0.16em; font-weight: 700; }
+        @media (max-width: 860px) {
+          .vf-surf-grid { grid-template-columns: 1fr; gap: clamp(36px, 8vw, 56px); max-width: 460px; margin: 0 auto; }
+          .vf-surf-desc { max-width: none; }
         }
       `}</style>
     </div>
