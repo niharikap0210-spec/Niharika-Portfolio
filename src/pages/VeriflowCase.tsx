@@ -1749,10 +1749,17 @@ export default function VeriflowCase() {
                 across a clinic tablet, a web control tower, and a lab wall.
               </motion.p>
 
-              {/* Meta — value-led masthead: labels whisper, values lead */}
+              {/* Meta — airy 2-column: label whispers above value, no ornament */}
               <motion.div
                 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7, duration: 0.6 }}
-                style={{ display: "flex", flexDirection: "column", gap: "clamp(20px, 2.3vw, 27px)", maxWidth: 460 }}
+                style={{
+                  maxWidth: 440,
+                  display: "grid",
+                  gridTemplateColumns: "auto auto",
+                  justifyContent: "start",
+                  columnGap: "clamp(44px, 6vw, 84px)",
+                  rowGap: "clamp(24px, 3vw, 32px)",
+                }}
               >
                 {([
                   { label: "Role",     value: "Product Designer" },
@@ -1760,9 +1767,9 @@ export default function VeriflowCase() {
                   { label: "Timeline", value: "3 months" },
                   { label: "Tools",    value: "Figma · FigJam" },
                 ] as { label: string; value: string }[]).map((m) => (
-                  <div key={m.label} style={{ display: "flex", flexDirection: "column", gap: 5 }}>
-                    <span style={{ ...mono, fontSize: 10, fontWeight: 600, letterSpacing: "0.28em", color: vf.muted }}>{m.label}</span>
-                    <span style={{ fontFamily: sans, fontSize: "clamp(18px, 1.6vw, 21px)", fontWeight: 600, letterSpacing: "-0.015em", lineHeight: 1.1, color: "var(--text-primary)" }}>{m.value}</span>
+                  <div key={m.label}>
+                    <div style={{ ...mono, fontSize: 10.5, fontWeight: 600, letterSpacing: "0.18em", color: vf.muted, marginBottom: 9 }}>{m.label}</div>
+                    <div style={{ fontFamily: sans, fontSize: "clamp(17px, 1.5vw, 20px)", fontWeight: 600, lineHeight: 1.15, letterSpacing: "-0.01em", color: "var(--text-primary)" }}>{m.value}</div>
                   </div>
                 ))}
               </motion.div>
