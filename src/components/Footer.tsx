@@ -74,7 +74,7 @@ export default function Footer() {
           {/* nav columns — larger links with a slide-in arrow on hover */}
           <div className="cfooter-cols cfooter-reveal">
             <nav className="cfooter-col" aria-label="Site pages">
-              <span className="cfooter-col-title"><span className="cfooter-col-num">01</span> Explore</span>
+              <span className="cfooter-col-title">Explore</span>
               {pages.map((p) => (
                 <Link key={p.label} to={p.href} className="cfooter-link">
                   <span className="cfooter-link-txt">{p.label}</span>
@@ -83,7 +83,7 @@ export default function Footer() {
               ))}
             </nav>
             <nav className="cfooter-col" aria-label="Find me elsewhere">
-              <span className="cfooter-col-title"><span className="cfooter-col-num">02</span> Find me</span>
+              <span className="cfooter-col-title">Find me</span>
               {elsewhere.map((l) => (
                 <a key={l.label} href={l.href} target={isHttp(l.href) ? "_blank" : undefined} rel={isHttp(l.href) ? "noopener noreferrer" : undefined} className="cfooter-link">
                   <span className="cfooter-link-txt">{l.label}</span>
