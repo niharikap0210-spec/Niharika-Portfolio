@@ -53,7 +53,7 @@ export default function Footer() {
         <div className="cfooter-grid">
           {/* CTA */}
           <div className="cfooter-cta cfooter-reveal">
-            <span className="cfooter-kicker"><span className="cfooter-kicker-dot" />Let's Connect</span>
+            <span className="cfooter-kicker">Open to work</span>
             <h2 className="cfooter-heading">
               Let's build something<br />
               <span className="cfooter-hl">
@@ -83,7 +83,7 @@ export default function Footer() {
               ))}
             </nav>
             <nav className="cfooter-col" aria-label="Find me elsewhere">
-              <span className="cfooter-col-title">Find me</span>
+              <span className="cfooter-col-title">Elsewhere</span>
               {elsewhere.map((l) => (
                 <a key={l.label} href={l.href} target={isHttp(l.href) ? "_blank" : undefined} rel={isHttp(l.href) ? "noopener noreferrer" : undefined} className="cfooter-link">
                   <span className="cfooter-link-txt">{l.label}</span>

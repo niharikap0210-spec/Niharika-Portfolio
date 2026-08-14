@@ -402,7 +402,7 @@ export default function ProjectsBoard() {
       <div className="pboard-inner">
         {/* header */}
         <div className="pboard-head">
-          <span className="pboard-kicker" style={mono}><span className="pboard-kicker-dot" />Selected Work</span>
+          <span className="pboard-kicker">Selected work</span>
           <h2 className="pboard-heading">
             {meta.headStart}{" "}
             <span className="pboard-heading-hl">
