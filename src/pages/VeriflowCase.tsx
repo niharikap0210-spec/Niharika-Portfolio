@@ -1,6 +1,6 @@
 import { motion, AnimatePresence, useScroll, useSpring, useInView, useMotionValue, useTransform, animate } from "framer-motion";
 import { Link } from "react-router-dom";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useLayoutEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
@@ -800,12 +800,56 @@ function LessonCard({ index, title, body, tag }: { index: number; title: string;
 /* ══════════════════════════════════════════════════════════════════
    SYSTEM DIAGRAM: three surfaces with preview thumbnails
 ══════════════════════════════════════════════════════════════════ */
+/* Thin, purpose-built device mockups for the System diagram. */
+function TabletMock({ src, alt }: { src: string; alt: string }) {
+  return (
+    <div style={{ width: "100%", background: "#15171c", borderRadius: "clamp(13px, 1.5vw, 19px)", padding: "clamp(5px, 0.55vw, 7px)", boxShadow: "0 1px 2px rgba(0,0,0,0.06), 0 22px 46px -18px rgba(15,42,120,0.30)", position: "relative" }}>
+      <span aria-hidden style={{ position: "absolute", top: "50%", right: 4, transform: "translateY(-50%)", width: 3, height: 3, borderRadius: "50%", background: "#41454e" }} />
+      <div style={{ aspectRatio: "16 / 10", borderRadius: "clamp(9px, 1vw, 13px)", overflow: "hidden", background: "#000" }}>
+        <img src={src} alt={alt} loading="lazy" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top center", display: "block" }} />
+      </div>
+    </div>
+  );
+}
+
+function BrowserMock({ src, alt }: { src: string; alt: string }) {
+  return (
+    <div style={{ width: "100%", borderRadius: 11, overflow: "hidden", border: "1px solid rgba(20,30,60,0.13)", boxShadow: "0 1px 2px rgba(0,0,0,0.05), 0 24px 50px -18px rgba(15,42,120,0.28)", background: "#fff" }}>
+      <div style={{ height: "clamp(28px, 2.8vw, 36px)", background: "#eceef1", borderBottom: "1px solid rgba(20,30,60,0.07)", display: "flex", alignItems: "center", gap: 6, padding: "0 clamp(11px, 1.1vw, 15px)" }}>
+        <span style={{ width: 9, height: 9, borderRadius: "50%", background: "#d3d7de" }} />
+        <span style={{ width: 9, height: 9, borderRadius: "50%", background: "#d3d7de" }} />
+        <span style={{ width: 9, height: 9, borderRadius: "50%", background: "#d3d7de" }} />
+        <div style={{ flex: 1, marginLeft: 10, maxWidth: "58%", height: "clamp(14px, 1.5vw, 19px)", borderRadius: 20, background: "#fff", border: "1px solid rgba(20,30,60,0.10)" }} />
+      </div>
+      <div style={{ aspectRatio: "16 / 10", overflow: "hidden", background: "#fff" }}>
+        <img src={src} alt={alt} loading="lazy" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top center", display: "block" }} />
+      </div>
+    </div>
+  );
+}
+
+function TVMock({ src, alt }: { src: string; alt: string }) {
+  return (
+    <div style={{ width: "100%" }}>
+      <div style={{ background: "#0e1015", borderRadius: 9, padding: "clamp(4px, 0.5vw, 6px)", paddingBottom: "clamp(13px, 1.5vw, 19px)", boxShadow: "0 1px 2px rgba(0,0,0,0.08), 0 30px 66px -22px rgba(15,42,120,0.32)", position: "relative" }}>
+        <div style={{ aspectRatio: "16 / 9", borderRadius: 3, overflow: "hidden", background: "#000" }}>
+          <img src={src} alt={alt} loading="lazy" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top center", display: "block" }} />
+        </div>
+        <span aria-hidden style={{ position: "absolute", bottom: "clamp(4px, 0.5vw, 7px)", left: "50%", transform: "translateX(-50%)", width: 6, height: 6, borderRadius: "50%", background: vf.light, boxShadow: `0 0 7px ${vf.light}` }} />
+      </div>
+      <div aria-hidden style={{ width: "17%", height: "clamp(7px, 0.9vw, 11px)", margin: "0 auto", background: "linear-gradient(180deg, #191c22 0%, #0e1015 100%)", borderRadius: "0 0 3px 3px" }} />
+      <div aria-hidden style={{ width: "40%", height: "clamp(4px, 0.5vw, 6px)", margin: "0 auto", background: "#14161b", borderRadius: 4 }} />
+    </div>
+  );
+}
+
 function SystemDiagram() {
   const rootRef = useRef<HTMLDivElement>(null);
-  const surfaces: { role: string; name: string; desc: string; tag: string; Frame: (p: { src: string; alt: string }) => JSX.Element; src: string }[] = [
-    { role: "Action", name: "Tablet",     desc: "PIN, scan, verify, exit — the clinic's kiosk.",     tag: "Kiosk · 10\"",  Frame: TabletFrame, src: "/veriflow/start-scanning.png" },
-    { role: "Memory", name: "Web",        desc: "Dashboards, registry, and every sample's journey.", tag: "Control tower", Frame: LaptopFrame, src: "/veriflow/dashboard.png" },
-    { role: "State",  name: "Ambient TV", desc: "The live state of the lab. Glance, don't click.",   tag: "Wall mount",    Frame: TVFrame,     src: "/veriflow/tv-dashboard-1.png" },
+  const [hover, setHover] = useState<number | null>(null);
+  const surfaces: { role: string; name: string; desc: string; tag: string; Mock: (p: { src: string; alt: string }) => JSX.Element; src: string }[] = [
+    { role: "Action", name: "Tablet",     desc: "PIN, scan, verify, exit — the clinic's kiosk.",     tag: "Kiosk · 10\"",  Mock: TabletMock,  src: "/veriflow/start-scanning.png" },
+    { role: "Memory", name: "Web",        desc: "Dashboards, registry, and every sample's journey.", tag: "Control tower", Mock: BrowserMock, src: "/veriflow/dashboard.png" },
+    { role: "State",  name: "Ambient TV", desc: "The live state of the lab. Glance, don't click.",   tag: "Lab · 55\"",    Mock: TVMock,      src: "/veriflow/tv-dashboard-1.png" },
   ];
 
   useLayoutEffect(() => {
@@ -813,17 +857,17 @@ function SystemDiagram() {
     if (!root) return;
     const ctx = gsap.context(() => {
       const q = gsap.utils.selector(root);
-      const cols = q(".vf-surf") as HTMLElement[];
+      const devs = q(".vf-surf-dev") as HTMLElement[];
+      const metas = q(".vf-surf-meta") as HTMLElement[];
       const mm = gsap.matchMedia();
       mm.add("(prefers-reduced-motion: reduce)", () => {
-        gsap.set(cols, { opacity: 1, y: 0 });
+        gsap.set([...devs, ...metas], { opacity: 1, y: 0 });
       });
       mm.add("(prefers-reduced-motion: no-preference)", () => {
-        gsap.set(cols, { opacity: 0, y: 34 });
-        gsap.to(cols, {
-          opacity: 1, y: 0, duration: 0.75, stagger: 0.16, ease: "power2.out",
-          scrollTrigger: { trigger: root, start: "top 78%", once: true },
-        });
+        gsap.set([...devs, ...metas], { opacity: 0, y: 30 });
+        const tl = gsap.timeline({ scrollTrigger: { trigger: root, start: "top 78%", once: true } });
+        tl.to(devs, { opacity: 1, y: 0, duration: 0.75, stagger: 0.16, ease: "power2.out" }, 0);
+        tl.to(metas, { opacity: 1, y: 0, duration: 0.65, stagger: 0.16, ease: "power2.out" }, 0.14);
       });
     }, rootRef);
     return () => ctx.revert();
@@ -833,41 +877,46 @@ function SystemDiagram() {
     <div ref={rootRef} className="vf-surfaces">
       <div className="vf-surf-grid">
         {surfaces.map((s, i) => (
-          <div key={s.name} className="vf-surf" tabIndex={0}>
-            <div className="vf-surf-stage">
-              <div className="vf-surf-glow" aria-hidden />
-              <div className="vf-surf-device"><s.Frame src={s.src} alt={`${s.name} — ${s.role}`} /></div>
+          <Fragment key={s.name}>
+            <div
+              className="vf-surf-dev" style={{ gridColumn: i + 1, gridRow: 1, alignSelf: "end" }}
+              tabIndex={0}
+              onMouseEnter={() => setHover(i)} onMouseLeave={() => setHover(null)}
+              onFocus={() => setHover(i)} onBlur={() => setHover(null)}
+            >
+              <div className="vf-surf-glow" aria-hidden style={{ opacity: hover === i ? 0.42 : 0 }} />
+              <div className="vf-surf-device" style={{ transform: hover === i ? "translateY(-9px)" : "none" }}>
+                <s.Mock src={s.src} alt={`${s.name} — ${s.role}`} />
+              </div>
             </div>
-            <div className="vf-surf-meta">
+            <div
+              className="vf-surf-meta" style={{ gridColumn: i + 1, gridRow: 2, alignSelf: "start" }}
+              onMouseEnter={() => setHover(i)} onMouseLeave={() => setHover(null)}
+            >
               <div className="vf-surf-role">{"0" + (i + 1)} · {s.role}</div>
-              <h3 className="vf-surf-name">{s.name}</h3>
+              <h3 className="vf-surf-name" style={{ color: hover === i ? vf.primary : "var(--text-primary)" }}>{s.name}</h3>
               <p className="vf-surf-desc">{s.desc}</p>
               <div className="vf-surf-tag">{s.tag}</div>
             </div>
-          </div>
+          </Fragment>
         ))}
       </div>
 
       <style>{`
         .vf-surfaces { position: relative; }
-        .vf-surf-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(22px, 3vw, 48px); align-items: stretch; }
-        .vf-surf { display: flex; flex-direction: column; outline: none; }
-        .vf-surf-stage { flex: 1 1 auto; position: relative; display: flex; align-items: flex-end; justify-content: center; margin-bottom: clamp(24px, 2.8vw, 34px); }
-        .vf-surf-glow { position: absolute; left: -6%; right: -6%; top: 4%; bottom: -6%; z-index: 0; pointer-events: none;
-          background: radial-gradient(55% 55% at 50% 60%, ${vf.light} 0%, ${vf.primary} 42%, rgba(30,64,175,0) 74%);
-          filter: blur(38px); opacity: 0; transition: opacity 420ms ease; }
+        .vf-surf-grid { display: grid; grid-template-columns: 0.8fr 1fr 1.22fr; column-gap: clamp(24px, 3.6vw, 56px); row-gap: clamp(20px, 2.4vw, 30px); }
+        .vf-surf-dev { position: relative; display: flex; align-items: flex-end; justify-content: center; outline: none; }
+        .vf-surf-glow { position: absolute; left: -8%; right: -8%; top: 2%; bottom: -8%; z-index: 0; pointer-events: none; background: radial-gradient(55% 55% at 50% 60%, ${vf.light} 0%, ${vf.primary} 42%, rgba(30,64,175,0) 74%); filter: blur(40px); transition: opacity 420ms ease; }
         .vf-surf-device { position: relative; z-index: 1; width: 100%; transition: transform 420ms cubic-bezier(0.25,1,0.4,1); }
-        .vf-surf:hover .vf-surf-device, .vf-surf:focus-visible .vf-surf-device { transform: translateY(-9px); }
-        .vf-surf:hover .vf-surf-glow, .vf-surf:focus-visible .vf-surf-glow { opacity: 0.42; }
-        .vf-surf-meta { flex: 0 0 auto; min-height: clamp(132px, 12vw, 162px); }
-        .vf-surf-role { font-family: 'Manrope', monospace; text-transform: uppercase; font-size: 12px; color: ${vf.primary}; letter-spacing: 0.2em; font-weight: 700; margin-bottom: 12px; }
-        .vf-surf-name { font-family: ${serif}; font-weight: 700; font-size: clamp(24px, 2.4vw, 30px); letter-spacing: -0.02em; line-height: 1.15; color: var(--text-primary); margin: 0 0 10px; transition: color 240ms; }
-        .vf-surf:hover .vf-surf-name, .vf-surf:focus-visible .vf-surf-name { color: ${vf.primary}; }
-        .vf-surf-desc { font-family: ${sans}; font-size: 16px; line-height: 1.6; color: var(--text-secondary); margin: 0 0 14px; max-width: 320px; }
-        .vf-surf-tag { font-family: 'Manrope', monospace; text-transform: uppercase; font-size: 11.5px; color: var(--text-muted); letter-spacing: 0.16em; font-weight: 700; }
+        .vf-surf-role { font-family: 'Manrope', monospace; text-transform: uppercase; font-size: 14px; color: ${vf.primary}; letter-spacing: 0.2em; font-weight: 700; margin-bottom: 13px; }
+        .vf-surf-name { font-family: ${serif}; font-weight: 700; font-size: clamp(25px, 2.5vw, 32px); letter-spacing: -0.02em; line-height: 1.15; margin: 0 0 11px; transition: color 240ms; }
+        .vf-surf-desc { font-family: ${sans}; font-size: 18px; line-height: 1.6; color: var(--text-secondary); margin: 0 0 15px; }
+        .vf-surf-tag { font-family: 'Manrope', monospace; text-transform: uppercase; font-size: 12.5px; color: var(--text-secondary); letter-spacing: 0.16em; font-weight: 700; }
         @media (max-width: 860px) {
-          .vf-surf-grid { grid-template-columns: 1fr; gap: clamp(36px, 8vw, 56px); max-width: 460px; margin: 0 auto; }
-          .vf-surf-desc { max-width: none; }
+          .vf-surf-grid { grid-template-columns: 1fr; max-width: 440px; margin: 0 auto; row-gap: 10px; }
+          .vf-surf-grid > * { grid-column: 1 !important; grid-row: auto !important; align-self: auto !important; }
+          .vf-surf-dev { margin-bottom: 22px; }
+          .vf-surf-meta { margin-bottom: 40px; }
         }
       `}</style>
     </div>
