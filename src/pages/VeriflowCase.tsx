@@ -520,256 +520,6 @@ function OverrideTimeline() {
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   BEFORE → AFTER BAND: wide editorial contrast
-══════════════════════════════════════════════════════════════════ */
-function BeforeAfterBand() {
-  const [hover, setHover] = useState<"before" | "after" | null>(null);
-  return (
-    <div style={{ marginTop: "clamp(40px, 5vw, 64px)" }}>
-      <div style={{ ...mono, fontSize: 13, color: vf.primary, letterSpacing: "0.22em", fontWeight: 700, marginBottom: 20, display: "flex", alignItems: "center", gap: 10 }}>
-        <span aria-hidden style={{ width: 3, height: 14, background: vf.primary, display: "inline-block" }} />
-        WHAT THIS REPLACED
-      </div>
-      <div className="ba-band" style={{
-        display: "grid",
-        gridTemplateColumns: "1fr auto 1fr",
-        alignItems: "stretch",
-        gap: 0,
-        border: `1px solid ${vf.subtle}`,
-        borderRadius: 8,
-        background: "var(--bg-elevated)",
-        overflow: "hidden",
-      }}>
-        {/* BEFORE */}
-        <motion.div
-          onHoverStart={() => setHover("before")}
-          onHoverEnd={() => setHover(null)}
-          style={{
-            padding: "clamp(28px, 3.2vw, 44px)",
-            position: "relative",
-            background: hover === "before" ? `${vf.flag}08` : "transparent",
-            transition: "background 300ms",
-          }}
-        >
-          <span aria-hidden style={{
-            position: "absolute", top: 0, left: 0, bottom: 0, width: 3, background: vf.flag,
-            transform: hover === "before" ? "scaleY(1)" : "scaleY(0.25)",
-            transformOrigin: "top", transition: "transform 400ms ease-out",
-          }} />
-          <div style={{
-            ...mono, fontSize: 12, color: vf.flag, letterSpacing: "0.22em", fontWeight: 700,
-            marginBottom: 14, display: "flex", alignItems: "center", gap: 8,
-          }}>
-            <span style={{
-              width: 7, height: 7, borderRadius: "50%", background: vf.flag,
-              animation: hover === "before" ? "status-pulse 1.8s ease-in-out infinite" : "none",
-            }} />
-            BEFORE
-          </div>
-          <div style={{
-            fontFamily: serif, fontWeight: 700,
-            fontSize: "clamp(26px, 2.8vw, 34px)",
-            letterSpacing: "-0.02em", lineHeight: 1.2,
-            color: "var(--text-primary)", marginBottom: 12,
-          }}>
-            A guessed journey.
-          </div>
-          <p style={{
-            fontFamily: sans, fontSize: 18, lineHeight: 1.65,
-            color: "var(--text-secondary)", margin: 0,
-          }}>
-            Clipboards, phone calls, last-mile uncertainty. The cooler left at 9am and you hoped it arrived.
-          </p>
-        </motion.div>
-
-        {/* DIVIDER with arrow */}
-        <div className="ba-divider" style={{
-          display: "flex", alignItems: "center", justifyContent: "center",
-          padding: "clamp(20px, 2.4vw, 32px) 0",
-          borderLeft: `1px solid ${vf.subtle}`,
-          borderRight: `1px solid ${vf.subtle}`,
-          background: "var(--bg-primary)",
-          minWidth: 72,
-        }}>
-          <motion.div
-            animate={{ x: hover ? 4 : 0 }}
-            transition={{ duration: 0.35, ease: [0.25, 1, 0.4, 1] }}
-            style={{
-              width: 44, height: 44, borderRadius: "50%",
-              background: vf.primary, display: "flex", alignItems: "center", justifyContent: "center",
-              boxShadow: `0 4px 14px ${vf.primary}40`,
-            }}
-          >
-            <ArrowRight size={20} color="#fff" weight="bold" />
-          </motion.div>
-        </div>
-
-        {/* AFTER */}
-        <motion.div
-          onHoverStart={() => setHover("after")}
-          onHoverEnd={() => setHover(null)}
-          style={{
-            padding: "clamp(28px, 3.2vw, 44px)",
-            position: "relative",
-            background: hover === "after" ? `${vf.status}08` : "transparent",
-            transition: "background 300ms",
-          }}
-        >
-          <span aria-hidden style={{
-            position: "absolute", top: 0, right: 0, bottom: 0, width: 3, background: vf.status,
-            transform: hover === "after" ? "scaleY(1)" : "scaleY(0.25)",
-            transformOrigin: "top", transition: "transform 400ms ease-out",
-          }} />
-          <div style={{
-            ...mono, fontSize: 12, color: vf.status, letterSpacing: "0.22em", fontWeight: 700,
-            marginBottom: 14, display: "flex", alignItems: "center", gap: 8,
-          }}>
-            <span style={{
-              width: 7, height: 7, borderRadius: "50%", background: vf.status,
-              animation: hover === "after" ? "status-pulse 1.8s ease-in-out infinite" : "none",
-            }} />
-            AFTER
-          </div>
-          <div style={{
-            fontFamily: serif, fontWeight: 700,
-            fontSize: "clamp(26px, 2.8vw, 34px)",
-            letterSpacing: "-0.02em", lineHeight: 1.2,
-            color: "var(--text-primary)", marginBottom: 12,
-          }}>
-            A recorded trip.
-          </div>
-          <p style={{
-            fontFamily: sans, fontSize: 18, lineHeight: 1.65,
-            color: "var(--text-secondary)", margin: 0,
-          }}>
-            Every handoff signed. Every sample watchable in real time. Every override an audit event.
-          </p>
-        </motion.div>
-      </div>
-      <style>{`
-        @media (max-width: 760px) {
-          .ba-band { grid-template-columns: minmax(0, 1fr) !important; }
-          .ba-divider { border-left: none !important; border-right: none !important; border-top: 1px solid ${vf.subtle}; border-bottom: 1px solid ${vf.subtle}; }
-        }
-      `}</style>
-    </div>
-  );
-}
-
-/* ══════════════════════════════════════════════════════════════════
-   ROLE ROW: interactive list row
-══════════════════════════════════════════════════════════════════ */
-function RoleRow({ index, line }: { index: number; line: string }) {
-  const [hovered, setHovered] = useState(false);
-  return (
-    <li
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={{
-        display: "grid",
-        gridTemplateColumns: "auto 1fr",
-        gap: 20,
-        alignItems: "center",
-        padding: "20px 18px 20px 0",
-        borderBottom: `1px solid var(--border-light)`,
-        position: "relative",
-        cursor: "default",
-        transition: "padding-left 300ms ease-out",
-        paddingLeft: hovered ? 16 : 0,
-      }}
-    >
-      <span aria-hidden style={{
-        position: "absolute", left: 0, top: "50%", transform: "translateY(-50%)",
-        width: 3, height: hovered ? "70%" : "0%", background: vf.primary,
-        transition: "height 320ms ease-out",
-      }} />
-      <span style={{
-        ...mono, fontSize: 13, fontWeight: 700,
-        color: hovered ? vf.primary : "var(--text-muted)",
-        letterSpacing: "0.18em", width: 32, flexShrink: 0,
-        transition: "color 240ms",
-      }}>
-        {String(index + 1).padStart(2, "0")}
-      </span>
-      <span style={{
-        fontFamily: sans, fontSize: 18,
-        color: hovered ? "var(--text-primary)" : "var(--text-secondary)",
-        lineHeight: 1.55, fontWeight: hovered ? 500 : 400,
-        transition: "color 240ms, font-weight 240ms",
-      }}>
-        {line}
-      </span>
-    </li>
-  );
-}
-
-/* ══════════════════════════════════════════════════════════════════
-   LESSON CARD: hover-expand takeaway
-══════════════════════════════════════════════════════════════════ */
-function LessonCard({ index, title, body, tag }: { index: number; title: string; body: string; tag: string }) {
-  const [hovered, setHovered] = useState(false);
-  return (
-    <motion.div
-      onHoverStart={() => setHovered(true)}
-      onHoverEnd={() => setHovered(false)}
-      style={{
-        position: "relative",
-        padding: "clamp(20px, 2.4vw, 28px)",
-        background: "var(--bg-elevated)",
-        border: `1px solid ${hovered ? vf.primary : vf.subtle}`,
-        borderRadius: 6,
-        cursor: "default",
-        transition: "border-color 240ms",
-        overflow: "hidden",
-      }}
-      animate={{ y: hovered ? -3 : 0 }}
-      transition={{ duration: 0.35, ease: [0.25, 1, 0.4, 1] }}
-    >
-      <span aria-hidden style={{
-        position: "absolute", top: 0, left: 0, bottom: 0, width: 3, background: vf.primary,
-        transform: hovered ? "scaleY(1)" : "scaleY(0)",
-        transformOrigin: "center", transition: "transform 380ms ease-out",
-      }} />
-      <div style={{
-        display: "flex", alignItems: "baseline", justifyContent: "space-between",
-        marginBottom: 14, gap: 12,
-      }}>
-        <span style={{
-          ...mono, fontSize: 13, fontWeight: 700,
-          color: vf.primary, letterSpacing: "0.18em",
-        }}>
-          L.0{index + 1}
-        </span>
-        <motion.span
-          animate={{ opacity: hovered ? 1 : 0, x: hovered ? 0 : 6 }}
-          transition={{ duration: 0.3 }}
-          style={{
-            ...mono, fontSize: 11, fontWeight: 700,
-            color: vf.muted, letterSpacing: "0.22em",
-          }}
-        >
-          {tag}
-        </motion.span>
-      </div>
-      <div style={{
-        fontFamily: serif, fontWeight: 700,
-        fontSize: "clamp(20px, 2vw, 24px)",
-        letterSpacing: "-0.01em", lineHeight: 1.25,
-        color: "var(--text-primary)", marginBottom: 10,
-      }}>
-        {title}
-      </div>
-      <p style={{
-        fontFamily: sans, fontSize: 18, lineHeight: 1.75,
-        color: "var(--text-secondary)", margin: 0,
-      }}>
-        {body}
-      </p>
-    </motion.div>
-  );
-}
-
-/* ══════════════════════════════════════════════════════════════════
    SYSTEM DIAGRAM: three surfaces with preview thumbnails
 ══════════════════════════════════════════════════════════════════ */
 /* Thin, purpose-built device mockups for the System diagram. */
@@ -2020,27 +1770,8 @@ export default function VeriflowCase() {
       ══════════════════════════════════════════════════════════════ */}
       <section style={{ padding: SECTION_PAD, background: vf.ink, color: "#fff" }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
-          <div style={{ marginBottom: "clamp(40px, 5vw, 64px)" }}>
-            <div style={{
-              display: "flex", alignItems: "baseline", gap: 18, flexWrap: "wrap", paddingBottom: 14,
-            }}>
-              <span style={{ ...mono, fontSize: 14, color: vf.light, letterSpacing: "0.22em", fontWeight: 700 }}>
-                07 <span style={{ color: "rgba(255,255,255,0.4)", fontWeight: 400 }}>/ {TOTAL_SECTIONS}</span>
-              </span>
-              <span style={{ ...mono, fontSize: 14, color: "#fff", letterSpacing: "0.22em", fontWeight: 600 }}>
-                AMBIENT · THE WALL
-              </span>
-              <div style={{ flex: 1, height: 1, background: vf.light, opacity: 0.4, minWidth: 40 }} />
-            </div>
-            <h2 style={{
-              fontFamily: serif, fontWeight: 700,
-              fontSize: "clamp(30px, 3.6vw, 44px)",
-              letterSpacing: "-0.025em", lineHeight: 1.2,
-              color: "#fff", marginTop: 20, maxWidth: 860,
-            }}>
-              Readable across the room.
-            </h2>
-          </div>
+          <SectionHeader num="07" phase="Ambient · the wall" title="Readable across the room." accent={vf.light} titleColor="#fff" />
+
 
           <div className="tv-grid" style={{
             display: "grid", gridTemplateColumns: "minmax(0, 1.15fr) minmax(260px, 1fr)",
@@ -2091,62 +1822,78 @@ export default function VeriflowCase() {
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <Reveal><SectionHeader num="08" phase="Role · Takeaways" title="What I owned, and what this project taught me." /></Reveal>
 
-          {/* ── BEFORE → AFTER: wide contrast band ─────────────────── */}
+          {/* Impact — before → after, distilled */}
           <Reveal>
-            <BeforeAfterBand />
+            <div className="vf-impact">
+              <div className="vf-impact-cell">
+                <span className="vf-impact-tag" style={{ color: "var(--text-muted)" }}>Before</span>
+                <span className="vf-impact-line" style={{ color: "var(--text-secondary)" }}>A guessed journey.</span>
+              </div>
+              <span aria-hidden className="vf-impact-arrow"><ArrowRight size={24} color={vf.primary} weight="bold" /></span>
+              <div className="vf-impact-cell">
+                <span className="vf-impact-tag" style={{ color: vf.primary }}>After</span>
+                <span className="vf-impact-line" style={{ color: "var(--text-primary)" }}>A recorded trip.</span>
+              </div>
+            </div>
           </Reveal>
 
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-16 items-start" style={{ marginTop: "clamp(56px, 7vw, 88px)" }}>
-            {/* ── LEFT: what I owned (interactive rows) ───────────── */}
-            <Reveal className="md:col-span-6">
-              <div style={{ ...mono, fontSize: 13, color: vf.primary, letterSpacing: "0.22em", fontWeight: 700, marginBottom: 20, display: "flex", alignItems: "center", gap: 10 }}>
-                <span aria-hidden style={{ width: 3, height: 14, background: vf.primary, display: "inline-block" }} />
-                ROLE · PRODUCT DESIGNER
+          <div className="vf-close-grid">
+            <Reveal>
+              <div>
+                <div className="vf-close-eyebrow">Role — Product Designer</div>
+                <ol className="vf-owned">
+                  {[
+                    "Mapped the clinic, courier, and lab chain across three roles.",
+                    "Designed the tablet kiosks: association, pickup, validation, override.",
+                    "Shipped the web control tower for admin, ops, and sample journeys.",
+                    "Laid out the TV wall: six-foot type, colour as status.",
+                    "Authored the validation-failure and 30-second override pattern.",
+                  ].map((line, j) => (
+                    <li key={j} className="vf-owned-row">
+                      <span className="vf-owned-num">{String(j + 1).padStart(2, "0")}</span>
+                      <span className="vf-owned-text">{line}</span>
+                    </li>
+                  ))}
+                </ol>
               </div>
-              <h3 style={{
-                fontFamily: serif, fontWeight: 700, fontSize: "clamp(26px, 2.8vw, 34px)",
-                letterSpacing: "-0.02em", lineHeight: 1.25, color: "var(--text-primary)",
-                marginBottom: 28, maxWidth: 520,
-              }}>
-                I owned the chain, end to end.
-              </h3>
-              <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-                {[
-                  "Mapped the clinic, courier, lab chain across three roles.",
-                  "Designed the tablet kiosks: association, pickup, validation, override.",
-                  "Shipped the web control tower (admin, ops, sample journey).",
-                  "Laid out the TV wall: six-foot type, color as status encoding.",
-                  "Authored the validation-failure plus 30-second override pattern.",
-                ].map((line, j) => (
-                  <RoleRow key={j} index={j} line={line} />
-                ))}
-              </ul>
             </Reveal>
-
-            {/* ── RIGHT: what I learned (flip cards) ──────────────── */}
-            <Reveal className="md:col-span-6" delay={0.1}>
-              <div style={{ ...mono, fontSize: 13, color: vf.primary, letterSpacing: "0.22em", fontWeight: 700, marginBottom: 20, display: "flex", alignItems: "center", gap: 10 }}>
-                <span aria-hidden style={{ width: 3, height: 14, background: vf.primary, display: "inline-block" }} />
-                THREE LESSONS
-              </div>
-              <h3 style={{
-                fontFamily: serif, fontWeight: 700, fontSize: "clamp(26px, 2.8vw, 34px)",
-                letterSpacing: "-0.02em", lineHeight: 1.25, color: "var(--text-primary)",
-                marginBottom: 28, maxWidth: 520,
-              }}>
-                What this project taught me.
-              </h3>
-              <div style={{ display: "grid", gap: 14 }}>
-                {[
-                  { title: "Constraint is the feature.", body: "In healthcare, flexibility is a liability. A linear flow is the design, not a limitation of it.", tag: "DESIGN POSTURE" },
-                  { title: "Error pathways are the product.", body: "The work lives in the moment a cooler is off and someone still needs to move. Happy paths are a warm-up.", tag: "FAILURE DESIGN" },
-                  { title: "Ambient information is calm information.", body: "A wall you glance at beats a phone that nags. Make the status findable, not pushable.", tag: "CALM UX" },
-                ].map((x, i) => (
-                  <LessonCard key={i} index={i} {...x} />
-                ))}
+            <Reveal delay={0.1}>
+              <div>
+                <div className="vf-close-eyebrow">What I learned</div>
+                <div className="vf-lessons">
+                  {[
+                    { title: "Constraint is the feature.", body: "In healthcare, flexibility is a liability. A linear flow is the design, not a limitation of it." },
+                    { title: "Error pathways are the product.", body: "The work lives in the moment a cooler is off and someone still needs to move. Happy paths are a warm-up." },
+                    { title: "Ambient information is calm information.", body: "A wall you glance at beats a phone that nags. Make the status findable, not pushable." },
+                  ].map((x, i) => (
+                    <div key={i} className="vf-lesson">
+                      <h4 className="vf-lesson-title">{x.title}</h4>
+                      <p className="vf-lesson-body">{x.body}</p>
+                    </div>
+                  ))}
+                </div>
               </div>
             </Reveal>
           </div>
+
+          <style>{`
+            .vf-impact { display: flex; align-items: center; gap: clamp(22px, 3.4vw, 48px); flex-wrap: wrap; margin: clamp(2px, 0.8vw, 10px) 0 clamp(52px, 7vw, 88px); }
+            .vf-impact-cell { display: flex; flex-direction: column; gap: 9px; }
+            .vf-impact-tag { font-family: 'Manrope', monospace; text-transform: uppercase; font-size: 12px; letter-spacing: 0.2em; font-weight: 700; }
+            .vf-impact-line { font-family: ${serif}; font-weight: 700; font-size: clamp(25px, 2.7vw, 36px); letter-spacing: -0.02em; line-height: 1.12; }
+            .vf-impact-arrow { display: inline-flex; }
+            .vf-close-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(40px, 6vw, 96px); align-items: start; }
+            .vf-close-eyebrow { font-family: 'Manrope', monospace; text-transform: uppercase; font-size: 13px; color: ${vf.primary}; letter-spacing: 0.2em; font-weight: 700; margin-bottom: clamp(22px, 3vw, 34px); }
+            .vf-owned { list-style: none; padding: 0; margin: 0; }
+            .vf-owned-row { display: grid; grid-template-columns: 34px 1fr; gap: 16px; align-items: baseline; padding: clamp(15px, 1.7vw, 20px) 0; border-top: 1px solid ${vf.subtle}; }
+            .vf-owned-row:last-child { border-bottom: 1px solid ${vf.subtle}; }
+            .vf-owned-num { font-family: 'Manrope', monospace; font-size: 13px; font-weight: 700; color: ${vf.muted}; letter-spacing: 0.14em; }
+            .vf-owned-text { font-family: ${sans}; font-size: 18px; line-height: 1.55; color: var(--text-primary); }
+            .vf-lessons { display: flex; flex-direction: column; gap: clamp(28px, 3.2vw, 40px); }
+            .vf-lesson-title { font-family: ${serif}; font-weight: 700; font-size: clamp(21px, 2vw, 25px); letter-spacing: -0.015em; line-height: 1.2; color: var(--text-primary); margin: 0 0 11px; }
+            .vf-lesson-body { font-family: ${sans}; font-size: 18px; line-height: 1.6; color: var(--text-secondary); margin: 0; }
+            @media (max-width: 860px) { .vf-close-grid { grid-template-columns: 1fr; gap: clamp(44px, 9vw, 60px); } }
+          `}</style>
         </div>
       </section>
 

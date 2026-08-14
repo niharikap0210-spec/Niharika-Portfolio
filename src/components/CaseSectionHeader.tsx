@@ -25,7 +25,7 @@ export function caseEyebrow(accent: string): CSSProperties {
 }
 
 export function SectionHeader({
-  num, phase, title, accent = "#1E40AF", meta, titleMaxWidth = 820,
+  num, phase, title, accent = "#1E40AF", meta, titleMaxWidth = 820, titleColor,
 }: {
   num: string;
   phase: string;
@@ -34,6 +34,8 @@ export function SectionHeader({
   /** optional right-aligned meta in the top row, e.g. a week range */
   meta?: string;
   titleMaxWidth?: number;
+  /** override the title color (e.g. "#fff" on a dark section) */
+  titleColor?: string;
   /** accepted for call-site compatibility; not rendered */
   total?: string;
 }) {
@@ -80,7 +82,7 @@ export function SectionHeader({
         initial={{ opacity: 0, y: 12 }}
         animate={inView ? { opacity: 1, y: 0 } : {}}
         transition={{ delay: 0.16, duration: 0.75, ease: [0.25, 1, 0.4, 1] }}
-        style={{ ...CASE_H2, margin: 0, maxWidth: titleMaxWidth }}
+        style={{ ...CASE_H2, margin: 0, maxWidth: titleMaxWidth, ...(titleColor ? { color: titleColor } : null) }}
       >
         {title}
       </motion.h2>
