@@ -15,10 +15,14 @@ import {
   ClockCountdownIcon as ClockCountdown,
   FileTextIcon as FileText,
   EyeSlashIcon as EyeSlash,
+  IdentificationBadgeIcon as IdBadge,
+  DevicesIcon as Devices,
+  PenNibIcon as PenNib,
 } from "@phosphor-icons/react";
 import type { Icon } from "@phosphor-icons/react";
 import { projects, type Project } from "../data/projects";
 import { ProjectHeroStage } from "../components/ProjectHeroStage";
+import { GradientBackground } from "../components/GradientBackground";
 
 /* ── Veriflow palette, scoped to this page ──────────────────────── */
 const vf = {
@@ -1675,18 +1679,38 @@ export default function VeriflowCase() {
       {/* ══════════════════════════════════════════════════════════════
           00 · HERO: laptop (admin web) + tablet overlay
       ══════════════════════════════════════════════════════════════ */}
-      <section className="blueprint-grid vf-hero-section" style={{
+      <section className="vf-hero-section" style={{
         position: "relative",
+        isolation: "isolate",
         height: "calc(var(--vh, 1vh) * 100 - 56px)",
         minHeight: 640,
         display: "flex",
         flexDirection: "column",
         overflow: "hidden",
+        background: "var(--bg-primary)",
       }}>
+        {/* Subtle blue noisy-gradient hero background (replaces the blueprint grid) */}
+        <GradientBackground
+          gradientType="radial-gradient"
+          gradientSize="140% 130%"
+          gradientOrigin="top-middle"
+          colors={[
+            { color: "rgba(59,130,246,0.20)", stop: "0%" },
+            { color: "rgba(96,165,250,0.12)", stop: "34%" },
+            { color: "rgba(147,197,253,0.07)", stop: "62%" },
+            { color: "rgba(239,244,253,0)", stop: "100%" },
+          ]}
+          noisePatternAlpha={11}
+          noiseIntensity={0.7}
+          noisePatternRefreshInterval={2}
+          noisePatternSize={100}
+          style={{ zIndex: 0 }}
+        />
         <motion.div
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.05, duration: 0.5 }}
           className="max-w-7xl mx-auto px-6 md:px-10"
           style={{
+            position: "relative", zIndex: 1,
             width: "100%", flexShrink: 0,
             display: "flex", justifyContent: "space-between", alignItems: "center",
             paddingTop: "clamp(16px, 2vw, 24px)",
@@ -1721,6 +1745,7 @@ export default function VeriflowCase() {
         <div
           className="max-w-7xl mx-auto px-6 md:px-10"
           style={{
+            position: "relative", zIndex: 1,
             flex: 1, width: "100%", minHeight: 0,
             display: "grid",
             gridTemplateColumns: "minmax(0, 1fr)",
@@ -1784,32 +1809,48 @@ export default function VeriflowCase() {
               </motion.p>
 
               <motion.div
-                initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8, duration: 0.6 }}
-                style={{
+                initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8, duration: 0.6 }}
+                style={{ maxWidth: 480 }}
+              >
+                <div style={{
                   display: "grid",
                   gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-                  columnGap: "clamp(20px, 3vw, 40px)",
-                  rowGap: 22,
-                  borderTop: "1px solid var(--border)",
-                  paddingTop: 24,
-                  maxWidth: 460,
-                }}
-              >
-                {([
-                  { label: "Role",     value: "Product Designer" },
-                  { label: "Surfaces", value: "Web · Tablet · TV" },
-                  { label: "Timeline", value: "3 months" },
-                  { label: "Tools",    value: "Figma · FigJam" },
-                ] as { label: string; value: string }[]).map((m) => (
-                  <div key={m.label} style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                    <span style={{ ...mono, fontSize: 13, color: "var(--text-secondary)", letterSpacing: "0.2em", fontWeight: 600 }}>
-                      {m.label}
-                    </span>
-                    <span style={{ fontFamily: sans, fontSize: 19, fontWeight: 500, color: "var(--text-primary)" }}>
-                      {m.value}
-                    </span>
-                  </div>
-                ))}
+                  gap: 1,
+                  background: vf.subtle,
+                  border: `1px solid ${vf.subtle}`,
+                  borderRadius: 16,
+                  overflow: "hidden",
+                  boxShadow: "0 1px 2px rgba(9,30,66,0.04), 0 18px 44px rgba(15,42,120,0.07)",
+                }}>
+                  {([
+                    { label: "Role",     value: "Product Designer", Icon: IdBadge },
+                    { label: "Surfaces", value: "Web · Tablet · TV", Icon: Devices },
+                    { label: "Timeline", value: "3 months",          Icon: ClockCountdown },
+                    { label: "Tools",    value: "Figma · FigJam",    Icon: PenNib },
+                  ] as { label: string; value: string; Icon: Icon }[]).map((m) => (
+                    <div key={m.label} style={{
+                      background: "rgba(255,255,255,0.72)",
+                      backdropFilter: "blur(6px)", WebkitBackdropFilter: "blur(6px)",
+                      padding: "clamp(15px, 1.5vw, 20px)",
+                      display: "flex", alignItems: "center", gap: 13,
+                    }}>
+                      <span style={{
+                        width: 40, height: 40, borderRadius: 11, flexShrink: 0,
+                        background: vf.surface, display: "flex", alignItems: "center", justifyContent: "center",
+                      }}>
+                        <m.Icon size={20} color={vf.primary} weight="regular" />
+                      </span>
+                      <div style={{ minWidth: 0 }}>
+                        <div style={{ ...mono, fontSize: 10, color: vf.muted, letterSpacing: "0.18em", fontWeight: 700, marginBottom: 5 }}>
+                          {m.label}
+                        </div>
+                        <div style={{ fontFamily: sans, fontSize: "clamp(14px, 1.25vw, 16px)", fontWeight: 600, color: "var(--text-primary)", lineHeight: 1.3 }}>
+                          {m.value}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </motion.div>
             </div>
 
@@ -1822,6 +1863,7 @@ export default function VeriflowCase() {
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.1, duration: 0.6 }}
           className="max-w-7xl mx-auto px-6 md:px-10"
           style={{
+            position: "relative", zIndex: 1,
             width: "100%", flexShrink: 0,
             display: "flex", justifyContent: "center", alignItems: "center",
             paddingBottom: "clamp(14px, 1.6vw, 22px)",
