@@ -20,6 +20,7 @@ import type { Icon } from "@phosphor-icons/react";
 import { projects, type Project } from "../data/projects";
 import { ProjectHeroStage } from "../components/ProjectHeroStage";
 import { GradientBackground } from "../components/GradientBackground";
+import LiquidBackground from "../components/LiquidBackground";
 
 /* ── Veriflow palette, scoped to this page ──────────────────────── */
 const vf = {
@@ -1933,7 +1934,8 @@ export default function VeriflowCase() {
       {/* ══════════════════════════════════════════════════════════════
           02 · SYSTEM
       ══════════════════════════════════════════════════════════════ */}
-      <section className="blueprint-grid-subtle" style={{ padding: SECTION_PAD }}>
+      <section className="vf-liquid-section" style={{ padding: SECTION_PAD }}>
+        <LiquidBackground c0="eff5fe" c1="dae8fc" c2="aecaf0" fade={0} lift={0.28} grain={0.055} speed={0.1} />
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <Reveal><SectionHeader num="02" phase="The system" title="Three surfaces, one unbroken chain." /></Reveal>
 
@@ -1993,7 +1995,8 @@ export default function VeriflowCase() {
       {/* ══════════════════════════════════════════════════════════════
           04 · CLINIC FLOW
       ══════════════════════════════════════════════════════════════ */}
-      <section className="blueprint-grid-subtle" style={{ padding: SECTION_PAD }}>
+      <section className="vf-liquid-section" style={{ padding: SECTION_PAD }}>
+        <LiquidBackground c0="eff5fe" c1="dae8fc" c2="aecaf0" fade={0} lift={0.28} grain={0.055} speed={0.1} />
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <Reveal>
             <SectionHeader num="04" phase="Flow · Clinic" title="A. Association. Tube becomes a trackable object." />
@@ -2079,7 +2082,8 @@ export default function VeriflowCase() {
       {/* ══════════════════════════════════════════════════════════════
           06 · BEYOND THE KIOSKS (web, laptop mockups)
       ══════════════════════════════════════════════════════════════ */}
-      <section className="blueprint-grid-subtle" style={{ padding: SECTION_PAD }}>
+      <section className="vf-liquid-section" style={{ padding: SECTION_PAD }}>
+        <LiquidBackground c0="eff5fe" c1="dae8fc" c2="aecaf0" fade={0} lift={0.28} grain={0.055} speed={0.1} />
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <Reveal>
             <SectionHeader num="06" phase="Beyond the kiosks" title="The kiosks handle the handoff. Everything else lives on the web." />
@@ -2195,7 +2199,8 @@ export default function VeriflowCase() {
       {/* ══════════════════════════════════════════════════════════════
           08 · ROLE + TAKEAWAYS
       ══════════════════════════════════════════════════════════════ */}
-      <section className="blueprint-grid-subtle" style={{ padding: SECTION_PAD }}>
+      <section className="vf-liquid-section" style={{ padding: SECTION_PAD }}>
+        <LiquidBackground c0="eff5fe" c1="dae8fc" c2="aecaf0" fade={0} lift={0.28} grain={0.055} speed={0.1} />
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <Reveal><SectionHeader num="08" phase="Role · Takeaways" title="What I owned, and what this project taught me." /></Reveal>
 
