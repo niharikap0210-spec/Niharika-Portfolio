@@ -418,7 +418,7 @@ function OverrideTimeline() {
     { src: "/veriflow/validation-failed-rotate-cooler-message.png", badge: "T + 0s",  color: vf.flag,    label: "Validation fails",  caption: "Plain-language retry. No blame, no jargon.",             actor: "Courier retries" },
     { src: "/veriflow/after-30-seconds-give-override-button.png",   badge: "T + 30s", color: vf.warn,    label: "Override appears",  caption: "The pause is forced. A second attempt earns the option.", actor: "System waits" },
     { src: "/veriflow/override-pin-authentication.png",             badge: "T + 35s", color: vf.primary, label: "Supervisor PIN",    caption: "A named person accepts responsibility for the exit.",     actor: "Supervisor signs" },
-    { src: "/veriflow/override-confirmation.png",                   badge: "T + 40s", color: vf.status,  label: "Cleared",           caption: "The cooler leaves — and the override leaves a trail.",    actor: "Audit log written" },
+    { src: "/veriflow/override-confirmation.png",                   badge: "T + 40s", color: vf.status,  label: "Cleared",           caption: "The cooler leaves. The override leaves a trail.",         actor: "Audit log written" },
   ];
   const gaps = ["30-second pause", "+5s", "+5s"];
 
@@ -502,9 +502,9 @@ function OverrideTimeline() {
         .ovr-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(18px, 2.4vw, 34px); }
         .ovr-col { display: flex; flex-direction: column; outline: none; }
         .ovr-badge { font-family: 'Manrope', monospace; text-transform: uppercase; font-size: 14px; letter-spacing: 0.14em; font-weight: 700; margin-bottom: clamp(12px, 1.4vw, 16px); }
-        .ovr-screen { margin-bottom: clamp(16px, 1.8vw, 22px); }
-        .ovr-title { font-family: ${serif}; font-weight: 700; font-size: clamp(22px, 2.1vw, 27px); letter-spacing: -0.015em; line-height: 1.2; color: var(--text-primary); margin: 0 0 10px; }
-        .ovr-caption { font-family: ${sans}; font-size: 18px; line-height: 1.55; color: var(--text-secondary); margin: 0 0 16px; }
+        .ovr-screen { margin-bottom: clamp(24px, 2.8vw, 34px); }
+        .ovr-title { font-family: ${serif}; font-weight: 700; font-size: clamp(22px, 2.1vw, 27px); letter-spacing: -0.015em; line-height: 1.2; color: var(--text-primary); margin: 0 0 15px; }
+        .ovr-caption { font-family: ${sans}; font-size: 18px; line-height: 1.6; color: var(--text-secondary); margin: 0 0 24px; }
         .ovr-actor { margin-top: auto; font-family: 'Manrope', monospace; text-transform: uppercase; font-size: 12px; letter-spacing: 0.14em; font-weight: 700; display: inline-flex; align-items: center; gap: 8px; }
         .ovr-actor-dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
         @media (max-width: 980px) {
@@ -899,9 +899,9 @@ function SystemDiagram() {
    LAPTOP SPREAD: full-width laptop + alternating text column
 ══════════════════════════════════════════════════════════════════ */
 function LaptopSpread({
-  fig, title, body, src, kicker, reverse = false,
+  title, body, src, kicker, reverse = false,
 }: {
-  fig: string; title: string; body: string; src: string; kicker: string; reverse?: boolean;
+  title: string; body: string; src: string; kicker: string; reverse?: boolean;
 }) {
   return (
     <div className="laptop-spread" style={{
@@ -923,7 +923,7 @@ function LaptopSpread({
       </div>
       <div style={{ direction: "ltr" }}>
         <div style={{ ...mono, fontSize: 13, color: vf.primary, letterSpacing: "0.22em", fontWeight: 700, marginBottom: 12 }}>
-          {fig} · {kicker}
+          {kicker}
         </div>
         <h3 style={{
           fontFamily: serif, fontWeight: 700, fontSize: "clamp(26px, 2.8vw, 34px)",
@@ -1988,7 +1988,6 @@ export default function VeriflowCase() {
           <div style={{ display: "flex", flexDirection: "column", gap: "clamp(80px, 10vw, 140px)" }}>
             <Reveal>
               <LaptopSpread
-                fig="W.01"
                 kicker="Operations overview"
                 title="Everything, one glance."
                 body="Compliance rate, active hospitals, RFID reader health, ticket load. Built for a lab director who opens one tab each morning to know whether today is going to be quiet."
@@ -1997,7 +1996,6 @@ export default function VeriflowCase() {
             </Reveal>
             <Reveal>
               <LaptopSpread
-                fig="W.02"
                 kicker="Sample registry"
                 title="Every sample, addressable."
                 body="Filterable by clinic, status, and date. The evidence layer for audits, morning standups, and any call that starts with 'where is sample #...'."
@@ -2007,7 +2005,6 @@ export default function VeriflowCase() {
             </Reveal>
             <Reveal>
               <LaptopSpread
-                fig="W.03"
                 kicker="Single sample"
                 title="One sample, whole journey."
                 body="A small isometric map of Clinic → Courier → Lab, paired with a vertical timeline of status changes. One glance beats four columns of text when a cooler is overdue."
