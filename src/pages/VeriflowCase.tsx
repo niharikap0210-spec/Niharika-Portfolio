@@ -15,9 +15,6 @@ import {
   ClockCountdownIcon as ClockCountdown,
   FileTextIcon as FileText,
   EyeSlashIcon as EyeSlash,
-  IdentificationBadgeIcon as IdBadge,
-  DevicesIcon as Devices,
-  PenNibIcon as PenNib,
 } from "@phosphor-icons/react";
 import type { Icon } from "@phosphor-icons/react";
 import { projects, type Project } from "../data/projects";
@@ -1682,17 +1679,18 @@ export default function VeriflowCase() {
       <section className="vf-hero-section" style={{
         position: "relative",
         isolation: "isolate",
-        height: "calc(var(--vh, 1vh) * 100 - 56px)",
-        minHeight: 640,
+        minHeight: "calc(var(--vh, 1vh) * 100 - 56px)",
         display: "flex",
         flexDirection: "column",
         overflow: "hidden",
         background: "var(--bg-primary)",
+        paddingTop: "clamp(56px, 8vw, 110px)",
+        paddingBottom: "clamp(56px, 8vw, 100px)",
       }}>
-        {/* Subtle blue noisy-gradient hero background (replaces the blueprint grid) */}
+        {/* Blue noisy-gradient hero background (replaces the blueprint grid) */}
         <GradientBackground
           gradientType="radial-gradient"
-          gradientSize="140% 130%"
+          gradientSize="150% 130%"
           gradientOrigin="top-middle"
           colors={[
             { color: "rgba(59,130,246,0.20)", stop: "0%" },
@@ -1700,190 +1698,87 @@ export default function VeriflowCase() {
             { color: "rgba(147,197,253,0.07)", stop: "62%" },
             { color: "rgba(239,244,253,0)", stop: "100%" },
           ]}
-          noisePatternAlpha={11}
-          noiseIntensity={0.7}
-          noisePatternRefreshInterval={2}
+          noisePatternAlpha={26}
+          noiseIntensity={1}
+          noisePatternRefreshInterval={1}
           noisePatternSize={100}
           style={{ zIndex: 0 }}
         />
-        <motion.div
-          initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.05, duration: 0.5 }}
-          className="max-w-7xl mx-auto px-6 md:px-10"
-          style={{
-            position: "relative", zIndex: 1,
-            width: "100%", flexShrink: 0,
-            display: "flex", justifyContent: "space-between", alignItems: "center",
-            paddingTop: "clamp(16px, 2vw, 24px)",
-            paddingBottom: 14,
-            flexWrap: "wrap", gap: 16,
-            borderBottom: "1px solid var(--border)",
-          }}
-        >
-          <Link to="/#projects"
-            style={{
-              display: "inline-flex", alignItems: "center", gap: 10,
-              ...mono, fontSize: 11, letterSpacing: "0.22em",
-              color: "var(--text-secondary)", textDecoration: "none",
-              transitionProperty: "color", transitionDuration: "200ms",
-            }}
-            onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = vf.primary)}
-            onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = "var(--text-secondary)")}>
-            <svg width="14" height="14" viewBox="0 0 18 18" fill="none">
-              <path d="M14 9H3M6 5L2 9l4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-            Index
-          </Link>
-          <div style={{ display: "flex", gap: 20, flexWrap: "wrap", alignItems: "center" }}>
-            {["Healthcare", "Enterprise", "Web + Tablet + TV"].map((tag) => (
-              <span key={tag} style={{ ...mono, fontSize: 10, color: "var(--text-muted)", letterSpacing: "0.2em" }}>
-                {tag}
-              </span>
-            ))}
+        <div className="max-w-5xl mx-auto px-6 md:px-10" style={{ position: "relative", zIndex: 1, width: "100%", textAlign: "center" }}>
+          {/* Title */}
+          <div style={{ overflow: "hidden" }}>
+            <motion.h1
+              initial={{ y: "110%" }} animate={{ y: 0 }}
+              transition={{ delay: 0.1, duration: 1.0, ease: [0.25, 1, 0.4, 1] }}
+              style={{
+                fontFamily: serif, fontWeight: 700,
+                fontSize: "clamp(66px, 12vw, 156px)",
+                color: "var(--text-primary)",
+                letterSpacing: "-0.055em", lineHeight: 0.9,
+                margin: 0,
+              }}>
+              Veriflow<span style={{ color: vf.primary, fontStyle: "italic" }}>.</span>
+            </motion.h1>
           </div>
-        </motion.div>
 
-        <div
-          className="max-w-7xl mx-auto px-6 md:px-10"
-          style={{
-            position: "relative", zIndex: 1,
-            flex: 1, width: "100%", minHeight: 0,
-            display: "grid",
-            gridTemplateColumns: "minmax(0, 1fr)",
-            gap: "clamp(24px, 3vw, 40px)",
-            alignItems: "center",
-            paddingTop: "clamp(20px, 2.4vw, 32px)",
-            paddingBottom: "clamp(16px, 2vw, 24px)",
-          }}
-        >
-          <div
-            className="grid grid-cols-1 md:grid-cols-12"
+          {/* Subtext */}
+          <motion.p
+            initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.45, duration: 0.7 }}
             style={{
-              gap: "clamp(24px, 3vw, 48px)",
-              alignItems: "center",
-              width: "100%",
-            }}
-          >
-            {/* LEFT: copy */}
-            <div className="md:col-span-5" style={{ minWidth: 0 }}>
-              <motion.div
-                initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1, duration: 0.6 }}
-                style={{ display: "flex", justifyContent: "space-between", marginBottom: 18, maxWidth: 460 }}
-              >
-                <span style={{ ...mono, fontSize: 11, color: vf.primary, letterSpacing: "0.22em", fontWeight: 700 }}>
-                  Case Study · 02
-                </span>
-                <span style={{ ...mono, fontSize: 11, color: "var(--text-muted)", letterSpacing: "0.22em" }}>
-                  Healthcare · 2024
-                </span>
-              </motion.div>
-
-              <div style={{ overflow: "hidden", marginBottom: "clamp(24px, 2.6vw, 36px)" }}>
-                <motion.h1
-                  initial={{ y: "110%" }} animate={{ y: 0 }}
-                  transition={{ delay: 0.15, duration: 1.0, ease: [0.25, 1, 0.4, 1] }}
-                  style={{
-                    fontFamily: serif, fontWeight: 700,
-                    fontSize: "clamp(56px, 8.2vw, 120px)",
-                    color: "var(--text-primary)",
-                    letterSpacing: "-0.055em", lineHeight: 0.9,
-                    margin: 0,
-                  }}>
-                  Veriflow<span style={{ color: vf.primary, fontStyle: "italic" }}>.</span>
-                </motion.h1>
-              </div>
-
-              <motion.p
-                initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5, duration: 0.7 }}
-                style={{
-                  fontFamily: serif, fontStyle: "italic",
-                  fontSize: "clamp(21px, 1.9vw, 28px)",
-                  color: "var(--text-secondary)",
-                  lineHeight: 1.5, maxWidth: 520,
-                  marginBottom: "clamp(28px, 3vw, 42px)",
-                  letterSpacing: "-0.01em",
-                }}
-              >
-                Specimen chain-of-custody. <span style={{ color: vf.primary }}>Tap, verify, hand off</span>
-                across a clinic tablet, a web control tower, and a lab wall.
-              </motion.p>
-
-              <motion.div
-                initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8, duration: 0.6 }}
-                style={{ maxWidth: 480 }}
-              >
-                <div style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-                  gap: 1,
-                  background: vf.subtle,
-                  border: `1px solid ${vf.subtle}`,
-                  borderRadius: 16,
-                  overflow: "hidden",
-                  boxShadow: "0 1px 2px rgba(9,30,66,0.04), 0 18px 44px rgba(15,42,120,0.07)",
-                }}>
-                  {([
-                    { label: "Role",     value: "Product Designer", Icon: IdBadge },
-                    { label: "Surfaces", value: "Web · Tablet · TV", Icon: Devices },
-                    { label: "Timeline", value: "3 months",          Icon: ClockCountdown },
-                    { label: "Tools",    value: "Figma · FigJam",    Icon: PenNib },
-                  ] as { label: string; value: string; Icon: Icon }[]).map((m) => (
-                    <div key={m.label} style={{
-                      background: "rgba(255,255,255,0.72)",
-                      backdropFilter: "blur(6px)", WebkitBackdropFilter: "blur(6px)",
-                      padding: "clamp(15px, 1.5vw, 20px)",
-                      display: "flex", alignItems: "center", gap: 13,
-                    }}>
-                      <span style={{
-                        width: 40, height: 40, borderRadius: 11, flexShrink: 0,
-                        background: vf.surface, display: "flex", alignItems: "center", justifyContent: "center",
-                      }}>
-                        <m.Icon size={20} color={vf.primary} weight="regular" />
-                      </span>
-                      <div style={{ minWidth: 0 }}>
-                        <div style={{ ...mono, fontSize: 10, color: vf.muted, letterSpacing: "0.18em", fontWeight: 700, marginBottom: 5 }}>
-                          {m.label}
-                        </div>
-                        <div style={{ fontFamily: sans, fontSize: "clamp(14px, 1.25vw, 16px)", fontWeight: 600, color: "var(--text-primary)", lineHeight: 1.3 }}>
-                          {m.value}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </motion.div>
-            </div>
-
-            {/* RIGHT: laptop (admin web) + floating tablet overlay, both react to cursor */}
-            <HeroMockups />
-          </div>
-        </div>
-
-        <motion.div
-          initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.1, duration: 0.6 }}
-          className="max-w-7xl mx-auto px-6 md:px-10"
-          style={{
-            position: "relative", zIndex: 1,
-            width: "100%", flexShrink: 0,
-            display: "flex", justifyContent: "center", alignItems: "center",
-            paddingBottom: "clamp(14px, 1.6vw, 22px)",
-          }}
-        >
-          <motion.div
-            animate={{ y: [0, 5, 0] }}
-            transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-            style={{
-              display: "inline-flex", alignItems: "center", gap: 10,
-              ...mono, fontSize: 10, letterSpacing: "0.22em",
+              fontFamily: serif, fontStyle: "italic",
+              fontSize: "clamp(20px, 2vw, 28px)",
               color: "var(--text-secondary)",
+              lineHeight: 1.5, maxWidth: 640,
+              margin: "clamp(22px, 2.6vw, 34px) auto 0",
+              letterSpacing: "-0.01em",
             }}
           >
-            Scroll
-            <svg width="12" height="12" viewBox="0 0 16 16" fill="none">
-              <path d="M8 3v10M4 9l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
+            Specimen chain-of-custody. <span style={{ color: vf.primary }}>Tap, verify, hand off</span>{" "}
+            across a clinic tablet, a web control tower, and a lab wall.
+          </motion.p>
+
+          {/* Image — laptop (admin web) + floating tablet, cursor-reactive */}
+          <motion.div
+            initial={{ opacity: 0, y: 26 }} animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.55, duration: 0.9, ease: [0.25, 1, 0.4, 1] }}
+            style={{ maxWidth: 960, margin: "clamp(48px, 6vw, 84px) auto 0", position: "relative" }}
+          >
+            <HeroMockups />
           </motion.div>
-        </motion.div>
+
+          {/* Meta strip */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.85, duration: 0.6 }}
+            style={{ display: "flex", justifyContent: "center", marginTop: "clamp(64px, 9vw, 120px)" }}
+          >
+            <div className="vf-metastrip" style={{
+              display: "inline-grid", gridTemplateColumns: "repeat(4, auto)",
+              gap: 1, background: vf.subtle,
+              border: `1px solid ${vf.subtle}`, borderRadius: 18, overflow: "hidden",
+              boxShadow: "0 1px 2px rgba(9,30,66,0.04), 0 16px 40px rgba(15,42,120,0.06)",
+            }}>
+              {([
+                { label: "Role",     value: "Product Designer" },
+                { label: "Surfaces", value: "Web · Tablet · TV" },
+                { label: "Timeline", value: "3 months" },
+                { label: "Tools",    value: "Figma · FigJam" },
+              ] as { label: string; value: string }[]).map((m) => (
+                <div key={m.label} style={{
+                  background: "rgba(255,255,255,0.72)",
+                  backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)",
+                  padding: "clamp(15px, 1.7vw, 22px) clamp(22px, 3.4vw, 46px)",
+                  textAlign: "center", display: "flex", flexDirection: "column", gap: 7,
+                }}>
+                  <span style={{ ...mono, fontSize: 10, color: vf.muted, letterSpacing: "0.2em", fontWeight: 700 }}>{m.label}</span>
+                  <span style={{ fontFamily: sans, fontSize: "clamp(14px, 1.3vw, 17px)", fontWeight: 600, color: "var(--text-primary)", whiteSpace: "nowrap" }}>{m.value}</span>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+
+          <style>{`@media (max-width: 640px){ .vf-metastrip { grid-template-columns: repeat(2, auto) !important; } }`}</style>
+        </div>
       </section>
 
       {/* ══════════════════════════════════════════════════════════════
