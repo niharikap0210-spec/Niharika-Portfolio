@@ -98,47 +98,47 @@ function Reveal({
 }
 
 function SectionHeader({
-  num, title, phase, total = TOTAL_SECTIONS,
+  num, title, phase,
 }: { num: string; title: string; phase: string; total?: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-40px" });
   return (
     <div ref={ref} style={{ marginBottom: "clamp(40px, 5vw, 64px)" }}>
-      <div style={{
-        display: "flex", alignItems: "baseline", gap: 18, flexWrap: "wrap",
-        paddingBottom: 14,
-      }}>
-        <motion.span
-          initial={{ opacity: 0, y: 8 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.55, ease: [0.25, 1, 0.4, 1] }}
-          style={{ ...mono, fontSize: 14, color: vf.primary, letterSpacing: "0.22em", fontWeight: 700 }}
-        >
-          {num} <span style={{ color: "var(--text-muted)", fontWeight: 400 }}>/ {total}</span>
-        </motion.span>
-        <motion.span
-          initial={{ opacity: 0, y: 8 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.08, duration: 0.55, ease: [0.25, 1, 0.4, 1] }}
-          style={{ ...mono, fontSize: 14, color: "var(--text-primary)", letterSpacing: "0.22em", fontWeight: 600 }}
-        >
-          {phase}
-        </motion.span>
+      <div style={{ display: "flex", alignItems: "flex-start", gap: "clamp(20px, 3.2vw, 40px)" }}>
         <motion.div
-          initial={{ scaleX: 0 }}
-          animate={inView ? { scaleX: 1 } : {}}
-          transition={{ delay: 0.15, duration: 0.9, ease: [0.25, 1, 0.4, 1] }}
-          style={{ flex: 1, height: 1, background: vf.primary, opacity: 0.55, transformOrigin: "left", minWidth: 40 }}
-        />
+          aria-hidden
+          initial={{ opacity: 0, y: 12 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, ease: [0.25, 1, 0.4, 1] }}
+          style={{
+            fontFamily: serif, fontWeight: 700,
+            fontSize: "clamp(48px, 5.8vw, 78px)",
+            lineHeight: 0.78, letterSpacing: "-0.045em",
+            color: "transparent", WebkitTextStroke: `1.4px ${vf.primary}`,
+            flexShrink: 0, userSelect: "none",
+          }}
+        >
+          {num}
+        </motion.div>
+        <div style={{ paddingTop: "clamp(2px, 0.7vw, 9px)" }}>
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ delay: 0.08, duration: 0.55, ease: [0.25, 1, 0.4, 1] }}
+            style={{ ...mono, fontSize: 13, color: vf.primary, letterSpacing: "0.24em", fontWeight: 700, marginBottom: "clamp(10px, 1.4vw, 16px)" }}
+          >
+            {phase}
+          </motion.div>
+          <motion.h2
+            initial={{ opacity: 0, y: 12 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ delay: 0.16, duration: 0.75, ease: [0.25, 1, 0.4, 1] }}
+            style={{ ...t.h2Section, margin: 0, maxWidth: 780 }}
+          >
+            {title}
+          </motion.h2>
+        </div>
       </div>
-      <motion.h2
-        initial={{ opacity: 0, y: 12 }}
-        animate={inView ? { opacity: 1, y: 0 } : {}}
-        transition={{ delay: 0.22, duration: 0.8, ease: [0.25, 1, 0.4, 1] }}
-        style={{ ...t.h2Section, marginTop: 20, maxWidth: 860 }}
-      >
-        {title}
-      </motion.h2>
     </div>
   );
 }
@@ -1189,14 +1189,14 @@ function StatRuler() {
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   BLIND-SPOT AUDIT: the three gaps as a calm diagnostic readout
+   GAP CARDS: the old process's three blind spots, as cards
 ══════════════════════════════════════════════════════════════════ */
-function BlindSpotAudit() {
+function GapCards() {
   const rootRef = useRef<HTMLDivElement>(null);
-  const channels = [
-    { Icon: FileText, label: "Trail",      status: "None",   practice: "Couriers scribbled cooler numbers on the same sheet, every day.", consequence: "A handoff left no record — nothing to trace." },
-    { Icon: HandTap,  label: "Verify",     status: "By eye", practice: "Pathologists matched sample IDs by hand.",                        consequence: "One digit off, and the wrong lab received the tube." },
-    { Icon: EyeSlash, label: "Visibility", status: "Blind",  practice: "Labs had no forecast of incoming work.",                          consequence: "Staffing and storage stayed guesswork until a cooler arrived." },
+  const cards = [
+    { Icon: FileText, title: "No trail",            status: "None",   body: "Handoffs left no record. Couriers scribbled cooler numbers on the same sheet, every day." },
+    { Icon: HandTap,  title: "Manual verification", status: "By eye", body: "Pathologists matched sample IDs by hand. One digit off, and the wrong lab received the tube." },
+    { Icon: EyeSlash, title: "No live view",        status: "Blind",  body: "Labs had no forecast of incoming work. Staffing and storage stayed guesswork until a cooler arrived." },
   ];
 
   useLayoutEffect(() => {
@@ -1204,99 +1204,69 @@ function BlindSpotAudit() {
     if (!root) return;
     const ctx = gsap.context(() => {
       const q = gsap.utils.selector(root);
-      const leaders  = q(".vf-au-leader") as HTMLElement[];
-      const statuses = q(".vf-au-status") as HTMLElement[];
-      const icons    = q(".vf-au-icon") as HTMLElement[];
-      const body     = q(".vf-au-body")[0] as HTMLElement;
-      const dot      = q(".vf-au-dot")[0] as HTMLElement;
-
+      const cardEls = q(".vf-gap-card") as HTMLElement[];
       const mm = gsap.matchMedia();
-
       mm.add("(prefers-reduced-motion: reduce)", () => {
-        gsap.set(leaders, { scaleX: 1 });
-        gsap.set(statuses, { opacity: 1, y: 0 });
-        gsap.set(icons, { color: vf.primary });
+        gsap.set(cardEls, { opacity: 1, y: 0 });
       });
-
       mm.add("(prefers-reduced-motion: no-preference)", () => {
-        gsap.set(leaders, { scaleX: 0, transformOrigin: "left center" });
-        gsap.set(statuses, { opacity: 0, y: 6 });
-        gsap.set(icons, { color: vf.muted });
-
-        gsap.to(dot, { scale: 1.35, opacity: 0.5, duration: 1.4, yoyo: true, repeat: -1, ease: "sine.inOut", transformOrigin: "50% 50%" });
-
-        // Simple staggered entrance — each row settles in turn. No sweeping line.
-        const tl = gsap.timeline({ scrollTrigger: { trigger: body, start: "top 80%", once: true } });
-        tl.to(leaders,  { scaleX: 1, duration: 0.55, stagger: 0.12, ease: "power2.out" }, 0);
-        tl.to(statuses, { opacity: 1, y: 0, duration: 0.5, stagger: 0.12, ease: "power2.out" }, 0.12);
-        tl.to(icons,    { color: vf.primary, duration: 0.5, stagger: 0.12 }, 0.12);
+        gsap.set(cardEls, { opacity: 0, y: 22 });
+        gsap.to(cardEls, {
+          opacity: 1, y: 0, duration: 0.6, stagger: 0.12, ease: "power2.out",
+          scrollTrigger: { trigger: root, start: "top 80%", once: true },
+        });
       });
     }, rootRef);
     return () => ctx.revert();
   }, []);
 
   return (
-    <div ref={rootRef} className="vf-audit" style={{ marginTop: "clamp(56px, 7vw, 80px)" }}>
-      <div className="vf-audit-head">
-        <span style={{ ...mono, fontSize: 13, color: vf.muted, letterSpacing: "0.2em", fontWeight: 700, display: "inline-flex", alignItems: "center", gap: 10 }}>
-          <MagnifyingGlass size={20} color={vf.primary} weight="regular" />
-          Blind-spot audit
-        </span>
-        <span style={{ ...mono, fontSize: 13, color: vf.ink, letterSpacing: "0.16em", fontWeight: 700, display: "inline-flex", alignItems: "center", gap: 9 }}>
-          3 Unmonitored
-          <span className="vf-au-dot" />
-        </span>
+    <div ref={rootRef} className="vf-gaps" style={{ marginTop: "clamp(56px, 7vw, 80px)" }}>
+      <div style={{ ...mono, fontSize: 13, color: vf.primary, letterSpacing: "0.2em", fontWeight: 700, marginBottom: "clamp(22px, 3vw, 34px)" }}>
+        Three blind spots
       </div>
 
-      <div className="vf-au-body">
-        {channels.map((c, i) => (
-          <div key={c.label} className="vf-au-row" tabIndex={0}>
-            <div className="vf-au-main">
-              <span className="vf-au-icon"><c.Icon size={22} weight="regular" color="currentColor" /></span>
-              <span className="vf-au-label" style={{ ...mono, fontSize: 14, letterSpacing: "0.12em", fontWeight: 700, color: vf.muted }}>
-                {c.label}
-                <span className="vf-au-underline" aria-hidden />
-              </span>
-              <span className="vf-au-leader" aria-hidden />
-              <span className="vf-au-status" style={{ ...mono, fontSize: 21, letterSpacing: "0.04em", fontWeight: 700, color: vf.ink }}>{c.status}</span>
+      <div className="vf-gap-cards">
+        {cards.map((c) => (
+          <div key={c.title} className="vf-gap-card" tabIndex={0}>
+            <div className="vf-gap-card-top">
+              <span className="vf-gap-icon"><c.Icon size={26} weight="regular" color="currentColor" /></span>
+              <span className="vf-gap-status">{c.status}</span>
             </div>
-            <div className="vf-au-detail">
-              <div className="vf-au-detail-inner">
-                <div>
-                  <div style={{ ...mono, fontSize: 12, letterSpacing: "0.16em", color: vf.muted, fontWeight: 700, marginBottom: 9 }}>How it worked</div>
-                  <p className="vf-au-p">{c.practice}</p>
-                </div>
-                <div>
-                  <div style={{ ...mono, fontSize: 12, letterSpacing: "0.16em", color: vf.muted, fontWeight: 700, marginBottom: 9 }}>What broke</div>
-                  <p className="vf-au-p">{c.consequence}</p>
-                </div>
-              </div>
-            </div>
+            <h3 className="vf-gap-title">{c.title}</h3>
+            <p className="vf-gap-body">{c.body}</p>
           </div>
         ))}
       </div>
 
       <style>{`
-        .vf-audit-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding-bottom: 18px; border-bottom: 1px solid ${vf.subtle}; }
-        .vf-au-dot { width: 8px; height: 8px; border-radius: 50%; background: ${vf.primary}; display: inline-block; }
-        .vf-au-body { position: relative; }
-        .vf-au-row { border-bottom: 1px solid ${vf.subtle}; outline: none; transition: background 240ms; }
-        .vf-au-row:hover, .vf-au-row:focus-visible { background: ${vf.surface}; }
-        .vf-au-main { display: grid; grid-template-columns: 34px minmax(110px, auto) minmax(40px, 1fr) auto; align-items: center; gap: 16px; padding: clamp(20px, 2.4vw, 28px) clamp(10px, 1.4vw, 18px); }
-        .vf-au-icon { color: ${vf.muted}; display: inline-flex; }
-        .vf-au-label { position: relative; display: inline-flex; align-items: center; }
-        .vf-au-underline { position: absolute; left: 0; right: 0; bottom: -5px; height: 1.5px; background: ${vf.primary}; transform: scaleX(0); transform-origin: left; transition: transform 420ms cubic-bezier(0.25,1,0.4,1); }
-        .vf-au-row:hover .vf-au-underline, .vf-au-row:focus-visible .vf-au-underline { transform: scaleX(1); }
-        .vf-au-leader { height: 0; border-bottom: 1.5px dotted ${vf.muted}; opacity: 0.5; transform: scaleX(0); transform-origin: left; align-self: center; }
-        .vf-au-status { justify-self: end; white-space: nowrap; }
-        .vf-au-detail { overflow: hidden; max-height: 0; transition: max-height 460ms cubic-bezier(0.25,1,0.4,1); }
-        .vf-au-row:hover .vf-au-detail, .vf-au-row:focus-visible .vf-au-detail { max-height: 240px; }
-        .vf-au-detail-inner { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(20px, 3vw, 48px); padding: 2px clamp(10px, 1.4vw, 18px) clamp(22px, 2.6vw, 30px) 66px; }
-        .vf-au-p { font-family: ${sans}; font-size: 17px; line-height: 1.6; color: var(--text-secondary); margin: 0; }
-        @media (max-width: 680px) {
-          .vf-au-main { grid-template-columns: 28px 1fr auto; }
-          .vf-au-leader { display: none; }
-          .vf-au-detail-inner { grid-template-columns: 1fr; gap: 16px; padding-left: clamp(10px,1.4vw,18px); }
+        .vf-gap-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(16px, 1.8vw, 24px); }
+        .vf-gap-card {
+          display: flex; flex-direction: column;
+          background: var(--bg-elevated);
+          border: 1px solid rgba(30,64,175,0.14);
+          border-radius: 14px;
+          padding: clamp(24px, 2.6vw, 34px);
+          outline: none;
+          transition: transform 380ms cubic-bezier(0.25,1,0.4,1), border-color 300ms, box-shadow 380ms;
+        }
+        .vf-gap-card:hover, .vf-gap-card:focus-visible {
+          transform: translateY(-5px);
+          border-color: ${vf.primary};
+          box-shadow: 0 1px 2px rgba(15,42,120,0.05), 0 18px 40px rgba(15,42,120,0.12);
+        }
+        .vf-gap-card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: clamp(22px, 2.6vw, 32px); }
+        .vf-gap-icon { color: ${vf.primary}; display: inline-flex; }
+        .vf-gap-status {
+          font-family: 'Manrope', monospace; text-transform: uppercase; letter-spacing: 0.1em;
+          font-size: 11px; font-weight: 700; color: ${vf.primary};
+          background: ${vf.surface}; border: 1px solid rgba(30,64,175,0.16);
+          padding: 5px 12px; border-radius: 100px; white-space: nowrap;
+        }
+        .vf-gap-title { font-family: ${serif}; font-weight: 700; font-size: clamp(21px, 2vw, 25px); letter-spacing: -0.02em; line-height: 1.2; color: var(--text-primary); margin: 0 0 13px; }
+        .vf-gap-body { font-family: ${sans}; font-size: 16px; line-height: 1.62; color: var(--text-secondary); margin: 0; }
+        @media (max-width: 780px) {
+          .vf-gap-cards { grid-template-columns: 1fr; }
         }
       `}</style>
     </div>
@@ -1377,9 +1347,8 @@ function DiagramTickPath() {
 
   return (
     <div ref={rootRef} className="vf-path" style={{ marginTop: "clamp(56px, 7vw, 80px)", paddingTop: "clamp(24px, 3vw, 34px)", borderTop: "1px solid var(--border)" }}>
-      <div style={{ ...mono, fontSize: 13, color: vf.primary, letterSpacing: "0.2em", fontWeight: 700, marginBottom: "clamp(18px, 2.4vw, 30px)", display: "flex", alignItems: "center", gap: 10 }}>
-        <span aria-hidden style={{ width: 3, height: 15, background: vf.primary }} />
-        FIG. 01 · CHAIN OF CUSTODY
+      <div style={{ ...mono, fontSize: 13, color: vf.primary, letterSpacing: "0.2em", fontWeight: 700, marginBottom: "clamp(18px, 2.4vw, 30px)" }}>
+        One tube, clinic to lab
       </div>
 
       <svg viewBox="0 0 1000 165" preserveAspectRatio="xMidYMid meet" style={{ width: "100%", height: "auto", display: "block", overflow: "visible" }}>
@@ -1935,7 +1904,7 @@ export default function VeriflowCase() {
           <DiagramTickPath />
 
           {/* Three gaps — blind-spot audit */}
-          <BlindSpotAudit />
+          <GapCards />
 
           {/* Stats + mission — measured ruler */}
           <StatRuler />
