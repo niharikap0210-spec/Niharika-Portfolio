@@ -1123,7 +1123,7 @@ function StatRuler() {
 
   return (
     <div ref={rootRef} className="vf-ruler">
-      <div style={{ ...mono, fontSize: 12, color: vf.muted, letterSpacing: "0.2em", fontWeight: 700, marginBottom: "clamp(28px, 3.5vw, 44px)" }}>
+      <div style={{ ...mono, fontSize: 13, color: vf.muted, letterSpacing: "0.2em", fontWeight: 700, marginBottom: "clamp(28px, 3.5vw, 44px)" }}>
         The old handoff, measured
       </div>
 
@@ -1131,7 +1131,7 @@ function StatRuler() {
         {stations.map((s) => (
           <div key={s.label} className="vf-rl-station" tabIndex={0}>
             <div className="vf-rl-num">{s.n}{s.suffix}</div>
-            <div className="vf-rl-label" style={{ ...mono, fontSize: 12, letterSpacing: "0.2em", fontWeight: 700 }}>{s.label}</div>
+            <div className="vf-rl-label" style={{ ...mono, fontSize: 14, letterSpacing: "0.18em", fontWeight: 700 }}>{s.label}</div>
             <div className="vf-rl-brk" aria-hidden />
             <p className="vf-rl-sub">{s.sub}</p>
           </div>
@@ -1162,7 +1162,7 @@ function StatRuler() {
         .vf-rl-label { margin-top: 14px; color: var(--text-secondary); transition: color 240ms; }
         .vf-rl-brk { height: 2px; width: 0; margin: 12px auto 0; background: ${vf.primary}; transition: width 360ms cubic-bezier(0.25,1,0.4,1); }
         .vf-rl-station:hover .vf-rl-brk, .vf-rl-station:focus-visible .vf-rl-brk { width: 44px; }
-        .vf-rl-sub { font-family: ${sans}; font-size: 15px; line-height: 1.55; color: var(--text-secondary); margin: 10px auto 0; max-width: 240px; opacity: 0; transform: translateY(6px); transition: opacity 360ms, transform 360ms; }
+        .vf-rl-sub { font-family: ${sans}; font-size: 17px; line-height: 1.55; color: var(--text-secondary); margin: 12px auto 0; max-width: 260px; opacity: 0; transform: translateY(6px); transition: opacity 360ms, transform 360ms; }
         .vf-rl-station:hover .vf-rl-sub, .vf-rl-station:focus-visible .vf-rl-sub { opacity: 1; transform: none; }
         .vf-rl-axisline { position: relative; height: 40px; margin-top: clamp(22px, 3vw, 34px); }
         .vf-rl-axisline::before { content: ""; position: absolute; left: 0; right: 0; top: 14px; height: 12px; background-image: repeating-linear-gradient(90deg, ${vf.subtle} 0 1px, transparent 1px, transparent 14px); }
@@ -1238,11 +1238,11 @@ function BlindSpotAudit() {
   return (
     <div ref={rootRef} className="vf-audit" style={{ marginTop: "clamp(56px, 7vw, 80px)" }}>
       <div className="vf-audit-head">
-        <span style={{ ...mono, fontSize: 12, color: vf.muted, letterSpacing: "0.2em", fontWeight: 700, display: "inline-flex", alignItems: "center", gap: 10 }}>
-          <MagnifyingGlass size={18} color={vf.primary} weight="regular" />
+        <span style={{ ...mono, fontSize: 13, color: vf.muted, letterSpacing: "0.2em", fontWeight: 700, display: "inline-flex", alignItems: "center", gap: 10 }}>
+          <MagnifyingGlass size={20} color={vf.primary} weight="regular" />
           Blind-spot audit
         </span>
-        <span style={{ ...mono, fontSize: 12, color: vf.ink, letterSpacing: "0.18em", fontWeight: 700, display: "inline-flex", alignItems: "center", gap: 9 }}>
+        <span style={{ ...mono, fontSize: 13, color: vf.ink, letterSpacing: "0.16em", fontWeight: 700, display: "inline-flex", alignItems: "center", gap: 9 }}>
           3 Unmonitored
           <span className="vf-au-dot" />
         </span>
@@ -1253,21 +1253,21 @@ function BlindSpotAudit() {
           <div key={c.label} className="vf-au-row" tabIndex={0}>
             <div className="vf-au-main">
               <span className="vf-au-icon"><c.Icon size={22} weight="regular" color="currentColor" /></span>
-              <span className="vf-au-label" style={{ ...mono, fontSize: 12, letterSpacing: "0.12em", fontWeight: 700, color: vf.muted }}>
+              <span className="vf-au-label" style={{ ...mono, fontSize: 14, letterSpacing: "0.12em", fontWeight: 700, color: vf.muted }}>
                 {c.label}
                 <span className="vf-au-underline" aria-hidden />
               </span>
               <span className="vf-au-leader" aria-hidden />
-              <span className="vf-au-status" style={{ ...mono, fontSize: 18, letterSpacing: "0.05em", fontWeight: 700, color: vf.ink }}>{c.status}</span>
+              <span className="vf-au-status" style={{ ...mono, fontSize: 21, letterSpacing: "0.04em", fontWeight: 700, color: vf.ink }}>{c.status}</span>
             </div>
             <div className="vf-au-detail">
               <div className="vf-au-detail-inner">
                 <div>
-                  <div style={{ ...mono, fontSize: 11, letterSpacing: "0.16em", color: vf.muted, fontWeight: 700, marginBottom: 7 }}>How it worked</div>
+                  <div style={{ ...mono, fontSize: 12, letterSpacing: "0.16em", color: vf.muted, fontWeight: 700, marginBottom: 9 }}>How it worked</div>
                   <p className="vf-au-p">{c.practice}</p>
                 </div>
                 <div>
-                  <div style={{ ...mono, fontSize: 11, letterSpacing: "0.16em", color: vf.muted, fontWeight: 700, marginBottom: 7 }}>What broke</div>
+                  <div style={{ ...mono, fontSize: 12, letterSpacing: "0.16em", color: vf.muted, fontWeight: 700, marginBottom: 9 }}>What broke</div>
                   <p className="vf-au-p">{c.consequence}</p>
                 </div>
               </div>
@@ -1292,7 +1292,7 @@ function BlindSpotAudit() {
         .vf-au-detail { overflow: hidden; max-height: 0; transition: max-height 460ms cubic-bezier(0.25,1,0.4,1); }
         .vf-au-row:hover .vf-au-detail, .vf-au-row:focus-visible .vf-au-detail { max-height: 240px; }
         .vf-au-detail-inner { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(20px, 3vw, 48px); padding: 2px clamp(10px, 1.4vw, 18px) clamp(22px, 2.6vw, 30px) 66px; }
-        .vf-au-p { font-family: ${sans}; font-size: 15px; line-height: 1.6; color: var(--text-secondary); margin: 0; }
+        .vf-au-p { font-family: ${sans}; font-size: 17px; line-height: 1.6; color: var(--text-secondary); margin: 0; }
         @media (max-width: 680px) {
           .vf-au-main { grid-template-columns: 28px 1fr auto; }
           .vf-au-leader { display: none; }
@@ -1377,8 +1377,8 @@ function DiagramTickPath() {
 
   return (
     <div ref={rootRef} className="vf-path" style={{ marginTop: "clamp(56px, 7vw, 80px)", paddingTop: "clamp(24px, 3vw, 34px)", borderTop: "1px solid var(--border)" }}>
-      <div style={{ ...mono, fontSize: 12, color: vf.primary, letterSpacing: "0.2em", fontWeight: 700, marginBottom: "clamp(18px, 2.4vw, 30px)", display: "flex", alignItems: "center", gap: 10 }}>
-        <span aria-hidden style={{ width: 3, height: 14, background: vf.primary }} />
+      <div style={{ ...mono, fontSize: 13, color: vf.primary, letterSpacing: "0.2em", fontWeight: 700, marginBottom: "clamp(18px, 2.4vw, 30px)", display: "flex", alignItems: "center", gap: 10 }}>
+        <span aria-hidden style={{ width: 3, height: 15, background: vf.primary }} />
         FIG. 01 · CHAIN OF CUSTODY
       </div>
 
@@ -1386,7 +1386,7 @@ function DiagramTickPath() {
         {/* zone labels */}
         {zones.map((z) => (
           <text key={z.label} className="vf-pt-zone" x={z.cx} y="38" textAnchor="middle"
-            style={{ ...mono, fontSize: 15, fill: vf.primary, letterSpacing: "0.18em", fontWeight: 700 }}>
+            style={{ ...mono, fontSize: 16.5, fill: vf.primary, letterSpacing: "0.18em", fontWeight: 700 }}>
             {z.label}
           </text>
         ))}
@@ -1401,11 +1401,11 @@ function DiagramTickPath() {
             <line className="vf-pt-tick" x1={h.x} y1={active === i ? 72 : 78} x2={h.x} y2={106}
               stroke={vf.primary} strokeWidth="1.6" />
             <text className="vf-pt-num" x={h.x} y="130" textAnchor="middle"
-              style={{ ...mono, fontSize: 14, fill: active === i ? vf.primary : "var(--text-primary)", letterSpacing: "0.08em", fontWeight: 700 }}>
+              style={{ ...mono, fontSize: 16, fill: active === i ? vf.primary : "var(--text-primary)", letterSpacing: "0.08em", fontWeight: 700 }}>
               {h.n}
             </text>
             <text className="vf-pt-verb" x={h.x} y="150" textAnchor="middle"
-              style={{ fontFamily: sans, fontSize: 13, fill: active === i ? "var(--text-primary)" : "var(--text-muted)", fontWeight: 500 }}>
+              style={{ fontFamily: sans, fontSize: 14.5, fill: active === i ? "var(--text-primary)" : "var(--text-muted)", fontWeight: 500 }}>
               {h.verb}
             </text>
             <rect x={h.x - 26} y="60" width="52" height="96" fill="transparent" tabIndex={0}
@@ -1421,12 +1421,12 @@ function DiagramTickPath() {
 
       <div style={{ marginTop: 18, minHeight: 22, textAlign: "center" }}>
         {active === null ? (
-          <span style={{ ...mono, fontSize: 12, color: vf.muted, letterSpacing: "0.2em", fontWeight: 600 }}>
+          <span style={{ ...mono, fontSize: 13, color: vf.muted, letterSpacing: "0.2em", fontWeight: 600 }}>
             A paper chain with no live tracking
           </span>
         ) : (
-          <span style={{ fontFamily: sans, fontSize: 15, color: "var(--text-secondary)" }}>
-            <strong style={{ ...mono, fontSize: 12, color: vf.primary, letterSpacing: "0.14em", marginRight: 10 }}>HAND {hands[active].n}</strong>
+          <span style={{ fontFamily: sans, fontSize: 16, color: "var(--text-secondary)" }}>
+            <strong style={{ ...mono, fontSize: 13, color: vf.primary, letterSpacing: "0.14em", marginRight: 10 }}>HAND {hands[active].n}</strong>
             {hands[active].detail}
           </span>
         )}
