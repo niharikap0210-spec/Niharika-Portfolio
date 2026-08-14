@@ -1682,10 +1682,11 @@ export default function VeriflowCase() {
         minHeight: "calc(var(--vh, 1vh) * 100 - 56px)",
         display: "flex",
         flexDirection: "column",
+        justifyContent: "center",
         overflow: "hidden",
         background: "var(--bg-primary)",
-        paddingTop: "clamp(56px, 8vw, 110px)",
-        paddingBottom: "clamp(56px, 8vw, 100px)",
+        paddingTop: "clamp(40px, 5vw, 72px)",
+        paddingBottom: "clamp(40px, 5vw, 72px)",
       }}>
         {/* Blue noisy-gradient hero background (replaces the blueprint grid) */}
         <GradientBackground
@@ -1713,80 +1714,69 @@ export default function VeriflowCase() {
           WebkitMaskImage: "linear-gradient(to bottom, #000 60%, transparent 100%)",
           maskImage: "linear-gradient(to bottom, #000 60%, transparent 100%)",
         }} />
-        <div className="max-w-5xl mx-auto px-6 md:px-10" style={{ position: "relative", zIndex: 1, width: "100%", textAlign: "center" }}>
-          {/* Title */}
-          <div style={{ overflow: "hidden" }}>
-            <motion.h1
-              initial={{ y: "110%" }} animate={{ y: 0 }}
-              transition={{ delay: 0.1, duration: 1.0, ease: [0.25, 1, 0.4, 1] }}
-              style={{
-                fontFamily: serif, fontWeight: 700,
-                fontSize: "clamp(66px, 12vw, 156px)",
-                color: "var(--text-primary)",
-                letterSpacing: "-0.055em", lineHeight: 0.9,
-                margin: 0,
-              }}>
-              Veriflow<span style={{ color: vf.primary, fontStyle: "italic" }}>.</span>
-            </motion.h1>
-          </div>
+        <div className="max-w-7xl mx-auto px-6 md:px-10" style={{ position: "relative", zIndex: 1, width: "100%" }}>
+          <div className="grid grid-cols-1 md:grid-cols-12" style={{ gap: "clamp(32px, 4.5vw, 60px)", alignItems: "center", width: "100%" }}>
+            {/* LEFT: copy (left-aligned) */}
+            <div className="md:col-span-5" style={{ minWidth: 0 }}>
+              <div style={{ overflow: "hidden", marginBottom: "clamp(24px, 2.6vw, 36px)" }}>
+                <motion.h1
+                  initial={{ y: "110%" }} animate={{ y: 0 }}
+                  transition={{ delay: 0.1, duration: 1.0, ease: [0.25, 1, 0.4, 1] }}
+                  style={{
+                    fontFamily: serif, fontWeight: 700,
+                    fontSize: "clamp(52px, 7.6vw, 112px)",
+                    color: "var(--text-primary)",
+                    letterSpacing: "-0.055em", lineHeight: 0.92,
+                    margin: 0, whiteSpace: "nowrap",
+                  }}>
+                  Veriflow<span style={{ color: vf.primary, fontStyle: "italic" }}>.</span>
+                </motion.h1>
+              </div>
 
-          {/* Subtext */}
-          <motion.p
-            initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.45, duration: 0.7 }}
-            style={{
-              fontFamily: serif, fontStyle: "italic",
-              fontSize: "clamp(20px, 2vw, 28px)",
-              color: "var(--text-secondary)",
-              lineHeight: 1.5, maxWidth: 640,
-              margin: "clamp(22px, 2.6vw, 34px) auto 0",
-              letterSpacing: "-0.01em",
-            }}
-          >
-            Specimen chain-of-custody. <span style={{ color: vf.primary }}>Tap, verify, hand off</span>{" "}
-            across a clinic tablet, a web control tower, and a lab wall.
-          </motion.p>
+              <motion.p
+                initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.45, duration: 0.7 }}
+                style={{
+                  fontFamily: serif, fontStyle: "italic",
+                  fontSize: "clamp(20px, 1.9vw, 27px)",
+                  color: "var(--text-secondary)",
+                  lineHeight: 1.5, maxWidth: 500,
+                  marginBottom: "clamp(34px, 4.5vw, 52px)",
+                  letterSpacing: "-0.01em",
+                }}
+              >
+                Specimen chain-of-custody. <span style={{ color: vf.primary }}>Tap, verify, hand off</span>{" "}
+                across a clinic tablet, a web control tower, and a lab wall.
+              </motion.p>
 
-          {/* Image — laptop (admin web) + floating tablet, cursor-reactive */}
-          <motion.div
-            initial={{ opacity: 0, y: 26 }} animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.55, duration: 0.9, ease: [0.25, 1, 0.4, 1] }}
-            style={{ maxWidth: 960, margin: "clamp(48px, 6vw, 84px) auto 0", position: "relative" }}
-          >
-            <HeroMockups />
-          </motion.div>
-
-          {/* Meta strip */}
-          <motion.div
-            initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.85, duration: 0.6 }}
-            style={{ display: "flex", justifyContent: "center", marginTop: "clamp(64px, 9vw, 120px)" }}
-          >
-            <div className="vf-metastrip" style={{
-              display: "inline-grid", gridTemplateColumns: "repeat(4, auto)",
-              gap: 1, background: vf.subtle,
-              border: `1px solid ${vf.subtle}`, borderRadius: 18, overflow: "hidden",
-              boxShadow: "0 1px 2px rgba(9,30,66,0.04), 0 16px 40px rgba(15,42,120,0.06)",
-            }}>
-              {([
-                { label: "Role",     value: "Product Designer" },
-                { label: "Surfaces", value: "Web · Tablet · TV" },
-                { label: "Timeline", value: "3 months" },
-                { label: "Tools",    value: "Figma · FigJam" },
-              ] as { label: string; value: string }[]).map((m) => (
-                <div key={m.label} style={{
-                  background: "rgba(255,255,255,0.72)",
-                  backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)",
-                  padding: "clamp(15px, 1.7vw, 22px) clamp(22px, 3.4vw, 46px)",
-                  textAlign: "center", display: "flex", flexDirection: "column", gap: 7,
-                }}>
-                  <span style={{ ...mono, fontSize: 10, color: vf.muted, letterSpacing: "0.2em", fontWeight: 700 }}>{m.label}</span>
-                  <span style={{ fontFamily: sans, fontSize: "clamp(14px, 1.3vw, 17px)", fontWeight: 600, color: "var(--text-primary)", whiteSpace: "nowrap" }}>{m.value}</span>
-                </div>
-              ))}
+              {/* Meta — accent-bar spec grid */}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7, duration: 0.6 }}
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+                  gap: "clamp(26px, 3.2vw, 38px) clamp(28px, 3.5vw, 52px)",
+                  maxWidth: 450,
+                }}
+              >
+                {([
+                  { label: "Role",     value: "Product Designer" },
+                  { label: "Surfaces", value: "Web · Tablet · TV" },
+                  { label: "Timeline", value: "3 months" },
+                  { label: "Tools",    value: "Figma · FigJam" },
+                ] as { label: string; value: string }[]).map((m) => (
+                  <div key={m.label}>
+                    <span aria-hidden style={{ display: "block", width: 26, height: 3, borderRadius: 2, background: vf.primary, marginBottom: 15 }} />
+                    <div style={{ ...mono, fontSize: 10, color: vf.muted, letterSpacing: "0.2em", fontWeight: 700, marginBottom: 9 }}>{m.label}</div>
+                    <div style={{ fontFamily: sans, fontSize: "clamp(17px, 1.5vw, 21px)", fontWeight: 600, color: "var(--text-primary)", letterSpacing: "-0.01em", lineHeight: 1.25 }}>{m.value}</div>
+                  </div>
+                ))}
+              </motion.div>
             </div>
-          </motion.div>
 
-          <style>{`@media (max-width: 640px){ .vf-metastrip { grid-template-columns: repeat(2, auto) !important; } }`}</style>
+            {/* RIGHT: laptop (admin web) + floating tablet, cursor-reactive */}
+            <HeroMockups />
+          </div>
         </div>
       </section>
 
