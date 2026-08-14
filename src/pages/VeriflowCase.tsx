@@ -24,6 +24,7 @@ import { projects, type Project } from "../data/projects";
 import { ProjectHeroStage } from "../components/ProjectHeroStage";
 import { GradientBackground } from "../components/GradientBackground";
 import LiquidBackground from "../components/LiquidBackground";
+import { SectionHeader } from "../components/CaseSectionHeader";
 
 /* ── Veriflow palette, scoped to this page ──────────────────────── */
 const vf = {
@@ -94,50 +95,6 @@ function Reveal({
     >
       {children}
     </motion.div>
-  );
-}
-
-function SectionHeader({
-  num, title, phase,
-}: { num: string; title: string; phase: string; total?: string }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-40px" });
-  return (
-    <div ref={ref} style={{ marginBottom: "clamp(40px, 5vw, 64px)" }}>
-      <div style={{ display: "flex", alignItems: "flex-end", gap: "clamp(16px, 2.2vw, 26px)", marginBottom: "clamp(18px, 2.4vw, 30px)" }}>
-        <motion.div
-          aria-hidden
-          initial={{ opacity: 0, y: 12 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, ease: [0.25, 1, 0.4, 1] }}
-          style={{
-            fontFamily: serif, fontWeight: 700,
-            fontSize: "clamp(46px, 5.4vw, 74px)",
-            lineHeight: 0.75, letterSpacing: "-0.045em",
-            color: "transparent", WebkitTextStroke: `1.4px ${vf.primary}`,
-            flexShrink: 0, userSelect: "none",
-          }}
-        >
-          {num}
-        </motion.div>
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.08, duration: 0.55, ease: [0.25, 1, 0.4, 1] }}
-          style={{ ...mono, fontSize: 14, color: vf.primary, letterSpacing: "0.22em", fontWeight: 700, paddingBottom: "clamp(8px, 1vw, 14px)" }}
-        >
-          {phase}
-        </motion.div>
-      </div>
-      <motion.h2
-        initial={{ opacity: 0, y: 12 }}
-        animate={inView ? { opacity: 1, y: 0 } : {}}
-        transition={{ delay: 0.16, duration: 0.75, ease: [0.25, 1, 0.4, 1] }}
-        style={{ ...t.h2Section, margin: 0, maxWidth: 820 }}
-      >
-        {title}
-      </motion.h2>
-    </div>
   );
 }
 
