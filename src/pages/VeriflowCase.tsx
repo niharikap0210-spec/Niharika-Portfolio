@@ -263,7 +263,7 @@ function TVFrame({ src, alt }: { src: string; alt: string }) {
 ══════════════════════════════════════════════════════════════════ */
 type Step = { src: string; label: string; note: string };
 
-function TabletStepper({ steps, figPrefix }: { steps: Step[]; figPrefix: string }) {
+function TabletStepper({ steps }: { steps: Step[] }) {
   const [active, setActive] = useState(0);
   const current = steps[active];
 
@@ -287,8 +287,9 @@ function TabletStepper({ steps, figPrefix }: { steps: Step[]; figPrefix: string 
           display: "flex", alignItems: "center", justifyContent: "space-between",
           marginTop: 22, gap: 14, flexWrap: "wrap",
         }}>
-          <span style={{ ...mono, fontSize: 13, color: vf.primary, letterSpacing: "0.22em", fontWeight: 700 }}>
-            {figPrefix}.{String(active + 1).padStart(2, "0")} · {current.label}
+          <span style={{ ...mono, fontSize: 13, color: vf.primary, letterSpacing: "0.2em", fontWeight: 700, display: "inline-flex", alignItems: "baseline", gap: 12, flexWrap: "wrap" }}>
+            {current.label}
+            <span style={{ color: vf.muted, letterSpacing: "0.14em", fontWeight: 600 }}>{String(active + 1).padStart(2, "0")} / {String(steps.length).padStart(2, "0")}</span>
           </span>
           <div style={{ display: "flex", gap: 8 }}>
             <StepperBtn disabled={active === 0} onClick={() => setActive(Math.max(0, active - 1))} dir="prev" />
@@ -303,7 +304,7 @@ function TabletStepper({ steps, figPrefix }: { steps: Step[]; figPrefix: string 
           marginBottom: 22, display: "flex", alignItems: "center", gap: 10,
         }}>
           <span aria-hidden style={{ width: 3, height: 14, background: vf.primary, display: "inline-block" }} />
-          Walkthrough · {steps.length} steps
+          Tap by tap
         </div>
         <ol style={{ listStyle: "none", padding: 0, margin: 0 }}>
           {steps.map((s, i) => {
@@ -329,15 +330,15 @@ function TabletStepper({ steps, figPrefix }: { steps: Step[]; figPrefix: string 
                 >
                   <span style={{
                     ...mono, fontSize: 13, fontWeight: 700,
-                    color: isActive ? vf.primary : "var(--text-muted)",
+                    color: isActive ? vf.primary : "var(--text-secondary)",
                     letterSpacing: "0.18em", paddingTop: 3,
                   }}>
                     {String(i + 1).padStart(2, "0")}
                   </span>
                   <div style={{ minWidth: 0 }}>
                     <div style={{
-                      fontFamily: sans, fontSize: 18, fontWeight: isActive ? 600 : 500,
-                      color: isActive ? "var(--text-primary)" : "var(--text-secondary)",
+                      fontFamily: sans, fontSize: 19, fontWeight: isActive ? 600 : 500,
+                      color: "var(--text-primary)",
                       marginBottom: 6, transition: "color 200ms", lineHeight: 1.3,
                     }}>
                       {s.label}
@@ -351,7 +352,7 @@ function TabletStepper({ steps, figPrefix }: { steps: Step[]; figPrefix: string 
                           transition={{ duration: 0.28, ease: [0.25, 1, 0.4, 1] }}
                           style={{ overflow: "hidden" }}
                         >
-                          <p style={{ fontFamily: sans, fontSize: 16, color: "var(--text-secondary)", lineHeight: 1.6, paddingTop: 4 }}>
+                          <p style={{ fontFamily: sans, fontSize: 18, color: "var(--text-secondary)", lineHeight: 1.6, paddingTop: 4 }}>
                             {s.note}
                           </p>
                         </motion.div>
@@ -1930,7 +1931,6 @@ export default function VeriflowCase() {
 
           <Reveal delay={0.05}>
             <TabletStepper
-              figPrefix="FIG. 04"
               steps={[
                 { src: "/veriflow/start-scanning.png",         label: "Choose action",       note: "The clinic tablet's home. Two big targets for gloved hands." },
                 { src: "/veriflow/sample-association.png",     label: "Scan both QRs",       note: "The tube's barcode and the sample ID bind in a single paired scan." },
@@ -1959,7 +1959,6 @@ export default function VeriflowCase() {
 
           <Reveal delay={0.05}>
             <TabletStepper
-              figPrefix="FIG. 05"
               steps={[
                 { src: "/veriflow/home-pin.png",                         label: "PIN in",             note: "Four digits on the tablet. Every action is attributable to a named courier." },
                 { src: "/veriflow/pickup-dashboard.png",                 label: "Ready coolers",      note: "Cards of cooler batches waiting for pickup. One tap claims it." },
