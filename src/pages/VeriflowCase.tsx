@@ -1058,8 +1058,8 @@ function StatRuler() {
   const rootRef = useRef<HTMLDivElement>(null);
   const stations = [
     { n: 5,  suffix: "",  label: "Hands per sample", sub: "between patient draw and pathologist screen." },
-    { n: 40, suffix: "m", label: "Invisible delay",  sub: "before anyone notices a cooler is late." },
-    { n: 3,  suffix: "",  label: "Buildings",        sub: "clinic, transit, lab. Three custody zones." },
+    { n: 40, suffix: "m", label: "Delay",            sub: "before anyone even notices a cooler is late." },
+    { n: 3,  suffix: "",  label: "Custody zones",    sub: "clinic, transit, lab." },
   ];
 
   useLayoutEffect(() => {
@@ -1123,8 +1123,8 @@ function StatRuler() {
 
   return (
     <div ref={rootRef} className="vf-ruler">
-      <div style={{ ...mono, fontSize: 12, color: vf.muted, letterSpacing: "0.22em", fontWeight: 700, marginBottom: "clamp(28px, 3.5vw, 44px)" }}>
-        Measured · what a late cooler costs
+      <div style={{ ...mono, fontSize: 12, color: vf.muted, letterSpacing: "0.2em", fontWeight: 700, marginBottom: "clamp(28px, 3.5vw, 44px)" }}>
+        The old handoff, measured
       </div>
 
       <div className="vf-rl-stations">
@@ -1196,7 +1196,7 @@ function BlindSpotAudit() {
   const channels = [
     { Icon: FileText, label: "Trail",      status: "None",   practice: "Couriers scribbled cooler numbers on the same sheet, every day.", consequence: "A handoff left no record — nothing to trace." },
     { Icon: HandTap,  label: "Verify",     status: "By eye", practice: "Pathologists matched sample IDs by hand.",                        consequence: "One digit off, and the wrong lab received the tube." },
-    { Icon: EyeSlash, label: "Visibility", status: "0",      practice: "Labs had no forecast of incoming work.",                          consequence: "Staffing and storage stayed guesswork until a cooler arrived." },
+    { Icon: EyeSlash, label: "Visibility", status: "Blind",  practice: "Labs had no forecast of incoming work.",                          consequence: "Staffing and storage stayed guesswork until a cooler arrived." },
   ];
 
   useLayoutEffect(() => {
@@ -1249,9 +1249,9 @@ function BlindSpotAudit() {
   return (
     <div ref={rootRef} className="vf-audit" style={{ marginTop: "clamp(56px, 7vw, 80px)" }}>
       <div className="vf-audit-head">
-        <span style={{ ...mono, fontSize: 12, color: vf.muted, letterSpacing: "0.22em", fontWeight: 700, display: "inline-flex", alignItems: "center", gap: 10 }}>
+        <span style={{ ...mono, fontSize: 12, color: vf.muted, letterSpacing: "0.2em", fontWeight: 700, display: "inline-flex", alignItems: "center", gap: 10 }}>
           <MagnifyingGlass size={18} color={vf.primary} weight="regular" />
-          Blind-spot audit · the paper process
+          Blind-spot audit
         </span>
         <span style={{ ...mono, fontSize: 12, color: vf.ink, letterSpacing: "0.18em", fontWeight: 700, display: "inline-flex", alignItems: "center", gap: 9 }}>
           3 Unmonitored
@@ -1265,22 +1265,21 @@ function BlindSpotAudit() {
           <div key={c.label} className="vf-au-row" tabIndex={0}>
             <div className="vf-au-main">
               <span className="vf-au-icon"><c.Icon size={22} weight="regular" color="currentColor" /></span>
-              <span className="vf-au-label" style={{ ...mono, fontSize: 15, letterSpacing: "0.14em", fontWeight: 700, color: vf.ink }}>
+              <span className="vf-au-label" style={{ ...mono, fontSize: 12, letterSpacing: "0.12em", fontWeight: 700, color: vf.muted }}>
                 {c.label}
                 <span className="vf-au-underline" aria-hidden />
               </span>
               <span className="vf-au-leader" aria-hidden />
-              <span className="vf-au-status" style={{ ...mono, fontSize: 15, letterSpacing: "0.1em", fontWeight: 700, color: "var(--text-primary)" }}>{c.status}</span>
-              <span className="vf-au-idx" style={{ ...mono, fontSize: 11, color: vf.muted, fontWeight: 700 }}>{String(i + 1).padStart(2, "0")}</span>
+              <span className="vf-au-status" style={{ ...mono, fontSize: 18, letterSpacing: "0.05em", fontWeight: 700, color: vf.ink }}>{c.status}</span>
             </div>
             <div className="vf-au-detail">
               <div className="vf-au-detail-inner">
                 <div>
-                  <div style={{ ...mono, fontSize: 10.5, letterSpacing: "0.18em", color: vf.muted, fontWeight: 700, marginBottom: 7 }}>The practice</div>
+                  <div style={{ ...mono, fontSize: 11, letterSpacing: "0.16em", color: vf.muted, fontWeight: 700, marginBottom: 7 }}>How it worked</div>
                   <p className="vf-au-p">{c.practice}</p>
                 </div>
                 <div>
-                  <div style={{ ...mono, fontSize: 10.5, letterSpacing: "0.18em", color: vf.muted, fontWeight: 700, marginBottom: 7 }}>The consequence</div>
+                  <div style={{ ...mono, fontSize: 11, letterSpacing: "0.16em", color: vf.muted, fontWeight: 700, marginBottom: 7 }}>What broke</div>
                   <p className="vf-au-p">{c.consequence}</p>
                 </div>
               </div>
@@ -1296,21 +1295,20 @@ function BlindSpotAudit() {
         .vf-au-scan { position: absolute; left: 0; right: 0; top: 0; height: 2px; background: linear-gradient(90deg, ${vf.primary}, rgba(30,64,175,0)); opacity: 0; pointer-events: none; z-index: 2; }
         .vf-au-row { border-bottom: 1px solid ${vf.subtle}; outline: none; transition: background 240ms; }
         .vf-au-row:hover, .vf-au-row:focus-visible { background: ${vf.surface}; }
-        .vf-au-main { display: grid; grid-template-columns: 34px minmax(110px, auto) minmax(40px, 1fr) auto 30px; align-items: center; gap: 16px; padding: clamp(20px, 2.4vw, 28px) clamp(10px, 1.4vw, 18px); }
+        .vf-au-main { display: grid; grid-template-columns: 34px minmax(110px, auto) minmax(40px, 1fr) auto; align-items: center; gap: 16px; padding: clamp(20px, 2.4vw, 28px) clamp(10px, 1.4vw, 18px); }
         .vf-au-icon { color: ${vf.muted}; display: inline-flex; }
         .vf-au-label { position: relative; display: inline-flex; align-items: center; }
         .vf-au-underline { position: absolute; left: 0; right: 0; bottom: -5px; height: 1.5px; background: ${vf.primary}; transform: scaleX(0); transform-origin: left; transition: transform 420ms cubic-bezier(0.25,1,0.4,1); }
         .vf-au-row:hover .vf-au-underline, .vf-au-row:focus-visible .vf-au-underline { transform: scaleX(1); }
         .vf-au-leader { height: 0; border-bottom: 1.5px dotted ${vf.muted}; opacity: 0.5; transform: scaleX(0); transform-origin: left; align-self: center; }
         .vf-au-status { justify-self: end; white-space: nowrap; }
-        .vf-au-idx { justify-self: end; }
         .vf-au-detail { overflow: hidden; max-height: 0; transition: max-height 460ms cubic-bezier(0.25,1,0.4,1); }
         .vf-au-row:hover .vf-au-detail, .vf-au-row:focus-visible .vf-au-detail { max-height: 240px; }
         .vf-au-detail-inner { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(20px, 3vw, 48px); padding: 2px clamp(10px, 1.4vw, 18px) clamp(22px, 2.6vw, 30px) 66px; }
-        .vf-au-p { font-family: ${sans}; font-size: 15.5px; line-height: 1.6; color: var(--text-secondary); margin: 0; }
+        .vf-au-p { font-family: ${sans}; font-size: 15px; line-height: 1.6; color: var(--text-secondary); margin: 0; }
         @media (max-width: 680px) {
           .vf-au-main { grid-template-columns: 28px 1fr auto; }
-          .vf-au-leader, .vf-au-idx { display: none; }
+          .vf-au-leader { display: none; }
           .vf-au-detail-inner { grid-template-columns: 1fr; gap: 16px; padding-left: clamp(10px,1.4vw,18px); }
         }
       `}</style>
@@ -1392,7 +1390,7 @@ function DiagramTickPath() {
 
   return (
     <div ref={rootRef} className="vf-path" style={{ marginTop: "clamp(56px, 7vw, 80px)", paddingTop: "clamp(24px, 3vw, 34px)", borderTop: "1px solid var(--border)" }}>
-      <div style={{ ...mono, fontSize: 12, color: vf.primary, letterSpacing: "0.22em", fontWeight: 700, marginBottom: "clamp(18px, 2.4vw, 30px)", display: "flex", alignItems: "center", gap: 10 }}>
+      <div style={{ ...mono, fontSize: 12, color: vf.primary, letterSpacing: "0.2em", fontWeight: 700, marginBottom: "clamp(18px, 2.4vw, 30px)", display: "flex", alignItems: "center", gap: 10 }}>
         <span aria-hidden style={{ width: 3, height: 14, background: vf.primary }} />
         FIG. 01 · CHAIN OF CUSTODY
       </div>
@@ -1437,7 +1435,7 @@ function DiagramTickPath() {
       <div style={{ marginTop: 18, minHeight: 22, textAlign: "center" }}>
         {active === null ? (
           <span style={{ ...mono, fontSize: 12, color: vf.muted, letterSpacing: "0.2em", fontWeight: 600 }}>
-            5 HANDS · 3 BUILDINGS · A PAPER CHAIN, NO TRACKING
+            A paper chain with no live tracking
           </span>
         ) : (
           <span style={{ fontFamily: sans, fontSize: 15, color: "var(--text-secondary)" }}>
@@ -1774,8 +1772,6 @@ function NavCard({ project }: { project: Project }) {
 }
 
 export default function VeriflowCase() {
-  const { scrollYProgress } = useScroll();
-  const scaleX = useSpring(scrollYProgress, { stiffness: 200, damping: 30, restDelta: 0.001 });
   const [showTop, setShowTop] = useState(false);
   const otherProjects = projects.filter((p) => p.slug !== "veriflow").slice(-2);
 
@@ -1796,17 +1792,6 @@ export default function VeriflowCase() {
         position: "fixed", top: 0, left: 0, right: 0, height: 59,
         background: "var(--bg-primary)", zIndex: 45, pointerEvents: "none",
       }} />
-
-      {/* Scroll progress */}
-      <div style={{
-        position: "fixed", top: 56, left: 0, right: 0, height: 2,
-        background: "var(--bg-primary)", zIndex: 49,
-      }}>
-        <motion.div style={{
-          height: "100%", background: vf.primary,
-          scaleX, transformOrigin: "left", opacity: 0.85,
-        }} />
-      </div>
 
       {/* ══════════════════════════════════════════════════════════════
           00 · HERO: laptop (admin web) + tablet overlay
