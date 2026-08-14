@@ -49,8 +49,8 @@ const sans  = "'Manrope', system-ui, sans-serif";
 const t = {
   h2Section: {
     fontFamily: serif, fontWeight: 700,
-    fontSize: "clamp(30px, 3.6vw, 44px)",
-    letterSpacing: "-0.025em", lineHeight: 1.2,
+    fontSize: "clamp(32px, 3.9vw, 48px)",
+    letterSpacing: "-0.025em", lineHeight: 1.18,
     color: "var(--text-primary)",
   } as React.CSSProperties,
   h3Lede: {
@@ -104,7 +104,7 @@ function SectionHeader({
   const inView = useInView(ref, { once: true, margin: "-40px" });
   return (
     <div ref={ref} style={{ marginBottom: "clamp(40px, 5vw, 64px)" }}>
-      <div style={{ display: "flex", alignItems: "flex-start", gap: "clamp(20px, 3.2vw, 40px)" }}>
+      <div style={{ display: "flex", alignItems: "flex-end", gap: "clamp(16px, 2.2vw, 26px)", marginBottom: "clamp(18px, 2.4vw, 30px)" }}>
         <motion.div
           aria-hidden
           initial={{ opacity: 0, y: 12 }}
@@ -112,33 +112,31 @@ function SectionHeader({
           transition={{ duration: 0.6, ease: [0.25, 1, 0.4, 1] }}
           style={{
             fontFamily: serif, fontWeight: 700,
-            fontSize: "clamp(48px, 5.8vw, 78px)",
-            lineHeight: 0.78, letterSpacing: "-0.045em",
+            fontSize: "clamp(46px, 5.4vw, 74px)",
+            lineHeight: 0.75, letterSpacing: "-0.045em",
             color: "transparent", WebkitTextStroke: `1.4px ${vf.primary}`,
             flexShrink: 0, userSelect: "none",
           }}
         >
           {num}
         </motion.div>
-        <div style={{ paddingTop: "clamp(2px, 0.7vw, 9px)" }}>
-          <motion.div
-            initial={{ opacity: 0, y: 8 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ delay: 0.08, duration: 0.55, ease: [0.25, 1, 0.4, 1] }}
-            style={{ ...mono, fontSize: 13, color: vf.primary, letterSpacing: "0.24em", fontWeight: 700, marginBottom: "clamp(10px, 1.4vw, 16px)" }}
-          >
-            {phase}
-          </motion.div>
-          <motion.h2
-            initial={{ opacity: 0, y: 12 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ delay: 0.16, duration: 0.75, ease: [0.25, 1, 0.4, 1] }}
-            style={{ ...t.h2Section, margin: 0, maxWidth: 780 }}
-          >
-            {title}
-          </motion.h2>
-        </div>
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ delay: 0.08, duration: 0.55, ease: [0.25, 1, 0.4, 1] }}
+          style={{ ...mono, fontSize: 14, color: vf.primary, letterSpacing: "0.22em", fontWeight: 700, paddingBottom: "clamp(8px, 1vw, 14px)" }}
+        >
+          {phase}
+        </motion.div>
       </div>
+      <motion.h2
+        initial={{ opacity: 0, y: 12 }}
+        animate={inView ? { opacity: 1, y: 0 } : {}}
+        transition={{ delay: 0.16, duration: 0.75, ease: [0.25, 1, 0.4, 1] }}
+        style={{ ...t.h2Section, margin: 0, maxWidth: 820 }}
+      >
+        {title}
+      </motion.h2>
     </div>
   );
 }
@@ -1123,7 +1121,7 @@ function StatRuler() {
 
   return (
     <div ref={rootRef} className="vf-ruler">
-      <div style={{ ...mono, fontSize: 13, color: vf.muted, letterSpacing: "0.2em", fontWeight: 700, marginBottom: "clamp(28px, 3.5vw, 44px)" }}>
+      <div style={{ ...mono, fontSize: 13, color: vf.primary, letterSpacing: "0.2em", fontWeight: 700, marginBottom: "clamp(28px, 3.5vw, 44px)" }}>
         The old handoff, measured
       </div>
 
@@ -1814,7 +1812,7 @@ export default function VeriflowCase() {
                 transition={{ delay: 0.45, duration: 0.7 }}
                 style={{
                   fontFamily: serif, fontStyle: "italic",
-                  fontSize: "clamp(20px, 1.9vw, 27px)",
+                  fontSize: "clamp(18px, 1.7vw, 24px)",
                   color: "var(--text-secondary)",
                   lineHeight: 1.5, maxWidth: 500,
                   marginBottom: "clamp(34px, 4.5vw, 52px)",
