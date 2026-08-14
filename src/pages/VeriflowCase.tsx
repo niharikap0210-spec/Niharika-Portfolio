@@ -812,17 +812,17 @@ function TabletMock({ src, alt }: { src: string; alt: string }) {
   );
 }
 
-function BrowserMock({ src, alt }: { src: string; alt: string }) {
+function LaptopMock({ src, alt }: { src: string; alt: string }) {
   return (
-    <div style={{ width: "100%", borderRadius: 11, overflow: "hidden", border: "1px solid rgba(20,30,60,0.13)", boxShadow: "0 1px 2px rgba(0,0,0,0.05), 0 24px 50px -18px rgba(15,42,120,0.28)", background: "#fff" }}>
-      <div style={{ height: "clamp(28px, 2.8vw, 36px)", background: "#eceef1", borderBottom: "1px solid rgba(20,30,60,0.07)", display: "flex", alignItems: "center", gap: 6, padding: "0 clamp(11px, 1.1vw, 15px)" }}>
-        <span style={{ width: 9, height: 9, borderRadius: "50%", background: "#d3d7de" }} />
-        <span style={{ width: 9, height: 9, borderRadius: "50%", background: "#d3d7de" }} />
-        <span style={{ width: 9, height: 9, borderRadius: "50%", background: "#d3d7de" }} />
-        <div style={{ flex: 1, marginLeft: 10, maxWidth: "58%", height: "clamp(14px, 1.5vw, 19px)", borderRadius: 20, background: "#fff", border: "1px solid rgba(20,30,60,0.10)" }} />
+    <div style={{ width: "100%" }}>
+      <div style={{ background: "#15171c", borderRadius: "9px 9px 4px 4px", padding: "clamp(5px, 0.55vw, 7px)", boxShadow: "0 1px 2px rgba(0,0,0,0.06), 0 22px 46px -18px rgba(15,42,120,0.28)" }}>
+        <div style={{ aspectRatio: "16 / 10", borderRadius: 4, overflow: "hidden", background: "#000" }}>
+          <img src={src} alt={alt} loading="lazy" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top center", display: "block" }} />
+        </div>
       </div>
-      <div style={{ aspectRatio: "16 / 10", overflow: "hidden", background: "#fff" }}>
-        <img src={src} alt={alt} loading="lazy" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top center", display: "block" }} />
+      <div aria-hidden style={{ position: "relative", height: "clamp(9px, 1.1vw, 13px)", margin: "0 -6.5%", background: "linear-gradient(180deg, #2b2e35 0%, #16181d 75%)", borderRadius: "0 0 12px 12px", boxShadow: "0 10px 20px -8px rgba(0,0,0,0.22)" }}>
+        <span style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: "rgba(0,0,0,0.28)" }} />
+        <span style={{ position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)", width: "18%", height: 5, background: "#0e0f13", borderRadius: "0 0 6px 6px" }} />
       </div>
     </div>
   );
@@ -847,8 +847,8 @@ function SystemDiagram() {
   const rootRef = useRef<HTMLDivElement>(null);
   const [hover, setHover] = useState<number | null>(null);
   const surfaces: { role: string; name: string; desc: string; tag: string; Mock: (p: { src: string; alt: string }) => JSX.Element; src: string }[] = [
-    { role: "Action", name: "Tablet",     desc: "PIN, scan, verify, exit — the clinic's kiosk.",     tag: "Kiosk · 10\"",  Mock: TabletMock,  src: "/veriflow/start-scanning.png" },
-    { role: "Memory", name: "Web",        desc: "Dashboards, registry, and every sample's journey.", tag: "Control tower", Mock: BrowserMock, src: "/veriflow/dashboard.png" },
+    { role: "Action", name: "Tablet",     desc: "PIN, scan, verify, exit — the clinic's kiosk.",     tag: "Kiosk · 10\"",  Mock: TabletMock,  src: "/veriflow/sample-association-4.png" },
+    { role: "Memory", name: "Web",        desc: "Dashboards, registry, and every sample's journey.", tag: "Control tower", Mock: LaptopMock,  src: "/veriflow/dashboard.png" },
     { role: "State",  name: "Ambient TV", desc: "The live state of the lab. Glance, don't click.",   tag: "Lab · 55\"",    Mock: TVMock,      src: "/veriflow/tv-dashboard-1.png" },
   ];
 
