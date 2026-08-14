@@ -1,6 +1,9 @@
 import { motion, AnimatePresence, useScroll, useSpring, useInView, useMotionValue, useTransform, animate } from "framer-motion";
 import { Link } from "react-router-dom";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+gsap.registerPlugin(ScrollTrigger);
 import {
   ArrowUpIcon as ArrowUp,
   QuotesIcon as Quotes,
@@ -11,10 +14,10 @@ import {
   TelevisionIcon as Television,
   DeviceTabletIcon as Tablet,
   MonitorIcon as Monitor,
-  WarningCircleIcon as WarningCircle,
   ClockCountdownIcon as ClockCountdown,
   FileTextIcon as FileText,
   EyeSlashIcon as EyeSlash,
+  MagnifyingGlassIcon as MagnifyingGlass,
 } from "@phosphor-icons/react";
 import type { Icon } from "@phosphor-icons/react";
 import { projects, type Project } from "../data/projects";
@@ -92,22 +95,6 @@ function Reveal({
       {children}
     </motion.div>
   );
-}
-
-function CountUp({ value, suffix = "", duration = 1.4 }: { value: number; suffix?: string; duration?: number }) {
-  const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-40px" });
-  const mv = useMotionValue(0);
-  const [display, setDisplay] = useState("0");
-  useEffect(() => {
-    if (!inView) return;
-    const controls = animate(mv, value, {
-      duration, ease: [0.25, 1, 0.4, 1],
-      onUpdate: (v) => setDisplay(Math.round(v).toString()),
-    });
-    return () => controls.stop();
-  }, [inView, value, duration, mv]);
-  return <span ref={ref}>{display}{suffix}</span>;
 }
 
 function SectionHeader({
@@ -1065,252 +1052,399 @@ function PrincipleCard({
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   GAP ROW: editorial row (big numeral · title · body · icon)
+   STAT RULER: three problem metrics measured out by a swept caliper
 ══════════════════════════════════════════════════════════════════ */
-function GapRow({
-  index, Icon: IconComp, k, t,
-}: {
-  index: number; Icon: Icon; k: string; t: string;
-}) {
-  const [hovered, setHovered] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-40px" });
-  return (
-    <motion.div
-      ref={ref}
-      onHoverStart={() => setHovered(true)}
-      onHoverEnd={() => setHovered(false)}
-      initial={{ opacity: 0, y: 16 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ delay: index * 0.12, duration: 0.7, ease: [0.25, 1, 0.4, 1] }}
-      className="vf-gap-row"
-      style={{
-        display: "grid",
-        gridTemplateColumns: "clamp(96px, 10vw, 140px) minmax(0, 1fr) auto",
-        gap: "clamp(24px, 3vw, 48px)",
-        alignItems: "center",
-        padding: "clamp(28px, 3.5vw, 40px) 0",
-        borderBottom: `1px solid ${vf.subtle}`,
-        position: "relative",
-      }}
-    >
-      {/* Sweep indicator on hover */}
-      <motion.span
-        aria-hidden
-        initial={false}
-        animate={{ scaleX: hovered ? 1 : 0 }}
-        transition={{ duration: 0.5, ease: [0.25, 1, 0.4, 1] }}
-        style={{
-          position: "absolute", left: 0, right: 0, bottom: -1, height: 2,
-          background: vf.flag, transformOrigin: "left",
-        }}
-      />
-      {/* Big serif numeral in flag color */}
-      <motion.div
-        animate={{ x: hovered ? 6 : 0 }}
-        transition={{ duration: 0.4, ease: [0.25, 1, 0.4, 1] }}
-        style={{
-          fontFamily: serif, fontWeight: 700,
-          fontSize: "clamp(64px, 7.5vw, 104px)",
-          color: vf.flag, letterSpacing: "-0.045em", lineHeight: 0.9,
-        }}
-      >
-        {String(index + 1).padStart(2, "0")}
-      </motion.div>
+function StatRuler() {
+  const rootRef = useRef<HTMLDivElement>(null);
+  const stations = [
+    { n: 5,  suffix: "",  label: "Hands per sample", sub: "between patient draw and pathologist screen." },
+    { n: 40, suffix: "m", label: "Invisible delay",  sub: "before anyone notices a cooler is late." },
+    { n: 3,  suffix: "",  label: "Buildings",        sub: "clinic, transit, lab. Three custody zones." },
+  ];
 
-      {/* Title + body */}
-      <div>
-        <div style={{ ...mono, fontSize: 13, color: vf.flag, letterSpacing: "0.22em", fontWeight: 700, marginBottom: 10 }}>
-          GAP {String(index + 1).padStart(2, "0")}
-        </div>
-        <h3 style={{
-          fontFamily: serif, fontWeight: 700,
-          fontSize: "clamp(22px, 2.2vw, 30px)",
-          letterSpacing: "-0.02em", lineHeight: 1.25,
-          color: "var(--text-primary)", marginBottom: 10,
-        }}>
-          {k}
-        </h3>
-        <p style={{
-          fontFamily: sans, fontSize: 19, lineHeight: 1.7,
-          color: "var(--text-secondary)", margin: 0, maxWidth: 680,
-        }}>
-          {t}
-        </p>
+  useLayoutEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+    const ctx = gsap.context(() => {
+      const q = gsap.utils.selector(root);
+      const nums    = q(".vf-rl-num") as HTMLElement[];
+      const majors  = q(".vf-rl-major") as HTMLElement[];
+      const labels  = q(".vf-rl-label") as HTMLElement[];
+      const caliper = q(".vf-rl-caliper")[0] as HTMLElement;
+      const axis    = q(".vf-rl-axisline")[0] as HTMLElement;
+      const baseline = q(".vf-rl-base")[0] as HTMLElement;
+      const mission = q(".vf-rl-mission")[0] as HTMLElement;
+      const offsets = [1 / 6, 1 / 2, 5 / 6];
+      const counters = stations.map(() => ({ v: 0 }));
+      const setNum = (i: number, v: number) => { if (nums[i]) nums[i].textContent = String(Math.round(v)) + stations[i].suffix; };
+
+      const mm = gsap.matchMedia();
+
+      mm.add("(prefers-reduced-motion: reduce)", () => {
+        stations.forEach((s, i) => setNum(i, s.n));
+        gsap.set(majors, { scaleY: 1, backgroundColor: vf.primary });
+        gsap.set(labels, { color: vf.primary });
+        gsap.set(baseline, { scaleX: 1 });
+        gsap.set(caliper, { left: "100%", x: -14, opacity: 1 });
+        gsap.set(mission, { opacity: 1, y: 0 });
+      });
+
+      mm.add("(prefers-reduced-motion: no-preference)", () => {
+        gsap.set(baseline, { scaleX: 0, transformOrigin: "left center" });
+        gsap.set(majors, { scaleY: 0.35, backgroundColor: vf.muted, transformOrigin: "50% 100%" });
+        gsap.set(labels, { color: "var(--text-secondary)" });
+        gsap.set(caliper, { x: 0, opacity: 1 });
+        gsap.set(mission, { opacity: 0, y: 14 });
+        stations.forEach((_, i) => setNum(i, 0));
+
+        gsap.to(baseline, {
+          scaleX: 1, duration: 0.9, ease: "power2.out",
+          scrollTrigger: { trigger: root, start: "top 80%", once: true },
+        });
+
+        const tl = gsap.timeline({
+          scrollTrigger: { trigger: root, start: "top 74%", end: "top 34%", scrub: 0.6, invalidateOnRefresh: true },
+        });
+        tl.fromTo(caliper, { x: 0 }, {
+          x: () => Math.max(0, axis.clientWidth - caliper.offsetWidth),
+          ease: "none", duration: 1,
+        }, 0);
+        stations.forEach((s, i) => {
+          const off = offsets[i];
+          tl.to(counters[i], { v: s.n, duration: 0.14, ease: "none", onUpdate: () => setNum(i, counters[i].v) }, Math.max(0, off - 0.05));
+          tl.to(majors[i], { scaleY: 1, backgroundColor: vf.primary, duration: 0.12, ease: "power2.out" }, off);
+          tl.to(labels[i], { color: vf.primary, duration: 0.12 }, off);
+        });
+        tl.to(mission, { opacity: 1, y: 0, duration: 0.16, ease: "power3.out" }, 0.9);
+      });
+    }, rootRef);
+    return () => ctx.revert();
+  }, []);
+
+  return (
+    <div ref={rootRef} className="vf-ruler">
+      <div style={{ ...mono, fontSize: 12, color: vf.muted, letterSpacing: "0.22em", fontWeight: 700, marginBottom: "clamp(28px, 3.5vw, 44px)" }}>
+        Measured · what a late cooler costs
       </div>
 
-      {/* Icon ornament, circular outlined */}
-      <motion.div
-        animate={{ rotate: hovered ? 8 : 0, scale: hovered ? 1.05 : 1 }}
-        transition={{ duration: 0.45, ease: [0.25, 1, 0.4, 1] }}
-        style={{
-          width: 60, height: 60, borderRadius: "50%",
-          border: `1px solid ${hovered ? vf.flag : vf.subtle}`,
-          display: "flex", alignItems: "center", justifyContent: "center",
-          flexShrink: 0,
-          transition: "border-color 240ms",
-        }}
-      >
-        <IconComp size={24} color={hovered ? vf.flag : vf.primary} weight="regular" />
-      </motion.div>
+      <div className="vf-rl-stations">
+        {stations.map((s) => (
+          <div key={s.label} className="vf-rl-station" tabIndex={0}>
+            <div className="vf-rl-num">{s.n}{s.suffix}</div>
+            <div className="vf-rl-label" style={{ ...mono, fontSize: 12, letterSpacing: "0.2em", fontWeight: 700 }}>{s.label}</div>
+            <div className="vf-rl-brk" aria-hidden />
+            <p className="vf-rl-sub">{s.sub}</p>
+          </div>
+        ))}
+      </div>
+
+      <div className="vf-rl-axisline" aria-hidden>
+        <div className="vf-rl-base" />
+        {stations.map((s, i) => (
+          <span key={s.label} className="vf-rl-major-wrap" style={{ left: `${((2 * i + 1) / 6) * 100}%` }}>
+            <span className="vf-rl-major" />
+          </span>
+        ))}
+        <div className="vf-rl-caliper"><span className="vf-rl-caliper-head" /></div>
+      </div>
+
+      <div className="vf-rl-mission">
+        <span className="vf-rl-mission-rule" aria-hidden />
+        <p>Veriflow replaces the clipboard with a <em>verified tap</em> at every handoff.</p>
+      </div>
 
       <style>{`
+        .vf-ruler { margin-top: clamp(40px, 5vw, 64px); }
+        .vf-rl-stations { display: grid; grid-template-columns: repeat(3, 1fr); }
+        .vf-rl-station { text-align: center; padding: 0 clamp(10px, 2vw, 28px); position: relative; outline: none; }
+        .vf-rl-station:focus-visible { outline: 2px solid ${vf.primary}; outline-offset: 6px; border-radius: 2px; }
+        .vf-rl-num { font-family: ${serif}; font-weight: 700; font-size: clamp(52px, 7vw, 92px); color: ${vf.ink}; letter-spacing: -0.045em; line-height: 0.9; font-variant-numeric: tabular-nums; }
+        .vf-rl-label { margin-top: 14px; color: var(--text-secondary); transition: color 240ms; }
+        .vf-rl-brk { height: 2px; width: 0; margin: 12px auto 0; background: ${vf.primary}; transition: width 360ms cubic-bezier(0.25,1,0.4,1); }
+        .vf-rl-station:hover .vf-rl-brk, .vf-rl-station:focus-visible .vf-rl-brk { width: 44px; }
+        .vf-rl-sub { font-family: ${sans}; font-size: 15px; line-height: 1.55; color: var(--text-secondary); margin: 10px auto 0; max-width: 240px; opacity: 0; transform: translateY(6px); transition: opacity 360ms, transform 360ms; }
+        .vf-rl-station:hover .vf-rl-sub, .vf-rl-station:focus-visible .vf-rl-sub { opacity: 1; transform: none; }
+        .vf-rl-axisline { position: relative; height: 40px; margin-top: clamp(22px, 3vw, 34px); }
+        .vf-rl-axisline::before { content: ""; position: absolute; left: 0; right: 0; top: 14px; height: 12px; background-image: repeating-linear-gradient(90deg, ${vf.subtle} 0 1px, transparent 1px, transparent 14px); }
+        .vf-rl-base { position: absolute; left: 0; right: 0; top: 20px; height: 1px; background: ${vf.primary}; opacity: 0.55; transform: scaleX(0); transform-origin: left center; }
+        .vf-rl-major-wrap { position: absolute; top: 8px; transform: translateX(-50%); }
+        .vf-rl-major { display: block; width: 2px; height: 24px; background: ${vf.muted}; }
+        .vf-rl-caliper { position: absolute; left: 0; top: 2px; width: 14px; height: 36px; display: flex; flex-direction: column; align-items: center; pointer-events: none; }
+        .vf-rl-caliper::before { content: ""; width: 1.5px; height: 100%; background: ${vf.light}; }
+        .vf-rl-caliper-head { position: absolute; top: 0; width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 9px solid ${vf.primary}; }
+        .vf-rl-mission { margin-top: clamp(44px, 6vw, 68px); display: flex; align-items: flex-start; gap: 16px; }
+        .vf-rl-mission-rule { width: 3px; align-self: stretch; background: ${vf.primary}; flex-shrink: 0; }
+        .vf-rl-mission p { font-family: ${serif}; font-style: italic; font-size: clamp(20px, 1.9vw, 26px); line-height: 1.45; color: var(--text-primary); margin: 0; max-width: 820px; }
+        .vf-rl-mission em { color: ${vf.primary}; font-style: italic; }
         @media (max-width: 720px) {
-          .vf-gap-row {
-            grid-template-columns: clamp(72px, 18vw, 96px) minmax(0, 1fr) !important;
-          }
-          .vf-gap-row > :last-child { display: none !important; }
+          .vf-rl-stations { grid-template-columns: 1fr; gap: 28px; text-align: left; }
+          .vf-rl-station { padding: 0; }
+          .vf-rl-brk { margin-left: 0; margin-right: auto; }
+          .vf-rl-sub { margin-left: 0; opacity: 1; transform: none; }
+          .vf-rl-axisline { display: none; }
         }
       `}</style>
-    </motion.div>
+    </div>
   );
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   JOURNEY ILLUSTRATION: clinic → courier → lab
+   BLIND-SPOT AUDIT: the three gaps as a calm diagnostic readout
 ══════════════════════════════════════════════════════════════════ */
-function JourneyIllustration() {
-  const ref = useRef<SVGSVGElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-60px" });
-  const nodes = [
-    { x: 140, label: "CLINIC",  sub: "patient draw"      },
-    { x: 500, label: "COURIER", sub: "pickup + transit"  },
-    { x: 860, label: "LAB",     sub: "receive + analyse" },
+function BlindSpotAudit() {
+  const rootRef = useRef<HTMLDivElement>(null);
+  const channels = [
+    { Icon: FileText, label: "Trail",      status: "None",   practice: "Couriers scribbled cooler numbers on the same sheet, every day.", consequence: "A handoff left no record — nothing to trace." },
+    { Icon: HandTap,  label: "Verify",     status: "By eye", practice: "Pathologists matched sample IDs by hand.",                        consequence: "One digit off, and the wrong lab received the tube." },
+    { Icon: EyeSlash, label: "Visibility", status: "0",      practice: "Labs had no forecast of incoming work.",                          consequence: "Staffing and storage stayed guesswork until a cooler arrived." },
   ];
-  const handLabels = ["HAND 01", "HAND 03", "HAND 05"];
+
+  useLayoutEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+    const ctx = gsap.context(() => {
+      const q = gsap.utils.selector(root);
+      const leaders  = q(".vf-au-leader") as HTMLElement[];
+      const statuses = q(".vf-au-status") as HTMLElement[];
+      const icons    = q(".vf-au-icon") as HTMLElement[];
+      const scan     = q(".vf-au-scan")[0] as HTMLElement;
+      const body     = q(".vf-au-body")[0] as HTMLElement;
+      const dot      = q(".vf-au-dot")[0] as HTMLElement;
+
+      const mm = gsap.matchMedia();
+
+      mm.add("(prefers-reduced-motion: reduce)", () => {
+        gsap.set(leaders, { scaleX: 1 });
+        gsap.set(statuses, { opacity: 1, y: 0 });
+        gsap.set(icons, { color: vf.primary });
+        gsap.set(scan, { opacity: 0 });
+      });
+
+      mm.add("(prefers-reduced-motion: no-preference)", () => {
+        gsap.set(leaders, { scaleX: 0, transformOrigin: "left center" });
+        gsap.set(statuses, { opacity: 0, y: 6 });
+        gsap.set(icons, { color: vf.muted });
+        gsap.set(scan, { opacity: 0, y: 0 });
+
+        gsap.to(dot, { scale: 1.35, opacity: 0.5, duration: 1.4, yoyo: true, repeat: -1, ease: "sine.inOut", transformOrigin: "50% 50%" });
+
+        const tl = gsap.timeline({
+          scrollTrigger: { trigger: body, start: "top 82%", end: "top 42%", scrub: 0.5, invalidateOnRefresh: true },
+        });
+        tl.set(scan, { opacity: 1 }, 0);
+        tl.fromTo(scan, { y: 0 }, { y: () => body.clientHeight, ease: "none", duration: 1 }, 0);
+        const rowOffsets = [0.16, 0.5, 0.84];
+        channels.forEach((_, i) => {
+          const off = rowOffsets[i];
+          tl.to(leaders[i], { scaleX: 1, duration: 0.1, ease: "power2.out" }, off);
+          tl.to(statuses[i], { opacity: 1, y: 0, duration: 0.12, ease: "power2.out" }, off);
+          tl.to(icons[i], { color: vf.primary, duration: 0.12 }, off);
+        });
+        tl.to(scan, { opacity: 0, duration: 0.08 }, 0.97);
+      });
+    }, rootRef);
+    return () => ctx.revert();
+  }, []);
 
   return (
-    <div style={{
-      padding: "clamp(24px, 3vw, 40px)",
-      background: "var(--bg-elevated)",
-      border: `1px solid ${vf.subtle}`,
-      borderRadius: 6, position: "relative", overflow: "hidden",
-    }}>
-      <div style={{
-        ...mono, fontSize: 13, color: vf.primary, letterSpacing: "0.22em", fontWeight: 700,
-        marginBottom: 22, display: "flex", alignItems: "center", gap: 10,
-      }}>
-        <span aria-hidden style={{ width: 3, height: 14, background: vf.primary }} />
-        FIG. 01 · FIVE HANDS, THREE BUILDINGS
+    <div ref={rootRef} className="vf-audit" style={{ marginTop: "clamp(56px, 7vw, 80px)" }}>
+      <div className="vf-audit-head">
+        <span style={{ ...mono, fontSize: 12, color: vf.muted, letterSpacing: "0.22em", fontWeight: 700, display: "inline-flex", alignItems: "center", gap: 10 }}>
+          <MagnifyingGlass size={18} color={vf.primary} weight="regular" />
+          Blind-spot audit · the paper process
+        </span>
+        <span style={{ ...mono, fontSize: 12, color: vf.ink, letterSpacing: "0.18em", fontWeight: 700, display: "inline-flex", alignItems: "center", gap: 9 }}>
+          3 Unmonitored
+          <span className="vf-au-dot" />
+        </span>
       </div>
-      <svg ref={ref} viewBox="0 0 1000 340" preserveAspectRatio="xMidYMid meet" style={{
-        width: "100%", height: "auto", display: "block",
-      }}>
-        <defs>
-          <pattern id="vf-grid-sm" width="20" height="20" patternUnits="userSpaceOnUse">
-            <path d="M 20 0 L 0 0 0 20" fill="none" stroke={vf.subtle} strokeWidth="1" />
-          </pattern>
-          <pattern id="vf-grid-lg" width="80" height="80" patternUnits="userSpaceOnUse">
-            <path d="M 80 0 L 0 0 0 80" fill="none" stroke={vf.subtle} strokeWidth="1" />
-          </pattern>
-          <marker id="vf-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-            <path d="M 0 0 L 10 5 L 0 10 z" fill={vf.primary} />
-          </marker>
-        </defs>
-        <rect x="0" y="0" width="1000" height="340" fill="url(#vf-grid-sm)" opacity="0.8" />
-        <rect x="0" y="0" width="1000" height="340" fill="url(#vf-grid-lg)" opacity="0.6" />
 
-        {/* Guide line between first and last node */}
-        <motion.line
-          x1={nodes[0].x + 60} y1="170"
-          x2={nodes[nodes.length - 1].x - 60} y2="170"
-          stroke={vf.primary} strokeWidth="1.2" strokeDasharray="2 6" opacity="0.4"
-          initial={{ pathLength: 0 }}
-          animate={inView ? { pathLength: 1 } : {}}
-          transition={{ duration: 1.6, ease: [0.25, 1, 0.4, 1], delay: 0.2 }}
-        />
+      <div className="vf-au-body">
+        <span className="vf-au-scan" aria-hidden />
+        {channels.map((c, i) => (
+          <div key={c.label} className="vf-au-row" tabIndex={0}>
+            <div className="vf-au-main">
+              <span className="vf-au-icon"><c.Icon size={22} weight="regular" color="currentColor" /></span>
+              <span className="vf-au-label" style={{ ...mono, fontSize: 15, letterSpacing: "0.14em", fontWeight: 700, color: vf.ink }}>
+                {c.label}
+                <span className="vf-au-underline" aria-hidden />
+              </span>
+              <span className="vf-au-leader" aria-hidden />
+              <span className="vf-au-status" style={{ ...mono, fontSize: 15, letterSpacing: "0.1em", fontWeight: 700, color: "var(--text-primary)" }}>{c.status}</span>
+              <span className="vf-au-idx" style={{ ...mono, fontSize: 11, color: vf.muted, fontWeight: 700 }}>{String(i + 1).padStart(2, "0")}</span>
+            </div>
+            <div className="vf-au-detail">
+              <div className="vf-au-detail-inner">
+                <div>
+                  <div style={{ ...mono, fontSize: 10.5, letterSpacing: "0.18em", color: vf.muted, fontWeight: 700, marginBottom: 7 }}>The practice</div>
+                  <p className="vf-au-p">{c.practice}</p>
+                </div>
+                <div>
+                  <div style={{ ...mono, fontSize: 10.5, letterSpacing: "0.18em", color: vf.muted, fontWeight: 700, marginBottom: 7 }}>The consequence</div>
+                  <p className="vf-au-p">{c.consequence}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
 
-        {/* HAND labels, well clear of the circles, high-contrast primary */}
-        {handLabels.map((label, i) => (
-          <motion.g
-            key={label}
-            initial={{ opacity: 0, y: -6 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ delay: 0.3 + i * 0.15, duration: 0.6, ease: [0.25, 1, 0.4, 1] }}
-          >
-            <line
-              x1={nodes[i].x} y1="72"
-              x2={nodes[i].x} y2="120"
-              stroke={vf.primary} strokeWidth="0.8" strokeDasharray="2 3" opacity="0.55"
-            />
-            <rect
-              x={nodes[i].x - 44} y="38" width="88" height="28" rx="3"
-              fill={vf.surface} stroke={vf.primary} strokeWidth="1"
-            />
-            <text
-              x={nodes[i].x} y="57" textAnchor="middle"
-              style={{ ...mono, fontSize: 14, fill: vf.primary, letterSpacing: "0.22em", fontWeight: 700 }}
-            >
-              {label}
-            </text>
-          </motion.g>
+      <style>{`
+        .vf-audit-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding-bottom: 18px; border-bottom: 1px solid ${vf.subtle}; }
+        .vf-au-dot { width: 8px; height: 8px; border-radius: 50%; background: ${vf.primary}; display: inline-block; }
+        .vf-au-body { position: relative; }
+        .vf-au-scan { position: absolute; left: 0; right: 0; top: 0; height: 2px; background: linear-gradient(90deg, ${vf.primary}, rgba(30,64,175,0)); opacity: 0; pointer-events: none; z-index: 2; }
+        .vf-au-row { border-bottom: 1px solid ${vf.subtle}; outline: none; transition: background 240ms; }
+        .vf-au-row:hover, .vf-au-row:focus-visible { background: ${vf.surface}; }
+        .vf-au-main { display: grid; grid-template-columns: 34px minmax(110px, auto) minmax(40px, 1fr) auto 30px; align-items: center; gap: 16px; padding: clamp(20px, 2.4vw, 28px) clamp(10px, 1.4vw, 18px); }
+        .vf-au-icon { color: ${vf.muted}; display: inline-flex; }
+        .vf-au-label { position: relative; display: inline-flex; align-items: center; }
+        .vf-au-underline { position: absolute; left: 0; right: 0; bottom: -5px; height: 1.5px; background: ${vf.primary}; transform: scaleX(0); transform-origin: left; transition: transform 420ms cubic-bezier(0.25,1,0.4,1); }
+        .vf-au-row:hover .vf-au-underline, .vf-au-row:focus-visible .vf-au-underline { transform: scaleX(1); }
+        .vf-au-leader { height: 0; border-bottom: 1.5px dotted ${vf.muted}; opacity: 0.5; transform: scaleX(0); transform-origin: left; align-self: center; }
+        .vf-au-status { justify-self: end; white-space: nowrap; }
+        .vf-au-idx { justify-self: end; }
+        .vf-au-detail { overflow: hidden; max-height: 0; transition: max-height 460ms cubic-bezier(0.25,1,0.4,1); }
+        .vf-au-row:hover .vf-au-detail, .vf-au-row:focus-visible .vf-au-detail { max-height: 240px; }
+        .vf-au-detail-inner { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(20px, 3vw, 48px); padding: 2px clamp(10px, 1.4vw, 18px) clamp(22px, 2.6vw, 30px) 66px; }
+        .vf-au-p { font-family: ${sans}; font-size: 15.5px; line-height: 1.6; color: var(--text-secondary); margin: 0; }
+        @media (max-width: 680px) {
+          .vf-au-main { grid-template-columns: 28px 1fr auto; }
+          .vf-au-leader, .vf-au-idx { display: none; }
+          .vf-au-detail-inner { grid-template-columns: 1fr; gap: 16px; padding-left: clamp(10px,1.4vw,18px); }
+        }
+      `}</style>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   TICK-MEASURED PATH: the sample's journey as a ruler of five hands
+══════════════════════════════════════════════════════════════════ */
+function DiagramTickPath() {
+  const rootRef = useRef<HTMLDivElement>(null);
+  const [active, setActive] = useState<number | null>(null);
+  const hands = [
+    { x: 120, n: "01", verb: "draw",    detail: "Blood drawn, tube labelled by hand." },
+    { x: 250, n: "02", verb: "log",     detail: "Cooler number written on the day's sheet." },
+    { x: 470, n: "03", verb: "pickup",  detail: "Courier collects the cooler from reception." },
+    { x: 600, n: "04", verb: "transit", detail: "In the van — no scan, no signal." },
+    { x: 880, n: "05", verb: "receive", detail: "Lab logs the tube, if the paperwork survived." },
+  ];
+  const zones = [
+    { label: "CLINIC",  cx: 185 },
+    { label: "COURIER", cx: 535 },
+    { label: "LAB",     cx: 880 },
+  ];
+  const X0 = 90, X1 = 930, Y = 92;
+
+  useLayoutEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+    const ctx = gsap.context(() => {
+      const q = gsap.utils.selector(root);
+      const drawn = q(".vf-pt-drawn")[0] as unknown as SVGElement;
+      const ticks = q(".vf-pt-tick") as unknown as SVGElement[];
+      const nums  = q(".vf-pt-num") as unknown as SVGElement[];
+      const verbs = q(".vf-pt-verb") as unknown as SVGElement[];
+      const zlabels = q(".vf-pt-zone") as unknown as SVGElement[];
+      const token = q(".vf-pt-token")[0] as unknown as SVGElement;
+      const len = X1 - X0;
+
+      const mm = gsap.matchMedia();
+
+      mm.add("(prefers-reduced-motion: reduce)", () => {
+        gsap.set(drawn, { strokeDasharray: len, strokeDashoffset: 0 });
+        gsap.set(ticks, { scaleY: 1, opacity: 1 });
+        gsap.set([...nums, ...verbs, ...zlabels], { opacity: 1, y: 0 });
+        gsap.set(token, { x: 0 });
+      });
+
+      mm.add("(prefers-reduced-motion: no-preference)", () => {
+        gsap.set(drawn, { strokeDasharray: len, strokeDashoffset: len });
+        gsap.set(ticks, { scaleY: 0, opacity: 0, transformOrigin: "50% 100%" });
+        gsap.set(nums, { opacity: 0, y: 6 });
+        gsap.set(verbs, { opacity: 0, y: 6 });
+        gsap.set(zlabels, { opacity: 0, y: 8 });
+        gsap.set(token, { x: 0 });
+
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: root, start: "top 80%", end: "bottom 58%", scrub: 0.6, invalidateOnRefresh: true,
+            onUpdate: (self) => {
+              const idx = Math.min(hands.length - 1, Math.floor(self.progress * hands.length));
+              gsap.set(token, { x: hands[idx].x - hands[0].x });
+            },
+          },
+        });
+        tl.to(zlabels, { opacity: 1, y: 0, duration: 0.14, stagger: 0.1, ease: "power2.out" }, 0);
+        tl.to(drawn, { strokeDashoffset: 0, ease: "none", duration: 1 }, 0);
+        hands.forEach((h, i) => {
+          const off = ((h.x - X0) / len) * 0.9;
+          tl.to(ticks[i], { scaleY: 1, opacity: 1, duration: 0.1, ease: "power3.out" }, off);
+          tl.to(nums[i], { opacity: 1, y: 0, duration: 0.12 }, off + 0.02);
+          tl.to(verbs[i], { opacity: 1, y: 0, duration: 0.12 }, off + 0.03);
+        });
+      });
+    }, rootRef);
+    return () => ctx.revert();
+  }, []);
+
+  return (
+    <div ref={rootRef} className="vf-path" style={{ marginTop: "clamp(56px, 7vw, 80px)", paddingTop: "clamp(24px, 3vw, 34px)", borderTop: "1px solid var(--border)" }}>
+      <div style={{ ...mono, fontSize: 12, color: vf.primary, letterSpacing: "0.22em", fontWeight: 700, marginBottom: "clamp(18px, 2.4vw, 30px)", display: "flex", alignItems: "center", gap: 10 }}>
+        <span aria-hidden style={{ width: 3, height: 14, background: vf.primary }} />
+        FIG. 01 · CHAIN OF CUSTODY
+      </div>
+
+      <svg viewBox="0 0 1000 165" preserveAspectRatio="xMidYMid meet" style={{ width: "100%", height: "auto", display: "block", overflow: "visible" }}>
+        {/* zone labels */}
+        {zones.map((z) => (
+          <text key={z.label} className="vf-pt-zone" x={z.cx} y="38" textAnchor="middle"
+            style={{ ...mono, fontSize: 15, fill: vf.primary, letterSpacing: "0.18em", fontWeight: 700 }}>
+            {z.label}
+          </text>
         ))}
 
-        {/* Nodes */}
-        {nodes.map((n, i) => (
-          <motion.g
-            key={n.label}
-            initial={{ opacity: 0, y: 8 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ delay: 0.45 + i * 0.16, duration: 0.7, ease: [0.25, 1, 0.4, 1] }}
-          >
-            <circle cx={n.x} cy="170" r="48" fill={vf.surface} stroke={vf.primary} strokeWidth="1.4" />
-            <circle cx={n.x} cy="170" r="7" fill={vf.primary} />
-            <text x={n.x} y="254" textAnchor="middle"
-              style={{ ...mono, fontSize: 17, fill: vf.primary, letterSpacing: "0.22em", fontWeight: 700 }}>
-              {n.label}
+        {/* guide underlay + drawn hairline */}
+        <line x1={X0} y1={Y} x2={X1} y2={Y} stroke={vf.subtle} strokeWidth="1" />
+        <line className="vf-pt-drawn" x1={X0} y1={Y} x2={X1} y2={Y} stroke={vf.muted} strokeWidth="1.4" />
+
+        {/* ticks + numbers + verbs + interaction hit-areas */}
+        {hands.map((h, i) => (
+          <g key={h.n}>
+            <line className="vf-pt-tick" x1={h.x} y1={active === i ? 72 : 78} x2={h.x} y2={106}
+              stroke={vf.primary} strokeWidth="1.6" />
+            <text className="vf-pt-num" x={h.x} y="130" textAnchor="middle"
+              style={{ ...mono, fontSize: 14, fill: active === i ? vf.primary : "var(--text-primary)", letterSpacing: "0.08em", fontWeight: 700 }}>
+              {h.n}
             </text>
-            <text x={n.x} y="282" textAnchor="middle"
-              style={{ fontFamily: sans, fontSize: 17, fill: "var(--text-primary)", fontWeight: 500 }}>
-              {n.sub}
+            <text className="vf-pt-verb" x={h.x} y="150" textAnchor="middle"
+              style={{ fontFamily: sans, fontSize: 13, fill: active === i ? "var(--text-primary)" : "var(--text-muted)", fontWeight: 500 }}>
+              {h.verb}
             </text>
-          </motion.g>
+            <rect x={h.x - 26} y="60" width="52" height="96" fill="transparent" tabIndex={0}
+              role="button" aria-label={`Hand ${h.n}, ${h.verb}`} style={{ cursor: "pointer", outline: "none" }}
+              onMouseEnter={() => setActive(i)} onMouseLeave={() => setActive(null)}
+              onFocus={() => setActive(i)} onBlur={() => setActive(null)} />
+          </g>
         ))}
 
-        {/* Arrows between nodes */}
-        {nodes.slice(0, -1).map((n, i) => (
-          <motion.line
-            key={`arrow-${i}`}
-            x1={n.x + 52} y1="170"
-            x2={nodes[i + 1].x - 54} y2="170"
-            stroke={vf.primary} strokeWidth="1.6"
-            markerEnd="url(#vf-arrow)"
-            initial={{ pathLength: 0, opacity: 0 }}
-            animate={inView ? { pathLength: 1, opacity: 0.75 } : {}}
-            transition={{ delay: 1.0 + i * 0.18, duration: 0.9, ease: [0.25, 1, 0.4, 1] }}
-          />
-        ))}
-
-        {/* Travelling cooler: sits at Hand 01 → travels to Hand 03 → Hand 05 → loops */}
-        <motion.g
-          initial={{ x: 0, opacity: 0 }}
-          animate={inView ? {
-            x:       [0, 0,    nodes[1].x - nodes[0].x, nodes[1].x - nodes[0].x, nodes[2].x - nodes[0].x, nodes[2].x - nodes[0].x, nodes[2].x - nodes[0].x],
-            opacity: [1, 1,    1,                        1,                        1,                        1,                        0],
-          } : {}}
-          transition={{
-            duration: 6.4,
-            times:   [0, 0.08, 0.38,                     0.5,                      0.82,                     0.92,                     1],
-            ease: [0.25, 1, 0.4, 1],
-            repeat: Infinity,
-            repeatDelay: 0.4,
-            delay: 1.6,
-          }}
-        >
-          <rect x={nodes[0].x - 18} y="155" width="36" height="30" rx="3"
-            fill={vf.primary} opacity="0.95" />
-          <rect x={nodes[0].x - 11} y="150" width="22" height="5" rx="1" fill={vf.primary} />
-          <line x1={nodes[0].x - 7} y1="167" x2={nodes[0].x + 7} y2="167"
-            stroke="#fff" strokeWidth="1.3" strokeLinecap="round" />
-          <line x1={nodes[0].x - 7} y1="175" x2={nodes[0].x + 7} y2="175"
-            stroke="#fff" strokeWidth="1.3" strokeLinecap="round" />
-        </motion.g>
+        {/* travelling sample token */}
+        <rect className="vf-pt-token" x={hands[0].x - 5} y={Y - 5} width="10" height="10" rx="1.5" fill={vf.primary} />
       </svg>
-      <div style={{
-        marginTop: 18, ...mono, fontSize: 13, color: vf.primary, letterSpacing: "0.22em",
-        textAlign: "center", fontWeight: 600, opacity: 0.85,
-      }}>
-        A TUBE'S JOURNEY · 5 HANDS · 3 BUILDINGS · PAPER CHAIN
+
+      <div style={{ marginTop: 18, minHeight: 22, textAlign: "center" }}>
+        {active === null ? (
+          <span style={{ ...mono, fontSize: 12, color: vf.muted, letterSpacing: "0.2em", fontWeight: 600 }}>
+            5 HANDS · 3 BUILDINGS · A PAPER CHAIN, NO TRACKING
+          </span>
+        ) : (
+          <span style={{ fontFamily: sans, fontSize: 15, color: "var(--text-secondary)" }}>
+            <strong style={{ ...mono, fontSize: 12, color: vf.primary, letterSpacing: "0.14em", marginRight: 10 }}>HAND {hands[active].n}</strong>
+            {hands[active].detail}
+          </span>
+        )}
       </div>
     </div>
   );
@@ -1825,109 +1959,14 @@ export default function VeriflowCase() {
             </Reveal>
           </div>
 
-          {/* Journey illustration: clinic → courier → lab */}
-          <Reveal delay={0.08}>
-            <div style={{ marginTop: "clamp(56px, 7vw, 80px)" }}>
-              <JourneyIllustration />
-            </div>
-          </Reveal>
+          {/* Journey — tick-measured path */}
+          <DiagramTickPath />
 
-          {/* Three gaps */}
-          <Reveal>
-            <div style={{
-              marginTop: "clamp(56px, 7vw, 80px)",
-              display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap", marginBottom: 24,
-            }}>
-              <WarningCircle size={20} color={vf.flag} weight="regular" />
-              <span style={{ ...mono, fontSize: 12, color: vf.flag, letterSpacing: "0.22em", fontWeight: 700 }}>
-                THREE GAPS THAT COULDN'T BE AFFORDED
-              </span>
-              <span aria-hidden style={{ flex: 1, height: 1, background: vf.subtle, minWidth: 40 }} />
-            </div>
-          </Reveal>
+          {/* Three gaps — blind-spot audit */}
+          <BlindSpotAudit />
 
-          {/* Editorial gap list: big numerals, horizontal rules, not cards */}
-          <div style={{ borderTop: `1px solid ${vf.subtle}` }}>
-            {[
-              { Icon: FileText, k: "No trail",            t: "Handoffs had no record. Couriers scribbled cooler numbers on the same sheet every day." },
-              { Icon: HandTap,  k: "Manual verification", t: "Pathologists matched sample IDs by eye. One digit off and the wrong lab received the tube." },
-              { Icon: EyeSlash, k: "No live view",        t: "Labs had no forecast of incoming work. Staffing and storage were guesswork until a cooler arrived." },
-            ].map((g, i) => (
-              <GapRow key={g.k} index={i} {...g} />
-            ))}
-          </div>
-
-          {/* Stat band: one flat horizontal band with thin dividers, no cards */}
-          <Reveal delay={0.08}>
-            <div className="vf-stat-band" style={{
-              marginTop: "clamp(40px, 5vw, 64px)",
-              display: "grid",
-              gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
-              padding: "clamp(32px, 4vw, 56px) 0",
-              borderTop: `1px solid ${vf.subtle}`,
-              borderBottom: `1px solid ${vf.subtle}`,
-              position: "relative",
-            }}>
-              {[
-                { n: 5,  suffix: "",   k: "Hands per sample",    v: "between patient draw and pathologist screen." },
-                { n: 40, suffix: "m",  k: "Invisible delay",     v: "before anyone notices a cooler is late." },
-                { n: 3,  suffix: "",   k: "Buildings",           v: "clinic, transit, lab. Three custody zones." },
-              ].map((c, i) => (
-                <motion.div
-                  key={c.k}
-                  initial={{ opacity: 0, y: 12 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-40px" }}
-                  transition={{ delay: i * 0.1, duration: 0.7, ease: [0.25, 1, 0.4, 1] }}
-                  style={{
-                    padding: "0 clamp(18px, 3vw, 40px)",
-                    borderLeft: i > 0 ? `1px solid ${vf.subtle}` : undefined,
-                    display: "flex", flexDirection: "column", gap: 12,
-                  }}
-                >
-                  <div style={{
-                    fontFamily: serif, fontWeight: 700,
-                    fontSize: "clamp(56px, 7vw, 96px)",
-                    color: vf.flag, letterSpacing: "-0.045em", lineHeight: 0.95,
-                  }}>
-                    <CountUp value={c.n} suffix={c.suffix} />
-                  </div>
-                  <div style={{ ...mono, fontSize: 13, color: vf.flag, letterSpacing: "0.22em", fontWeight: 700 }}>
-                    {c.k}
-                  </div>
-                  <p style={{ fontFamily: sans, fontSize: 18, color: "var(--text-primary)", lineHeight: 1.6, margin: 0 }}>
-                    {c.v}
-                  </p>
-                </motion.div>
-              ))}
-              <style>{`
-                @media (max-width: 820px) {
-                  .vf-stat-band { grid-template-columns: minmax(0, 1fr) !important; }
-                  .vf-stat-band > div { border-left: none !important; padding: 24px 0 !important; }
-                  .vf-stat-band > div + div { border-top: 1px solid ${vf.subtle}; }
-                }
-              `}</style>
-            </div>
-          </Reveal>
-
-          {/* Mission rule */}
-          <Reveal delay={0.1}>
-            <div style={{
-              marginTop: "clamp(48px, 6vw, 72px)",
-              display: "flex", alignItems: "flex-start", gap: 16,
-              paddingTop: 22, borderTop: "1px solid var(--border)",
-            }}>
-              <span style={{ width: 3, alignSelf: "stretch", background: vf.primary, flexShrink: 0 }} />
-              <p style={{
-                fontFamily: serif, fontStyle: "italic",
-                fontSize: "clamp(20px, 1.9vw, 26px)",
-                lineHeight: 1.45, color: "var(--text-primary)", margin: 0,
-                maxWidth: 820,
-              }}>
-                Veriflow replaces the clipboard with a verified tap at every handoff.
-              </p>
-            </div>
-          </Reveal>
+          {/* Stats + mission — measured ruler */}
+          <StatRuler />
         </div>
       </section>
 
