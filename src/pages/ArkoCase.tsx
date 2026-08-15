@@ -13,6 +13,7 @@ import LiquidBackground from "../components/LiquidBackground";
 const arko = {
   primary: "#6E8F4E",         // Arko olive green
   light:   "#8BAD6A",         // tint
+  pale:    "#D4E4B8",         // pale tint for text on dark olive
   dark:    "#4F6B35",         // shade
   surface: "#F0F4E8",         // very light tint for soft backgrounds
   subtle:  "rgba(110, 143, 78, 0.08)",
@@ -281,7 +282,7 @@ function LoopCard() {
 
   return (
     <div style={{
-      border: "1px solid var(--border)",
+      border: "1px solid rgba(79,107,53,0.28)",
       background: "var(--bg-elevated)",
       overflow: "hidden",
     }}>
@@ -452,7 +453,7 @@ function WebGallery({
             display: "grid",
             gridTemplateColumns: `repeat(${tabs.length}, minmax(0, 1fr))`,
           }),
-          borderBottom: "1px solid var(--border)",
+          borderBottom: "1px solid rgba(79,107,53,0.34)",
           marginBottom: 32,
         }}
       >
@@ -532,7 +533,7 @@ function WebGallery({
         style={{
           width: "100%",
           background: "var(--bg-elevated)",
-          border: "1px solid var(--border)",
+          border: "1px solid rgba(79,107,53,0.22)",
           borderRadius: "10px 10px 6px 6px",
           overflow: "hidden",
           boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 28px 60px -28px rgba(26,26,26,0.22)",
@@ -710,9 +711,7 @@ function UserTabs() {
                     padding: "16px 0",
                     borderBottom: "1px solid var(--border-light)",
                   }}>
-                    <span style={{ ...mono, fontSize: 12, color: "var(--text-muted)", width: 36, flexShrink: 0, letterSpacing: "0.16em", fontWeight: 600 }}>
-                      {String(j + 1).padStart(2, "0")}
-                    </span>
+                    <span aria-hidden style={{ width: 5, height: 5, borderRadius: "50%", background: arko.primary, flexShrink: 0 }} />
                     <span style={{ fontFamily: sans, fontSize: 17, color: "var(--text-primary)", lineHeight: 1.5 }}>
                       {n}
                     </span>
@@ -1092,7 +1091,6 @@ function ScanFlowStepper({
     return () => window.clearInterval(id);
   }, [paused, inView, stages.length]);
 
-  const progress = ((active + 1) / stages.length) * 100;
 
   return (
     <div
@@ -1188,18 +1186,6 @@ function ScanFlowStepper({
                   {/* Body */}
                   <div style={{ minWidth: 0, paddingTop: 2 }}>
                     <div style={{ display: "flex", alignItems: "baseline", gap: 10, flexWrap: "wrap" }}>
-                      <span
-                        style={{
-                          ...mono,
-                          fontSize: 11,
-                          color: isActive ? arko.primary : "var(--text-muted)",
-                          letterSpacing: "0.22em",
-                          fontWeight: 700,
-                          transition: "color 220ms ease-out",
-                        }}
-                      >
-                        Stage {s.num}
-                      </span>
                       <span
                         style={{
                           ...mono,
@@ -1316,7 +1302,7 @@ function ScanFlowStepper({
                   className="status-pulse"
                 />
                 <span style={{ ...mono, fontSize: 10, color: "#FAFAFA", letterSpacing: "0.22em", fontWeight: 700 }}>
-                  Stage {stages[active].num}
+                  Scanning
                 </span>
               </motion.div>
             </AnimatePresence>
@@ -1526,7 +1512,6 @@ function ClientJourneyReel() {
     return () => window.clearInterval(id);
   }, [paused, inView, stages.length]);
 
-  const progress = ((active + 1) / stages.length) * 100;
 
   return (
     <div
@@ -1594,16 +1579,6 @@ function ClientJourneyReel() {
                       weight={isActive ? "duotone" : "regular"}
                     />
                   </motion.span>
-                  <span style={{
-                    ...mono,
-                    fontSize: 12,
-                    color: isActive ? arko.light : "rgba(250,250,250,0.58)",
-                    letterSpacing: "0.22em",
-                    fontWeight: 700,
-                    transition: "color 240ms ease-out",
-                  }}>
-                    {s.num}
-                  </span>
                 </div>
                 {isActive && (
                   <motion.span
@@ -1827,9 +1802,6 @@ function ArEditorStepper({
               />
             </motion.div>
             <div className="md:col-span-5">
-              <span style={{ ...mono, fontSize: 11, color: arko.dark, display: "block", marginBottom: 14, letterSpacing: "0.14em" }}>
-                Step {steps[active].num} · of {String(steps.length).padStart(2, "0")}
-              </span>
               <p style={{
                 fontFamily: serif, fontStyle: "italic",
                 fontSize: "clamp(22px, 2.6vw, 30px)",
@@ -2125,7 +2097,7 @@ export default function ArkoCase() {
               <motion.div
                 animate={{ y: [0, -6, 0] }}
                 transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-                whileHover={{ y: -14, scale: 1.025, transition: { type: "spring", stiffness: 220, damping: 18 } }}
+                whileHover={{ scale: 1.04, transition: { type: "spring", stiffness: 220, damping: 18 } }}
                 style={{
                   position: "relative",
                   zIndex: 2,
@@ -2144,7 +2116,7 @@ export default function ArkoCase() {
               <motion.div
                 animate={{ y: [0, -10, 0] }}
                 transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
-                whileHover={{ y: -18, scale: 1.04, transition: { type: "spring", stiffness: 240, damping: 18 } }}
+                whileHover={{ scale: 1.06, transition: { type: "spring", stiffness: 240, damping: 18 } }}
                 style={{
                   position: "absolute",
                   right: "-4%",
@@ -2244,21 +2216,6 @@ export default function ArkoCase() {
                     borderRight: pos.right !== undefined ? `1.5px solid ${arko.dark}` : "none",
                   }} />
                 ))}
-
-                {/* Top meta band: figure tag + source */}
-                <div style={{
-                  display: "flex", justifyContent: "space-between", alignItems: "center",
-                  paddingBottom: 12,
-                  borderBottom: "1px solid var(--border)",
-                  marginBottom: 24,
-                }}>
-                  <span style={{ ...mono, fontSize: 10, color: arko.dark, letterSpacing: "0.22em" }}>
-                    Fig. 01.1
-                  </span>
-                  <span style={{ ...mono, fontSize: 10, color: "var(--text-muted)", letterSpacing: "0.2em" }}>
-                    hrs / project
-                  </span>
-                </div>
 
                 {/* The number with measurement bracket */}
                 <div style={{
@@ -2407,7 +2364,7 @@ export default function ArkoCase() {
       ══════════════════════════════════════════════════════════════ */}
       <section style={{
         backgroundColor: "var(--text-primary)",
-        padding: "clamp(88px, 12vw, 140px) 0",
+        padding: SECTION_PAD,
         position: "relative", overflow: "hidden",
       }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10" style={{ position: "relative", zIndex: 2 }}>
@@ -2528,9 +2485,12 @@ export default function ArkoCase() {
           {/* AR Editor */}
           <Reveal>
             <div style={{ marginBottom: 40, maxWidth: 720 }}>
-              <p style={{ ...mono, fontSize: 11, color: arko.dark, letterSpacing: "0.22em", marginBottom: 14, fontWeight: 600 }}>
-                AR room editor
-              </p>
+              <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 14 }}>
+                <span aria-hidden style={{ width: 3, height: 16, background: arko.primary, display: "inline-block" }} />
+                <p style={{ ...mono, fontSize: 13, color: arko.dark, letterSpacing: "0.22em", fontWeight: 700 }}>
+                  AR room editor
+                </p>
+              </div>
               <h3 style={{ ...t.h3Lede }}>
                 Canvas first, tools at the edges: place, scale, swap, no modals.
               </h3>
@@ -2585,7 +2545,7 @@ export default function ArkoCase() {
             <SectionHeader
               num="07"
               phase="Approval · Client"
-              title={<>No login. No jargon.{" "}<em style={{ fontStyle: "italic", color: "#D4E4B8" }}>Just the room, a comment, and an approve.</em></>}
+              title={<>No login. No jargon.{" "}<em style={{ fontStyle: "italic", color: arko.pale }}>Just the room, a comment, and an approve.</em></>}
               accent="#fff"
               titleColor="#FAFAFA"
             />
@@ -2783,7 +2743,7 @@ export default function ArkoCase() {
                       </p>
                       <p style={{ fontFamily: sans, fontSize: 13.5, lineHeight: 1.4 }}>
                         <span style={{ color: arko.dark, fontWeight: 600 }}>{k.delta}</span>
-                        <span style={{ color: "var(--text-muted)" }}> · {k.note}</span>
+                        <span style={{ color: "var(--text-secondary)" }}> · {k.note}</span>
                       </p>
                     </motion.div>
                   );
@@ -2822,9 +2782,9 @@ export default function ArkoCase() {
       ══════════════════════════════════════════════════════════════ */}
       <section style={{ padding: "clamp(64px, 8vw, 104px) 0", borderTop: "1px solid var(--border)" }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
-          <div style={{ display: "flex", alignItems: "baseline", gap: 14, marginBottom: 36 }}>
-            <span aria-hidden style={{ width: 3, height: 14, background: arko.primary }} />
-            <p style={{ ...mono, fontSize: 12, color: arko.dark, letterSpacing: "0.22em", fontWeight: 600 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 36 }}>
+            <span aria-hidden style={{ width: 3, height: 16, background: arko.primary, display: "inline-block" }} />
+            <p style={{ ...mono, fontSize: 13, color: arko.dark, letterSpacing: "0.22em", fontWeight: 700 }}>
               More case studies
             </p>
           </div>
