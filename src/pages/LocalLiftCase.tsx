@@ -604,7 +604,7 @@ function HeroMockup() {
           position: "absolute",
           right: "6%", bottom: "8%",
           width: "42%", height: "42%",
-          background: `radial-gradient(circle, ${ll.warm}44 0%, rgba(196,123,58,0) 70%)`,
+          background: `radial-gradient(circle, ${ll.primary}44 0%, rgba(59,79,123,0) 70%)`,
           filter: "blur(40px)",
           opacity: 0.6,
           zIndex: 0,
@@ -820,7 +820,7 @@ function TensionCard({
         transition={{ duration: 0.35, ease: [0.25, 1, 0.4, 1] }}
         style={{
           position: "absolute", left: 0, top: 0, bottom: 0,
-          width: 3, background: ll.warm, transformOrigin: "top",
+          width: 3, background: ll.primary, transformOrigin: "top",
         }}
       />
 
@@ -849,14 +849,6 @@ function TensionCard({
 
       {/* Right column - content */}
       <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
-          <span style={{ ...mono, fontSize: 10, color: ll.primary, letterSpacing: "0.22em", fontWeight: 700 }}>
-            {tension.tag}
-          </span>
-          <span style={{ ...mono, fontSize: 10, color: ll.muted, letterSpacing: "0.2em", fontWeight: 700 }}>
-            {tension.count} OBS
-          </span>
-        </div>
         <h4 style={{
           fontFamily: serif, fontWeight: 700,
           fontSize: "clamp(19px, 1.7vw, 23px)",
@@ -888,7 +880,7 @@ function TensionCard({
                 position: "absolute", left: 0, top: 0,
                 width: `${(tension.count / 40) * 100}%`,
                 height: "100%",
-                background: active ? ll.warm : ll.primary,
+                background: active ? ll.primary : ll.light,
                 transformOrigin: "left",
                 transition: "background 260ms ease-out",
               }}
@@ -984,7 +976,6 @@ function AffinityOutput() {
         <Plate
           src={`${IMG}/user-stories.png`}
           alt="Affinity map of user stories from small business owner interviews."
-          caption="FIG · 01 / AFFINITY MAP · USER STORIES CLUSTERED BY TENSION"
           tag="RESEARCH"
           aspect="16 / 7"
           bg={ll.surface}
@@ -1166,13 +1157,6 @@ function PersonasSection() {
                     if (!isActive) (e.currentTarget as HTMLButtonElement).style.borderColor = ll.line;
                   }}
                 >
-                  <span style={{
-                    ...mono, fontSize: 10, letterSpacing: "0.22em",
-                    fontWeight: 700,
-                    color: isActive ? "rgba(255,255,255,0.75)" : ll.muted,
-                  }}>
-                    {persona.tag}
-                  </span>
                   <span style={{ fontSize: 15, fontWeight: 500, letterSpacing: "-0.005em" }}>
                     {persona.archetype}
                   </span>
@@ -1182,7 +1166,7 @@ function PersonasSection() {
                       transition={{ type: "spring", stiffness: 380, damping: 32 }}
                       style={{
                         position: "absolute", left: 0, right: 0, bottom: -1,
-                        height: 2, background: ll.warm,
+                        height: 2, background: ll.primary,
                       }}
                     />
                   )}
@@ -1237,17 +1221,6 @@ function PersonasSection() {
                   }}
                 />
               ))}
-              <span style={{
-                position: "absolute", top: 20, left: 20,
-                ...mono, fontSize: 9.5, color: ll.primary,
-                letterSpacing: "0.22em", fontWeight: 700,
-                background: "rgba(255,255,255,0.92)",
-                padding: "5px 10px",
-                border: `1px solid ${ll.line}`,
-                zIndex: 3,
-              }}>
-                {p.tag}
-              </span>
               <AnimatePresence mode="wait">
                 <motion.img
                   key={p.img}
@@ -1535,14 +1508,6 @@ function ReflectionStepper() {
 
               <span style={{ display: "flex", flexDirection: "column", gap: 5 }}>
                 <span style={{
-                  ...mono, fontSize: 11, letterSpacing: "0.22em",
-                  fontWeight: 700,
-                  color: on ? ll.primary : ll.muted,
-                  transition: "color 180ms ease",
-                }}>
-                  {l.tag}
-                </span>
-                <span style={{
                   fontFamily: serif, fontWeight: 700,
                   fontSize: "clamp(19px, 1.5vw, 22px)", lineHeight: 1.25,
                   letterSpacing: "-0.015em",
@@ -1608,15 +1573,6 @@ function ReflectionStepper() {
           >
             {/* Tag row */}
             <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-              <span style={{
-                ...mono, fontSize: 10, letterSpacing: "0.22em",
-                color: ll.primary, fontWeight: 700,
-                padding: "6px 10px",
-                background: "#FFFFFF",
-                border: `1px solid ${ll.primary}`,
-              }}>
-                {lesson.tag}
-              </span>
               <Icon size={22} color={ll.primary} weight="regular" />
             </div>
 
@@ -1932,9 +1888,6 @@ export default function LocalLiftCase() {
                       }}>
                         <I size={22} color={ll.primary} weight="regular" />
                       </div>
-                      <p style={{ ...mono, fontSize: 9.5, color: ll.muted, letterSpacing: "0.22em", fontWeight: 700 }}>
-                        {o.tag}
-                      </p>
                     </div>
                     <h3 style={{ ...t.h3, marginBottom: 12 }}>{o.head}</h3>
                     <p style={{ ...t.body, flex: 1 }}>{o.body}</p>
@@ -2007,9 +1960,6 @@ export default function LocalLiftCase() {
                     }}
                   >
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 26 }}>
-                      <span style={{ ...mono, fontSize: 11, color: ll.primary, letterSpacing: "0.22em", fontWeight: 700 }}>
-                        {m.num}
-                      </span>
                       <I size={22} color={ll.primary} weight="regular" />
                     </div>
                     <h3 style={{ ...t.h3, marginBottom: 12 }}>{m.title}</h3>
@@ -2062,9 +2012,6 @@ export default function LocalLiftCase() {
                   }}
                 >
                   <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                    <span style={{ ...mono, fontSize: 11, color: ll.primary, letterSpacing: "0.22em", fontWeight: 700 }}>
-                      {v.num}
-                    </span>
                     <span aria-hidden style={{
                       fontFamily: serif, fontStyle: "italic", fontSize: 42,
                       color: ll.primary, opacity: 0.22, lineHeight: 0.6,
@@ -2220,7 +2167,6 @@ export default function LocalLiftCase() {
               <Plate
                 src={`${IMG}/user-flow.png`}
                 alt="Primary user flow from onboarding through mentorship match."
-                caption="FIG · 02 / PRIMARY USER FLOW · ONBOARD → MATCH → LEARN → APPLY"
                 tag="FLOW"
                 aspect="16 / 7"
                 bg="#FFFFFF"
@@ -2352,7 +2298,6 @@ export default function LocalLiftCase() {
                       <Plate
                         src={m.img}
                         alt={`Before and after for ${m.friction}`}
-                        tag={m.tag}
                         aspect="16 / 10"
                         fit="contain"
                         bg={ll.surface}
@@ -2407,7 +2352,7 @@ export default function LocalLiftCase() {
                   color: "#FFFFFF", marginBottom: 20,
                 }}>
                   Small moves,
-                  <span style={{ fontStyle: "italic", color: ll.warm }}> compounded.</span>
+                  <span style={{ fontStyle: "italic", color: ll.primary }}> compounded.</span>
                 </h2>
               </Reveal>
               <Reveal delay={0.1}>
@@ -2450,10 +2395,7 @@ export default function LocalLiftCase() {
                   }}
                 >
                   <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24 }}>
-                    <ChartBar size={24} color={ll.warm} weight="regular" />
-                    <p style={{ ...mono, fontSize: 9.5, color: "rgba(255,255,255,0.65)", letterSpacing: "0.22em", fontWeight: 700 }}>
-                      {s.tag}
-                    </p>
+                    <ChartBar size={24} color={ll.light} weight="regular" />
                   </div>
                   <p style={{
                     fontFamily: serif, fontWeight: 700,
