@@ -2728,7 +2728,7 @@ export default function ArkoCase() {
                       viewport={{ once: true, margin: "-40px" }}
                       transition={{ delay: i * 0.07, duration: 0.5, ease: [0.25, 1, 0.4, 1] }}
                       style={{
-                        padding: isMobile ? "24px 18px" : "clamp(28px, 2.6vw, 36px) clamp(24px, 2.2vw, 34px) clamp(26px, 2.4vw, 32px) 0",
+                        padding: isMobile ? "36px 18px" : "clamp(44px, 4vw, 56px) clamp(24px, 2.2vw, 34px) clamp(44px, 4vw, 56px) 0",
                         borderLeft: (isMobile ? isRightCol : i > 0) ? "1px solid rgba(79,107,53,0.17)" : "none",
                         borderTop: (isMobile && i >= 2) ? "1px solid rgba(79,107,53,0.17)" : "none",
                         minWidth: 0,
@@ -2738,10 +2738,10 @@ export default function ArkoCase() {
                         <CountUp value={k.value} decimals={k.decimals} prefix={k.prefix} />
                         <span style={{ fontFamily: sans, fontSize: "clamp(13px, 1vw, 15px)", fontWeight: 500, color: "var(--text-secondary)", marginLeft: 7, letterSpacing: 0 }}>{k.unit}</span>
                       </p>
-                      <p style={{ fontFamily: sans, fontSize: 15, fontWeight: 600, color: "var(--text-primary)", letterSpacing: "-0.01em", marginBottom: 9 }}>
+                      <p style={{ fontFamily: sans, fontSize: 17, fontWeight: 600, color: "var(--text-primary)", letterSpacing: "-0.01em", marginBottom: 11 }}>
                         {k.label}
                       </p>
-                      <p style={{ fontFamily: sans, fontSize: 13.5, lineHeight: 1.4 }}>
+                      <p style={{ fontFamily: sans, fontSize: 15, lineHeight: 1.45 }}>
                         <span style={{ color: arko.dark, fontWeight: 600 }}>{k.delta}</span>
                         <span style={{ color: "var(--text-secondary)" }}> · {k.note}</span>
                       </p>
