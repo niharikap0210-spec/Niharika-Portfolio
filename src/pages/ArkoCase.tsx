@@ -1662,9 +1662,9 @@ function ClientJourneyReel() {
                       transition={{ duration: 0.38, ease: [0.25, 1, 0.4, 1] }}
                       style={{
                         fontFamily: sans,
-                        fontSize: 16.5,
+                        fontSize: 18.5,
                         color: "rgba(250,250,250,0.92)",
-                        lineHeight: 1.65,
+                        lineHeight: 1.6,
                         overflow: "hidden",
                       }}
                     >
