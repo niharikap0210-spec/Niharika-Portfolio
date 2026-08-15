@@ -842,21 +842,18 @@ function ResearchLedger() {
       {/* Header band */}
       <div style={{
         display: "flex", alignItems: "center",
-        gap: 12, marginBottom: 24,
+        gap: 12, marginBottom: "clamp(24px, 2.6vw, 34px)",
       }}>
         <span aria-hidden style={{ width: 3, height: 16, background: arko.primary, display: "inline-block" }} />
-        <p style={{ ...mono, fontSize: 13, color: arko.dark, letterSpacing: "0.22em", fontWeight: 600 }}>
-          Research depth · how I got here
+        <p style={{ ...mono, fontSize: 13, color: arko.dark, letterSpacing: "0.22em", fontWeight: 700 }}>
+          The groundwork
         </p>
       </div>
 
-      {/* Ledger */}
+      {/* Research cards */}
       <div
         className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
-        style={{
-          border: "1px solid var(--border)",
-          background: "var(--bg-elevated)",
-        }}
+        style={{ gap: "clamp(16px, 1.5vw, 22px)" }}
       >
         {methods.map((m, i) => {
           const isHover = hover === i;
@@ -869,71 +866,52 @@ function ResearchLedger() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-40px" }}
               transition={{ delay: i * 0.08, duration: 0.55, ease: [0.25, 1, 0.4, 1] }}
-              whileHover={{ y: -4 }}
+              whileHover={{ y: -5 }}
               style={{
-                padding: "32px 28px 30px",
-                borderRight: i < methods.length - 1 ? "1px solid var(--border-light)" : "none",
-                borderBottom: "none",
+                padding: "clamp(24px, 2vw, 30px)",
+                borderRadius: 16,
+                background: "var(--bg-elevated)",
+                border: `1px solid ${isHover ? arko.primary : "var(--border)"}`,
+                boxShadow: isHover
+                  ? "0 18px 40px rgba(79,107,53,0.16)"
+                  : "0 1px 2px rgba(0,0,0,0.04)",
+                transition: "border-color 260ms ease, box-shadow 260ms ease",
                 position: "relative",
                 cursor: "default",
-                background: isHover ? arko.subtle : "transparent",
-                transition: "background-color 260ms ease-out",
                 minWidth: 0,
               }}
             >
-              {/* Top accent rail */}
-              <span
-                aria-hidden
-                style={{
-                  position: "absolute", top: 0, left: 0, right: 0, height: 2,
-                  background: arko.primary,
-                  transformOrigin: "left center",
-                  transform: isHover ? "scaleX(1)" : "scaleX(0)",
-                  transition: "transform 320ms ease-out",
-                }}
-              />
-              {/* Method index + icon */}
+              {/* Icon chip */}
               <div style={{
-                display: "flex", alignItems: "center", justifyContent: "space-between",
-                marginBottom: 20,
+                width: 46, height: 46, borderRadius: 13,
+                display: "grid", placeItems: "center",
+                background: arko.subtle,
+                marginBottom: "clamp(20px, 2vw, 26px)",
               }}>
-                <span style={{
-                  ...mono, fontSize: 11, fontWeight: 600,
-                  color: isHover ? arko.primary : "var(--text-muted)",
-                  letterSpacing: "0.22em",
-                  transition: "color 240ms ease-out",
-                }}>
-                  M.0{i + 1}
-                </span>
-                <m.Icon
-                  size={22}
-                  color={arko.primary}
-                  weight={isHover ? "fill" : "duotone"}
-                />
+                <m.Icon size={23} color={arko.primary} weight={isHover ? "fill" : "duotone"} />
               </div>
               {/* Big count */}
               <p style={{
                 fontFamily: serif, fontWeight: 700,
-                fontSize: "clamp(48px, 5vw, 64px)",
+                fontSize: "clamp(44px, 4.6vw, 58px)",
                 color: arko.primary,
                 letterSpacing: "-0.035em", lineHeight: 1,
-                marginBottom: 14,
+                marginBottom: 12,
               }}>
                 <CountUp value={m.big} />
               </p>
-              {/* Unit */}
+              {/* Method */}
               <p style={{
-                ...mono, fontSize: "clamp(13px, 1vw, 15px)",
-                color: "var(--text-primary)",
-                letterSpacing: "0.16em",
-                marginBottom: 12, fontWeight: 600,
+                fontFamily: sans, fontSize: "clamp(16px, 1.15vw, 18px)",
+                color: "var(--text-primary)", fontWeight: 600,
+                letterSpacing: "-0.01em", marginBottom: 8,
               }}>
                 {m.unit}
               </p>
               {/* Sub */}
               <p style={{
-                fontFamily: sans, fontSize: "clamp(15px, 1.15vw, 17px)",
-                color: "var(--text-secondary)", lineHeight: 1.6,
+                fontFamily: sans, fontSize: "clamp(14px, 1vw, 15px)",
+                color: "var(--text-secondary)", lineHeight: 1.55,
               }}>
                 {m.sub}
               </p>
