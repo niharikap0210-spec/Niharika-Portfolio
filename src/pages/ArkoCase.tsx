@@ -2063,8 +2063,6 @@ function NavCard({ project }: { project: Project }) {
 ══════════════════════════════════════════════════════════════════ */
 export default function ArkoCase() {
   const otherProjects = projects.filter((p) => p.slug !== "arko").slice(-2);
-  const { scrollYProgress } = useScroll();
-  const scaleX = useSpring(scrollYProgress, { stiffness: 200, damping: 30 });
   const isMobile = useIsMobile();
 
   useEffect(() => {
@@ -2084,17 +2082,6 @@ export default function ArkoCase() {
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
       transition={{ duration: 0.4 }}
     >
-      {/* Scroll progress */}
-      <div style={{
-        position: "fixed", top: 56, left: 0, right: 0, height: 2,
-        background: "transparent", zIndex: 49,
-      }}>
-        <motion.div style={{
-          height: "100%", background: arko.primary,
-          scaleX, transformOrigin: "left", opacity: 0.85,
-        }} />
-      </div>
-
       {/* ══════════════════════════════════════════════════════════════
           00 · HERO - editorial monograph cover
       ══════════════════════════════════════════════════════════════ */}
@@ -2302,9 +2289,7 @@ export default function ArkoCase() {
               title={<>One loop.{" "}
                 <em style={{ fontStyle: "italic", color: arko.primary }}>
                   Zero back-and-forth.
-                </em></>}
-              meta="Weeks 01 · 02"
-              accent={arko.primary}
+                </em></>}              accent={arko.primary}
             />
           </Reveal>
 
@@ -2480,9 +2465,7 @@ export default function ArkoCase() {
               num="02"
               phase="Context"
               title={<>Clients can't visualize a space from a floor plan.{" "}
-              <em style={{ fontStyle: "italic", color: arko.primary }}>That gap costs real money.</em></>}
-              meta="Weeks 02 · 03"
-              accent={arko.primary}
+              <em style={{ fontStyle: "italic", color: arko.primary }}>That gap costs real money.</em></>}              accent={arko.primary}
             />
           </Reveal>
 
@@ -2513,9 +2496,7 @@ export default function ArkoCase() {
               phase="Users & Research"
               title={<>One platform.{" "}
               <em style={{ fontStyle: "italic", color: arko.primary }}>Two different contexts</em>{" "}
-              of use.</>}
-              meta="Weeks 03 · 04"
-              accent={arko.primary}
+              of use.</>}              accent={arko.primary}
             />
           </Reveal>
 
@@ -2539,18 +2520,9 @@ export default function ArkoCase() {
         position: "relative", overflow: "hidden",
       }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10" style={{ position: "relative", zIndex: 2 }}>
-          <motion.div
-            initial={{ opacity: 0, y: 14 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.5, ease: [0.25, 1, 0.4, 1] }}
-            style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 40 }}
-          >
-            <Quotes size={30} color={arko.light} opacity={0.7} weight="duotone" />
-            <p style={{ ...mono, fontSize: 15, color: arko.light, letterSpacing: "0.22em", fontWeight: 600 }}>
-              04 / 09 · Key insight
-            </p>
-          </motion.div>
+          <Reveal>
+            <SectionHeader num="04" phase="Key insight" accent="#fff" />
+          </Reveal>
           <InsightQuote />
           <motion.p
             initial={{ opacity: 0, y: 14 }}
@@ -2577,9 +2549,7 @@ export default function ArkoCase() {
               num="05"
               phase="Workspace · Web"
               title={<>A professional workspace.{" "}
-                <em style={{ fontStyle: "italic", color: arko.primary }}>Dense, powerful, built for daily use.</em></>}
-              meta="Weeks 05 · 08"
-              accent={arko.primary}
+                <em style={{ fontStyle: "italic", color: arko.primary }}>Dense, powerful, built for daily use.</em></>}              accent={arko.primary}
             />
           </Reveal>
 
@@ -2615,9 +2585,7 @@ export default function ArkoCase() {
               phase="Capture · iOS"
               title={<>From empty room to{" "}
                 <em style={{ fontStyle: "italic", color: arko.primary }}>furnished space</em>{" "}
-                in minutes.</>}
-              meta="Weeks 06 · 09"
-              accent={arko.primary}
+                in minutes.</>}              accent={arko.primary}
             />
           </Reveal>
 
@@ -2715,50 +2683,26 @@ export default function ArkoCase() {
       <section style={{
         padding: SECTION_PAD,
         backgroundColor: arko.dark,
-        backgroundImage: `
-          repeating-linear-gradient(0deg, rgba(255,255,255,0.045) 0, rgba(255,255,255,0.045) 1px, transparent 1px, transparent 20px),
-          repeating-linear-gradient(90deg, rgba(255,255,255,0.045) 0, rgba(255,255,255,0.045) 1px, transparent 1px, transparent 20px),
-          repeating-linear-gradient(0deg, rgba(255,255,255,0.09) 0, rgba(255,255,255,0.09) 1px, transparent 1px, transparent 80px),
-          repeating-linear-gradient(90deg, rgba(255,255,255,0.09) 0, rgba(255,255,255,0.09) 1px, transparent 1px, transparent 80px)
-        `,
+        backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1.5px)",
+        backgroundSize: "23px 23px",
+        backgroundPosition: "-11px -11px",
         position: "relative",
         overflow: "hidden",
       }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10" style={{ position: "relative", zIndex: 2 }}>
           <Reveal>
-            <div style={{ marginBottom: "clamp(40px, 5vw, 64px)" }}>
-              <div style={{
-                display: "flex", alignItems: "baseline", gap: 18, flexWrap: "wrap",
-                paddingBottom: 14,
-              }}>
-                <span style={{ ...mono, fontSize: 14, color: "#FAFAFA", letterSpacing: "0.22em", fontWeight: 700 }}>
-                  07 <span style={{ color: "rgba(250,250,250,0.55)", fontWeight: 400 }}>/ 09</span>
-                </span>
-                <span style={{ ...mono, fontSize: 14, color: "#FAFAFA", letterSpacing: "0.22em", fontWeight: 600 }}>
-                  Approval · Client
-                </span>
-                <span style={{ ...mono, fontSize: 13, color: "rgba(250,250,250,0.65)", letterSpacing: "0.2em", marginLeft: "auto" }}>
-                  Weeks 09 · 11
-                </span>
-              </div>
-              <div style={{ height: 1, background: "rgba(250,250,250,0.55)", transformOrigin: "left" }} />
-            </div>
+            <SectionHeader
+              num="07"
+              phase="Approval · Client"
+              title={<>No login. No jargon.{" "}<em style={{ fontStyle: "italic", color: "#D4E4B8" }}>Just the room, a comment, and an approve.</em></>}
+              accent="#fff"
+              titleColor="#FAFAFA"
+            />
           </Reveal>
 
-          {/* Hero block - statement + lede */}
+          {/* Lede */}
           <Reveal>
-            <div style={{ maxWidth: 860, marginBottom: 56 }}>
-              <h2 style={{
-                fontFamily: serif, fontWeight: 700,
-                fontSize: "clamp(32px, 4.6vw, 58px)",
-                color: "#FAFAFA", letterSpacing: "-0.035em",
-                lineHeight: 1.08, marginBottom: 28,
-              }}>
-                No login. No jargon.{" "}
-                <em style={{ fontStyle: "italic", color: "#D4E4B8" }}>
-                  Just the room, a comment, and an approve.
-                </em>
-              </h2>
+            <div style={{ maxWidth: 680, marginBottom: 56 }}>
               <p style={{
                 ...t.bodyLg,
                 color: "rgba(250,250,250,0.82)",
@@ -2870,9 +2814,7 @@ export default function ArkoCase() {
               num="08"
               phase="Design Decisions"
               title={<><em style={{ fontStyle: "italic", color: arko.primary }}>Four decisions</em>{" "}
-                that defined the product.</>}
-              meta="Weeks 10 · 12"
-              accent={arko.primary}
+                that defined the product.</>}              accent={arko.primary}
             />
           </Reveal>
 
@@ -2894,9 +2836,7 @@ export default function ArkoCase() {
               phase="Outcomes & Reflection"
               title={<>Three workflows. One platform.{" "}
               <em style={{ fontStyle: "italic", color: arko.primary }}>No compromise</em>{" "}
-              on either user.</>}
-              meta="Weeks 13 · 14"
-              accent={arko.primary}
+              on either user.</>}              accent={arko.primary}
             />
           </Reveal>
 

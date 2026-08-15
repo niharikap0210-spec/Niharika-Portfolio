@@ -29,7 +29,8 @@ export function SectionHeader({
 }: {
   num: string;
   phase: string;
-  title: ReactNode;
+  /** optional — when omitted, only the numeral + phase render (e.g. above a custom centerpiece) */
+  title?: ReactNode;
   accent?: string;
   /** optional right-aligned meta in the top row, e.g. a week range */
   meta?: string;
@@ -43,7 +44,7 @@ export function SectionHeader({
   const inView = useInView(ref, { once: true, margin: "-40px" });
   return (
     <div ref={ref} style={{ marginBottom: "clamp(40px, 5vw, 64px)" }}>
-      <div style={{ display: "flex", alignItems: "flex-end", gap: "clamp(16px, 2.2vw, 26px)", marginBottom: "clamp(18px, 2.4vw, 30px)" }}>
+      <div style={{ display: "flex", alignItems: "flex-end", gap: "clamp(16px, 2.2vw, 26px)", marginBottom: title ? "clamp(18px, 2.4vw, 30px)" : 0 }}>
         <motion.div
           aria-hidden
           initial={{ opacity: 0, y: 12 }}
@@ -78,14 +79,16 @@ export function SectionHeader({
           </motion.div>
         ) : null}
       </div>
-      <motion.h2
-        initial={{ opacity: 0, y: 12 }}
-        animate={inView ? { opacity: 1, y: 0 } : {}}
-        transition={{ delay: 0.16, duration: 0.75, ease: [0.25, 1, 0.4, 1] }}
-        style={{ ...CASE_H2, margin: 0, maxWidth: titleMaxWidth, ...(titleColor ? { color: titleColor } : null) }}
-      >
-        {title}
-      </motion.h2>
+      {title ? (
+        <motion.h2
+          initial={{ opacity: 0, y: 12 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ delay: 0.16, duration: 0.75, ease: [0.25, 1, 0.4, 1] }}
+          style={{ ...CASE_H2, margin: 0, maxWidth: titleMaxWidth, ...(titleColor ? { color: titleColor } : null) }}
+        >
+          {title}
+        </motion.h2>
+      ) : null}
     </div>
   );
 }
