@@ -23,6 +23,8 @@ import type { Icon } from "@phosphor-icons/react";
 import { projects, type Project } from "../data/projects";
 import { ProjectHeroStage } from "../components/ProjectHeroStage";
 import { SectionHeader, CASE_H2 } from "../components/CaseSectionHeader";
+import { GradientBackground } from "../components/GradientBackground";
+import LiquidBackground from "../components/LiquidBackground";
 
 /* ══════════════════════════════════════════════════════════════════
    LOCALLIFT - scoped palette + type tokens
@@ -1094,12 +1096,8 @@ function PersonasSection() {
   const p = PERSONAS[active];
 
   return (
-    <section style={{
-      padding: SECTION_PAD,
-      ...gridSurface,
-      borderTop: `1px solid ${ll.line}`,
-      borderBottom: `1px solid ${ll.line}`,
-    }}>
+    <section className="ll-liquid-section" style={{ padding: SECTION_PAD }}>
+      <LiquidBackground c0="eaeef7" c1="d6dcec" c2="aeb8d4" fade={0} lift={0.28} grain={0.055} speed={0.1} />
       <div className="max-w-7xl mx-auto px-6 md:px-10">
         <SectionHeader
           num="04"
@@ -1740,12 +1738,11 @@ export default function LocalLiftCase() {
     <motion.div
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
       transition={{ duration: 0.4 }}
-      className="pt-14"
     >
       {/* Scroll progress */}
       <div style={{
         position: "fixed", top: 56, left: 0, right: 0, height: 2,
-        background: "var(--bg-primary)", zIndex: 49,
+        background: "transparent", zIndex: 49,
       }}>
         <motion.div style={{
           height: "100%", background: ll.primary,
@@ -1760,126 +1757,74 @@ export default function LocalLiftCase() {
         ref={heroRef}
         style={{
           position: "relative",
-          minHeight: "calc(var(--vh, 1vh) * 100 - 56px)",
-          display: "flex", flexDirection: "column",
+          isolation: "isolate",
+          minHeight: "calc(var(--vh, 1vh) * 100)",
+          display: "flex", flexDirection: "column", justifyContent: "center",
           overflow: "hidden",
           background: "var(--bg-primary)",
+          paddingTop: "clamp(96px, 10vw, 128px)",
+          paddingBottom: "clamp(40px, 6vw, 72px)",
         }}
       >
-        {/* Blueprint grid backdrop */}
+        {/* Indigo noisy-gradient hero background */}
+        <GradientBackground
+          gradientType="radial-gradient"
+          gradientSize="150% 130%"
+          gradientOrigin="top-middle"
+          colors={[
+            { color: "rgba(59,79,123,0.20)", stop: "0%" },
+            { color: "rgba(101,119,160,0.12)", stop: "34%" },
+            { color: "rgba(140,155,190,0.07)", stop: "62%" },
+            { color: "rgba(237,240,247,0)", stop: "100%" },
+          ]}
+          noisePatternAlpha={26}
+          noiseIntensity={1}
+          noisePatternRefreshInterval={1}
+          noisePatternSize={100}
+          style={{ zIndex: 0 }}
+        />
+        {/* Dotted grid overlay */}
         <div aria-hidden style={{
           position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none",
-          backgroundImage: `
-            repeating-linear-gradient(0deg,  ${ll.subtle} 0 1px, transparent 1px 22px),
-            repeating-linear-gradient(90deg, ${ll.subtle} 0 1px, transparent 1px 22px),
-            repeating-linear-gradient(0deg,  ${ll.line}  0 1px, transparent 1px 88px),
-            repeating-linear-gradient(90deg, ${ll.line}  0 1px, transparent 1px 88px)
-          `,
-          opacity: 0.55,
-          maskImage: "radial-gradient(ellipse 85% 85% at 55% 50%, #000 40%, transparent 100%)",
-          WebkitMaskImage: "radial-gradient(ellipse 85% 85% at 55% 50%, #000 40%, transparent 100%)",
+          backgroundImage: "radial-gradient(circle, rgba(30,42,69,0.07) 1px, transparent 1.5px)",
+          backgroundSize: "23px 23px",
+          backgroundPosition: "-11px -11px",
+          WebkitMaskImage: "linear-gradient(to bottom, #000 60%, transparent 100%)",
+          maskImage: "linear-gradient(to bottom, #000 60%, transparent 100%)",
         }} />
 
-        {/* Top bar */}
-        <motion.div
-          initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.05, duration: 0.5 }}
-          className="max-w-7xl mx-auto px-6 md:px-10"
-          style={{
-            width: "100%", flexShrink: 0,
-            display: "flex", justifyContent: "space-between", alignItems: "center",
-            paddingTop: "clamp(16px, 2vw, 24px)",
-            paddingBottom: 14,
-            flexWrap: "wrap", gap: 16,
-            borderBottom: `1px solid ${ll.line}`,
-            position: "relative", zIndex: 1,
-          }}
-        >
-          <Link to="/#projects"
-            style={{
-              display: "inline-flex", alignItems: "center", gap: 10,
-              ...mono, fontSize: 11, letterSpacing: "0.22em",
-              color: "var(--text-secondary)", textDecoration: "none",
-              transitionProperty: "color", transitionDuration: "200ms",
-            }}
-            onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = ll.primary)}
-            onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = "var(--text-secondary)")}
-          >
-            <ArrowLeft size={14} weight="regular" />
-            Index
-          </Link>
-          <div style={{ display: "flex", gap: 20, flexWrap: "wrap", alignItems: "center" }}>
-            {["UX Research", "Service Design", "SMB", "Cross-cultural"].map((tag) => (
-              <span key={tag} style={{ ...mono, fontSize: 10, color: "var(--text-muted)", letterSpacing: "0.22em" }}>
-                {tag}
-              </span>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* Hero body */}
-        <div
-          className="max-w-7xl mx-auto px-6 md:px-10"
-          style={{
-            flex: 1, width: "100%", minHeight: 0,
-            display: "grid",
-            gridTemplateColumns: "minmax(0, 1fr)",
-            gap: "clamp(24px, 3vw, 40px)",
-            alignItems: "center",
-            paddingTop: "clamp(32px, 3.5vw, 56px)",
-            paddingBottom: "clamp(24px, 2.6vw, 40px)",
-            position: "relative", zIndex: 1,
-          }}
-        >
-          <div
-            className="grid grid-cols-1 md:grid-cols-12"
-            style={{
-              gap: "clamp(28px, 3.4vw, 52px)",
-              alignItems: "center",
-              width: "100%",
-            }}
-          >
-            {/* LEFT - title + lede + meta */}
+        {/* Hero body - 2-column: text left, mockup right */}
+        <div className="max-w-7xl mx-auto px-6 md:px-10" style={{ position: "relative", zIndex: 1, width: "100%" }}>
+          <div className="grid grid-cols-1 md:grid-cols-12" style={{ gap: "clamp(32px, 4.5vw, 60px)", alignItems: "center", width: "100%" }}>
+            {/* LEFT - title, tagline, meta */}
             <motion.div
               className="md:col-span-5"
               style={{ minWidth: 0, opacity: heroOpacity, y: heroY }}
             >
-              <motion.div
-                initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1, duration: 0.6 }}
-                style={{ display: "flex", justifyContent: "space-between", marginBottom: 18, maxWidth: 460 }}
-              >
-                <span style={{ ...mono, fontSize: 11, color: ll.primary, letterSpacing: "0.22em", fontWeight: 700 }}>
-                  Case Study · 04
-                </span>
-                <span style={{ ...mono, fontSize: 11, color: "var(--text-muted)", letterSpacing: "0.22em" }}>
-                  SMB · 2024
-                </span>
-              </motion.div>
-
-              <div style={{ overflow: "hidden", marginBottom: "clamp(22px, 2.4vw, 32px)" }}>
+              <div style={{ overflow: "hidden", marginBottom: "clamp(24px, 2.6vw, 36px)" }}>
                 <motion.h1
                   initial={{ y: "110%" }} animate={{ y: 0 }}
-                  transition={{ delay: 0.15, duration: 1.0, ease: [0.25, 1, 0.4, 1] }}
+                  transition={{ delay: 0.1, duration: 1.0, ease: [0.25, 1, 0.4, 1] }}
                   style={{
                     fontFamily: serif, fontWeight: 700,
-                    fontSize: "clamp(60px, 8.5vw, 124px)",
+                    fontSize: "clamp(52px, 7.6vw, 112px)",
                     color: "var(--text-primary)",
-                    letterSpacing: "-0.055em", lineHeight: 0.9,
-                    margin: 0,
+                    letterSpacing: "-0.055em", lineHeight: 0.92,
+                    margin: 0, whiteSpace: "nowrap",
                   }}
                 >
                   LocalLift<span style={{ color: ll.primary, fontStyle: "italic" }}>.</span>
                 </motion.h1>
               </div>
-
               <motion.p
                 initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5, duration: 0.7 }}
+                transition={{ delay: 0.45, duration: 0.7 }}
                 style={{
                   fontFamily: serif, fontStyle: "italic",
                   fontSize: "clamp(18px, 1.7vw, 24px)",
                   color: "var(--text-secondary)",
-                  lineHeight: 1.5, maxWidth: 520,
-                  marginBottom: "clamp(28px, 3vw, 40px)",
+                  lineHeight: 1.5, maxWidth: 500,
+                  marginBottom: "clamp(34px, 4.5vw, 52px)",
                   letterSpacing: "-0.01em",
                 }}
               >
@@ -1887,18 +1832,12 @@ export default function LocalLiftCase() {
                 <span style={{ color: ll.primary }}> the digital economy </span>
                 they're supposed to already live in.
               </motion.p>
-
-              {/* Meta - 2x2 grid */}
+              {/* Meta - airy 2-column */}
               <motion.div
-                initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8, duration: 0.6 }}
+                initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7, duration: 0.6 }}
                 style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-                  columnGap: "clamp(20px, 3vw, 40px)",
-                  rowGap: 22,
-                  borderTop: `1px solid ${ll.line}`,
-                  paddingTop: 24,
-                  maxWidth: 460,
+                  maxWidth: 440, display: "grid", gridTemplateColumns: "auto auto",
+                  justifyContent: "start", columnGap: "clamp(44px, 6vw, 84px)", rowGap: "clamp(24px, 3vw, 32px)",
                 }}
               >
                 {([
@@ -1907,49 +1846,18 @@ export default function LocalLiftCase() {
                   { label: "Timeline", value: "10 weeks" },
                   { label: "Team",     value: "5 members" },
                 ] as { label: string; value: string }[]).map((m) => (
-                  <div key={m.label} style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                    <span style={{ ...mono, fontSize: 13, color: "var(--text-secondary)", letterSpacing: "0.2em", fontWeight: 600 }}>
-                      {m.label}
-                    </span>
-                    <span style={{ fontFamily: sans, fontSize: 19, fontWeight: 500, color: "var(--text-primary)" }}>
-                      {m.value}
-                    </span>
+                  <div key={m.label}>
+                    <div style={{ ...mono, fontSize: 10.5, fontWeight: 600, letterSpacing: "0.18em", color: ll.muted, marginBottom: 9 }}>{m.label}</div>
+                    <div style={{ fontFamily: sans, fontSize: "clamp(17px, 1.5vw, 20px)", fontWeight: 600, lineHeight: 1.15, letterSpacing: "-0.01em", color: "var(--text-primary)" }}>{m.value}</div>
                   </div>
                 ))}
               </motion.div>
             </motion.div>
 
-            {/* RIGHT - phones */}
+            {/* RIGHT - phone mockups */}
             <HeroMockup />
           </div>
         </div>
-
-        {/* Scroll cue */}
-        <motion.div
-          initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2, duration: 0.6 }}
-          className="max-w-7xl mx-auto px-6 md:px-10"
-          style={{
-            width: "100%", flexShrink: 0,
-            display: "flex", justifyContent: "center", alignItems: "center",
-            paddingBottom: "clamp(14px, 1.6vw, 22px)",
-            position: "relative", zIndex: 1,
-          }}
-        >
-          <motion.div
-            animate={{ y: [0, 5, 0] }}
-            transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-            style={{
-              display: "inline-flex", alignItems: "center", gap: 10,
-              ...mono, fontSize: 10, letterSpacing: "0.22em",
-              color: "var(--text-secondary)",
-            }}
-          >
-            Scroll
-            <svg width="12" height="12" viewBox="0 0 16 16" fill="none">
-              <path d="M8 3v10M4 9l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </motion.div>
-        </motion.div>
       </section>
 
       {/* ─── 01 · CONTEXT ─────────────────────────────────────── */}
@@ -1985,12 +1893,8 @@ export default function LocalLiftCase() {
       </section>
 
       {/* ─── 02 · PROBLEM ─────────────────────────────────────── */}
-      <section style={{
-        padding: SECTION_PAD,
-        ...gridSurface,
-        borderTop: `1px solid ${ll.line}`,
-        borderBottom: `1px solid ${ll.line}`,
-      }}>
+      <section className="ll-liquid-section" style={{ padding: SECTION_PAD }}>
+        <LiquidBackground c0="eaeef7" c1="d6dcec" c2="aeb8d4" fade={0} lift={0.28} grain={0.055} speed={0.1} />
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <SectionHeader
             num="02"
@@ -2272,12 +2176,8 @@ export default function LocalLiftCase() {
       </section>
 
       {/* ─── 06 · HIFI FINAL DESIGN ──────────────────────── */}
-      <section style={{
-        padding: SECTION_PAD,
-        ...gridSurface,
-        borderTop: `1px solid ${ll.line}`,
-        borderBottom: `1px solid ${ll.line}`,
-      }}>
+      <section className="ll-liquid-section" style={{ padding: SECTION_PAD }}>
+        <LiquidBackground c0="eaeef7" c1="d6dcec" c2="aeb8d4" fade={0} lift={0.28} grain={0.055} speed={0.1} />
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <SectionHeader
             num="06"

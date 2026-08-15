@@ -137,6 +137,15 @@ html {
 }
 .arko-liquid-section > div { position: relative; z-index: 1; }
 
+/* ── LocalLift alternating liquid-indigo sections (mirrors .vf-liquid-section) ── */
+.ll-liquid-section {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: linear-gradient(180deg, var(--bg-primary) 0%, #e9edf7 16%, #e9edf7 84%, var(--bg-primary) 100%);
+}
+.ll-liquid-section > div { position: relative; z-index: 1; }
+
 /* ── Hero Cursor ────────────────────────────────────────────────── */
 .hero-canvas {
   cursor: none;
