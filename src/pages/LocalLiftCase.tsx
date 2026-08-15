@@ -1103,7 +1103,6 @@ function PersonasSection() {
           num="04"
           phase="Personas"
           title={<>Two owners,<span style={{ fontStyle: "italic", color: ll.primary }}> one shared platform.</span></>}
-          meta="Synthesis"
           accent={ll.primary}
         />
 
@@ -1717,8 +1716,6 @@ function ReflectionStepper() {
 ══════════════════════════════════════════════════════════════════ */
 export default function LocalLiftCase() {
   const otherProjects = projects.filter((p) => p.slug !== "locallift").slice(0, 2);
-  const { scrollYProgress } = useScroll();
-  const scaleX = useSpring(scrollYProgress, { stiffness: 200, damping: 30, restDelta: 0.001 });
   const [showTop, setShowTop] = useState(false);
 
   // Subtle parallax on hero copy
@@ -1739,17 +1736,6 @@ export default function LocalLiftCase() {
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
       transition={{ duration: 0.4 }}
     >
-      {/* Scroll progress */}
-      <div style={{
-        position: "fixed", top: 56, left: 0, right: 0, height: 2,
-        background: "transparent", zIndex: 49,
-      }}>
-        <motion.div style={{
-          height: "100%", background: ll.primary,
-          scaleX, transformOrigin: "left", opacity: 0.9,
-        }} />
-      </div>
-
       {/* ══════════════════════════════════════════════════════════════
           00 · HERO - three-phone mockup stage
       ══════════════════════════════════════════════════════════════ */}
@@ -1870,7 +1856,6 @@ export default function LocalLiftCase() {
             num="01"
             phase="Context"
             title={<>A mentorship platform,<span style={{ fontStyle: "italic", color: ll.primary }}> grounded in real owners across two markets.</span></>}
-            meta="Setup"
             accent={ll.primary}
           />
 
@@ -1900,7 +1885,6 @@ export default function LocalLiftCase() {
             num="02"
             phase="The gap"
             title={<>Digital tools were built for scale.<br /><span style={{ fontStyle: "italic", color: ll.primary }}>Most small businesses are built for survival.</span></>}
-            meta="Problem"
             accent={ll.primary}
           />
 
@@ -1969,7 +1953,6 @@ export default function LocalLiftCase() {
             num="03"
             phase="Research"
             title={<>A cross-cultural study,<span style={{ fontStyle: "italic", color: ll.primary }}> shaped in partnership with local voices.</span></>}
-            meta="Method + synthesis"
             accent={ll.primary}
           />
 
@@ -2120,7 +2103,6 @@ export default function LocalLiftCase() {
             num="05"
             phase="Lo-fi exploration"
             title={<>Start in greyscale.<span style={{ fontStyle: "italic", color: ll.primary }}> Test structure before style.</span></>}
-            meta="Wireframes"
             accent={ll.primary}
           />
 
@@ -2183,7 +2165,6 @@ export default function LocalLiftCase() {
             num="06"
             phase="Final design"
             title={<>A quiet UI for a loud week.<span style={{ fontStyle: "italic", color: ll.primary }}> Calm indigo, clear hierarchy, one action at a time.</span></>}
-            meta="Hi-fi UI"
             accent={ll.primary}
           />
 
@@ -2256,7 +2237,6 @@ export default function LocalLiftCase() {
             num="07"
             phase="Iterations"
             title={<>Three rounds, three<span style={{ fontStyle: "italic", color: ll.primary }}> targeted changes.</span></>}
-            meta="Usability rounds"
             accent={ll.primary}
           />
 
@@ -2413,9 +2393,6 @@ export default function LocalLiftCase() {
               <span style={{ ...mono, fontSize: 13, color: "#FFFFFF", letterSpacing: "0.24em", fontWeight: 600 }}>
                 Outcomes
               </span>
-              <span style={{ ...mono, fontSize: 12, color: "rgba(255,255,255,0.55)", letterSpacing: "0.22em", marginLeft: "auto" }}>
-                Measured impact
-              </span>
             </div>
             <div style={{ height: 1, background: "rgba(255,255,255,0.3)" }} />
           </div>
@@ -2513,7 +2490,6 @@ export default function LocalLiftCase() {
             num="09"
             phase="Reflection"
             title={<>A platform<span style={{ fontStyle: "italic", color: ll.primary }}> isn't a tool. It's a community the tool keeps open.</span></>}
-            meta="Takeaways"
             accent={ll.primary}
           />
 
@@ -2523,16 +2499,6 @@ export default function LocalLiftCase() {
                 <p style={{ ...t.bodyLg, maxWidth: 640 }}>
                   The strongest thing this project left me with was a quiet reframe: stop designing around
                   the feature and start designing around the owner's week.
-                </p>
-              </Reveal>
-            </div>
-            <div className="lg:col-span-3">
-              <Reveal delay={0.16}>
-                <p style={{
-                  ...mono, fontSize: 11, letterSpacing: "0.22em",
-                  color: ll.muted, fontWeight: 700, textAlign: "right",
-                }}>
-                  04 LESSONS<br />ONE STUDY
                 </p>
               </Reveal>
             </div>
