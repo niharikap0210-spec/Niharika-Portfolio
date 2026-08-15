@@ -1999,27 +1999,38 @@ export default function LocalLiftCase() {
               { num: "V·04", finding: "Local context beats generic",           quote: "I need insights relevant to my city and industry, not generic business tips." },
             ] as { num: string; finding: string; quote: string }[]).map((v, i) => (
               <Reveal key={i} delay={0.05 + i * 0.06}>
-                <figure style={{
-                  height: "100%",
-                  display: "flex", flexDirection: "column", gap: 20, margin: 0,
-                }}>
-                  <span aria-hidden style={{ width: 28, height: 2, background: ll.primary, display: "block", flexShrink: 0 }} />
+                <motion.figure
+                  whileHover={{ y: -3, boxShadow: "0 2px 4px rgba(30,42,69,0.06), 0 22px 46px -16px rgba(30,42,69,0.22)" }}
+                  transition={{ type: "spring", stiffness: 260, damping: 24 }}
+                  style={{
+                    background: ll.surface,
+                    borderRadius: 16,
+                    padding: "clamp(26px, 2.4vw, 32px)",
+                    height: "100%",
+                    display: "flex", flexDirection: "column", margin: 0,
+                    boxShadow: "0 1px 2px rgba(30,42,69,0.05), 0 10px 24px -14px rgba(30,42,69,0.12)",
+                  }}
+                >
                   <blockquote style={{
-                    fontFamily: serif, fontStyle: "italic",
-                    fontSize: "clamp(18px, 1.4vw, 21px)",
+                    fontFamily: sans, fontWeight: 500,
+                    fontSize: "clamp(19px, 1.45vw, 22px)",
                     color: "var(--text-primary)",
                     lineHeight: 1.5, letterSpacing: "-0.01em",
                     margin: 0, flex: 1,
                   }}>
                     {v.quote}
                   </blockquote>
-                  <figcaption style={{
-                    fontFamily: sans, fontSize: 14.5, fontWeight: 600,
-                    color: ll.primary, letterSpacing: "-0.005em", lineHeight: 1.45,
-                  }}>
-                    {v.finding}
+                  <div style={{ height: 1, background: "rgba(59,79,123,0.16)", marginTop: 22 }} />
+                  <figcaption style={{ display: "flex", alignItems: "flex-start", gap: 11, marginTop: 16 }}>
+                    <span aria-hidden style={{ width: 6, height: 6, borderRadius: "50%", background: ll.primary, flexShrink: 0, marginTop: 7 }} />
+                    <span style={{
+                      fontFamily: sans, fontSize: 15, fontWeight: 600,
+                      color: ll.primary, letterSpacing: "-0.005em", lineHeight: 1.45,
+                    }}>
+                      {v.finding}
+                    </span>
                   </figcaption>
-                </figure>
+                </motion.figure>
               </Reveal>
             ))}
           </div>
