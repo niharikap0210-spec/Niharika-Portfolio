@@ -6,6 +6,8 @@ import { ClockIcon as Clock, QuotesIcon as Quotes, DeviceMobileCameraIcon as Dev
 import { projects, type Project } from "../data/projects";
 import { ProjectHeroStage } from "../components/ProjectHeroStage";
 import { SectionHeader, CASE_H2 } from "../components/CaseSectionHeader";
+import { GradientBackground } from "../components/GradientBackground";
+import LiquidBackground from "../components/LiquidBackground";
 
 /* ── Arko brand palette (scoped to this page only) ─────────────── */
 const arko = {
@@ -2080,12 +2082,12 @@ export default function ArkoCase() {
   return (
     <motion.div
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-      transition={{ duration: 0.4 }} className="pt-14"
+      transition={{ duration: 0.4 }}
     >
       {/* Scroll progress */}
       <div style={{
         position: "fixed", top: 56, left: 0, right: 0, height: 2,
-        background: "var(--bg-primary)", zIndex: 49,
+        background: "transparent", zIndex: 49,
       }}>
         <motion.div style={{
           height: "100%", background: arko.primary,
@@ -2096,64 +2098,47 @@ export default function ArkoCase() {
       {/* ══════════════════════════════════════════════════════════════
           00 · HERO - editorial monograph cover
       ══════════════════════════════════════════════════════════════ */}
-      <section className="blueprint-grid" style={{
+      <section className="arko-hero-section" style={{
         position: "relative",
-        height: isMobile ? "auto" : "calc(var(--vh, 1vh) * 100 - 56px)",
-        minHeight: isMobile ? 0 : 640,
+        isolation: "isolate",
+        minHeight: isMobile ? 0 : "calc(var(--vh, 1vh) * 100)",
         display: "flex",
         flexDirection: "column",
+        justifyContent: "center",
         overflow: isMobile ? "visible" : "hidden",
-        paddingBottom: isMobile ? "clamp(40px, 6vw, 64px)" : 0,
+        background: "var(--bg-primary)",
+        paddingTop: "clamp(96px, 10vw, 128px)",
+        paddingBottom: "clamp(40px, 6vw, 72px)",
       }}>
-        {/* Top bar - back link + tag strip */}
-        <motion.div
-          initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.05, duration: 0.5 }}
-          className="max-w-7xl mx-auto px-6 md:px-10"
-          style={{
-            width: "100%", flexShrink: 0,
-            display: "flex", justifyContent: "space-between", alignItems: "center",
-            paddingTop: "clamp(16px, 2vw, 24px)",
-            paddingBottom: 14,
-            flexWrap: "wrap", gap: 16,
-            borderBottom: "1px solid var(--border)",
-          }}
-        >
-          <Link to="/#projects"
-            style={{
-              display: "inline-flex", alignItems: "center", gap: 10,
-              ...mono, fontSize: 11, letterSpacing: "0.22em",
-              color: "var(--text-secondary)", textDecoration: "none",
-              transitionProperty: "color", transitionDuration: "200ms",
-            }}
-            onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = arko.primary)}
-            onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = "var(--text-secondary)")}>
-            <svg width="14" height="14" viewBox="0 0 18 18" fill="none">
-              <path d="M14 9H3M6 5L2 9l4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-            Index
-          </Link>
-          <div style={{ display: "flex", gap: 20, flexWrap: "wrap", alignItems: "center" }}>
-            {["Product Design", "B2B SaaS", "Web + iOS", "AR · Spatial"].map((tag) => (
-              <span key={tag} style={{ ...mono, fontSize: 10, color: "var(--text-muted)", letterSpacing: "0.2em" }}>
-                {tag}
-              </span>
-            ))}
-          </div>
-        </motion.div>
+        {/* Olive noisy-gradient hero background */}
+        <GradientBackground
+          gradientType="radial-gradient"
+          gradientSize="150% 130%"
+          gradientOrigin="top-middle"
+          colors={[
+            { color: "rgba(110,143,78,0.20)", stop: "0%" },
+            { color: "rgba(139,173,106,0.12)", stop: "34%" },
+            { color: "rgba(174,197,140,0.07)", stop: "62%" },
+            { color: "rgba(240,244,232,0)", stop: "100%" },
+          ]}
+          noisePatternAlpha={26}
+          noiseIntensity={1}
+          noisePatternRefreshInterval={1}
+          noisePatternSize={100}
+          style={{ zIndex: 0 }}
+        />
+        {/* Dotted grid overlay */}
+        <div aria-hidden style={{
+          position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none",
+          backgroundImage: "radial-gradient(circle, rgba(79,107,53,0.07) 1px, transparent 1.5px)",
+          backgroundSize: "23px 23px",
+          backgroundPosition: "-11px -11px",
+          WebkitMaskImage: "linear-gradient(to bottom, #000 60%, transparent 100%)",
+          maskImage: "linear-gradient(to bottom, #000 60%, transparent 100%)",
+        }} />
 
-        {/* Hero body - 2-column: text left, laptop right, all in viewport */}
-        <div
-          className="max-w-7xl mx-auto px-6 md:px-10"
-          style={{
-            flex: 1, width: "100%", minHeight: 0,
-            display: "grid",
-            gridTemplateColumns: "minmax(0, 1fr)",
-            gap: "clamp(24px, 3vw, 40px)",
-            alignItems: "center",
-            paddingTop: "clamp(20px, 2.4vw, 32px)",
-            paddingBottom: "clamp(16px, 2vw, 24px)",
-          }}
-        >
+        {/* Hero body - 2-column: text left, mockups right */}
+        <div className="max-w-7xl mx-auto px-6 md:px-10" style={{ position: "relative", zIndex: 1, width: "100%" }}>
           <div
             className="grid grid-cols-1 md:grid-cols-12"
             style={{
@@ -2162,30 +2147,18 @@ export default function ArkoCase() {
               width: "100%",
             }}
           >
-            {/* LEFT - title, subtitle */}
+            {/* LEFT - title, subtitle, meta */}
             <div className="md:col-span-5" style={{ minWidth: 0 }}>
-              <motion.div
-                initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1, duration: 0.6 }}
-                style={{ display: "flex", justifyContent: "space-between", marginBottom: 18, maxWidth: 460 }}
-              >
-                <span style={{ ...mono, fontSize: 11, color: arko.primary, letterSpacing: "0.22em", fontWeight: 700 }}>
-                  Case Study · 01
-                </span>
-                <span style={{ ...mono, fontSize: 11, color: "var(--text-muted)", letterSpacing: "0.22em" }}>
-                  2025
-                </span>
-              </motion.div>
-
               <div style={{ overflow: "hidden", marginBottom: "clamp(24px, 2.6vw, 36px)" }}>
                 <motion.h1
                   initial={{ y: "110%" }} animate={{ y: 0 }}
                   transition={{ delay: 0.15, duration: 1.0, ease: [0.25, 1, 0.4, 1] }}
                   style={{
                     fontFamily: serif, fontWeight: 700,
-                    fontSize: "clamp(64px, 9.5vw, 140px)",
+                    fontSize: "clamp(52px, 7.6vw, 112px)",
                     color: "var(--text-primary)",
-                    letterSpacing: "-0.055em", lineHeight: 0.9,
-                    margin: 0,
+                    letterSpacing: "-0.055em", lineHeight: 0.92,
+                    margin: 0, whiteSpace: "nowrap",
                   }}>
                   Arko<span style={{ color: arko.primary, fontStyle: "italic" }}>.</span>
                 </motion.h1>
@@ -2193,13 +2166,13 @@ export default function ArkoCase() {
 
               <motion.p
                 initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5, duration: 0.7 }}
+                transition={{ delay: 0.45, duration: 0.7 }}
                 style={{
                   fontFamily: serif, fontStyle: "italic",
                   fontSize: "clamp(18px, 1.7vw, 24px)",
                   color: "var(--text-secondary)",
-                  lineHeight: 1.5, maxWidth: 520,
-                  marginBottom: "clamp(32px, 3.4vw, 48px)",
+                  lineHeight: 1.5, maxWidth: 500,
+                  marginBottom: "clamp(34px, 4.5vw, 52px)",
                   letterSpacing: "-0.01em",
                 }}
               >
@@ -2208,32 +2181,27 @@ export default function ArkoCase() {
                 in one closed loop.
               </motion.p>
 
-              {/* Meta row - compact, below subtitle */}
+              {/* Meta - airy 2-column */}
               <motion.div
-                initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8, duration: 0.6 }}
+                initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7, duration: 0.6 }}
                 style={{
+                  maxWidth: 440,
                   display: "grid",
-                  gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-                  columnGap: "clamp(20px, 3vw, 40px)",
-                  rowGap: 22,
-                  borderTop: "1px solid var(--border)",
-                  paddingTop: 24,
-                  maxWidth: 460,
+                  gridTemplateColumns: "auto auto",
+                  justifyContent: "start",
+                  columnGap: "clamp(44px, 6vw, 84px)",
+                  rowGap: "clamp(24px, 3vw, 32px)",
                 }}
               >
                 {([
                   { label: "Role",     value: "Product Designer" },
-                  { label: "Platform", value: "Web + iOS" },
+                  { label: "Platform", value: "Web · iOS" },
                   { label: "Timeline", value: "14 weeks" },
                   { label: "Tools",    value: "Figma · Framer" },
                 ] as { label: string; value: string }[]).map((m) => (
-                  <div key={m.label} style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                    <span style={{ ...mono, fontSize: 13, color: "var(--text-secondary)", letterSpacing: "0.2em", fontWeight: 600 }}>
-                      {m.label}
-                    </span>
-                    <span style={{ fontFamily: sans, fontSize: 19, fontWeight: 500, color: "var(--text-primary)" }}>
-                      {m.value}
-                    </span>
+                  <div key={m.label}>
+                    <div style={{ ...mono, fontSize: 10.5, fontWeight: 600, letterSpacing: "0.18em", color: arko.muted, marginBottom: 9 }}>{m.label}</div>
+                    <div style={{ fontFamily: sans, fontSize: "clamp(17px, 1.5vw, 20px)", fontWeight: 600, lineHeight: 1.15, letterSpacing: "-0.01em", color: "var(--text-primary)" }}>{m.value}</div>
                   </div>
                 ))}
               </motion.div>
@@ -2320,32 +2288,6 @@ export default function ArkoCase() {
             </motion.div>
           </div>
         </div>
-
-        {/* Scroll cue - bottom strip */}
-        <motion.div
-          initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.1, duration: 0.6 }}
-          className="max-w-7xl mx-auto px-6 md:px-10"
-          style={{
-            width: "100%", flexShrink: 0,
-            display: "flex", justifyContent: "center", alignItems: "center",
-            paddingBottom: "clamp(14px, 1.6vw, 22px)",
-          }}
-        >
-          <motion.div
-            animate={{ y: [0, 5, 0] }}
-            transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-            style={{
-              display: "inline-flex", alignItems: "center", gap: 10,
-              ...mono, fontSize: 10, letterSpacing: "0.22em",
-              color: "var(--text-secondary)",
-            }}
-          >
-            Scroll
-            <svg width="12" height="12" viewBox="0 0 16 16" fill="none">
-              <path d="M8 3v10M4 9l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </motion.div>
-        </motion.div>
       </section>
 
       {/* ══════════════════════════════════════════════════════════════
@@ -2530,7 +2472,8 @@ export default function ArkoCase() {
       {/* ══════════════════════════════════════════════════════════════
           02 · CONTEXT - the broken workflow
       ══════════════════════════════════════════════════════════════ */}
-      <section className="blueprint-grid-subtle" style={{ padding: SECTION_PAD }}>
+      <section className="arko-liquid-section" style={{ padding: SECTION_PAD }}>
+        <LiquidBackground c0="eef3e3" c1="dce8c6" c2="bfd49c" fade={0} lift={0.28} grain={0.055} speed={0.1} />
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <Reveal>
             <SectionHeader
@@ -2626,7 +2569,8 @@ export default function ArkoCase() {
       {/* ══════════════════════════════════════════════════════════════
           05 · WORKSPACE · WEB - desk-side platform for the designer
       ══════════════════════════════════════════════════════════════ */}
-      <section className="blueprint-grid" style={{ padding: SECTION_PAD }}>
+      <section className="arko-liquid-section" style={{ padding: SECTION_PAD }}>
+        <LiquidBackground c0="eef3e3" c1="dce8c6" c2="bfd49c" fade={0} lift={0.28} grain={0.055} speed={0.1} />
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <Reveal>
             <SectionHeader
@@ -2663,7 +2607,7 @@ export default function ArkoCase() {
       {/* ══════════════════════════════════════════════════════════════
           06 · CAPTURE · iOS - scan flow + AR editor
       ══════════════════════════════════════════════════════════════ */}
-      <section style={{ padding: SECTION_PAD, background: "var(--bg-secondary)" }}>
+      <section style={{ padding: SECTION_PAD, background: "var(--bg-primary)" }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <Reveal>
             <SectionHeader
@@ -2941,7 +2885,8 @@ export default function ArkoCase() {
       {/* ══════════════════════════════════════════════════════════════
           09 · OUTCOMES
       ══════════════════════════════════════════════════════════════ */}
-      <section className="blueprint-grid-subtle" style={{ padding: SECTION_PAD }}>
+      <section className="arko-liquid-section" style={{ padding: SECTION_PAD }}>
+        <LiquidBackground c0="eef3e3" c1="dce8c6" c2="bfd49c" fade={0} lift={0.28} grain={0.055} speed={0.1} />
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <Reveal>
             <SectionHeader

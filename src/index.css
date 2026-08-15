@@ -127,6 +127,16 @@ html {
 }
 .vf-liquid-section > div { position: relative; z-index: 1; }
 
+/* ── Arko alternating liquid-green sections (mirrors .vf-liquid-section) ── */
+.arko-liquid-section {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  /* Fallback olive tint behind the semi-transparent liquid canvas */
+  background: linear-gradient(180deg, var(--bg-primary) 0%, #eef3e3 16%, #eef3e3 84%, var(--bg-primary) 100%);
+}
+.arko-liquid-section > div { position: relative; z-index: 1; }
+
 /* ── Hero Cursor ────────────────────────────────────────────────── */
 .hero-canvas {
   cursor: none;
