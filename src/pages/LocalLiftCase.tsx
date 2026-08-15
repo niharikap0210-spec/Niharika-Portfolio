@@ -51,7 +51,7 @@ const sans  = "'Manrope', system-ui, sans-serif";
 
 const t = {
   eyebrow: {
-    ...mono, fontSize: 11, letterSpacing: "0.22em",
+    ...mono, fontSize: 13.5, letterSpacing: "0.22em",
     color: ll.primary, fontWeight: 700,
   } as React.CSSProperties,
   h2: {
