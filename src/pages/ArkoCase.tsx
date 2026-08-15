@@ -902,15 +902,15 @@ function ResearchLedger() {
               </p>
               {/* Method */}
               <p style={{
-                fontFamily: sans, fontSize: "clamp(16px, 1.15vw, 18px)",
+                fontFamily: sans, fontSize: "clamp(18px, 1.5vw, 22px)",
                 color: "var(--text-primary)", fontWeight: 600,
-                letterSpacing: "-0.01em", marginBottom: 8,
+                letterSpacing: "-0.01em", marginBottom: 10,
               }}>
                 {m.unit}
               </p>
               {/* Sub */}
               <p style={{
-                fontFamily: sans, fontSize: "clamp(14px, 1vw, 15px)",
+                fontFamily: sans, fontSize: "clamp(15px, 1.2vw, 17px)",
                 color: "var(--text-secondary)", lineHeight: 1.55,
               }}>
                 {m.sub}
