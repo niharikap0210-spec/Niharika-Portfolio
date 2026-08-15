@@ -1999,41 +1999,27 @@ export default function LocalLiftCase() {
               { num: "V·04", finding: "Local context beats generic",           quote: "I need insights relevant to my city and industry, not generic business tips." },
             ] as { num: string; finding: string; quote: string }[]).map((v, i) => (
               <Reveal key={i} delay={0.05 + i * 0.06}>
-                <motion.figure
-                  whileHover={{ y: -4 }}
-                  transition={{ type: "spring", stiffness: 240, damping: 22 }}
-                  style={{
-                    background: "#FFFFFF",
-                    border: `1px solid ${ll.line}`,
-                    padding: "28px 26px 24px",
-                    height: "100%",
-                    display: "flex", flexDirection: "column",
-                    gap: 16, margin: 0,
-                  }}
-                >
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                    <span aria-hidden style={{
-                      fontFamily: serif, fontStyle: "italic", fontSize: 42,
-                      color: ll.primary, opacity: 0.22, lineHeight: 0.6,
-                    }}>"</span>
-                  </div>
+                <figure style={{
+                  height: "100%",
+                  display: "flex", flexDirection: "column", gap: 20, margin: 0,
+                }}>
+                  <span aria-hidden style={{ width: 28, height: 2, background: ll.primary, display: "block", flexShrink: 0 }} />
                   <blockquote style={{
                     fontFamily: serif, fontStyle: "italic",
                     fontSize: "clamp(18px, 1.4vw, 21px)",
                     color: "var(--text-primary)",
-                    lineHeight: 1.45, letterSpacing: "-0.01em",
+                    lineHeight: 1.5, letterSpacing: "-0.01em",
                     margin: 0, flex: 1,
                   }}>
                     {v.quote}
                   </blockquote>
                   <figcaption style={{
-                    ...mono, fontSize: 9.5, letterSpacing: "0.22em",
-                    color: ll.muted, fontWeight: 700,
-                    paddingTop: 16, borderTop: `1px solid ${ll.line}`,
+                    fontFamily: sans, fontSize: 14.5, fontWeight: 600,
+                    color: ll.primary, letterSpacing: "-0.005em", lineHeight: 1.45,
                   }}>
-                    FINDING · {v.finding}
+                    {v.finding}
                   </figcaption>
-                </motion.figure>
+                </figure>
               </Reveal>
             ))}
           </div>
