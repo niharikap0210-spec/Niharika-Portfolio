@@ -1775,17 +1775,6 @@ function ArEditorStepper({
                   transition={{ duration: 0.4, ease: [0.25, 1, 0.4, 1] }}
                 />
               )}
-              <span
-                style={{
-                  ...mono,
-                  fontSize: 14,
-                  color: isActive ? arko.primary : "var(--text-muted)",
-                  letterSpacing: "0.2em",
-                  fontWeight: 600,
-                }}
-              >
-                {s.num}
-              </span>
               <span style={{ display: "inline-flex", alignItems: isMobile ? "flex-start" : "center", gap: isMobile ? 10 : 14, minWidth: 0 }}>
                 {StepIcon && (
                   <StepIcon
