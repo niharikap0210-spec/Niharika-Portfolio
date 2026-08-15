@@ -427,7 +427,7 @@ function WebGallery({
 
   const tabs = screens.map((s) => {
     const parts = s.label.split(" · ");
-    return { fig: parts[0] ?? "", name: parts[1] ?? "", tail: parts.slice(2).join(" · "), Icon: s.Icon };
+    return { name: parts[0] ?? "", tail: parts.slice(1).join(" · "), Icon: s.Icon };
   });
 
   const slugFor = (name: string) => name.toLowerCase().replace(/\s+/g, "-");
@@ -495,17 +495,6 @@ function WebGallery({
                   transition={{ duration: 0.4, ease: [0.25, 1, 0.4, 1] }}
                 />
               )}
-              <span
-                style={{
-                  ...mono,
-                  fontSize: isMobile ? 10 : 13,
-                  color: isActive ? arko.primary : "var(--text-muted)",
-                  letterSpacing: "0.2em",
-                  fontWeight: 600,
-                }}
-              >
-                {tab.fig}
-              </span>
               <span style={{ display: "inline-flex", alignItems: "center", gap: isMobile ? 8 : 12, minWidth: 0 }}>
                 {TabIcon && (
                   <TabIcon
@@ -599,7 +588,7 @@ function WebGallery({
               {host}
             </span>
           </div>
-          {/* Right meta */}
+          {/* Right meta — live status dot */}
           <span
             aria-hidden
             style={{
@@ -615,7 +604,7 @@ function WebGallery({
             }}
           >
             <span style={{ width: 6, height: 6, borderRadius: "50%", background: arko.primary }} />
-            {tabs[active].fig}
+            Live
           </span>
         </div>
 
@@ -644,7 +633,7 @@ function WebGallery({
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.25, ease: [0.25, 1, 0.4, 1] }}
-          style={{ ...caption, fontSize: "clamp(16px, 1.2vw, 19px)", textAlign: "center", marginTop: 22 }}
+          style={{ ...caption, fontSize: "clamp(16px, 1.2vw, 19px)", color: "var(--text-secondary)", textAlign: "center", marginTop: 22 }}
         >
           {current.label}
         </motion.p>
@@ -2543,10 +2532,10 @@ export default function ArkoCase() {
 
           <Reveal delay={0.1}>
             <WebGallery screens={[
-              { src: "/arko/web-3.png", label: "Fig. 06.1 · Dashboard · active projects, team stats, pending approvals", Icon: SquaresFour },
-              { src: "/arko/web-4.png", label: "Fig. 06.2 · All Projects · filter by status, search, quick access", Icon: FolderOpen },
-              { src: "/arko/web-5.png", label: "Fig. 06.3 · Project Detail · rooms, progress bars, live activity log", Icon: ClipboardText },
-              { src: "/arko/web-6.png", label: "Fig. 06.4 · Comments view · client feedback pinned in context", Icon: ChatCircleDots },
+              { src: "/arko/web-3.png", label: "Dashboard · active projects, team stats, and pending approvals at a glance", Icon: SquaresFour },
+              { src: "/arko/web-4.png", label: "All Projects · filter by status, search, and jump to any space", Icon: FolderOpen },
+              { src: "/arko/web-5.png", label: "Project Detail · rooms, progress bars, and a live activity log", Icon: ClipboardText },
+              { src: "/arko/web-6.png", label: "Comments view · client feedback pinned in spatial context", Icon: ChatCircleDots },
             ]} />
           </Reveal>
         </div>
