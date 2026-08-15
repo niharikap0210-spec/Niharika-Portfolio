@@ -1203,7 +1203,7 @@ function ScanFlowStepper({
                       style={{
                         fontFamily: serif,
                         fontWeight: 700,
-                        fontSize: "clamp(18px, 1.7vw, 22px)",
+                        fontSize: "clamp(21px, 2vw, 26px)",
                         color: isActive ? "var(--text-primary)" : isDone ? "var(--text-secondary)" : "var(--text-muted)",
                         letterSpacing: "-0.02em",
                         lineHeight: 1.3,
@@ -1226,7 +1226,7 @@ function ScanFlowStepper({
                           <p
                             style={{
                               fontFamily: sans,
-                              fontSize: "clamp(16px, 1.2vw, 18px)",
+                              fontSize: "clamp(17px, 1.35vw, 20px)",
                               color: "var(--text-secondary)",
                               lineHeight: 1.7,
                               marginTop: 12,
@@ -2728,7 +2728,7 @@ export default function ArkoCase() {
                       viewport={{ once: true, margin: "-40px" }}
                       transition={{ delay: i * 0.07, duration: 0.5, ease: [0.25, 1, 0.4, 1] }}
                       style={{
-                        padding: isMobile ? "36px 18px" : "clamp(44px, 4vw, 56px) clamp(24px, 2.2vw, 34px) clamp(44px, 4vw, 56px) 0",
+                        padding: isMobile ? "36px 18px" : `clamp(44px, 4vw, 56px) clamp(24px, 2.2vw, 34px) clamp(44px, 4vw, 56px) ${i > 0 ? "clamp(30px, 2.6vw, 40px)" : "0"}`,
                         borderLeft: (isMobile ? isRightCol : i > 0) ? "1px solid rgba(79,107,53,0.17)" : "none",
                         borderTop: (isMobile && i >= 2) ? "1px solid rgba(79,107,53,0.17)" : "none",
                         minWidth: 0,
