@@ -33,6 +33,8 @@ import type { Icon } from "@phosphor-icons/react";
 import { projects, type Project } from "../data/projects";
 import { ProjectHeroStage } from "../components/ProjectHeroStage";
 import { SectionHeader, CASE_H2 } from "../components/CaseSectionHeader";
+import { GradientBackground } from "../components/GradientBackground";
+import LiquidBackground from "../components/LiquidBackground";
 
 /* ── Shelfie palette, scoped to this page ─────────────────────────── */
 const sh = {
@@ -1585,12 +1587,11 @@ export default function ShelfieCase() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.4 }}
-      className="pt-14"
     >
       {/* Scroll progress */}
       <div style={{
         position: "fixed", top: 56, left: 0, right: 0, height: 2,
-        background: "var(--bg-primary)", zIndex: 49,
+        background: "transparent", zIndex: 49,
       }}>
         <motion.div style={{
           height: "100%", background: sh.primary,
@@ -1603,120 +1604,70 @@ export default function ShelfieCase() {
       ══════════════════════════════════════════════════════════════ */}
       <section style={{
         position: "relative",
-        height: "calc(var(--vh, 1vh) * 100 - 56px)",
-        minHeight: 640,
-        display: "flex",
-        flexDirection: "column",
+        isolation: "isolate",
+        minHeight: "calc(var(--vh, 1vh) * 100)",
+        display: "flex", flexDirection: "column", justifyContent: "center",
         overflow: "hidden",
+        background: "var(--bg-primary)",
+        paddingTop: "clamp(96px, 10vw, 128px)",
+        paddingBottom: "clamp(40px, 6vw, 72px)",
       }}>
-        {/* Blueprint grid backdrop - fine 20px micro + 80px primary */}
+        {/* Teal noisy-gradient hero background */}
+        <GradientBackground
+          gradientType="radial-gradient"
+          gradientSize="150% 130%"
+          gradientOrigin="top-middle"
+          colors={[
+            { color: "rgba(31,95,92,0.20)", stop: "0%" },
+            { color: "rgba(74,137,133,0.12)", stop: "34%" },
+            { color: "rgba(120,175,170,0.07)", stop: "62%" },
+            { color: "rgba(232,241,239,0)", stop: "100%" },
+          ]}
+          noisePatternAlpha={26}
+          noiseIntensity={1}
+          noisePatternRefreshInterval={1}
+          noisePatternSize={100}
+          style={{ zIndex: 0 }}
+        />
+        {/* Dotted grid overlay */}
         <div aria-hidden style={{
           position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none",
-          backgroundImage: `
-            repeating-linear-gradient(0deg, ${sh.subtle} 0 1px, transparent 1px 20px),
-            repeating-linear-gradient(90deg, ${sh.subtle} 0 1px, transparent 1px 20px),
-            repeating-linear-gradient(0deg, ${sh.muted} 0 1px, transparent 1px 80px),
-            repeating-linear-gradient(90deg, ${sh.muted} 0 1px, transparent 1px 80px)
-          `,
-          opacity: 0.42,
-          maskImage: "radial-gradient(ellipse 80% 80% at 50% 45%, #000 40%, transparent 100%)",
-          WebkitMaskImage: "radial-gradient(ellipse 80% 80% at 50% 45%, #000 40%, transparent 100%)",
+          backgroundImage: "radial-gradient(circle, rgba(20,63,61,0.07) 1px, transparent 1.5px)",
+          backgroundSize: "23px 23px",
+          backgroundPosition: "-11px -11px",
+          WebkitMaskImage: "linear-gradient(to bottom, #000 60%, transparent 100%)",
+          maskImage: "linear-gradient(to bottom, #000 60%, transparent 100%)",
         }} />
-        {/* Top bar - back link + tag strip */}
-        <motion.div
-          initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.05, duration: 0.5 }}
-          className="max-w-7xl mx-auto px-6 md:px-10"
-          style={{
-            width: "100%", flexShrink: 0,
-            display: "flex", justifyContent: "space-between", alignItems: "center",
-            paddingTop: "clamp(16px, 2vw, 24px)",
-            paddingBottom: 14,
-            flexWrap: "wrap", gap: 16,
-            borderBottom: "1px solid var(--border)",
-            position: "relative", zIndex: 1,
-          }}
-        >
-          <Link to="/#projects"
-            style={{
-              display: "inline-flex", alignItems: "center", gap: 10,
-              ...mono, fontSize: 11, letterSpacing: "0.22em",
-              color: "var(--text-secondary)", textDecoration: "none",
-              transitionProperty: "color", transitionDuration: "200ms",
-            }}
-            onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = sh.primary)}
-            onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = "var(--text-secondary)")}>
-            <ArrowLeft size={14} weight="regular" />
-            Index
-          </Link>
-          <div style={{ display: "flex", gap: 20, flexWrap: "wrap", alignItems: "center" }}>
-            {["UX Research", "Field Study", "Packaging", "Consumer"].map((tag) => (
-              <span key={tag} style={{ ...mono, fontSize: 10, color: "var(--text-muted)", letterSpacing: "0.2em" }}>
-                {tag}
-              </span>
-            ))}
-          </div>
-        </motion.div>
 
-        {/* Hero body - 2-column: text left, specimen right, all in viewport */}
-        <div
-          className="max-w-7xl mx-auto px-6 md:px-10"
-          style={{
-            flex: 1, width: "100%", minHeight: 0,
-            display: "grid",
-            gridTemplateColumns: "minmax(0, 1fr)",
-            gap: "clamp(24px, 3vw, 40px)",
-            alignItems: "center",
-            paddingTop: "clamp(20px, 2.4vw, 32px)",
-            paddingBottom: "clamp(16px, 2vw, 24px)",
-            position: "relative", zIndex: 1,
-          }}
-        >
-          <div
-            className="grid grid-cols-1 md:grid-cols-12"
-            style={{
-              gap: "clamp(24px, 3vw, 48px)",
-              alignItems: "center",
-              width: "100%",
-            }}
-          >
-            {/* LEFT - title, subtitle, meta */}
+        {/* Hero body - 2-column: text left, visual right */}
+        <div className="max-w-7xl mx-auto px-6 md:px-10" style={{ position: "relative", zIndex: 1, width: "100%" }}>
+          <div className="grid grid-cols-1 md:grid-cols-12" style={{ gap: "clamp(32px, 4.5vw, 60px)", alignItems: "center", width: "100%" }}>
+            {/* LEFT - title, tagline, meta */}
             <div className="md:col-span-5" style={{ minWidth: 0 }}>
-              <motion.div
-                initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1, duration: 0.6 }}
-                style={{ display: "flex", justifyContent: "space-between", marginBottom: 18, maxWidth: 460 }}
-              >
-                <span style={{ ...mono, fontSize: 11, color: sh.primary, letterSpacing: "0.22em", fontWeight: 700 }}>
-                  Case Study · 03
-                </span>
-                <span style={{ ...mono, fontSize: 11, color: "var(--text-muted)", letterSpacing: "0.22em" }}>
-                  Consumer · 2023
-                </span>
-              </motion.div>
-
               <div style={{ overflow: "hidden", marginBottom: "clamp(24px, 2.6vw, 36px)" }}>
                 <motion.h1
                   initial={{ y: "110%" }} animate={{ y: 0 }}
-                  transition={{ delay: 0.15, duration: 1.0, ease: [0.25, 1, 0.4, 1] }}
+                  transition={{ delay: 0.1, duration: 1.0, ease: [0.25, 1, 0.4, 1] }}
                   style={{
                     fontFamily: serif, fontWeight: 700,
-                    fontSize: "clamp(64px, 9.5vw, 140px)",
+                    fontSize: "clamp(52px, 7.6vw, 112px)",
                     color: "var(--text-primary)",
-                    letterSpacing: "-0.055em", lineHeight: 0.9,
-                    margin: 0,
-                  }}>
+                    letterSpacing: "-0.055em", lineHeight: 0.92,
+                    margin: 0, whiteSpace: "nowrap",
+                  }}
+                >
                   Shelfie<span style={{ color: sh.primary, fontStyle: "italic" }}>.</span>
                 </motion.h1>
               </div>
-
               <motion.p
                 initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5, duration: 0.7 }}
+                transition={{ delay: 0.45, duration: 0.7 }}
                 style={{
                   fontFamily: serif, fontStyle: "italic",
                   fontSize: "clamp(18px, 1.7vw, 24px)",
                   color: "var(--text-secondary)",
-                  lineHeight: 1.5, maxWidth: 520,
-                  marginBottom: "clamp(28px, 3vw, 42px)",
+                  lineHeight: 1.5, maxWidth: 500,
+                  marginBottom: "clamp(34px, 4.5vw, 52px)",
                   letterSpacing: "-0.01em",
                 }}
               >
@@ -1724,18 +1675,12 @@ export default function ShelfieCase() {
                 <span style={{ color: sh.primary }}> the quiet safety signal </span>
                 nobody can read, get misread by nearly two-thirds of shoppers.
               </motion.p>
-
-              {/* Meta row - 2x2, compact, below subtitle */}
+              {/* Meta - airy 2-column */}
               <motion.div
-                initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8, duration: 0.6 }}
+                initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7, duration: 0.6 }}
                 style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-                  columnGap: "clamp(20px, 3vw, 40px)",
-                  rowGap: 22,
-                  borderTop: "1px solid var(--border)",
-                  paddingTop: 24,
-                  maxWidth: 460,
+                  maxWidth: 440, display: "grid", gridTemplateColumns: "auto auto",
+                  justifyContent: "start", columnGap: "clamp(44px, 6vw, 84px)", rowGap: "clamp(24px, 3vw, 32px)",
                 }}
               >
                 {([
@@ -1744,58 +1689,22 @@ export default function ShelfieCase() {
                   { label: "Timeline", value: "12 weeks" },
                   { label: "Sample",   value: "25 shoppers" },
                 ] as { label: string; value: string }[]).map((m) => (
-                  <div key={m.label} style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                    <span style={{ ...mono, fontSize: 13, color: "var(--text-secondary)", letterSpacing: "0.2em", fontWeight: 600 }}>
-                      {m.label}
-                    </span>
-                    <span style={{ fontFamily: sans, fontSize: 19, fontWeight: 500, color: "var(--text-primary)" }}>
-                      {m.value}
-                    </span>
+                  <div key={m.label}>
+                    <div style={{ ...mono, fontSize: 10.5, fontWeight: 600, letterSpacing: "0.18em", color: sh.muted, marginBottom: 9 }}>{m.label}</div>
+                    <div style={{ fontFamily: sans, fontSize: "clamp(17px, 1.5vw, 20px)", fontWeight: 600, lineHeight: 1.15, letterSpacing: "-0.01em", color: "var(--text-primary)" }}>{m.value}</div>
                   </div>
                 ))}
               </motion.div>
             </div>
 
-            {/* RIGHT - annotated specimen plate */}
+            {/* RIGHT - hero visual */}
             <HeroVisual />
           </div>
         </div>
-
-        {/* Scroll cue - bottom strip */}
-        <motion.div
-          initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.1, duration: 0.6 }}
-          className="max-w-7xl mx-auto px-6 md:px-10"
-          style={{
-            width: "100%", flexShrink: 0,
-            display: "flex", justifyContent: "center", alignItems: "center",
-            paddingBottom: "clamp(14px, 1.6vw, 22px)",
-            position: "relative", zIndex: 1,
-          }}
-        >
-          <motion.div
-            animate={{ y: [0, 5, 0] }}
-            transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-            style={{
-              display: "inline-flex", alignItems: "center", gap: 10,
-              ...mono, fontSize: 10, letterSpacing: "0.22em",
-              color: "var(--text-secondary)",
-            }}
-          >
-            Scroll
-            <svg width="12" height="12" viewBox="0 0 16 16" fill="none">
-              <path d="M8 3v10M4 9l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </motion.div>
-        </motion.div>
       </section>
 
       {/* ─── 01 PREMISE ───────────────────────────────────────────── */}
-      <section style={{
-        padding: SECTION_PAD,
-        background: sh.surface,
-        borderTop: "1px solid var(--border)",
-        borderBottom: "1px solid var(--border)",
-      }}>
+      <section style={{ padding: SECTION_PAD, background: "var(--bg-primary)" }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <SectionHeader
             num="01"
@@ -1999,7 +1908,8 @@ export default function ShelfieCase() {
       </section>
 
       {/* ─── 02 THE PROBLEM ON THE SHELF ──────────────────────────── */}
-      <section className="blueprint-grid-subtle" style={{ padding: SECTION_PAD }}>
+      <section className="sh-liquid-section" style={{ padding: SECTION_PAD }}>
+        <LiquidBackground c0="e8f1ef" c1="cee3df" c2="9ec8c2" fade={0} lift={0.28} grain={0.055} speed={0.1} />
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <SectionHeader
             num="02"
@@ -2029,11 +1939,7 @@ export default function ShelfieCase() {
       </section>
 
       {/* ─── 03 RESEARCH APPROACH ─────────────────────────────────── */}
-      <section style={{
-        padding: SECTION_PAD,
-        borderTop: "1px solid var(--border)",
-        borderBottom: "1px solid var(--border)",
-      }}>
+      <section style={{ padding: SECTION_PAD, background: "var(--bg-primary)" }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <SectionHeader
             num="03"
@@ -2106,7 +2012,8 @@ export default function ShelfieCase() {
       </section>
 
       {/* ─── 04 VOICES FROM THE AISLE ─────────────────────────────── */}
-      <section style={{ padding: SECTION_PAD, background: sh.surface }}>
+      <section className="sh-liquid-section" style={{ padding: SECTION_PAD }}>
+        <LiquidBackground c0="e8f1ef" c1="cee3df" c2="9ec8c2" fade={0} lift={0.28} grain={0.055} speed={0.1} />
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <SectionHeader
             num="04"
@@ -2183,7 +2090,7 @@ export default function ShelfieCase() {
       </section>
 
       {/* ─── 05 PRINCIPLES APPLIED ────────────────────────────────── */}
-      <section className="blueprint-grid-subtle" style={{ padding: SECTION_PAD }}>
+      <section style={{ padding: SECTION_PAD, background: "var(--bg-primary)" }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <SectionHeader
             num="05"
@@ -2277,12 +2184,8 @@ export default function ShelfieCase() {
       </section>
 
       {/* ─── 06 DESIGN SOLUTIONS ──────────────────────────────────── */}
-      <section style={{
-        padding: SECTION_PAD,
-        background: "var(--bg-secondary)",
-        borderTop: "1px solid var(--border)",
-        borderBottom: "1px solid var(--border)",
-      }}>
+      <section className="sh-liquid-section" style={{ padding: SECTION_PAD }}>
+        <LiquidBackground c0="e8f1ef" c1="cee3df" c2="9ec8c2" fade={0} lift={0.28} grain={0.055} speed={0.1} />
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <SectionHeader
             num="06"
@@ -2365,7 +2268,7 @@ export default function ShelfieCase() {
       </section>
 
       {/* ─── 07 OUTCOMES + TAKEAWAYS ──────────────────────────────── */}
-      <section className="blueprint-grid-subtle" style={{ padding: SECTION_PAD }}>
+      <section style={{ padding: SECTION_PAD, background: "var(--bg-primary)" }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <SectionHeader
             num="07"

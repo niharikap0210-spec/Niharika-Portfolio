@@ -146,6 +146,15 @@ html {
 }
 .ll-liquid-section > div { position: relative; z-index: 1; }
 
+/* ── Shelfie alternating liquid-teal sections (mirrors .vf-liquid-section) ── */
+.sh-liquid-section {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: linear-gradient(180deg, var(--bg-primary) 0%, #e6f0ed 16%, #e6f0ed 84%, var(--bg-primary) 100%);
+}
+.sh-liquid-section > div { position: relative; z-index: 1; }
+
 /* ── Hero Cursor ────────────────────────────────────────────────── */
 .hero-canvas {
   cursor: none;
