@@ -2778,10 +2778,12 @@ export default function ArkoCase() {
       ══════════════════════════════════════════════════════════════ */}
       <section style={{ padding: "clamp(64px, 8vw, 104px) 0", borderTop: "1px solid var(--border)" }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
-          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 36 }}>
-            <span aria-hidden style={{ width: 3, height: 16, background: arko.primary, display: "inline-block" }} />
-            <p style={{ ...mono, fontSize: 13, color: arko.dark, letterSpacing: "0.22em", fontWeight: 700 }}>
-              More case studies
+          <div style={{ marginBottom: "clamp(36px, 4.5vw, 56px)", maxWidth: 560 }}>
+            <h2 style={{ fontFamily: serif, fontWeight: 700, fontSize: "clamp(30px, 3.4vw, 44px)", letterSpacing: "-0.03em", lineHeight: 1.12, color: "var(--text-primary)", margin: 0 }}>
+              Keep exploring<span style={{ color: arko.primary, fontStyle: "italic" }}>.</span>
+            </h2>
+            <p style={{ fontFamily: sans, fontSize: "clamp(17px, 1.4vw, 19px)", color: "var(--text-secondary)", lineHeight: 1.6, margin: "16px 0 0" }}>
+              Two more case studies, start to finish.
             </p>
           </div>
 
