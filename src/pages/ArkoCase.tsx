@@ -2731,226 +2731,87 @@ export default function ArkoCase() {
             />
           </Reveal>
 
+          {/* Setup — the consolidation fact, quietly */}
           <Reveal>
-            <p style={{ ...t.bodyLg, maxWidth: 760, marginBottom: 72 }}>
-              Arko consolidates space scanning, interior design, and client approval into one
-              platform. A single product that serves two very different users without compromising
-              either experience.
+            <p style={{ ...t.bodyLg, color: "var(--text-secondary)", maxWidth: 720, marginBottom: "clamp(30px, 3.2vw, 44px)" }}>
+              Arko consolidates space scanning, interior design, and client approval into one platform — one product serving two very different users, neither compromised.
             </p>
           </Reveal>
 
-          {/* Editorial impact banner - one strip, no card borders */}
-          <Reveal delay={0.08}>
-            <div style={{ marginBottom: 96 }}>
-              {/* Eyebrow */}
-              <div style={{
-                display: "flex",
-                alignItems: "baseline",
-                justifyContent: "space-between",
-                gap: 16,
-                flexWrap: "wrap",
-                marginBottom: 36,
-              }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                  <span aria-hidden style={{ width: 3, height: 14, background: arko.primary }} />
-                  <p style={{ ...mono, fontSize: 12, color: arko.dark, letterSpacing: "0.22em", fontWeight: 700 }}>
-                    Impact
-                  </p>
-                </div>
-                <p style={{ ...mono, fontSize: 11, color: "var(--text-muted)", letterSpacing: "0.22em" }}>
-                  Pilot study · 30 days · 4 teams · 12 projects
-                </p>
-              </div>
+          {/* Thesis reflection — the argument, with a result woven in */}
+          <Reveal>
+            <p style={{ ...t.bodyLg, color: "var(--text-primary)", maxWidth: 720, marginBottom: "clamp(48px, 5.5vw, 72px)" }}>
+              <strong style={{ fontWeight: 800, letterSpacing: "-0.01em" }}>What this reinforced.</strong>{" "}
+              The best B2B products make the professional look good in front of their client. Every decision in Arko was made with that in mind — and in the pilot it bore out: approvals that once ate a working day closed in <span style={{ color: arko.primary, fontWeight: 600 }}>45 minutes</span>.
+            </p>
+          </Reveal>
 
-              {/* Metrics row */}
-              <div
-                className="grid grid-cols-2 lg:grid-cols-4"
-                style={{
-                  borderTop: `1px solid ${arko.primary}`,
-                  borderBottom: `1px solid ${arko.primary}`,
-                }}
-              >
+          {/* Connective + quiet metrics ledger (evidence) */}
+          <Reveal delay={0.05}>
+            <p style={{ ...t.bodyLg, color: "var(--text-secondary)", maxWidth: 720, marginBottom: "clamp(24px, 2.6vw, 34px)" }}>
+              Measured across a 30-day pilot — four teams, twelve projects — the ledger:
+            </p>
+            <div style={{ maxWidth: 960, marginBottom: "clamp(72px, 9vw, 116px)", borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)" }}>
+              <div className="grid grid-cols-2 lg:grid-cols-4">
                 {([
-                  { label: "Approval time",    num: 45,   decimals: 0, prefix: "",  unit: "min", delta: "↓ 92%",      tone: "down" as const, note: "from 6–8 hrs" },
-                  { label: "Revision cycles",  num: 1.2,  decimals: 1, prefix: "",  unit: "avg", delta: "↓ 72%",      tone: "down" as const, note: "from 4+ rounds" },
-                  { label: "Spatial accuracy", num: 92,   decimals: 0, prefix: "",  unit: "%",   delta: "→ target",   tone: "flat" as const, note: "90% threshold" },
-                  { label: "Client NPS",       num: 38,   decimals: 0, prefix: "+", unit: "pts", delta: "↑ 24 pts",   tone: "up"   as const, note: "baseline +14" },
-                ] as { label: string; num: number; decimals: number; prefix: string; unit: string; delta: string; tone: "up" | "down" | "flat"; note: string }[]).map((k, i) => {
+                  { value: 45, decimals: 0, prefix: "", unit: "min", label: "Approval time",   delta: "down 92%", note: "was 6–8 hrs" },
+                  { value: 1.2, decimals: 1, prefix: "", unit: "avg", label: "Revision cycles", delta: "down 72%", note: "from 4+ rounds" },
+                  { value: 92, decimals: 0, prefix: "", unit: "%",   label: "Spatial accuracy", delta: "on target", note: "90% threshold" },
+                  { value: 38, decimals: 0, prefix: "+", unit: "pts", label: "Client NPS",      delta: "up 24 pts", note: "baseline +14" },
+                ] as { value: number; decimals: number; prefix: string; unit: string; label: string; delta: string; note: string }[]).map((k, i) => {
                   const isRightCol = i % 2 === 1;
-                  const isFirstRow = i < 2;
                   return (
-                  <motion.div
-                    key={k.label}
-                    initial={{ opacity: 0, y: 14 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: "-40px" }}
-                    transition={{ delay: i * 0.08, duration: 0.55, ease: [0.25, 1, 0.4, 1] }}
-                    style={{
-                      padding: isMobile ? "28px 18px 24px" : "40px 28px 36px",
-                      borderLeft: (isMobile ? isRightCol : i > 0) ? "1px solid var(--border-light)" : "none",
-                      borderBottom: (isMobile && isFirstRow) ? "1px solid var(--border-light)" : "none",
-                      position: "relative",
-                    }}
-                  >
-                    <p style={{ ...mono, fontSize: 11, color: arko.dark, letterSpacing: "0.22em", marginBottom: 22, fontWeight: 700 }}>
-                      {k.label}
-                    </p>
-                    <p style={{
-                      fontFamily: serif, fontWeight: 700,
-                      fontSize: "clamp(56px, 6vw, 84px)",
-                      color: "var(--text-primary)",
-                      letterSpacing: "-0.04em", lineHeight: 0.95, marginBottom: 14,
-                    }}>
-                      <CountUp value={k.num} decimals={k.decimals} prefix={k.prefix} />
-                      <span style={{
-                        fontFamily: sans, fontSize: "clamp(14px, 1.1vw, 17px)", fontWeight: 500,
-                        color: "var(--text-secondary)", marginLeft: 8, letterSpacing: 0,
-                      }}>{k.unit}</span>
-                    </p>
-                    <div style={{ display: "flex", alignItems: "baseline", gap: 10, flexWrap: "wrap" }}>
-                      <span style={{
-                        ...mono,
-                        fontSize: 12,
-                        color: arko.primary,
-                        letterSpacing: "0.16em",
-                        fontWeight: 700,
-                      }}>
-                        {k.delta}
-                      </span>
-                      <span style={{
-                        ...mono, fontSize: 10, color: "var(--text-muted)", letterSpacing: "0.18em",
-                      }}>
-                        {k.note}
-                      </span>
-                    </div>
-                  </motion.div>
+                    <motion.div
+                      key={k.label}
+                      initial={{ opacity: 0, y: 12 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true, margin: "-40px" }}
+                      transition={{ delay: i * 0.07, duration: 0.5, ease: [0.25, 1, 0.4, 1] }}
+                      style={{
+                        padding: isMobile ? "24px 18px" : "clamp(28px, 2.6vw, 36px) clamp(24px, 2.2vw, 34px) clamp(26px, 2.4vw, 32px) 0",
+                        borderLeft: (isMobile ? isRightCol : i > 0) ? "1px solid var(--border-light)" : "none",
+                        borderTop: (isMobile && i >= 2) ? "1px solid var(--border-light)" : "none",
+                        minWidth: 0,
+                      }}
+                    >
+                      <p style={{ fontFamily: serif, fontWeight: 700, fontSize: "clamp(38px, 3.6vw, 52px)", color: "var(--text-primary)", letterSpacing: "-0.03em", lineHeight: 0.98, marginBottom: 16 }}>
+                        <CountUp value={k.value} decimals={k.decimals} prefix={k.prefix} />
+                        <span style={{ fontFamily: sans, fontSize: "clamp(13px, 1vw, 15px)", fontWeight: 500, color: "var(--text-secondary)", marginLeft: 7, letterSpacing: 0 }}>{k.unit}</span>
+                      </p>
+                      <p style={{ fontFamily: sans, fontSize: 15, fontWeight: 600, color: "var(--text-primary)", letterSpacing: "-0.01em", marginBottom: 9 }}>
+                        {k.label}
+                      </p>
+                      <p style={{ fontFamily: sans, fontSize: 13.5, lineHeight: 1.4 }}>
+                        <span style={{ color: arko.dark, fontWeight: 600 }}>{k.delta}</span>
+                        <span style={{ color: "var(--text-muted)" }}> · {k.note}</span>
+                      </p>
+                    </motion.div>
                   );
                 })}
               </div>
             </div>
           </Reveal>
 
-          {/* Reflection - two pull-quote editorial cards */}
-          <div
-            className="grid grid-cols-1 md:grid-cols-2"
-            style={{ gap: 32, marginBottom: 88 }}
-          >
-            {([
-              {
-                label: "What I'd build next",
-                body: "An analytics layer for designers. Which rooms clients spend the most time reviewing, which furniture items get swapped most often, where comments cluster spatially. Turning client behavior into actionable design intelligence.",
-                Icon: LightbulbFilament,
-              },
-              {
-                label: "What this reinforced",
-                body: "The best B2B products make the professional look good in front of their client. Every design decision in Arko was made with that in mind.",
-                Icon: Sparkle,
-              },
-            ] as { label: string; body: string; Icon: typeof LightbulbFilament }[]).map((c, i) => (
-              <Reveal key={i} delay={i * 0.08}>
-                <motion.div
-                  initial={{ opacity: 0, y: 14 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-40px" }}
-                  transition={{ duration: 0.55, ease: [0.25, 1, 0.4, 1] }}
-                  style={{
-                    position: "relative",
-                    padding: "44px 36px 40px",
-                    background: "var(--bg-elevated)",
-                    border: "1px solid var(--border)",
-                    height: "100%",
-                    overflow: "hidden",
-                  }}
-                >
-                  {/* Accent top bar */}
-                  <span
-                    aria-hidden
-                    style={{
-                      position: "absolute",
-                      top: 0, left: 0,
-                      width: 64, height: 3,
-                      background: arko.primary,
-                    }}
-                  />
-                  {/* Oversized background quote mark */}
-                  <span
-                    aria-hidden
-                    style={{
-                      position: "absolute",
-                      top: 18, right: 20,
-                      fontFamily: serif,
-                      fontSize: 140,
-                      fontWeight: 700,
-                      color: arko.subtle,
-                      lineHeight: 0.7,
-                      pointerEvents: "none",
-                      userSelect: "none",
-                    }}
-                  >
-                    “
-                  </span>
-
-                  <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 24 }}>
-                    <c.Icon size={22} color={arko.primary} weight="duotone" />
-                    <p style={{ ...mono, fontSize: 12, color: arko.dark, letterSpacing: "0.22em", fontWeight: 700 }}>
-                      {c.label}
-                    </p>
-                  </div>
-                  <p style={{
-                    ...t.bodyLg,
-                    color: "var(--text-primary)",
-                    position: "relative",
-                    zIndex: 1,
-                  }}>
-                    {c.body}
-                  </p>
-                </motion.div>
-              </Reveal>
-            ))}
-          </div>
-
-          {/* Closing line - cinematic */}
+          {/* Forward reflection — the next chapter */}
           <Reveal>
-            <div style={{
-              paddingTop: 56,
-              borderTop: "1px solid var(--border)",
-              position: "relative",
-            }}>
-              {/* Corner brackets */}
-              {[
-                { top: 40, left: 0 },
-                { top: 40, right: 0 },
-              ].map((pos, i) => (
-                <span
-                  key={i}
-                  aria-hidden
-                  style={{
-                    position: "absolute",
-                    top: pos.top,
-                    left: pos.left,
-                    right: pos.right,
-                    width: 18, height: 18,
-                    borderTop: `1px solid ${arko.primary}`,
-                    borderLeft: pos.left !== undefined ? `1px solid ${arko.primary}` : "none",
-                    borderRight: pos.right !== undefined ? `1px solid ${arko.primary}` : "none",
-                    opacity: 0.6,
-                  }}
-                />
-              ))}
-              <div style={{ textAlign: "center", maxWidth: 760, margin: "0 auto" }}>
-                <p style={{ ...mono, fontSize: 11, color: arko.dark, letterSpacing: "0.24em", marginBottom: 26, fontWeight: 700 }}>
-                  Fin · Arko case study
-                </p>
-                <p style={{
-                  fontFamily: serif, fontStyle: "italic",
-                  fontSize: "clamp(28px, 3.4vw, 42px)",
-                  color: "var(--text-primary)", letterSpacing: "-0.02em",
-                  lineHeight: 1.22,
-                }}>
-                  From architecture to digital product:{" "}
-                  <span style={{ color: arko.primary }}>the loop, finally closed.</span>
-                </p>
-              </div>
+            <p style={{ ...t.bodyLg, color: "var(--text-primary)", maxWidth: 720, marginBottom: "clamp(84px, 10vw, 136px)" }}>
+              <strong style={{ fontWeight: 800, letterSpacing: "-0.01em" }}>What I'd build next.</strong>{" "}
+              An analytics layer for designers — which rooms clients linger in, which furniture gets swapped most, where comments cluster in space. Client behavior turned into design intelligence.
+            </p>
+          </Reveal>
+
+          {/* Finale */}
+          <Reveal>
+            <div style={{ borderTop: "1px solid var(--border)", paddingTop: "clamp(44px, 5.5vw, 68px)" }}>
+              <p style={{
+                fontFamily: serif, fontWeight: 700,
+                fontSize: "clamp(30px, 3.6vw, 46px)",
+                color: "var(--text-primary)", letterSpacing: "-0.03em",
+                lineHeight: 1.16, maxWidth: 940,
+              }}>
+                From architecture to digital product —{" "}
+                <span style={{ color: arko.primary, fontStyle: "italic" }}>the loop, finally closed.</span>
+              </p>
             </div>
           </Reveal>
         </div>
