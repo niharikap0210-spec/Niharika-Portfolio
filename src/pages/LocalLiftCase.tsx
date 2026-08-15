@@ -1106,16 +1106,6 @@ function PersonasSection() {
               </p>
             </Reveal>
           </div>
-          <div className="lg:col-span-4">
-            <Reveal delay={0.16}>
-              <p style={{
-                ...mono, fontSize: 11, letterSpacing: "0.22em",
-                color: ll.muted, fontWeight: 700, textAlign: "right",
-              }}>
-                02 ARCHETYPES<br />PRESSURE-TESTED ACROSS EVERY SCREEN
-              </p>
-            </Reveal>
-          </div>
         </div>
 
         {/* Tab bar */}
@@ -1916,16 +1906,6 @@ export default function LocalLiftCase() {
                   Three lenses: understand the owner's day, cluster what we heard across context, turn it into
                   archetypes the team could design against. Local collaborators translated insight, literally
                   and culturally, so patterns carried the texture of each market, not just one.
-                </p>
-              </Reveal>
-            </div>
-            <div className="lg:col-span-4">
-              <Reveal delay={0.16}>
-                <p style={{
-                  ...mono, fontSize: 11, letterSpacing: "0.22em",
-                  color: ll.muted, fontWeight: 700, textAlign: "right",
-                }}>
-                  03 METHODS<br />ONE SHARED TRANSCRIPT
                 </p>
               </Reveal>
             </div>
