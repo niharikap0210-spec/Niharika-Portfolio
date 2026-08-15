@@ -509,13 +509,11 @@ function WebGallery({
                   style={{
                     fontFamily: serif,
                     fontWeight: 700,
-                    fontSize: isMobile ? 19 : 24,
+                    fontSize: isMobile ? 17 : 20,
                     lineHeight: 1.2,
                     letterSpacing: "-0.015em",
                     color: isActive ? "var(--text-primary)" : "var(--text-secondary)",
-                    whiteSpace: "nowrap",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
+                    whiteSpace: "normal",
                     transitionProperty: "color",
                     transitionDuration: "220ms",
                   }}
@@ -689,7 +687,7 @@ function UserTabs() {
             </span>
             <span style={{ display: "inline-flex", alignItems: "center", gap: 12 }}>
               <x.Icon size={22} color={tab === i ? arko.primary : "var(--text-secondary)"} weight={tab === i ? "duotone" : "regular"} />
-              <span style={{ fontFamily: serif, fontWeight: 700, fontSize: isMobile ? 19 : 24, color: tab === i ? "var(--text-primary)" : "var(--text-secondary)", letterSpacing: "-0.02em" }}>
+              <span style={{ fontFamily: serif, fontWeight: 700, fontSize: isMobile ? 17 : 20, color: tab === i ? "var(--text-primary)" : "var(--text-secondary)", letterSpacing: "-0.02em" }}>
                 {x.heading}
               </span>
             </span>
@@ -1009,7 +1007,7 @@ function DecisionStepper() {
                 <span
                   style={{
                     fontFamily: serif,
-                    fontSize: isMobile ? 19 : 24,
+                    fontSize: isMobile ? 17 : 20,
                     fontWeight: 700,
                     color: isActive ? "var(--text-primary)" : "var(--text-secondary)",
                     letterSpacing: "-0.015em",
@@ -1762,14 +1760,12 @@ function ArEditorStepper({
                 <span
                   style={{
                     fontFamily: serif,
-                    fontSize: isMobile ? 19 : 24,
+                    fontSize: isMobile ? 17 : 20,
                     fontWeight: 700,
                     color: isActive ? "var(--text-primary)" : "var(--text-secondary)",
                     letterSpacing: "-0.015em",
                     lineHeight: 1.3,
-                    whiteSpace: isMobile ? "normal" : "nowrap",
-                    overflow: "hidden",
-                    textOverflow: isMobile ? "unset" : "ellipsis",
+                    whiteSpace: "normal",
                     transitionProperty: "color",
                     transitionDuration: "220ms",
                   }}
@@ -2501,7 +2497,7 @@ export default function ArkoCase() {
             <ArEditorStepper steps={[
               {
                 src: "/arko/phone-7.png", num: "01",
-                label: "Room type breadcrumb navigation",
+                label: "Room breadcrumb · room-type navigation",
                 desc: "Navigate between room types without losing context. The full path stays visible at all times; every step in the hierarchy is one tap to reverse.",
                 Icon: Compass,
               },
