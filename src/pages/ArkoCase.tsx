@@ -588,7 +588,7 @@ function WebGallery({
               {host}
             </span>
           </div>
-          {/* Right meta — live status dot */}
+          {/* Right meta - live status dot */}
           <span
             aria-hidden
             style={{
@@ -1284,7 +1284,7 @@ function ScanFlowStepper({
             minHeight: isMobile ? 0 : 440,
           }}
         >
-          {/* LEFT gutter · STAGE pill — hidden on mobile */}
+          {/* LEFT gutter · STAGE pill - hidden on mobile */}
           {!isMobile && (
           <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "flex-end", height: "100%", paddingBottom: "18%" }}>
             <AnimatePresence mode="wait">
@@ -1387,7 +1387,7 @@ function ScanFlowStepper({
             </AnimatePresence>
           </div>
 
-          {/* RIGHT gutter · LIVE metric chip — hidden on mobile */}
+          {/* RIGHT gutter · LIVE metric chip - hidden on mobile */}
           {!isMobile && <div style={{ display: "flex", justifyContent: "flex-start", alignItems: "flex-start", height: "100%", paddingTop: "18%" }}>
             <AnimatePresence mode="wait">
               <motion.div
@@ -2731,27 +2731,27 @@ export default function ArkoCase() {
             />
           </Reveal>
 
-          {/* Setup — the consolidation fact, quietly */}
+          {/* Setup - the consolidation fact, quietly */}
           <Reveal>
             <p style={{ ...t.bodyLg, color: "var(--text-secondary)", maxWidth: 720, marginBottom: "clamp(30px, 3.2vw, 44px)" }}>
-              Arko consolidates space scanning, interior design, and client approval into one platform — one product serving two very different users, neither compromised.
+              Arko consolidates space scanning, interior design, and client approval into one platform. One product serving two very different users, neither compromised.
             </p>
           </Reveal>
 
-          {/* Thesis reflection — the argument, with a result woven in */}
+          {/* Thesis reflection - the argument, with a result woven in */}
           <Reveal>
             <p style={{ ...t.bodyLg, color: "var(--text-primary)", maxWidth: 720, marginBottom: "clamp(48px, 5.5vw, 72px)" }}>
               <strong style={{ fontWeight: 800, letterSpacing: "-0.01em" }}>What this reinforced.</strong>{" "}
-              The best B2B products make the professional look good in front of their client. Every decision in Arko was made with that in mind — and in the pilot it bore out: approvals that once ate a working day closed in <span style={{ color: arko.primary, fontWeight: 600 }}>45 minutes</span>.
+              The best B2B products make the professional look good in front of their client. Every decision in Arko was made with that in mind, and in the pilot it bore out: approvals that once ate a working day closed in <span style={{ color: arko.primary, fontWeight: 600 }}>45 minutes</span>.
             </p>
           </Reveal>
 
           {/* Connective + quiet metrics ledger (evidence) */}
           <Reveal delay={0.05}>
             <p style={{ ...t.bodyLg, color: "var(--text-secondary)", maxWidth: 720, marginBottom: "clamp(24px, 2.6vw, 34px)" }}>
-              Measured across a 30-day pilot — four teams, twelve projects — the ledger:
+              Measured across a 30-day pilot of four teams and twelve projects:
             </p>
-            <div style={{ maxWidth: 960, marginBottom: "clamp(72px, 9vw, 116px)", borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)" }}>
+            <div style={{ maxWidth: 960, marginBottom: "clamp(72px, 9vw, 116px)", borderTop: "1px solid rgba(79,107,53,0.34)", borderBottom: "1px solid rgba(79,107,53,0.34)" }}>
               <div className="grid grid-cols-2 lg:grid-cols-4">
                 {([
                   { value: 45, decimals: 0, prefix: "", unit: "min", label: "Approval time",   delta: "down 92%", note: "was 6–8 hrs" },
@@ -2769,8 +2769,8 @@ export default function ArkoCase() {
                       transition={{ delay: i * 0.07, duration: 0.5, ease: [0.25, 1, 0.4, 1] }}
                       style={{
                         padding: isMobile ? "24px 18px" : "clamp(28px, 2.6vw, 36px) clamp(24px, 2.2vw, 34px) clamp(26px, 2.4vw, 32px) 0",
-                        borderLeft: (isMobile ? isRightCol : i > 0) ? "1px solid var(--border-light)" : "none",
-                        borderTop: (isMobile && i >= 2) ? "1px solid var(--border-light)" : "none",
+                        borderLeft: (isMobile ? isRightCol : i > 0) ? "1px solid rgba(79,107,53,0.17)" : "none",
+                        borderTop: (isMobile && i >= 2) ? "1px solid rgba(79,107,53,0.17)" : "none",
                         minWidth: 0,
                       }}
                     >
@@ -2792,25 +2792,25 @@ export default function ArkoCase() {
             </div>
           </Reveal>
 
-          {/* Forward reflection — the next chapter */}
+          {/* Forward reflection - the next chapter */}
           <Reveal>
             <p style={{ ...t.bodyLg, color: "var(--text-primary)", maxWidth: 720, marginBottom: "clamp(84px, 10vw, 136px)" }}>
               <strong style={{ fontWeight: 800, letterSpacing: "-0.01em" }}>What I'd build next.</strong>{" "}
-              An analytics layer for designers — which rooms clients linger in, which furniture gets swapped most, where comments cluster in space. Client behavior turned into design intelligence.
+              An analytics layer for designers: which rooms clients linger in, which furniture gets swapped most, where comments cluster in space. Client behavior turned into design intelligence.
             </p>
           </Reveal>
 
           {/* Finale */}
           <Reveal>
-            <div style={{ borderTop: "1px solid var(--border)", paddingTop: "clamp(44px, 5.5vw, 68px)" }}>
+            <div style={{ borderTop: "1px solid rgba(79,107,53,0.34)", paddingTop: "clamp(44px, 5.5vw, 68px)" }}>
               <p style={{
                 fontFamily: serif, fontWeight: 700,
                 fontSize: "clamp(30px, 3.6vw, 46px)",
                 color: "var(--text-primary)", letterSpacing: "-0.03em",
                 lineHeight: 1.16, maxWidth: 940,
               }}>
-                From architecture to digital product —{" "}
-                <span style={{ color: arko.primary, fontStyle: "italic" }}>the loop, finally closed.</span>
+                From architecture to digital product.{" "}
+                <span style={{ color: arko.primary, fontStyle: "italic" }}>The loop, finally closed.</span>
               </p>
             </div>
           </Reveal>
