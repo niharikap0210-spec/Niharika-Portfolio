@@ -1000,17 +1000,6 @@ function DecisionStepper() {
                   transition={{ duration: 0.4, ease: [0.25, 1, 0.4, 1] }}
                 />
               )}
-              <span
-                style={{
-                  ...mono,
-                  fontSize: 14,
-                  color: isActive ? arko.primary : "var(--text-muted)",
-                  letterSpacing: "0.2em",
-                  fontWeight: 600,
-                }}
-              >
-                {d.num}
-              </span>
               <span style={{ display: "inline-flex", alignItems: "flex-start", gap: 14, minWidth: 0 }}>
                 <d.Icon
                   size={24}
@@ -1114,29 +1103,6 @@ function ScanFlowStepper({
     >
       {/* LEFT · timeline */}
       <div className="md:col-span-6">
-        {/* Header strip - progress */}
-        <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 26 }}>
-          <span style={{ ...mono, fontSize: 11, color: arko.dark, letterSpacing: "0.22em", fontWeight: 700 }}>
-            {String(active + 1).padStart(2, "0")} <span style={{ color: "var(--text-muted)", fontWeight: 400 }}>/ {String(stages.length).padStart(2, "0")}</span>
-          </span>
-          <div style={{ flex: 1, height: 1, background: "var(--border)", position: "relative", overflow: "hidden" }}>
-            <motion.span
-              aria-hidden
-              style={{
-                position: "absolute",
-                inset: 0,
-                background: arko.primary,
-                transformOrigin: "left center",
-              }}
-              animate={{ scaleX: progress / 100 }}
-              transition={{ duration: 0.6, ease: [0.25, 1, 0.4, 1] }}
-            />
-          </div>
-          <span style={{ ...mono, fontSize: 10, color: "var(--text-muted)", letterSpacing: "0.2em" }}>
-            {paused ? "Paused" : "Auto"}
-          </span>
-        </div>
-
         {/* Timeline list */}
         <ol style={{ position: "relative", listStyle: "none", padding: 0, margin: 0 }}>
           {/* Rail · base */}
@@ -1568,37 +1534,6 @@ function ClientJourneyReel() {
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      {/* Progress header strip */}
-      <div style={{
-        display: "flex", alignItems: "center", gap: 14, marginBottom: 40,
-      }}>
-        <span style={{ ...mono, fontSize: 12, color: "#FAFAFA", letterSpacing: "0.22em", fontWeight: 700 }}>
-          {String(active + 1).padStart(2, "0")}
-          <span style={{ color: "rgba(250,250,250,0.55)", fontWeight: 400 }}>
-            {" "}/ {String(stages.length).padStart(2, "0")}
-          </span>
-        </span>
-        <div style={{
-          flex: 1, height: 1,
-          background: "rgba(250,250,250,0.22)",
-          position: "relative", overflow: "hidden",
-        }}>
-          <motion.span
-            aria-hidden
-            style={{
-              position: "absolute", inset: 0,
-              background: arko.light,
-              transformOrigin: "left center",
-            }}
-            animate={{ scaleX: progress / 100 }}
-            transition={{ duration: 0.6, ease: [0.25, 1, 0.4, 1] }}
-          />
-        </div>
-        <span style={{ ...mono, fontSize: 10, color: "rgba(250,250,250,0.55)", letterSpacing: "0.22em" }}>
-          {paused ? "Paused" : "Auto"}
-        </span>
-      </div>
-
       {/* 4-up phone gallery */}
       <div
         className="grid grid-cols-2 md:grid-cols-4"
