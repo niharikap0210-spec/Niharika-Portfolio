@@ -1,7 +1,6 @@
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
-import { AnimatePresence, MotionConfig } from "framer-motion";
+import { MotionConfig } from "framer-motion";
 import { useEffect } from "react";
-import { ScrollTrigger } from "./lib/gsap";
 import Nav from "./components/Nav";
 import Footer from "./components/Footer";
 import ScrollManager from "./components/ScrollManager";
@@ -19,41 +18,24 @@ import NotFound from "./pages/NotFound";
 
 function AnimatedRoutes() {
   const location = useLocation();
+  // Key by pathname so each page remounts (and replays its GSAP entrance) on route
+  // change. Same-path hash changes (/ -> /#projects) keep the same key, so the Home
+  // page stays mounted and ScrollManager just scrolls to the anchor. Scroll reset +
+  // ScrollTrigger.refresh are handled in ScrollManager, AFTER the new page paints.
   return (
-    // mode="wait": the outgoing page fully unmounts before the incoming one mounts,
-    // so ScrollTrigger reveals always measure against the correct single-page layout.
-    // onExitComplete + double-rAF: refresh all triggers once the new page has
-    // committed + painted (keeps the persistent Footer's trigger correct too).
-    <AnimatePresence
-      mode="wait"
-      onExitComplete={() => {
-        // Reset scroll AFTER the outgoing page has faded out (mode="wait"), so a page
-        // left while scrolled doesn't visibly snap to its top mid-transition. Force
-        // "instant": the root has scroll-behavior:smooth, and a smooth reset gets
-        // interrupted by the incoming mount and never lands. Skip anchor navigations —
-        // ScrollManager scrolls those to their #hash target.
-        const toTop = () => window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior });
-        if (!window.location.hash) {
-          toTop();
-          requestAnimationFrame(() => { if (!window.location.hash) toTop(); });
-        }
-        requestAnimationFrame(() => requestAnimationFrame(() => ScrollTrigger.refresh()));
-      }}
-    >
-      <Routes location={location} key={location.pathname}>
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/work/arko" element={<ArkoCase />} />
-        <Route path="/work/veriflow" element={<VeriflowCase />} />
-        <Route path="/work/shelfie" element={<ShelfieCase />} />
-        <Route path="/work/locallift" element={<LocalLiftCase />} />
-        <Route path="/work/:slug" element={<CaseStudy />} />
-        <Route path="/resume" element={<Resume />} />
-        <Route path="/architecture/thesis" element={<ThesisCase />} />
-        <Route path="/architecture/renders" element={<RendersCase />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </AnimatePresence>
+    <Routes location={location} key={location.pathname}>
+      <Route path="/" element={<Home />} />
+      <Route path="/about" element={<About />} />
+      <Route path="/work/arko" element={<ArkoCase />} />
+      <Route path="/work/veriflow" element={<VeriflowCase />} />
+      <Route path="/work/shelfie" element={<ShelfieCase />} />
+      <Route path="/work/locallift" element={<LocalLiftCase />} />
+      <Route path="/work/:slug" element={<CaseStudy />} />
+      <Route path="/resume" element={<Resume />} />
+      <Route path="/architecture/thesis" element={<ThesisCase />} />
+      <Route path="/architecture/renders" element={<RendersCase />} />
+      <Route path="*" element={<NotFound />} />
+    </Routes>
   );
 }
 

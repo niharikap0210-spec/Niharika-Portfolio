@@ -1536,7 +1536,7 @@ export default function VeriflowCase() {
                 or not at all. The brief asked for a system that
                 <em style={{ color: vf.primary, fontStyle: "italic" }}> knew where every sample was, right now.</em>
               </p>
-              <p style={{ ...t.body, marginBottom: 22 }}>
+              <p style={{ ...t.bodyLg, marginBottom: 22 }}>
                 Blood is time- and temperature-sensitive. A single lost cooler is a patient re-drawn,
                 a diagnosis delayed, a clinic day lost.
               </p>
@@ -1635,7 +1635,7 @@ export default function VeriflowCase() {
         <LiquidBackground c0="eff5fe" c1="dae8fc" c2="aecaf0" fade={0} lift={0.28} grain={0.055} speed={0.1} />
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <Reveal>
-            <SectionHeader num="04" phase="Flow · Clinic" title="A. Association. Tube becomes a trackable object." />
+            <SectionHeader num="04" phase="Flow · Clinic" title="Association. Tube becomes a trackable object." />
           </Reveal>
 
           <Reveal>
@@ -1663,7 +1663,7 @@ export default function VeriflowCase() {
       <section style={{ padding: SECTION_PAD, background: "var(--bg-primary)" }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <Reveal>
-            <SectionHeader num="05" phase="Flow · Courier" title="B. Pickup, validation, override." />
+            <SectionHeader num="05" phase="Flow · Courier" title="Pickup, validation, override." />
           </Reveal>
 
           <Reveal>

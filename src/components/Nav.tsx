@@ -281,68 +281,82 @@ export default function Nav() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: "100%" }}
             transition={{ duration: 0.38, ease: [0.25, 1, 0.4, 1] }}
-            className="md:hidden fixed inset-0 z-40 blueprint-grid flex flex-col"
-            style={{ paddingTop: 56 }}
+            className="md:hidden fixed inset-0 flex flex-col"
+            style={{
+              zIndex: 60,
+              paddingTop: 56,
+              backgroundColor: "var(--bg-primary)",
+              backgroundImage:
+                "radial-gradient(120% 55% at 50% 0%, rgba(66,98,255,0.12) 0%, transparent 58%), radial-gradient(circle, rgba(66,98,255,0.09) 1px, transparent 1.5px)",
+              backgroundSize: "auto, 22px 22px",
+              backgroundPosition: "center top, -11px -11px",
+            }}
             role="dialog"
             aria-modal
             aria-label="Navigation menu"
           >
             <button
-              className="absolute top-4 right-6 flex items-center justify-center w-10 h-10 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+              className="absolute top-4 right-5 flex items-center justify-center w-11 h-11 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
               onClick={() => setMenuOpen(false)}
               aria-label="Close menu"
-              style={{ color: C_ACTIVE }}
+              style={{
+                color: C_ACTIVE,
+                background: "#fff",
+                borderRadius: 12,
+                border: "1px solid rgba(9,30,66,0.06)",
+                boxShadow: "var(--miro-shadow)",
+              }}
             >
               <X size={20} weight="regular" />
             </button>
 
-            <nav className="flex flex-col items-center justify-center flex-1 gap-8">
+            <nav className="flex flex-col items-center justify-center flex-1 gap-9">
               {navItems.map((item, i) => {
                 const active   = isActive(item);
                 const IconComp = item.icon;
+                const linkStyle: React.CSSProperties = {
+                  position: "relative",
+                  fontFamily: "'Manrope', Georgia, serif",
+                  fontSize: 38,
+                  fontWeight: 700,
+                  letterSpacing: "-0.03em",
+                  textDecoration: "none",
+                  color: active ? "#4262FF" : C_DEFAULT,
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 10,
+                };
 
                 return (
                   <motion.div
                     key={item.label}
-                    initial={{ opacity: 0, y: 20 }}
+                    initial={{ opacity: 0, y: 18 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.05 * (i + 1), duration: 0.5, ease: [0.25, 1, 0.4, 1] }}
+                    style={{ position: "relative" }}
                   >
-                    {item.external ? (
-                      <a
-                        href={item.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                    {active && (
+                      <span
+                        aria-hidden
                         style={{
-                          fontFamily: "'Manrope', Georgia, serif",
-                          fontSize: 36,
-                          fontWeight: 700,
-                          color: C_DEFAULT,
-                          textDecoration: "none",
-                          letterSpacing: "-0.02em",
-                          display: "inline-flex",
-                          alignItems: "center",
-                          gap: 10,
+                          position: "absolute",
+                          left: -22,
+                          top: "50%",
+                          transform: "translateY(-50%)",
+                          width: 8,
+                          height: 8,
+                          borderRadius: 2,
+                          background: "#4262FF",
                         }}
-                        className="hover-underline"
-                      >
+                      />
+                    )}
+                    {item.external ? (
+                      <a href={item.href} target="_blank" rel="noopener noreferrer" style={linkStyle} className="hover-underline">
                         {item.label}
                         {IconComp && <IconComp size={28} weight="regular" />}
                       </a>
                     ) : (
-                      <Link
-                        to={item.href}
-                        aria-current={active ? "page" : undefined}
-                        style={{
-                          fontFamily: "'Manrope', Georgia, serif",
-                          fontSize: 36,
-                          fontWeight: 700,
-                          color: active ? C_ACTIVE : C_DEFAULT,
-                          textDecoration: "none",
-                          letterSpacing: "-0.02em",
-                        }}
-                        className="hover-underline"
-                      >
+                      <Link to={item.href} aria-current={active ? "page" : undefined} style={linkStyle} className="hover-underline">
                         {item.label}
                       </Link>
                     )}
@@ -354,13 +368,13 @@ export default function Nav() {
             <div className="p-8 flex justify-center">
               <p style={{
                 fontFamily: "'Manrope', monospace",
-                letterSpacing: "0.12em",
+                letterSpacing: "0.14em",
                 fontSize: 10,
                 textTransform: "uppercase",
-                color: "#9A9A9A",
-                opacity: 0.6,
+                color: "var(--text-muted)",
+                opacity: 0.75,
               }}>
-                NIHARIKA PUNDLIK © 2026
+                Niharika Pundlik © 2026
               </p>
             </div>
           </motion.div>

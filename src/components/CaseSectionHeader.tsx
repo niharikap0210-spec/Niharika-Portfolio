@@ -44,7 +44,7 @@ export function SectionHeader({
   const inView = useInView(ref, { once: true, margin: "-40px" });
   return (
     <div ref={ref} style={{ marginBottom: "clamp(40px, 5vw, 64px)" }}>
-      <div style={{ display: "flex", alignItems: "flex-end", gap: "clamp(16px, 2.2vw, 26px)", marginBottom: title ? "clamp(18px, 2.4vw, 30px)" : 0 }}>
+      <div style={{ display: "flex", alignItems: "baseline", gap: "clamp(14px, 2vw, 22px)", marginBottom: title ? "clamp(18px, 2.4vw, 30px)" : 0 }}>
         <motion.div
           aria-hidden
           initial={{ opacity: 0, y: 12 }}
@@ -60,11 +60,12 @@ export function SectionHeader({
         >
           {num}
         </motion.div>
+        {/* Section name — half the numeral's size, top-aligned with it */}
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ delay: 0.08, duration: 0.55, ease: [0.25, 1, 0.4, 1] }}
-          style={{ ...MONO, fontSize: 14, color: accent, letterSpacing: "0.22em", fontWeight: 700, paddingBottom: "clamp(8px, 1vw, 14px)" }}
+          style={{ ...MONO, fontSize: "clamp(23px, 2.7vw, 37px)", lineHeight: 0.82, color: accent, letterSpacing: "0.03em", fontWeight: 500 }}
         >
           {phase}
         </motion.div>
@@ -73,7 +74,7 @@ export function SectionHeader({
             initial={{ opacity: 0 }}
             animate={inView ? { opacity: 1 } : {}}
             transition={{ delay: 0.16, duration: 0.55 }}
-            style={{ ...MONO, fontSize: 12, color: "var(--text-muted)", letterSpacing: "0.2em", fontWeight: 500, marginLeft: "auto", paddingBottom: "clamp(9px, 1.1vw, 15px)" }}
+            style={{ ...MONO, fontSize: 12, color: "var(--text-muted)", letterSpacing: "0.2em", fontWeight: 500, marginLeft: "auto", alignSelf: "flex-end", paddingBottom: "clamp(2px, 0.4vw, 6px)" }}
           >
             {meta}
           </motion.div>

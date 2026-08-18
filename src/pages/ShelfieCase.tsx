@@ -28,6 +28,7 @@ import {
   GearIcon as Gear,
   TargetIcon as Target,
   PlusIcon as Plus,
+  QuotesIcon as Quotes,
 } from "@phosphor-icons/react";
 import type { Icon } from "@phosphor-icons/react";
 import { projects, type Project } from "../data/projects";
@@ -208,9 +209,6 @@ function OilBottleIllustration() {
 
       {/* base rule + fig footer */}
       <line x1="214" y1="200" x2="344" y2="200" stroke={sh.dark} strokeWidth="1" opacity="0.4" />
-      <text x="214" y="220" {...ANNOT.fig} fill={sh.dark} opacity="0.55">
-        FIG · 01 / CONTRAST
-      </text>
     </svg>
   );
 }
@@ -223,9 +221,9 @@ function BreadBagIllustration() {
     { x: 96,  y: 174, n: "3" },
   ];
   const rows = [
-    { y: 70,  n: "1", t: "FRONT FACE",  code: "BB 04/15" },
-    { y: 102, n: "2", t: "BACK PANEL",  code: "04/15"   },
-    { y: 134, n: "3", t: "BOTTOM FOLD", code: "LOT 22A" },
+    { y: 72,  n: "1", t: "FRONT FACE",  code: "BB 04/15" },
+    { y: 112, n: "2", t: "BACK PANEL",  code: "04/15"   },
+    { y: 152, n: "3", t: "BOTTOM FOLD", code: "LOT 22A" },
   ];
   return (
     <svg viewBox="0 0 360 240" width="100%" aria-hidden>
@@ -262,23 +260,19 @@ function BreadBagIllustration() {
           <text x="214" y={r.y + 4} textAnchor="middle"
             fontFamily="'Manrope', monospace" fontSize="11" fontWeight="700"
             fill="#fff">{r.n}</text>
-          <text x="232" y={r.y - 1} {...ANNOT.body} fill={sh.dark}>
+          <text x="232" y={r.y - 3} {...ANNOT.body} fill={sh.dark}>
             {r.t}
           </text>
-          <text x="232" y={r.y + 12} {...ANNOT.small} fill={sh.dark} opacity="0.6">
+          <text x="232" y={r.y + 15} {...ANNOT.small} fill={sh.dark} opacity="0.6">
             {r.code}
           </text>
         </g>
       ))}
 
-      <text x="206" y="178" fontFamily={serif} fontSize="26" fontWeight="700"
+      <text x="206" y="196" fontFamily={serif} fontSize="26" fontWeight="700"
         fill={sh.primary} letterSpacing="-0.03em">3 spots,</text>
-      <text x="206" y="200" fontFamily={serif} fontSize="16" fontStyle="italic"
+      <text x="206" y="218" fontFamily={serif} fontSize="16" fontStyle="italic"
         fill={sh.dark}>no convention.</text>
-
-      <text x="206" y="226" {...ANNOT.fig} fill={sh.dark} opacity="0.55">
-        FIG · 02 / PLACEMENT
-      </text>
     </svg>
   );
 }
@@ -295,10 +289,10 @@ function CodedDateIllustration() {
       <line x1="120" y1="22" x2="120" y2="210" stroke={sh.dark} strokeWidth="1" opacity="0.45" />
 
       {/* printed label patch with the cryptic code */}
-      <rect x="48" y="92" width="84" height="38" fill="#FFFFFF" opacity="0.95"
+      <rect x="46" y="92" width="94" height="38" fill="#FFFFFF" opacity="0.95"
         stroke={sh.dark} strokeWidth="0.7" />
-      <text x="60" y="118" fontFamily="'Manrope', monospace" fontSize="17"
-        fontWeight="700" fill={sh.dark} letterSpacing="0.10em">mfg 213</text>
+      <text x="58" y="117" fontFamily="'Manrope', monospace" fontSize="16"
+        fontWeight="700" fill={sh.dark} letterSpacing="0.06em">mfg 213</text>
 
       {/* faux ingredient panel below - blurred lines */}
       {[148, 160, 172, 184, 196].map((y, i) => (
@@ -307,7 +301,7 @@ function CodedDateIllustration() {
       ))}
 
       {/* decoder pointer line from label out to right rail */}
-      <PointerRule x1={132} y1={111} x2={188} y2={111} />
+      <PointerRule x1={150} y1={111} x2={190} y2={111} />
 
       {/* right rail - the decode */}
       <text x="200" y="48" {...ANNOT.hed} fill={sh.dark}>DECODE REQUIRED</text>
@@ -330,10 +324,6 @@ function CodedDateIllustration() {
         stroke={sh.dark} strokeWidth="1" opacity="0.45" />
       <text x="208" y="201" {...ANNOT.small} fill={sh.dark} opacity="0.65">
         KEY · DAY OF YEAR 1 TO 365
-      </text>
-
-      <text x="200" y="226" {...ANNOT.fig} fill={sh.dark} opacity="0.55">
-        FIG · 03 / LEGIBILITY
       </text>
     </svg>
   );
@@ -368,29 +358,24 @@ function YogurtCupIllustration() {
       <line x1="92" y1="48" x2="218" y2="138" stroke={sh.primary} strokeWidth="0.9" strokeDasharray="3 3" opacity="0.7" />
 
       {/* magnification inset card */}
-      <rect x="216" y="68" width="128" height="80" fill="#fff" stroke={sh.primary} strokeWidth="1.2" />
-      <text x="226" y="86" {...ANNOT.body} fill={sh.primary} fontWeight="700">
+      <rect x="216" y="66" width="128" height="90" fill="#fff" stroke={sh.primary} strokeWidth="1.2" />
+      <text x="228" y="88" {...ANNOT.body} fill={sh.primary} fontWeight="700">
         ENLARGED 4×
       </text>
-      <text x="226" y="112" fontFamily="'Manrope', monospace" fontSize="14"
+      <text x="228" y="116" fontFamily="'Manrope', monospace" fontSize="14"
         fontWeight="700" fill={sh.dark} letterSpacing="0.04em">EXP 04/29/25</text>
-      <text x="226" y="128" fontFamily="'Manrope', monospace" fontSize="10"
+      <text x="228" y="134" fontFamily="'Manrope', monospace" fontSize="10"
         fill={sh.dark} opacity="0.65" letterSpacing="0.08em">LOT 4178</text>
-      <line x1="216" y1="138" x2="344" y2="138" stroke={sh.primary} strokeWidth="1" opacity="0.5" />
-      <text x="226" y="146" {...ANNOT.small} fill={sh.dark} opacity="0.6">
+      <line x1="228" y1="142" x2="332" y2="142" stroke={sh.primary} strokeWidth="1" opacity="0.4" />
+      <text x="228" y="151" {...ANNOT.small} fill={sh.dark} opacity="0.6">
         SOURCE · FOIL RIM
       </text>
 
-      {/* scale comparison - vertically stacked, no collision */}
-      <text x="216" y="176" {...ANNOT.hed} fill={sh.dark}>TYPE SIZE</text>
-      <text x="216" y="206" fontFamily={serif} fontSize="32" fontWeight="700"
+      {/* scale comparison - stacked, roomy */}
+      <text x="216" y="182" {...ANNOT.hed} fill={sh.dark}>TYPE SIZE</text>
+      <text x="216" y="214" fontFamily={serif} fontSize="30" fontWeight="700"
         fill={sh.primary} letterSpacing="-0.03em">3.4 pt</text>
-      <text x="290" y="200" {...ANNOT.body} fill={sh.dark} opacity="0.7">vs 8 pt</text>
-      <text x="290" y="214" {...ANNOT.small} fill={sh.dark} opacity="0.55">READ MIN</text>
-
-      <text x="216" y="232" {...ANNOT.fig} fill={sh.dark} opacity="0.55">
-        FIG · 04 / TYPE SIZE
-      </text>
+      <text x="216" y="232" {...ANNOT.small} fill={sh.dark} opacity="0.6">VS 8 PT · READ MINIMUM</text>
     </svg>
   );
 }
@@ -507,9 +492,6 @@ function MethodCard({
           </motion.div>
         </div>
 
-        <p style={{ ...mono, fontSize: 11, color: sh.primary, letterSpacing: "0.22em", marginBottom: 12, fontWeight: 700 }}>
-          {tag}
-        </p>
         <h3 style={{ ...t.h3Lede, fontSize: 26, marginBottom: 14 }}>
           {title}
         </h3>
@@ -582,130 +564,47 @@ type Voice = {
 };
 
 function VoicesPanel({ voices }: { voices: Voice[] }) {
-  const [active, setActive] = useState(0);
-  const current = voices[active];
-  const total = voices.length;
-
-  const onKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "ArrowDown" || e.key === "ArrowRight") {
-      e.preventDefault();
-      setActive((v) => (v + 1) % total);
-    } else if (e.key === "ArrowUp" || e.key === "ArrowLeft") {
-      e.preventDefault();
-      setActive((v) => (v - 1 + total) % total);
-    }
-  };
-
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-12 gap-0" style={{
-      background: "var(--bg-elevated)",
-      border: `1px solid ${sh.subtle}`,
-    }}>
-      {/* LEFT - hero quote stage */}
-      <div className="lg:col-span-8" style={{
-        position: "relative",
-        padding: "40px 44px",
-        borderRight: `1px solid ${sh.subtle}`,
-        minHeight: 320,
-        display: "flex", flexDirection: "column", justifyContent: "center",
-      }}>
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={active}
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.4, ease: [0.25, 1, 0.4, 1] }}
-          >
-            <p style={{
-              ...mono, fontSize: 10, letterSpacing: "0.24em",
-              color: sh.primary, fontWeight: 700,
-              marginBottom: 20,
-            }}>
-              {String(active + 1).padStart(2, "0")} · {current.theme.toUpperCase()}
-            </p>
+    <div className="grid grid-cols-1 sm:grid-cols-2" style={{ gap: "clamp(16px, 1.6vw, 24px)" }}>
+      {voices.map((v, i) => (
+        <motion.figure
+          key={i}
+          whileHover={{ y: -3, boxShadow: "0 1px 2px rgba(20,63,61,0.05), 0 14px 30px -16px rgba(20,63,61,0.20)" }}
+          transition={{ type: "spring", stiffness: 300, damping: 24 }}
+          style={{
+            margin: 0,
+            background: "#FFFFFF",
+            border: `1px solid ${sh.subtle}`,
+            padding: "clamp(28px, 2.6vw, 38px)",
+            display: "flex", flexDirection: "column", gap: 20,
+            height: "100%",
+          }}
+        >
+          <Quotes size={34} weight="fill" color={sh.primary} aria-hidden />
 
-            <blockquote style={{
-              fontFamily: serif, fontStyle: "italic",
-              fontSize: "clamp(22px, 2.1vw, 28px)",
-              lineHeight: 1.4,
-              color: "var(--text-primary)",
-              letterSpacing: "-0.01em",
-              margin: 0,
-              maxWidth: "48ch",
-            }}>
-              &ldquo;{current.quote}&rdquo;
-            </blockquote>
-          </motion.div>
-        </AnimatePresence>
-      </div>
+          <blockquote style={{
+            margin: 0, flex: 1,
+            fontFamily: serif, fontStyle: "italic",
+            fontSize: "clamp(19px, 1.55vw, 23px)",
+            lineHeight: 1.5, letterSpacing: "-0.01em",
+            color: "var(--text-primary)",
+          }}>
+            &ldquo;{v.quote}&rdquo;
+          </blockquote>
 
-      {/* RIGHT - theme list */}
-      <div
-        className="lg:col-span-4"
-        role="tablist"
-        aria-label="Voices from the aisle"
-        tabIndex={0}
-        onKeyDown={onKeyDown}
-        style={{
-          background: sh.surface,
-          outline: "none",
-          position: "relative",
-          display: "flex", flexDirection: "column",
-        }}
-      >
-        {voices.map((v, i) => {
-          const isActive = i === active;
-          return (
-            <button
-              key={i}
-              type="button"
-              role="tab"
-              aria-selected={isActive}
-              onMouseEnter={() => setActive(i)}
-              onFocus={() => setActive(i)}
-              onClick={() => setActive(i)}
-              style={{
-                width: "100%",
-                padding: "22px 26px",
-                textAlign: "left",
-                border: "none",
-                borderBottom: i === total - 1 ? "none" : `1px solid ${sh.subtle}`,
-                background: isActive ? "var(--bg-elevated)" : "transparent",
-                cursor: "pointer",
-                position: "relative",
-                outline: "none",
-                flex: 1,
-                transition: "background-color 0.32s ease",
-              }}
-            >
-              {isActive && (
-                <motion.span
-                  layoutId="voice-active-bar"
-                  aria-hidden
-                  style={{
-                    position: "absolute",
-                    left: 0, top: 0, bottom: 0,
-                    width: 3,
-                    background: sh.primary,
-                  }}
-                  transition={{ type: "spring", stiffness: 380, damping: 32 }}
-                />
-              )}
-
-              <p style={{
-                ...mono, fontSize: 13, letterSpacing: "0.22em",
-                color: isActive ? sh.primary : sh.muted,
-                fontWeight: 700,
-                margin: 0,
-                transition: "color 0.32s ease",
-              }}>
-                {String(i + 1).padStart(2, "0")} · {v.theme.toUpperCase()}
-              </p>
-            </button>
-          );
-        })}
-      </div>
+          <figcaption style={{
+            display: "flex", alignItems: "center", justifyContent: "space-between",
+            gap: 12, paddingTop: 18, borderTop: `1px solid ${sh.subtle}`,
+          }}>
+            <span style={{ ...mono, fontSize: 11, letterSpacing: "0.2em", color: sh.primary, fontWeight: 700 }}>
+              {v.theme.toUpperCase()}
+            </span>
+            <span style={{ ...mono, fontSize: 10.5, letterSpacing: "0.14em", color: sh.muted, textAlign: "right" }}>
+              {v.meta.role.toUpperCase()} · {v.meta.age}
+            </span>
+          </figcaption>
+        </motion.figure>
+      ))}
     </div>
   );
 }
@@ -720,72 +619,28 @@ type Takeaway = {
 };
 
 function TakeawayCard({ tk }: { tk: Takeaway }) {
-  const [open, setOpen] = useState(false);
-
   return (
-    <button
-      type="button"
-      onClick={() => setOpen((v) => !v)}
-      aria-expanded={open}
+    <article
       style={{
-        textAlign: "left",
-        padding: "clamp(28px, 3vw, 36px)",
+        padding: "clamp(30px, 3vw, 40px)",
         background: "var(--bg-elevated)",
-        border: `1px solid ${open ? sh.primary : sh.subtle}`,
-        borderLeft: `3px solid ${sh.primary}`,
-        cursor: "pointer",
-        outline: "none",
-        transition: "border-color 240ms ease",
-        display: "block", width: "100%",
+        border: `1px solid ${sh.subtle}`,
+        display: "flex", flexDirection: "column",
+        height: "100%",
       }}
     >
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 20, marginBottom: 14 }}>
-        <p style={{
-          ...mono, fontSize: 11, letterSpacing: "0.22em",
-          color: sh.primary, fontWeight: 700,
-          margin: 0,
-        }}>
-          {tk.num} · TAKEAWAY
-        </p>
-        <motion.span
-          aria-hidden
-          animate={{ rotate: open ? 45 : 0 }}
-          transition={{ type: "spring", stiffness: 340, damping: 24 }}
-          style={{
-            display: "inline-flex",
-            color: sh.primary,
-            flexShrink: 0,
-          }}
-        >
-          <Plus size={18} weight="regular" />
-        </motion.span>
-      </div>
-
+      <span aria-hidden style={{ display: "block", width: 32, height: 2, background: sh.primary, marginBottom: 22 }} />
       <h3 style={{
         fontFamily: serif, fontWeight: 700,
-        fontSize: "clamp(22px, 1.8vw, 26px)",
-        letterSpacing: "-0.02em", lineHeight: 1.28,
+        fontSize: "clamp(21px, 1.85vw, 26px)",
+        letterSpacing: "-0.02em", lineHeight: 1.25,
         color: "var(--text-primary)",
-        margin: 0,
+        margin: "0 0 14px",
       }}>
         {tk.short}
       </h3>
-
-      <AnimatePresence initial={false}>
-        {open && (
-          <motion.div
-            key="body"
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.32, ease: [0.25, 1, 0.4, 1] }}
-            style={{ overflow: "hidden" }}
-          >
-            <p style={{ ...t.bodyLg, margin: 0, marginTop: 16 }}>{tk.body}</p>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </button>
+      <p style={{ ...t.bodyLg, margin: 0 }}>{tk.body}</p>
+    </article>
   );
 }
 
@@ -844,9 +699,6 @@ function ProposalBand({ data, index }: { data: ProposalBandData; index: number }
         <span style={{ color: sh.primary, fontWeight: 700 }}>
           PROPOSAL · {data.num} / 04
         </span>
-        <span style={{ color: sh.muted, fontWeight: 700 }}>
-          FILING {data.filing}
-        </span>
       </div>
 
       {/* Body grid */}
@@ -876,12 +728,6 @@ function ProposalBand({ data, index }: { data: ProposalBandData; index: number }
             <div key={i} style={{ position: "absolute", width: 14, height: 14, ...p }} />
           ))}
 
-          <p style={{
-            ...mono, position: "absolute", left: 22, bottom: 18,
-            fontSize: 9, letterSpacing: "0.22em", color: sh.muted,
-          }}>
-            FIG. {data.num} · CONCEPT
-          </p>
 
           <div style={{ width: "100%", maxWidth: 440 }}>
             {data.illus}
@@ -1232,149 +1078,130 @@ function FailureExplorer() {
 
   return (
     <div ref={ref} className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-stretch">
-      {/* ── LEFT · comparative chart ──────────────────────────────── */}
+      {/* ── LEFT · comparative chart (lollipop staircase) ─────────── */}
       <div className="lg:col-span-5">
-        <div style={{
-          display: "flex", justifyContent: "space-between", alignItems: "baseline",
-          marginBottom: 12,
-        }}>
+        <div style={{ marginBottom: 22 }}>
           <p style={{ ...mono, fontSize: 12, color: "var(--text-muted)", letterSpacing: "0.2em", margin: 0 }}>
-            FIG · LOCATE TIME · SECONDS
-          </p>
-          <p style={{ ...mono, fontSize: 11, color: sh.muted, letterSpacing: "0.16em", margin: 0 }}>
-            HOVER OR TAP A ROW
+            LOCATE TIME · SECONDS
           </p>
         </div>
 
-        <div style={{
-          position: "relative",
-          borderTop: `1px solid ${sh.subtle}`,
-          borderBottom: `1px solid ${sh.subtle}`,
-          paddingTop: 22, paddingBottom: 6,
-        }}>
-          {/* 5s comfort threshold marker */}
-          <div aria-hidden style={{
-            position: "absolute", top: 0, bottom: 0,
-            left: `${(threshold / maxTime) * 100}%`,
-            width: 0,
-            borderLeft: `1px dashed ${sh.dark}`,
-            opacity: 0.45,
-            zIndex: 1,
-          }}>
+        {/* comfort flag, aligned to the 5s guide */}
+        <div style={{ display: "grid", gridTemplateColumns: "108px 1fr 46px", gap: 12, marginBottom: 4 }}>
+          <div aria-hidden />
+          <div aria-hidden style={{ position: "relative", height: 14 }}>
             <span style={{
-              position: "absolute", top: 4, left: 6,
-              ...mono, fontSize: 11, fontWeight: 700,
-              color: sh.dark, letterSpacing: "0.16em",
-              whiteSpace: "nowrap", opacity: 0.7,
+              position: "absolute", right: "50%", marginRight: 8, top: 0, whiteSpace: "nowrap",
+              ...mono, fontSize: 10, fontWeight: 700, letterSpacing: "0.14em", color: sh.primary,
             }}>
-              5 S · COMFORT
+              COMFORT · 5S
             </span>
           </div>
+          <div aria-hidden />
+        </div>
 
-          {failures.map((f, i) => {
-            const isActive = active === i;
-            const fillPct = inView ? (f.time / maxTime) * 100 : 0;
+        {failures
+          .map((f, i) => ({ ...f, orig: i }))
+          .sort((a, b) => b.time - a.time)
+          .map((f, rank) => {
+            const isActive = active === f.orig;
+            const valuePct = (f.time / maxTime) * 100;
+            const overrunPct = valuePct - (threshold / maxTime) * 100;
             return (
               <button
-                key={i}
+                key={f.orig}
                 type="button"
-                onMouseEnter={() => setActive(i)}
-                onFocus={() => setActive(i)}
-                onClick={() => setActive(i)}
+                className="sh-chart-row"
+                onMouseEnter={() => setActive(f.orig)}
+                onFocus={() => setActive(f.orig)}
+                onClick={() => setActive(f.orig)}
                 aria-pressed={isActive}
-                aria-label={`Inspect ${f.tag.toLowerCase()} failure, ${f.time.toFixed(1)} seconds`}
+                aria-label={`Inspect ${f.tag.toLowerCase()} failure, ${f.time.toFixed(1)} seconds to locate`}
                 style={{
-                  width: "100%", display: "block", textAlign: "left",
-                  padding: "20px 0",
-                  border: "none", background: "transparent",
-                  cursor: "pointer",
-                  borderTop: i === 0 ? "none" : `1px solid ${sh.subtle}`,
-                  outline: "none",
-                  position: "relative",
-                  zIndex: 2,
+                  width: "100%", display: "grid",
+                  gridTemplateColumns: "108px 1fr 46px", gap: 12, alignItems: "stretch",
+                  padding: "0 8px", border: "none", cursor: "pointer", textAlign: "left",
+                  background: isActive ? "rgba(31,95,92,0.05)" : "transparent",
+                  transition: "background 0.25s ease",
                 }}
               >
-                <div style={{
-                  display: "flex", alignItems: "baseline",
-                  justifyContent: "space-between", marginBottom: 12,
+                {/* mode label */}
+                <span style={{
+                  alignSelf: "center", textAlign: "right",
+                  fontFamily: sans, fontSize: 17, fontWeight: isActive ? 600 : 500, letterSpacing: "-0.01em",
+                  color: isActive ? "var(--text-primary)" : "var(--text-secondary)",
+                  transition: "color 0.25s ease",
                 }}>
-                  <div style={{ display: "flex", alignItems: "baseline", gap: 18 }}>
-                    <span style={{
-                      ...mono, fontSize: 13, fontWeight: 700,
-                      color: isActive ? sh.primary : "var(--text-muted)",
-                      letterSpacing: "0.2em",
-                      transition: "color 0.3s ease",
-                    }}>
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                    <span style={{
-                      fontFamily: serif, fontWeight: 700, fontSize: 26,
-                      letterSpacing: "-0.02em",
-                      color: isActive ? "var(--text-primary)" : "var(--text-secondary)",
-                      transition: "color 0.3s ease",
-                    }}>
-                      {f.tag.charAt(0) + f.tag.slice(1).toLowerCase()}
-                    </span>
-                  </div>
-                  <span style={{
-                    ...mono, fontSize: 14, fontWeight: 700,
-                    color: isActive ? sh.primary : sh.dark,
-                    letterSpacing: "0.16em",
-                    transition: "color 0.3s ease",
-                  }}>
-                    {f.time.toFixed(1)} s
-                  </span>
-                </div>
-                <div style={{
-                  position: "relative", height: 6,
-                  background: sh.subtle,
-                }}>
+                  {f.tag.charAt(0) + f.tag.slice(1).toLowerCase()}
+                </span>
+
+                {/* track */}
+                <div style={{ position: "relative", alignSelf: "stretch", minHeight: 56 }}>
+                  {/* 0-10s baseline */}
+                  <div aria-hidden style={{
+                    position: "absolute", left: 0, right: 0, top: "50%", height: 1,
+                    transform: "translateY(-50%)", background: "rgba(31,95,92,0.15)",
+                  }} />
+                  {/* 5s comfort guide */}
+                  <div aria-hidden style={{
+                    position: "absolute", left: "50%", top: 0, bottom: 0, width: 1,
+                    background: isActive ? "rgba(20,63,61,0.4)" : "rgba(20,63,61,0.22)",
+                    transition: "background 0.25s ease",
+                  }} />
+                  {/* overrun: 5s -> value */}
                   <motion.div
-                    initial={{ width: 0 }}
-                    animate={{ width: `${fillPct}%` }}
-                    transition={{
-                      duration: 1.0,
-                      delay: 0.15 + i * 0.12,
-                      ease: [0.25, 1, 0.4, 1],
-                    }}
+                    aria-hidden
+                    initial={{ scaleX: 0 }}
+                    animate={inView ? { scaleX: 1 } : { scaleX: 0 }}
+                    transition={{ duration: 0.6, delay: 0.15 + rank * 0.09, ease: [0.25, 1, 0.4, 1] }}
                     style={{
-                      position: "absolute", left: 0, top: 0, bottom: 0,
+                      position: "absolute", left: "50%", top: "calc(50% - 1px)",
+                      width: `${overrunPct}%`, height: 2, transformOrigin: "left",
                       background: isActive ? sh.primary : sh.light,
-                      transition: "background 0.3s ease",
+                      transitionProperty: "background", transitionDuration: "0.25s",
                     }}
                   />
-                  {/* slim active marker dot at end of bar */}
-                  {isActive && (
+                  {/* value dot */}
+                  <div aria-hidden style={{ position: "absolute", left: `${valuePct}%`, top: "50%", transform: "translate(-50%, -50%)" }}>
                     <motion.div
-                      layoutId="failure-active-dot"
-                      transition={{ duration: 0.35, ease: [0.34, 1.56, 0.64, 1] }}
+                      initial={{ scale: 0 }}
+                      animate={inView ? { scale: 1 } : { scale: 0 }}
+                      transition={{ duration: 0.4, delay: 0.34 + rank * 0.09, ease: [0.34, 1.56, 0.64, 1] }}
                       style={{
-                        position: "absolute",
-                        left: `${fillPct}%`, top: "50%",
-                        transform: "translate(-50%, -50%)",
-                        width: 12, height: 12,
-                        background: sh.primary,
-                        border: `2px solid var(--bg-primary)`,
-                        boxShadow: `0 0 0 1px ${sh.primary}`,
-                        borderRadius: 0,
+                        width: isActive ? 14 : 10, height: isActive ? 14 : 10, borderRadius: "50%",
+                        background: isActive ? sh.primary : sh.light,
+                        boxShadow: isActive ? `0 0 0 5px ${sh.surface}` : "none",
+                        transition: "width 0.2s ease, height 0.2s ease, background 0.2s ease, box-shadow 0.2s ease",
                       }}
                     />
-                  )}
+                  </div>
                 </div>
+
+                {/* seconds value */}
+                <span style={{
+                  alignSelf: "center", textAlign: "right",
+                  ...mono, fontSize: 16, fontWeight: 700, letterSpacing: "0.02em",
+                  fontVariantNumeric: "tabular-nums",
+                  color: isActive ? sh.primary : sh.dark,
+                  transition: "color 0.25s ease",
+                }}>
+                  {f.time.toFixed(1)}
+                </span>
               </button>
             );
           })}
+
+        {/* axis */}
+        <div style={{ display: "grid", gridTemplateColumns: "108px 1fr 46px", gap: 12, marginTop: 8 }}>
+          <div aria-hidden />
+          <div style={{ display: "flex", justifyContent: "space-between", ...mono, fontSize: 10, color: "var(--text-muted)", letterSpacing: "0.16em" }}>
+            <span>0S</span>
+            <span>{maxTime}S</span>
+          </div>
+          <div aria-hidden />
         </div>
 
-        <div style={{
-          display: "flex", justifyContent: "space-between",
-          marginTop: 10,
-          ...mono, fontSize: 11, color: "var(--text-muted)",
-          letterSpacing: "0.16em",
-        }}>
-          <span>0 S</span>
-          <span>{maxTime} S</span>
-        </div>
+        <style>{`.sh-chart-row:focus-visible { outline: 2px solid ${sh.primary}; outline-offset: -2px; }`}</style>
       </div>
 
       {/* ── RIGHT · active specimen card ──────────────────────────── */}
@@ -1447,7 +1274,7 @@ function FailureExplorer() {
                     }}
                   />
                 ) : (
-                  <div style={{ width: "100%", maxWidth: 480 }}>
+                  <div style={{ width: "100%", maxWidth: 600 }}>
                     {current.illus}
                   </div>
                 )}
@@ -1570,8 +1397,6 @@ function NavCard({ project }: { project: Project }) {
 ══════════════════════════════════════════════════════════════════ */
 export default function ShelfieCase() {
   const otherProjects = projects.filter((p) => p.slug !== "shelfie").slice(-2);
-  const { scrollYProgress } = useScroll();
-  const scaleX = useSpring(scrollYProgress, { stiffness: 200, damping: 30, restDelta: 0.001 });
   const [showTop, setShowTop] = useState(false);
 
   useEffect(() => {
@@ -1588,17 +1413,6 @@ export default function ShelfieCase() {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.4 }}
     >
-      {/* Scroll progress */}
-      <div style={{
-        position: "fixed", top: 56, left: 0, right: 0, height: 2,
-        background: "transparent", zIndex: 49,
-      }}>
-        <motion.div style={{
-          height: "100%", background: sh.primary,
-          scaleX, transformOrigin: "left", opacity: 0.85,
-        }} />
-      </div>
-
       {/* ══════════════════════════════════════════════════════════════
           00 · HERO - editorial monograph cover
       ══════════════════════════════════════════════════════════════ */}
@@ -1709,15 +1523,14 @@ export default function ShelfieCase() {
           <SectionHeader
             num="01"
             phase="Premise"
-            title={<>A three-word<br /><span style={{ fontStyle: "italic", color: sh.primary }}>public-health</span><br />problem.</>}
-            meta="The stakes"
+            title={<>A three-word <span style={{ fontStyle: "italic", color: sh.primary }}>public-health</span> problem.</>}
             accent={sh.primary}
           />
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mb-14 items-start">
-            <div className="lg:col-span-6">
-              <Reveal delay={0.12}>
-                <p style={{ ...t.bodyLg, maxWidth: 480 }}>
+            <div className="lg:col-span-12">
+              <Reveal delay={undefined}>
+                <p style={{ ...t.bodyLg, maxWidth: 800 }}>
                   The last thing a shopper reads before a purchase. The first thing they
                   consult before a meal. And nearly nobody reads it the same way twice.
                 </p>
@@ -1732,21 +1545,6 @@ export default function ShelfieCase() {
               border: `1px solid ${sh.subtle}`,
               marginBottom: 56,
             }}>
-              {/* Catalog strip */}
-              <div style={{
-                display: "flex", justifyContent: "space-between", alignItems: "center",
-                padding: "14px 24px",
-                borderBottom: `1px solid ${sh.subtle}`,
-                background: sh.surface,
-              }}>
-                <p style={{ ...mono, fontSize: 10, letterSpacing: "0.24em", color: sh.primary, fontWeight: 700 }}>
-                  EXHIBIT · A
-                </p>
-                <p style={{ ...mono, fontSize: 9, letterSpacing: "0.22em", color: sh.muted }}>
-                  CATALOG · ONE PRODUCT, TWO TERMS
-                </p>
-              </div>
-
               <div style={{
                 display: "grid",
                 gridTemplateColumns: "minmax(0, 5fr) minmax(0, 7fr)",
@@ -1780,12 +1578,6 @@ export default function ShelfieCase() {
                       mixBlendMode: "multiply",
                     }}
                   />
-                  <p style={{
-                    ...mono, position: "absolute", left: 24, bottom: 26,
-                    fontSize: 9, letterSpacing: "0.22em", color: sh.muted,
-                  }}>
-                    FIG. 01 · OBSERVED IN-AISLE
-                  </p>
                 </div>
 
                 {/* Field note */}
@@ -1804,16 +1596,13 @@ export default function ShelfieCase() {
                     ].map((row, i) => (
                       <div key={i} style={{
                         display: "grid",
-                        gridTemplateColumns: "auto 1fr auto",
+                        gridTemplateColumns: "1fr auto",
                         gap: 22,
                         padding: "22px 0",
                         borderTop: `1px solid ${sh.subtle}`,
                         borderBottom: i === 1 ? `1px solid ${sh.subtle}` : "none",
                         alignItems: "baseline",
                       }}>
-                        <p style={{ ...mono, fontSize: 13, letterSpacing: "0.2em", color: sh.muted, fontWeight: 700 }}>
-                          {row.tag}
-                        </p>
                         <div>
                           <p style={{ ...mono, fontSize: 18, letterSpacing: "0.18em", color: "var(--text-primary)", fontWeight: 700, margin: 0, marginBottom: 8 }}>
                             {row.term}
@@ -1879,9 +1668,6 @@ export default function ShelfieCase() {
                       }}>
                         <I size={20} color={sh.primary} weight="regular" />
                       </div>
-                      <p style={{ ...mono, fontSize: 9, color: sh.muted, letterSpacing: "0.2em" }}>
-                        FACT · 0{i + 1}
-                      </p>
                     </div>
                     <p style={{
                       fontFamily: serif, fontWeight: 700,
@@ -1915,14 +1701,13 @@ export default function ShelfieCase() {
             num="02"
             phase="What fails on the shelf"
             title={<>Four ways a label<span style={{ fontStyle: "italic", color: sh.primary }}> disappears</span>, in plain sight.</>}
-            meta="Failure cases"
             accent={sh.primary}
           />
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mb-12 items-end">
-            <div className="lg:col-span-7">
-              <Reveal delay={0.1}>
-                <p style={{ ...t.bodyLg, maxWidth: 620 }}>
+            <div className="lg:col-span-12">
+              <Reveal delay={undefined}>
+                <p style={{ ...t.bodyLg, maxWidth: 800 }}>
                   I pulled four representative products off the shelf, then timed
                   twenty-five shoppers locating each date. Every product failed differently,
                   and the spread between best and worst was almost two-to-one.
@@ -1945,23 +1730,15 @@ export default function ShelfieCase() {
             num="03"
             phase="How I studied it"
             title={<>A mixed-methods study,<span style={{ fontStyle: "italic", color: sh.primary }}> grounded in the aisle.</span></>}
-            meta="Method"
             accent={sh.primary}
           />
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mb-12 items-end">
-            <div className="lg:col-span-8">
-              <Reveal delay={0.1}>
-                <p style={{ ...t.bodyLg, maxWidth: 640 }}>
+            <div className="lg:col-span-12">
+              <Reveal delay={undefined}>
+                <p style={{ ...t.bodyLg, maxWidth: 800 }}>
                   Three complementary lenses: watch them, time them, ask them.
                   Twenty-five participants, balanced across age, vision, and cadence.
-                </p>
-              </Reveal>
-            </div>
-            <div className="lg:col-span-4">
-              <Reveal delay={0.18}>
-                <p style={{ ...mono, fontSize: 11, letterSpacing: "0.22em", color: sh.muted, fontWeight: 700, textAlign: "right" }}>
-                  HOVER OR TAP A METHOD<br />TO REVEAL THE FIELD KIT
                 </p>
               </Reveal>
             </div>
@@ -2019,28 +1796,16 @@ export default function ShelfieCase() {
             num="04"
             phase="Voices from the aisle"
             title={<>Twenty-five shoppers,<span style={{ fontStyle: "italic", color: sh.primary }}> in their own words.</span></>}
-            meta="Research highlights"
             accent={sh.primary}
           />
 
           {/* Lede - text only, panel sits below */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mb-10 items-end">
-            <div className="lg:col-span-8">
-              <Reveal delay={0.1}>
-                <p style={{ ...t.bodyLg, maxWidth: 640 }}>
+            <div className="lg:col-span-12">
+              <Reveal delay={undefined}>
+                <p style={{ ...t.bodyLg, maxWidth: 800 }}>
                   Semi-structured shop-alongs and post-task debriefs. Verbatim transcripts,
                   affinity-diagrammed, blind-coded. Browse the four strongest themes below.
-                </p>
-              </Reveal>
-            </div>
-            <div className="lg:col-span-4">
-              <Reveal delay={0.16}>
-                <p style={{
-                  ...mono, fontSize: 11, letterSpacing: "0.22em",
-                  color: sh.muted, fontWeight: 700,
-                  textAlign: "right",
-                }}>
-                  HOVER OR TAP A VOICE<br />TO PLAY THE RECORDING
                 </p>
               </Reveal>
             </div>
@@ -2096,14 +1861,13 @@ export default function ShelfieCase() {
             num="05"
             phase="Principles I pressed against"
             title={<>Every failure traced back to a<span style={{ fontStyle: "italic", color: sh.primary }}> named principle.</span></>}
-            meta="Synthesis"
             accent={sh.primary}
           />
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mb-12 items-end">
-            <div className="lg:col-span-7">
-              <Reveal delay={0.1}>
-                <p style={{ ...t.bodyLg, maxWidth: 580 }}>
+            <div className="lg:col-span-12">
+              <Reveal delay={undefined}>
+                <p style={{ ...t.bodyLg, maxWidth: 800 }}>
                   Anecdotes don't change packaging. Principles do. I mapped each observation
                   onto a named cognitive constraint, so the design isn't asking to be trusted,
                   it's showing its work.
@@ -2191,27 +1955,15 @@ export default function ShelfieCase() {
             num="06"
             phase="Design proposals"
             title={<>Four concepts,<span style={{ fontStyle: "italic", color: sh.primary }}> two sides of the package.</span></>}
-            meta="Concepts"
             accent={sh.primary}
           />
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mb-14 items-end">
-            <div className="lg:col-span-8">
-              <Reveal delay={0.1}>
-                <p style={{ ...t.bodyLg, maxWidth: 640 }}>
+            <div className="lg:col-span-12">
+              <Reveal delay={undefined}>
+                <p style={{ ...t.bodyLg, maxWidth: 800 }}>
                   Better printing helps the aisle. Better tools help the pantry.
                   Each concept points back to a finding and names the principle it leans on.
-                </p>
-              </Reveal>
-            </div>
-            <div className="lg:col-span-4">
-              <Reveal delay={0.16}>
-                <p style={{
-                  ...mono, fontSize: 11, letterSpacing: "0.22em",
-                  color: sh.muted, fontWeight: 700,
-                  textAlign: "right",
-                }}>
-                  04 PROPOSALS<br />FILING USP-2025
                 </p>
               </Reveal>
             </div>
@@ -2227,7 +1979,7 @@ export default function ShelfieCase() {
                 body: "A single three-state glyph replaces the four-vocabulary tangle. Fresh, soon, expired: colour-coded, language-independent, half-second glance.",
                 illus: <UniversalIconIllustration />,
                 principle: "Affordance · Visual hierarchy",
-                respondsTo: "F·01 Vocabulary",
+                respondsTo: "Vocabulary",
                 filing: "USP-2025-A",
               },
               {
@@ -2237,7 +1989,7 @@ export default function ShelfieCase() {
                 body: "Temperature-reactive ink darkens with real storage conditions. No battery, and a hot car ride doesn't go uncounted.",
                 illus: <TimeStripIllustration />,
                 principle: "Mental models · Feedback",
-                respondsTo: "F·03 Memory",
+                respondsTo: "Memory",
                 filing: "USP-2025-B",
               },
               {
@@ -2247,7 +1999,7 @@ export default function ShelfieCase() {
                 body: "A peel-reveal sticker starts a visible countdown the moment the seal breaks, making the invisible post-open timer visible.",
                 illus: <OpenByIllustration />,
                 principle: "Cognitive load · Mental models",
-                respondsTo: "F·03 Memory",
+                respondsTo: "Memory",
                 filing: "USP-2025-C",
               },
               {
@@ -2257,7 +2009,7 @@ export default function ShelfieCase() {
                 body: "Snap one shelf photo. OCR extracts dates, builds a timeline, and nudges you 48 h before something tips.",
                 illus: <ShelfieAppIllustration />,
                 principle: "Distributed cognition · Reminders",
-                respondsTo: "F·04 Loss aversion",
+                respondsTo: "Loss aversion",
                 filing: "USP-2025-D",
               },
             ] as ProposalBandData[]).map((p, i) => (
@@ -2274,27 +2026,15 @@ export default function ShelfieCase() {
             num="07"
             phase="What the work left me with"
             title={<>Research as a way<span style={{ fontStyle: "italic", color: sh.primary }}> to make the invisible arguable.</span></>}
-            meta="Reflection"
             accent={sh.primary}
           />
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mb-14 items-end">
-            <div className="lg:col-span-9">
-              <Reveal delay={0.1}>
-                <p style={{ ...t.bodyLg, maxWidth: 640 }}>
+            <div className="lg:col-span-12">
+              <Reveal delay={undefined}>
+                <p style={{ ...t.bodyLg, maxWidth: 800 }}>
                   The strongest thing this study left me with wasn't a single fix.
                   It was a way to defend each one: observation by observation, principle by principle.
-                </p>
-              </Reveal>
-            </div>
-            <div className="lg:col-span-3">
-              <Reveal delay={0.16}>
-                <p style={{
-                  ...mono, fontSize: 11, letterSpacing: "0.22em",
-                  color: sh.muted, fontWeight: 700,
-                  textAlign: "right",
-                }}>
-                  04 LESSONS<br />ONE STUDY
                 </p>
               </Reveal>
             </div>
@@ -2335,10 +2075,12 @@ export default function ShelfieCase() {
       ══════════════════════════════════════════════════════════════ */}
       <section style={{ padding: "clamp(64px, 8vw, 104px) 0", borderTop: "1px solid var(--border)" }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
-          <div style={{ display: "flex", alignItems: "baseline", gap: 14, marginBottom: 36 }}>
-            <span aria-hidden style={{ width: 3, height: 14, background: sh.primary }} />
-            <p style={{ ...mono, fontSize: 12, color: sh.primary, letterSpacing: "0.22em", fontWeight: 600 }}>
-              More case studies
+          <div style={{ marginBottom: "clamp(36px, 4.5vw, 56px)", maxWidth: 560 }}>
+            <h2 style={{ fontFamily: serif, fontWeight: 700, fontSize: "clamp(30px, 3.4vw, 44px)", letterSpacing: "-0.03em", lineHeight: 1.12, color: "var(--text-primary)", margin: 0 }}>
+              Keep exploring<span style={{ fontStyle: "italic", color: sh.primary }}>.</span>
+            </h2>
+            <p style={{ fontFamily: sans, fontSize: "clamp(17px, 1.4vw, 19px)", color: "var(--text-secondary)", lineHeight: 1.6, margin: "16px 0 0" }}>
+              Two more case studies, start to finish.
             </p>
           </div>
 
