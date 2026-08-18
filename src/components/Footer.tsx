@@ -1,299 +1,109 @@
+import { useRef, useLayoutEffect } from "react";
 import { Link } from "react-router-dom";
 import {
-  LinkedinLogo,
-  EnvelopeSimple,
-  FileArrowDown,
+  EnvelopeSimpleIcon as EnvelopeSimple,
+  ArrowUpIcon as ArrowUp,
+  ArrowRightIcon as ArrowRight,
+  ArrowUpRightIcon as ArrowUpRight,
 } from "@phosphor-icons/react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-interface SocialLink {
-  icon: React.ReactNode;
-  href: string;
-  label: string;
-}
+gsap.registerPlugin(ScrollTrigger);
 
-interface NavLink {
-  href: string;
-  label: string;
-  internal?: boolean;
-}
+const EMAIL = "mailto:niharikap0210@gmail.com";
+const LINKEDIN = "https://www.linkedin.com/in/niharika-pundlik-63a9a1288/";
+const RESUME = "https://drive.google.com/file/d/1wXRAfG2Os-Kbt9WtR1W2ET0YSC9HRoaf/view?usp=sharing";
 
-const socialLinks: SocialLink[] = [
-  {
-    icon: <LinkedinLogo size={18} weight="regular" color="currentColor" />,
-    href: "https://www.linkedin.com/in/niharika-pundlik-63a9a1288/",
-    label: "LinkedIn",
-  },
-  {
-    icon: <EnvelopeSimple size={18} weight="regular" color="currentColor" />,
-    href: "mailto:niharikap0210@gmail.com",
-    label: "Email",
-  },
-  {
-    icon: <FileArrowDown size={18} weight="regular" color="currentColor" />,
-    href: "https://drive.google.com/file/d/1wXRAfG2Os-Kbt9WtR1W2ET0YSC9HRoaf/view?usp=sharing",
-    label: "Resume",
-  },
+const pages = [
+  { label: "Home", href: "/" },
+  { label: "Work", href: "/#projects" },
+  { label: "About", href: "/about" },
+];
+const elsewhere = [
+  { label: "LinkedIn", href: LINKEDIN },
+  { label: "Email", href: EMAIL },
+  { label: "Resume", href: RESUME },
 ];
 
-const mainLinks: NavLink[] = [
-  { href: "/#projects", label: "Work", internal: true },
-  { href: "/about", label: "About", internal: true },
-  { href: "https://drive.google.com/file/d/1wXRAfG2Os-Kbt9WtR1W2ET0YSC9HRoaf/view?usp=sharing", label: "Resume" },
-  { href: "mailto:niharikap0210@gmail.com", label: "Contact" },
-];
+const isHttp = (h: string) => h.startsWith("http");
 
-const copyright = {
-  text: "© 2026 Niharika Pundlik",
-  license: "Product Designer · Architect by training",
-};
-
-const mono: React.CSSProperties = {
-  fontFamily: "'Space Mono', monospace",
-  letterSpacing: "0.12em",
-  textTransform: "uppercase",
-};
-
-/* ── NP monogram — architectural drafting mark ─────────────────── */
-function LogoMark() {
-  return (
-    <svg
-      width="28"
-      height="28"
-      viewBox="0 0 28 28"
-      fill="none"
-      aria-hidden
-      style={{ color: "var(--text-primary)" }}
-    >
-      <rect
-        x="1"
-        y="1"
-        width="26"
-        height="26"
-        rx="3"
-        stroke="currentColor"
-        strokeWidth="1"
-        fill="none"
-      />
-      <text
-        x="14"
-        y="18"
-        textAnchor="middle"
-        fontFamily="'Playfair Display', Georgia, serif"
-        fontSize="13"
-        fontWeight="700"
-        fill="currentColor"
-        letterSpacing="-0.02em"
-      >
-        NP
-      </text>
-    </svg>
-  );
-}
-
+/* Combined "Let's connect" + site footer (global, on every page) */
 export default function Footer() {
+  const rootRef = useRef<HTMLElement>(null);
+
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      const mm = gsap.matchMedia();
+      mm.add("(prefers-reduced-motion: no-preference)", () => {
+        gsap.from(".cfooter-reveal", {
+          y: 26, autoAlpha: 0, duration: 0.7, ease: "power3.out", stagger: 0.09,
+          scrollTrigger: { trigger: rootRef.current, start: "top 85%", once: true },
+        });
+      });
+    }, rootRef);
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <footer
-      style={{
-        borderTop: "1px solid var(--border)",
-        backgroundColor: "var(--bg-primary)",
-      }}
-      className="pb-6 pt-12 lg:pb-10 lg:pt-16"
-    >
-      <div className="max-w-6xl mx-auto px-6 md:px-10">
-        {/* ── Top: brand + social ─────────────────────────────── */}
-        <div className="md:flex md:items-start md:justify-between">
-          <Link
-            to="/"
-            className="flex items-center gap-x-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded"
-            aria-label="Niharika Pundlik - home"
-            style={{ textDecoration: "none" }}
-          >
-            <LogoMark />
-            <span
-              style={{
-                fontFamily: "'Playfair Display', Georgia, serif",
-                fontWeight: 700,
-                fontSize: 22,
-                color: "var(--text-primary)",
-                letterSpacing: "-0.015em",
-              }}
-            >
-              Niharika Pundlik<span style={{ color: "var(--accent)" }}>.</span>
-            </span>
-          </Link>
+    <footer ref={rootRef} id="connect" className="cfooter" aria-label="Let's connect">
+      <span className="cfooter-mark" aria-hidden>Niharika</span>
 
-          <ul className="flex list-none mt-6 md:mt-0 gap-2">
-            {socialLinks.map((link) => (
-              <li key={link.label}>
-                <a
-                  href={link.href}
-                  target={link.href.startsWith("http") ? "_blank" : undefined}
-                  rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                  aria-label={link.label}
-                  className="inline-flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
-                  style={{
-                    height: 40,
-                    width: 40,
-                    borderRadius: 999,
-                    border: "1px solid var(--border)",
-                    backgroundColor: "var(--bg-elevated)",
-                    color: "var(--text-secondary)",
-                    transitionProperty: "background-color, color, border-color",
-                    transitionDuration: "200ms",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = "var(--accent)";
-                    e.currentTarget.style.color = "#fff";
-                    e.currentTarget.style.borderColor = "var(--accent)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = "var(--bg-elevated)";
-                    e.currentTarget.style.color = "var(--text-secondary)";
-                    e.currentTarget.style.borderColor = "var(--border)";
-                  }}
-                >
-                  {link.icon}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
+      <div className="cfooter-inner">
+        <div className="cfooter-grid">
+          {/* CTA */}
+          <div className="cfooter-cta cfooter-reveal">
+            <span className="cfooter-kicker">Open to work</span>
+            <h2 className="cfooter-heading">
+              Let's build something<br />
+              <span className="cfooter-hl">
+                <span className="cfooter-hl-mark" aria-hidden />
+                <span className="cfooter-hl-text">together.</span>
+              </span>
+            </h2>
+            <p className="cfooter-sub">
+              Open to full-time Product Design roles, thoughtful side projects, and good conversations about turning architectural thinking into digital products.
+            </p>
+            <a className="cfooter-btn" href={EMAIL}>
+              <span className="cfooter-btn-label">
+                <EnvelopeSimple size={18} weight="bold" aria-hidden /> Get in touch
+              </span>
+            </a>
+          </div>
 
-        {/* ── Divider + grid: copyright / main links / legal ──── */}
-        <div
-          className="mt-8 pt-8 lg:mt-6 lg:pt-10 lg:grid lg:grid-cols-10 lg:gap-6"
-          style={{ borderTop: "1px solid var(--border)" }}
-        >
-          {/* Main nav — top-right block */}
-          <nav className="lg:col-[4/11]">
-            <ul className="list-none flex flex-wrap gap-x-6 gap-y-2 lg:justify-end">
-              {mainLinks.map((link) => (
-                <li key={link.label}>
-                  {link.internal ? (
-                    <Link
-                      to={link.href}
-                      className="hover-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded"
-                      style={{
-                        ...mono,
-                        fontSize: 13,
-                        color: "var(--text-primary)",
-                        textDecoration: "none",
-                        transitionProperty: "color",
-                        transitionDuration: "150ms",
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.color = "var(--accent)";
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.color = "var(--text-primary)";
-                      }}
-                    >
-                      {link.label}
-                    </Link>
-                  ) : (
-                    <a
-                      href={link.href}
-                      target={link.href.startsWith("http") ? "_blank" : undefined}
-                      rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                      className="hover-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded"
-                      style={{
-                        ...mono,
-                        fontSize: 13,
-                        color: "var(--text-primary)",
-                        textDecoration: "none",
-                        transitionProperty: "color",
-                        transitionDuration: "150ms",
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.color = "var(--accent)";
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.color = "var(--text-primary)";
-                      }}
-                    >
-                      {link.label}
-                    </a>
-                  )}
-                </li>
+          {/* nav columns — larger links with a slide-in arrow on hover */}
+          <div className="cfooter-cols cfooter-reveal">
+            <nav className="cfooter-col" aria-label="Site pages">
+              <span className="cfooter-col-title">Explore</span>
+              {pages.map((p) => (
+                <Link key={p.label} to={p.href} className="cfooter-link">
+                  <span className="cfooter-link-txt">{p.label}</span>
+                  <ArrowRight className="cfooter-link-arrow" size={15} weight="bold" aria-hidden />
+                </Link>
               ))}
-            </ul>
-          </nav>
-
-          {/* Legal / meta — second right-side row */}
-          <div className="mt-5 lg:mt-0 lg:col-[4/11]">
-            <ul className="list-none flex flex-wrap gap-x-6 gap-y-2 lg:justify-end">
-              <li>
-                <button
-                  onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-                  className="hover-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded"
-                  style={{
-                    ...mono,
-                    fontSize: 12,
-                    color: "var(--text-muted)",
-                    background: "none",
-                    border: "none",
-                    padding: 0,
-                    cursor: "pointer",
-                    transitionProperty: "color",
-                    transitionDuration: "150ms",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.color = "var(--accent)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.color = "var(--text-muted)";
-                  }}
-                >
-                  Back to top
-                </button>
-              </li>
-            </ul>
-          </div>
-
-          {/* Copyright — spans both rows, left block */}
-          <div
-            className="mt-6 lg:mt-0 lg:row-[1/3] lg:col-[1/4]"
-            style={{
-              ...mono,
-              fontSize: 12,
-              color: "var(--text-muted)",
-              lineHeight: 1.8,
-            }}
-          >
-            <div>{copyright.text}</div>
-            {copyright.license && (
-              <div
-                style={{
-                  fontFamily: "'Inter', system-ui, sans-serif",
-                  fontSize: 14,
-                  fontStyle: "normal",
-                  fontWeight: 400,
-                  letterSpacing: "0",
-                  textTransform: "none",
-                  marginTop: 4,
-                  color: "var(--text-muted)",
-                  lineHeight: 1.5,
-                }}
-              >
-                {copyright.license}
-              </div>
-            )}
+            </nav>
+            <nav className="cfooter-col" aria-label="Find me elsewhere">
+              <span className="cfooter-col-title">Elsewhere</span>
+              {elsewhere.map((l) => (
+                <a key={l.label} href={l.href} target={isHttp(l.href) ? "_blank" : undefined} rel={isHttp(l.href) ? "noopener noreferrer" : undefined} className="cfooter-link">
+                  <span className="cfooter-link-txt">{l.label}</span>
+                  <ArrowUpRight className="cfooter-link-arrow" size={15} weight="bold" aria-hidden />
+                </a>
+              ))}
+            </nav>
           </div>
         </div>
 
-        {/* ── Drawing sheet detail — architectural easter egg ── */}
-        <div className="flex justify-end mt-8">
-          <p
-            aria-hidden
-            style={{
-              ...mono,
-              fontSize: 10,
-              opacity: 0.35,
-              letterSpacing: "0.14em",
-            }}
-          >
-            Sheet: 01 of 01 • Rev: Final
-          </p>
+        {/* bottom bar */}
+        <div className="cfooter-bottom cfooter-reveal">
+          <Link to="/" className="cfooter-brand" aria-label="Niharika Pundlik — home">
+            <span className="cfooter-logo">NP</span>
+            <span className="cfooter-name">Niharika Pundlik</span>
+          </Link>
+          <span className="cfooter-copy">© 2026 · Product Designer, architect by training</span>
+          <button className="cfooter-toptop" onClick={() => window.scrollTo({ top: 0, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" })}>
+            Back to top <ArrowUp size={14} weight="bold" aria-hidden />
+          </button>
         </div>
       </div>
     </footer>

@@ -327,7 +327,7 @@ export default function HandDrawnSketch({
       animate={shouldAnimate ? { opacity: 1 } : { opacity: 0 }}
       transition={{ delay: delay + 1.0, duration: 0.6 }}
       style={{
-        fontFamily: "'Caveat', cursive",
+        fontFamily: "'Manrope', cursive",
         fontSize: 18,
         color: annotationColor ?? "var(--text-secondary)",
         opacity: 0.65,

@@ -15,27 +15,28 @@ import {
   CaretLeftIcon as CaretLeft,
   CaretRightIcon as CaretRight,
 } from "@phosphor-icons/react";
-import DrawingSheetBorder from "../components/DrawingSheetBorder";
-import SectionMarker from "../components/SectionMarker";
+import { GradientBackground } from "../components/GradientBackground";
+import LiquidBackground from "../components/LiquidBackground";
+import { SectionHeader } from "../components/CaseSectionHeader";
 
 /* ── Brand palette ────────────────────────────────────────────────── */
 const thesis = {
-  primary: "#9B7A52",
-  light:   "#B8966D",
-  dark:    "#6B5238",
-  surface: "#F6EEE5",
-  subtle:  "rgba(155, 122, 82, 0.08)",
-  muted:   "rgba(155, 122, 82, 0.55)",
+  primary: "#4262FF",
+  light:   "#6E86FF",
+  dark:    "#2A3AB0",
+  surface: "#EEF1FF",
+  subtle:  "rgba(66, 98, 255, 0.08)",
+  muted:   "rgba(66, 98, 255, 0.55)",
 };
 
 /* ── Type scale ───────────────────────────────────────────────────── */
 const mono: React.CSSProperties = {
-  fontFamily: "'Space Mono', monospace",
+  fontFamily: "'Manrope', monospace",
   textTransform: "uppercase" as const,
   letterSpacing: "0.12em",
 };
-const serif = "'Playfair Display', Georgia, serif";
-const sans  = "'Inter', system-ui, sans-serif";
+const serif = "'Manrope', Georgia, serif";
+const sans  = "'Manrope', system-ui, sans-serif";
 
 const t = {
   eyebrow: {
@@ -126,50 +127,6 @@ function CountUp({
   return <span ref={ref} style={style}>{display}{suffix}</span>;
 }
 
-/* ── Section header ───────────────────────────────────────────────── */
-function SectionHeader({ num, title, phase, total = "04" }: {
-  num: string; title: string; phase: string; total?: string;
-}) {
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-40px" });
-  return (
-    <div ref={ref} style={{ marginBottom: "clamp(40px, 5vw, 64px)" }}>
-      <div style={{ display: "flex", alignItems: "baseline", gap: 18, flexWrap: "wrap", paddingBottom: 14 }}>
-        <motion.span
-          initial={{ opacity: 0, y: 8 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.55, ease: EASE }}
-          style={{ ...mono, fontSize: 14, color: thesis.primary, letterSpacing: "0.22em", fontWeight: 700 }}
-        >
-          {num} <span style={{ color: "var(--text-muted)", fontWeight: 400 }}>/ {total}</span>
-        </motion.span>
-        <motion.span
-          initial={{ opacity: 0, y: 8 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.08, duration: 0.55, ease: EASE }}
-          style={{ ...mono, fontSize: 14, color: "var(--text-primary)", letterSpacing: "0.22em", fontWeight: 600 }}
-        >
-          {title}
-        </motion.span>
-        <motion.span
-          initial={{ opacity: 0 }}
-          animate={inView ? { opacity: 1 } : {}}
-          transition={{ delay: 0.2, duration: 0.55 }}
-          style={{ ...mono, fontSize: 11, color: "var(--text-muted)", letterSpacing: "0.2em", marginLeft: "auto" }}
-        >
-          {phase}
-        </motion.span>
-      </div>
-      <motion.div
-        initial={{ scaleX: 0 }}
-        animate={inView ? { scaleX: 1 } : {}}
-        transition={{ delay: 0.15, duration: 0.9, ease: EASE }}
-        style={{ height: 1, background: thesis.primary, transformOrigin: "left", opacity: 0.6 }}
-      />
-    </div>
-  );
-}
-
 /* ── Sheet data ───────────────────────────────────────────────────── */
 const SHEETS = [
   { src: "/thesis/img-05.png", label: "Sheet 01", title: "Introduction & Synopsis", caption: "Placemaking framework, design principles for public realm, objectives and scope of the thesis." },
@@ -231,7 +188,7 @@ function SheetCarousel() {
     : 0;
 
   return (
-    <div className="blueprint-grid-subtle" style={{ backgroundColor: "var(--bg-secondary)" }}>
+    <div style={{ backgroundColor: "var(--bg-secondary)", backgroundImage: "radial-gradient(circle, rgba(66,98,255,0.09) 1px, transparent 1.5px)", backgroundSize: "22px 22px", backgroundPosition: "-11px -11px" }}>
 
       {/* ── Sliding track ── */}
       <div
@@ -393,8 +350,6 @@ function SheetCarousel() {
    PAGE
 ══════════════════════════════════════════════════════════════════ */
 export default function ThesisCase() {
-  const { scrollYProgress } = useScroll();
-  const scaleX = useSpring(scrollYProgress, { stiffness: 200, damping: 40 });
   const isMobile = useIsMobile();
 
   return (
@@ -405,43 +360,45 @@ export default function ThesisCase() {
       transition={{ duration: 0.35 }}
       className="pt-14"
     >
-      {/* Top mask — solid white behind nav pill */}
-      <div style={{
-        position: "fixed", top: 0, left: 0, right: 0, height: 59,
-        background: "var(--bg-primary)", zIndex: 45,
-        pointerEvents: "none",
-      }} />
-
-      {/* Scroll progress bar — sits behind nav pill (z-index 49 < nav 50) */}
-      <div style={{
-        position: "fixed", top: 56, left: 0, right: 0, height: 2,
-        background: "var(--bg-primary)", zIndex: 49,
-      }}>
-        <motion.div style={{
-          height: "100%", background: thesis.primary,
-          scaleX, transformOrigin: "left", opacity: 0.85,
-        }} />
-      </div>
-
       {/* ── Hero ────────────────────────────────────────────────────── */}
-      <DrawingSheetBorder
-        titleBlock={{ name: "NIHARIKA PUNDLIK", sheet: "ARCHITECTURE / THESIS" }}
-        className="blueprint-grid overflow-hidden"
-        style={{ padding: "clamp(52px, 8vw, 88px) 0 clamp(44px, 6vw, 72px)" }}
-      >
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10">
-          <SectionMarker label="Architecture · Thesis" letter="T" className="mb-8" />
+      <section style={{
+        position: "relative",
+        isolation: "isolate",
+        overflow: "hidden",
+        background: "var(--bg-primary)",
+        marginTop: "-56px",
+        padding: "calc(56px + clamp(48px, 6vw, 80px)) 0 clamp(48px, 6vw, 76px)",
+      }}>
+        {/* Blue noisy-gradient hero background */}
+        <GradientBackground
+          gradientType="radial-gradient"
+          gradientSize="150% 130%"
+          gradientOrigin="top-middle"
+          colors={[
+            { color: "rgba(66,98,255,0.18)", stop: "0%" },
+            { color: "rgba(110,134,255,0.11)", stop: "34%" },
+            { color: "rgba(150,168,255,0.06)", stop: "62%" },
+            { color: "rgba(238,241,255,0)", stop: "100%" },
+          ]}
+          noisePatternAlpha={26}
+          noiseIntensity={1}
+          noisePatternRefreshInterval={1}
+          noisePatternSize={100}
+          style={{ zIndex: 0 }}
+        />
+        {/* Dotted grid overlay */}
+        <div aria-hidden style={{
+          position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none",
+          backgroundImage: "radial-gradient(circle, rgba(66,98,255,0.09) 1px, transparent 1.5px)",
+          backgroundSize: "22px 22px",
+          backgroundPosition: "-11px -11px",
+          WebkitMaskImage: "linear-gradient(to bottom, #000 60%, transparent 100%)",
+          maskImage: "linear-gradient(to bottom, #000 60%, transparent 100%)",
+        }} />
 
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10" style={{ position: "relative", zIndex: 1 }}>
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-end">
             <div className="lg:col-span-7">
-              <motion.div
-                initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-                style={{ ...t.eyebrow, marginBottom: 20, letterSpacing: "0.22em" }}
-              >
-                B.Arch Thesis · 2023 · 20 Weeks
-              </motion.div>
-
               <motion.h1
                 initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.75, ease: EASE }}
@@ -496,7 +453,7 @@ export default function ThesisCase() {
             </motion.div>
           </div>
         </div>
-      </DrawingSheetBorder>
+      </section>
 
       {/* ── Hero aerial render ───────────────────────────────────────── */}
       <div style={{
@@ -522,14 +479,6 @@ export default function ThesisCase() {
           position: "absolute", inset: 0,
           background: "linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, transparent 28%)",
         }} />
-        <div style={{
-          position: "absolute",
-          bottom: "clamp(16px, 3vw, 28px)",
-          left: "clamp(16px, 5vw, 40px)",
-          ...mono, fontSize: 9, color: "rgba(255,255,255,0.72)", letterSpacing: "0.22em",
-        }}>
-          Aerial Render
-        </div>
       </div>
 
       {/* ── Metadata strip ──────────────────────────────────────────── */}
@@ -580,93 +529,73 @@ export default function ThesisCase() {
       {/* ── 01 / Overview ───────────────────────────────────────────── */}
       <section style={{ padding: SECTION_PAD }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10">
-          <SectionHeader num="01" title="Overview" phase="Context & Intent" total="03" />
+          <SectionHeader
+            num="01"
+            phase="Context & intent"
+            title={<>Turning underused urban land into<span style={{ fontStyle: "italic", color: thesis.primary }}> shared public life.</span></>}
+            accent={thesis.primary}
+          />
 
-          {/* Full-width lede */}
-          <Reveal>
-            <p style={{
-              ...t.bodyLg,
-              fontSize: "clamp(20px, 1.8vw, 26px)",
-              maxWidth: 820,
-              marginBottom: "clamp(36px, 5vw, 56px)",
-            }}>
-              An architectural initiative aimed at revitalising urban spaces by
-              creating inclusive, sustainable, and vibrant public areas that
-              foster community interactions and enhance quality of life.
-            </p>
-          </Reveal>
-
-          {/* Ruled divider */}
-          <Reveal delay={0.08}>
-            <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: "clamp(36px, 5vw, 56px)" }}>
-              <div style={{ width: 32, height: 2, background: thesis.primary }} />
-              <div style={{ flex: 1, height: 1, background: "var(--border)" }} />
-            </div>
-          </Reveal>
-
-          {/* Body + Project Brief */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
-            <div className="lg:col-span-6">
-              <Reveal delay={0.12}>
-                <p style={{ ...t.body, fontSize: "clamp(18px, 1.4vw, 21px)" }}>
-                  This thesis explores transforming underutilised urban spaces into
-                  vibrant public realms through placemaking, sustainable design, and
-                  inclusive spatial planning, fostering social cohesion and improving
-                  urban life quality.
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+            <div className="lg:col-span-7">
+              <Reveal delay={0.1}>
+                <p style={{ ...t.bodyLg, maxWidth: 680 }}>
+                  The thesis reimagines underutilised urban spaces as inclusive, sustainable public
+                  realms — using placemaking, passive design, and context-led spatial planning to
+                  foster social cohesion and lift everyday quality of life.
                 </p>
-              </Reveal>
-            </div>
-
-            <div className="lg:col-span-6">
-              <Reveal delay={0.2}>
-                <div style={{
-                  display: "grid", gridTemplateColumns: "1fr 1fr",
-                  borderTop: "1px solid var(--border)",
-                }}>
-                  {[
-                    { value: "20", suffix: " wks", label: "Thesis Duration" },
-                    { value: "3,770", suffix: " sq.m", label: "Site Area" },
-                    { value: "5", suffix: "", label: "Programme Elements" },
-                    { value: "4", suffix: "", label: "Case Studies" },
-                  ].map((s, i) => (
-                    <div key={s.label} style={{
-                      padding: "clamp(24px, 3vw, 36px) clamp(16px, 2vw, 28px)",
-                      borderRight: i % 2 === 0 ? "1px solid var(--border)" : "none",
-                      borderBottom: i < 2 ? "1px solid var(--border)" : "none",
-                    }}>
-                      <div style={{
-                        fontFamily: serif, fontWeight: 700,
-                        fontSize: "clamp(32px, 3.5vw, 48px)",
-                        letterSpacing: "-0.035em", lineHeight: 1,
-                        color: thesis.primary, marginBottom: 10,
-                      }}>
-                        {s.value}
-                        <span style={{ fontSize: "0.45em", fontWeight: 400, letterSpacing: "0.04em", color: thesis.muted }}>
-                          {s.suffix}
-                        </span>
-                      </div>
-                      <div style={{ ...mono, fontSize: 9, color: "var(--text-muted)", letterSpacing: "0.18em" }}>
-                        {s.label}
-                      </div>
-                    </div>
-                  ))}
-                </div>
               </Reveal>
             </div>
           </div>
 
+          {/* Minimal stat row */}
+          <Reveal delay={0.18}>
+            <div style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
+              gap: "clamp(24px, 3vw, 48px)",
+              marginTop: "clamp(48px, 5.5vw, 76px)",
+              borderTop: "1px solid var(--border)",
+              paddingTop: "clamp(32px, 3.5vw, 44px)",
+            }}>
+              {([
+                { value: "20",    suffix: " wks",  label: "Thesis duration" },
+                { value: "3,770", suffix: " sq.m", label: "Site area" },
+                { value: "5",     suffix: "",      label: "Programme elements" },
+                { value: "4",     suffix: "",      label: "Case studies" },
+              ] as { value: string; suffix: string; label: string }[]).map((st) => (
+                <div key={st.label}>
+                  <div style={{
+                    fontFamily: serif, fontWeight: 700,
+                    fontSize: "clamp(34px, 3.6vw, 48px)",
+                    letterSpacing: "-0.035em", lineHeight: 1,
+                    color: thesis.primary, marginBottom: 10,
+                  }}>
+                    {st.value}
+                    <span style={{ fontSize: "0.42em", fontWeight: 400, letterSpacing: "0.03em", color: thesis.muted }}>{st.suffix}</span>
+                  </div>
+                  <div style={{ ...mono, fontSize: 10.5, color: "var(--text-muted)", letterSpacing: "0.16em", fontWeight: 600 }}>
+                    {st.label}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Reveal>
         </div>
       </section>
 
       {/* ── 02 / Project Sheets ─────────────────────────────────────── */}
       <div style={{ borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)" }}>
         {/* Section header — light area */}
-        <div className="blueprint-grid-subtle" style={{
+        <div style={{
           backgroundColor: "var(--bg-secondary)",
+          backgroundImage: "radial-gradient(circle, rgba(66,98,255,0.09) 1px, transparent 1.5px)",
+          backgroundSize: "22px 22px",
+          backgroundPosition: "-11px -11px",
           padding: "clamp(72px, 9vw, 120px) 0 clamp(40px, 5vw, 60px)",
         }}>
           <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10">
-            <SectionHeader num="02" title="Project Sheets" phase="Documentation" total="03" />
+            <SectionHeader num="02" phase="Documentation" title={<>The thesis,<span style={{ fontStyle: "italic", color: thesis.primary }}> sheet by sheet.</span></>} accent={thesis.primary} />
           </div>
         </div>
         {/* Full-bleed dark carousel */}
@@ -674,87 +603,60 @@ export default function ThesisCase() {
       </div>
 
       {/* ── 03 / Key Takeaways ──────────────────────────────────────── */}
-      <div style={{
-        backgroundColor: "var(--bg-secondary)",
-        borderTop: "1px solid var(--border)",
-        borderBottom: "1px solid var(--border)",
+      <section className="thesis-liquid-section" style={{
+        borderTop: "1px solid rgba(42, 58, 176, 0.18)",
+        borderBottom: "1px solid rgba(42, 58, 176, 0.18)",
         padding: SECTION_PAD,
       }}>
+        <LiquidBackground c0="eef1ff" c1="dbe1ff" c2="aeb9ff" fade={0} lift={0.28} grain={0.055} speed={0.1} />
         <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10">
-          <SectionHeader num="03" title="Key Takeaways" phase="Architecture → HCI" total="03" />
+          <SectionHeader
+            num="03"
+            phase="Architecture → HCI"
+            title={<>Where architecture meets<span style={{ fontStyle: "italic", color: thesis.primary }}> design thinking.</span></>}
+            accent={thesis.primary}
+          />
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16" style={{ marginBottom: "clamp(40px, 5vw, 64px)" }}>
-            <div className="lg:col-span-5">
-              <Reveal>
-                <h2 style={t.h2Section}>
-                  Where architecture{" "}
-                  <span style={{ fontStyle: "italic", color: thesis.primary }}>
-                    meets design thinking
-                  </span>
-                </h2>
-              </Reveal>
-            </div>
-          </div>
-
-          <div style={{ display: "flex", flexDirection: "column" }}>
-            {[
-              { num: "01", title: "Placemaking prioritises engagement", body: "Just as UX design centres the user, architectural placemaking centres the inhabitant. Every spatial decision is tested against how people will actually dwell, move, and interact with the space." },
-              { num: "02", title: "Sustainability and efficiency align", body: "Passive design strategies (orientation, natural ventilation, daylight) reduce energy load without compromising quality. The most sustainable solution is often the most elegant one." },
-              { num: "03", title: "Human-centered thinking drives both disciplines", body: "The translation from architecture to HCI was natural because both share a core methodology: observe how people behave in a space, identify friction, redesign until the friction disappears." },
-              { num: "04", title: "Context informs meaningful design", body: "A public space cannot be lifted from one city and planted in another. Site history, climate, culture, and existing movement patterns are the raw material, not constraints to work around." },
-              { num: "05", title: "Iteration refines functionality", body: "No design survives contact with a real site unchanged. Iteration through model, section, and drawing is how spatial hypotheses get pressure-tested and resolved." },
-            ].map((item, i) => (
-              <Reveal key={item.num} delay={i * 0.06}>
+          <div>
+            {([
+              { title: "Placemaking prioritises engagement", body: "Just as UX design centres the user, architectural placemaking centres the inhabitant. Every spatial decision is tested against how people will actually dwell, move, and interact with the space." },
+              { title: "Sustainability and efficiency align", body: "Passive design strategies — orientation, natural ventilation, daylight — reduce energy load without compromising quality. The most sustainable solution is often the most elegant one." },
+              { title: "Human-centred thinking drives both disciplines", body: "The translation from architecture to HCI was natural: both share a core method — observe how people behave in a space, find the friction, and redesign until it disappears." },
+              { title: "Context informs meaningful design", body: "A public space cannot be lifted from one city and planted in another. Site history, climate, culture, and existing movement patterns are the raw material, not constraints to work around." },
+              { title: "Iteration refines functionality", body: "No design survives contact with a real site unchanged. Iteration through model, section, and drawing is how spatial hypotheses get pressure-tested and resolved." },
+            ] as { title: string; body: string }[]).map((item, i) => (
+              <Reveal key={item.title} delay={i * 0.05}>
                 <div style={{
-                  display: "grid", gridTemplateColumns: isMobile ? "32px 1fr" : "48px 1fr",
-                  gap: isMobile ? 12 : "clamp(16px, 3vw, 32px)",
-                  padding: "clamp(20px, 3vw, 36px) 0",
-                  borderBottom: "1px solid var(--border)",
-                  borderTop: i === 0 ? "1px solid var(--border)" : "none",
+                  display: "grid",
+                  gridTemplateColumns: isMobile ? "1fr" : "minmax(0, 5fr) minmax(0, 7fr)",
+                  gap: isMobile ? 10 : "clamp(24px, 4vw, 56px)",
+                  padding: "clamp(24px, 3vw, 34px) 0",
+                  borderTop: "1px solid rgba(42, 58, 176, 0.32)",
                 }}>
-                  <span style={{ ...mono, fontSize: isMobile ? 16 : 11, color: thesis.primary, letterSpacing: "0.22em", paddingTop: 4 }}>
-                    {item.num}
-                  </span>
-                  <div>
-                    <h3 style={{ ...t.h3Lede, ...(isMobile ? { fontSize: 18 } : {}), margin: 0, marginBottom: 12 }}>{item.title}</h3>
-                    <p style={{ ...t.body, ...(isMobile ? { fontSize: 15 } : {}), margin: 0 }}>{item.body}</p>
-                  </div>
+                  <h3 style={{
+                    fontFamily: serif, fontWeight: 700,
+                    fontSize: "clamp(20px, 1.9vw, 25px)",
+                    letterSpacing: "-0.02em", lineHeight: 1.25,
+                    color: "var(--text-primary)", margin: 0,
+                  }}>
+                    {item.title}
+                  </h3>
+                  <p style={{ ...t.body, margin: 0 }}>{item.body}</p>
                 </div>
               </Reveal>
             ))}
           </div>
         </div>
-      </div>
+      </section>
 
       {/* ── Navigation ──────────────────────────────────────────────── */}
       <nav style={{ borderTop: "1px solid var(--border)" }}>
         <div
           className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10"
-          style={{ display: "flex", justifyContent: "space-between" }}
+          style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 24, flexWrap: "wrap", padding: "clamp(32px, 4.5vw, 56px) 0" }}
         >
-          <ThesisNavLink to="/#projects" align="left">
-            <ArrowLeft size={14} weight="regular" />
-            <span>
-              <span style={{ ...mono, fontSize: 9, color: "var(--text-muted)", letterSpacing: "0.22em", display: "block", marginBottom: 5 }}>
-                Prev
-              </span>
-              <span style={{ ...mono, fontSize: 13, letterSpacing: "0.18em" }}>
-                Home
-              </span>
-            </span>
-          </ThesisNavLink>
-
-          <ThesisNavLink to="/architecture/renders" align="right">
-            <span style={{ textAlign: "right" }}>
-              <span style={{ ...mono, fontSize: 9, color: "var(--text-muted)", letterSpacing: "0.22em", display: "block", marginBottom: 5 }}>
-                Next
-              </span>
-              <span style={{ ...mono, fontSize: 13, letterSpacing: "0.18em" }}>
-                Rendered Realities
-              </span>
-            </span>
-            <ArrowRight size={14} weight="regular" />
-          </ThesisNavLink>
+          <ThesisNavLink to="/#projects" dir="prev" title="Home" />
+          <ThesisNavLink to="/architecture/renders" dir="next" title="Rendered Realities" />
         </div>
       </nav>
     </motion.div>
@@ -762,33 +664,52 @@ export default function ThesisCase() {
 }
 
 function ThesisNavLink({
-  to,
-  align,
-  children,
+  to, dir, title,
 }: {
   to: string;
-  align: "left" | "right";
-  children: React.ReactNode;
+  dir: "prev" | "next";
+  title: string;
 }) {
   const [hovered, setHovered] = useState(false);
+  const isNext = dir === "next";
+  const Arrow = isNext ? ArrowRight : ArrowLeft;
+  const arrow = (
+    <motion.span
+      aria-hidden
+      animate={{ x: hovered ? (isNext ? 4 : -4) : 0 }}
+      transition={{ type: "spring", stiffness: 320, damping: 24 }}
+      style={{
+        display: "inline-flex", flexShrink: 0,
+        color: hovered ? "#1A1A1A" : "var(--text-muted)",
+        transition: "color 200ms ease",
+      }}
+    >
+      <Arrow size={20} weight="regular" />
+    </motion.span>
+  );
   return (
     <RouterLink
       to={to}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
-        display: "flex",
-        alignItems: "center",
-        gap: 12,
-        justifyContent: align === "right" ? "flex-end" : "flex-start",
-        padding: "clamp(20px, 3vw, 32px) 0",
+        display: "inline-flex", alignItems: "center", gap: 12,
+        padding: "10px 16px", margin: "0 -16px", borderRadius: 12,
         textDecoration: "none",
-        color: hovered ? "var(--accent)" : "var(--text-secondary)",
-        transitionProperty: "color",
-        transitionDuration: "200ms",
+        color: "var(--text-primary)",
+        background: hovered ? "rgba(66,98,255,0.14)" : "transparent",
+        transition: "background 200ms ease",
       }}
     >
-      {children}
+      {!isNext && arrow}
+      <span style={{
+        fontFamily: serif, fontWeight: 700,
+        fontSize: "clamp(20px, 2vw, 28px)",
+        letterSpacing: "-0.02em", lineHeight: 1.1,
+      }}>
+        {title}
+      </span>
+      {isNext && arrow}
     </RouterLink>
   );
 }

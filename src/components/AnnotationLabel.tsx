@@ -57,7 +57,7 @@ export default function AnnotationLabel({
       {/* Text */}
       <span
         style={{
-          fontFamily: "'Caveat', cursive",
+          fontFamily: "'Manrope', cursive",
           fontSize: 12,
           color: "var(--text-secondary)",
           opacity: 0.4,

@@ -2,8 +2,7 @@ import { motion, useScroll, useSpring, useInView, AnimatePresence } from "framer
 import { useRef, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import { ArrowLeftIcon as ArrowLeft, ArrowRightIcon as ArrowRight } from "@phosphor-icons/react";
-import DrawingSheetBorder from "../components/DrawingSheetBorder";
-import SectionMarker from "../components/SectionMarker";
+import { GradientBackground } from "../components/GradientBackground";
 
 const accent = {
   primary: "#4E7396",
@@ -13,11 +12,11 @@ const accent = {
 };
 
 const mono: React.CSSProperties = {
-  fontFamily: "'Space Mono', monospace",
+  fontFamily: "'Manrope', monospace",
   textTransform: "uppercase",
   letterSpacing: "0.12em",
 };
-const serif = "'Playfair Display', Georgia, serif";
+const serif = "'Manrope', Georgia, serif";
 
 
 const allImages = [
@@ -33,26 +32,47 @@ const allImages = [
   "/renders/villa-04.jpg",
 ];
 
-function RendersNavLink({ to, align, children }: { to: string; align: "left" | "right"; children: React.ReactNode }) {
+function RendersNavLink({ to, dir, title }: { to: string; dir: "prev" | "next"; title: string }) {
   const [hovered, setHovered] = useState(false);
+  const isNext = dir === "next";
+  const Arrow = isNext ? ArrowRight : ArrowLeft;
+  const arrow = (
+    <motion.span
+      aria-hidden
+      animate={{ x: hovered ? (isNext ? 4 : -4) : 0 }}
+      transition={{ type: "spring", stiffness: 320, damping: 24 }}
+      style={{
+        display: "inline-flex", flexShrink: 0,
+        color: hovered ? "#1A1A1A" : "var(--text-muted)",
+        transition: "color 200ms ease",
+      }}
+    >
+      <Arrow size={20} weight="regular" />
+    </motion.span>
+  );
   return (
     <RouterLink
       to={to}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
-        display: "flex",
-        alignItems: "center",
-        gap: 12,
-        justifyContent: align === "right" ? "flex-end" : "flex-start",
-        padding: "clamp(20px, 3vw, 32px) 0",
+        display: "inline-flex", alignItems: "center", gap: 12,
+        padding: "10px 16px", margin: "0 -16px", borderRadius: 12,
         textDecoration: "none",
-        color: hovered ? accent.primary : "var(--text-secondary)",
-        transitionProperty: "color",
-        transitionDuration: "200ms",
+        color: "var(--text-primary)",
+        background: hovered ? "rgba(66,98,255,0.14)" : "transparent",
+        transition: "background 200ms ease",
       }}
     >
-      {children}
+      {!isNext && arrow}
+      <span style={{
+        fontFamily: serif, fontWeight: 700,
+        fontSize: "clamp(20px, 2vw, 28px)",
+        letterSpacing: "-0.02em", lineHeight: 1.1,
+      }}>
+        {title}
+      </span>
+      {isNext && arrow}
     </RouterLink>
   );
 }
@@ -86,8 +106,6 @@ function RenderImage({ src, onClick, ratio, delay }: { src: string; onClick: () 
 }
 
 export default function RendersCase() {
-  const { scrollYProgress } = useScroll();
-  const scaleX = useSpring(scrollYProgress, { stiffness: 200, damping: 40 });
   const [lightbox, setLightbox] = useState<string | null>(null);
 
   return (
@@ -98,44 +116,45 @@ export default function RendersCase() {
       transition={{ duration: 0.35 }}
       className="pt-14"
     >
-      {/* Top mask — solid white behind nav pill */}
-      <div style={{
-        position: "fixed", top: 0, left: 0, right: 0, height: 59,
-        background: "var(--bg-primary)", zIndex: 45,
-        pointerEvents: "none",
-      }} />
-
-      {/* Scroll progress bar — sits behind nav pill (z-index 49 < nav 50) */}
-      <div style={{
-        position: "fixed", top: 56, left: 0, right: 0, height: 2,
-        background: "var(--bg-primary)", zIndex: 49,
-      }}>
-        <motion.div style={{
-          height: "100%", background: accent.primary,
-          scaleX, transformOrigin: "left", opacity: 0.85,
-        }} />
-      </div>
-
       {/* ── Hero ── */}
-      <DrawingSheetBorder
-        titleBlock={{ name: "NIHARIKA PUNDLIK", sheet: "ARCHITECTURE / VISUALIZATION" }}
-        className="blueprint-grid"
-        style={{ padding: "clamp(52px, 8vw, 88px) 0 clamp(44px, 6vw, 72px)" }}
-      >
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10">
-          <SectionMarker label="Architecture · Visualization" letter="R" className="mb-8" />
+      <section style={{
+        position: "relative",
+        isolation: "isolate",
+        overflow: "hidden",
+        background: "var(--bg-primary)",
+        marginTop: "-56px",
+        padding: "calc(56px + clamp(48px, 6vw, 80px)) 0 clamp(48px, 6vw, 76px)",
+      }}>
+        {/* Blue-grey noisy-gradient hero background */}
+        <GradientBackground
+          gradientType="radial-gradient"
+          gradientSize="150% 130%"
+          gradientOrigin="top-middle"
+          colors={[
+            { color: "rgba(78,115,150,0.30)", stop: "0%" },
+            { color: "rgba(107,144,179,0.18)", stop: "34%" },
+            { color: "rgba(150,180,205,0.10)", stop: "62%" },
+            { color: "rgba(235,241,248,0)", stop: "100%" },
+          ]}
+          noisePatternAlpha={26}
+          noiseIntensity={1}
+          noisePatternRefreshInterval={1}
+          noisePatternSize={100}
+          style={{ zIndex: 0 }}
+        />
+        {/* Dotted grid overlay */}
+        <div aria-hidden style={{
+          position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none",
+          backgroundImage: "radial-gradient(circle, rgba(46,79,106,0.09) 1px, transparent 1.5px)",
+          backgroundSize: "22px 22px",
+          backgroundPosition: "-11px -11px",
+          WebkitMaskImage: "linear-gradient(to bottom, #000 60%, transparent 100%)",
+          maskImage: "linear-gradient(to bottom, #000 60%, transparent 100%)",
+        }} />
 
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10" style={{ position: "relative", zIndex: 1 }}>
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-end">
             <div className="lg:col-span-7">
-              <motion.div
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-                style={{ ...mono, fontSize: 11, color: "var(--text-muted)", letterSpacing: "0.22em", marginBottom: 20 }}
-              >
-                B.Arch · 2018–2023
-              </motion.div>
-
               <motion.h1
                 initial={{ opacity: 0, y: 18 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -152,7 +171,7 @@ export default function RendersCase() {
                 }}
               >
                 Rendered{" "}
-                <span style={{ fontStyle: "italic", color: "var(--accent)" }}>Realities</span>
+                <span style={{ fontStyle: "italic", color: accent.primary }}>Realities</span>
               </motion.h1>
 
               <motion.p
@@ -160,7 +179,7 @@ export default function RendersCase() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.25, duration: 0.6 }}
                 style={{
-                  fontFamily: "'Inter', system-ui, sans-serif",
+                  fontFamily: "'Manrope', system-ui, sans-serif",
                   fontSize: "clamp(16px, 1.4vw, 19px)",
                   color: "var(--text-secondary)",
                   lineHeight: 1.75,
@@ -201,7 +220,7 @@ export default function RendersCase() {
                       fontWeight: 700,
                       fontSize: "clamp(24px, 3vw, 40px)",
                       letterSpacing: "-0.03em",
-                      color: "var(--accent)",
+                      color: accent.primary,
                       lineHeight: 1,
                       marginBottom: 8,
                     }}>
@@ -216,7 +235,7 @@ export default function RendersCase() {
             </motion.div>
           </div>
         </div>
-      </DrawingSheetBorder>
+      </section>
 
       {/* ── Image gallery ── */}
       <section style={{ padding: "clamp(48px, 6vw, 72px) 0 clamp(72px, 9vw, 112px)" }}>
@@ -259,31 +278,10 @@ export default function RendersCase() {
       <nav style={{ borderTop: "1px solid var(--border)" }}>
         <div
           className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10"
-          style={{ display: "flex", justifyContent: "space-between" }}
+          style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 24, flexWrap: "wrap", padding: "clamp(32px, 4.5vw, 56px) 0" }}
         >
-          <RendersNavLink to="/architecture/thesis" align="left">
-            <ArrowLeft size={14} weight="regular" />
-            <span>
-              <span style={{ ...mono, fontSize: 9, color: "var(--text-muted)", letterSpacing: "0.22em", display: "block", marginBottom: 5 }}>
-                Prev
-              </span>
-              <span style={{ ...mono, fontSize: 13, letterSpacing: "0.18em" }}>
-                Thesis
-              </span>
-            </span>
-          </RendersNavLink>
-
-          <RendersNavLink to="/#projects" align="right">
-            <span style={{ textAlign: "right" }}>
-              <span style={{ ...mono, fontSize: 9, color: "var(--text-muted)", letterSpacing: "0.22em", display: "block", marginBottom: 5 }}>
-                Next
-              </span>
-              <span style={{ ...mono, fontSize: 13, letterSpacing: "0.18em" }}>
-                Home
-              </span>
-            </span>
-            <ArrowRight size={14} weight="regular" />
-          </RendersNavLink>
+          <RendersNavLink to="/architecture/thesis" dir="prev" title="Public Realm" />
+          <RendersNavLink to="/#projects" dir="next" title="Home" />
         </div>
       </nav>
 

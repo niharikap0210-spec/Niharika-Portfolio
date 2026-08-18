@@ -3,7 +3,7 @@ import SectionMarker from "../components/SectionMarker";
 import DrawingSheetBorder from "../components/DrawingSheetBorder";
 
 const mono: React.CSSProperties = {
-  fontFamily: "'Space Mono', monospace",
+  fontFamily: "'Manrope', monospace",
   textTransform: "uppercase",
   letterSpacing: "0.12em",
 };
@@ -58,7 +58,7 @@ export default function Resume() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: [0.25, 1, 0.4, 1] }}
             style={{
-              fontFamily: "'Playfair Display', Georgia, serif",
+              fontFamily: "'Manrope', Georgia, serif",
               fontWeight: 700,
               fontSize: "clamp(40px, 5vw, 64px)",
               color: "var(--text-primary)",
@@ -74,7 +74,7 @@ export default function Resume() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.12, duration: 0.5 }}
             style={{
-              fontFamily: "'Inter', system-ui, sans-serif",
+              fontFamily: "'Manrope', system-ui, sans-serif",
               fontSize: "clamp(15px, 1.5vw, 18px)",
               color: "var(--text-secondary)",
               lineHeight: 1.7,
@@ -99,7 +99,7 @@ export default function Resume() {
             <motion.h2
               variants={itemVariants}
               style={{
-                fontFamily: "'Playfair Display', Georgia, serif",
+                fontFamily: "'Manrope', Georgia, serif",
                 fontWeight: 700,
                 fontSize: 32,
                 color: "var(--text-primary)",
@@ -146,7 +146,7 @@ export default function Resume() {
                     </p>
                     <p
                       style={{
-                        fontFamily: "'Inter', system-ui, sans-serif",
+                        fontFamily: "'Manrope', system-ui, sans-serif",
                         fontSize: 15,
                         color: "var(--text-secondary)",
                         transitionProperty: "color",
@@ -172,7 +172,7 @@ export default function Resume() {
           >
             <h2
               style={{
-                fontFamily: "'Playfair Display', Georgia, serif",
+                fontFamily: "'Manrope', Georgia, serif",
                 fontWeight: 700,
                 fontSize: 32,
                 color: "var(--text-primary)",
@@ -207,7 +207,7 @@ export default function Resume() {
                 </p>
                 <h3
                   style={{
-                    fontFamily: "'Playfair Display', Georgia, serif",
+                    fontFamily: "'Manrope', Georgia, serif",
                     fontWeight: 700,
                     fontSize: 24,
                     color: "var(--text-primary)",
@@ -219,7 +219,7 @@ export default function Resume() {
                 </h3>
                 <p
                   style={{
-                    fontFamily: "'Inter', system-ui, sans-serif",
+                    fontFamily: "'Manrope', system-ui, sans-serif",
                     fontSize: 14,
                     color: "var(--text-secondary)",
                     marginBottom: 24,
@@ -249,7 +249,7 @@ export default function Resume() {
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 mt-6 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                   style={{
-                    fontFamily: "'Space Mono', monospace",
+                    fontFamily: "'Manrope', monospace",
                     fontSize: 10,
                     letterSpacing: "0.12em",
                     textTransform: "uppercase",
@@ -306,7 +306,7 @@ export default function Resume() {
           />
           <p
             style={{
-              fontFamily: "'Space Mono', monospace",
+              fontFamily: "'Manrope', monospace",
               fontSize: "clamp(9px, 2vw, 11px)",
               color: "var(--text-muted)",
               letterSpacing: "0.1em",

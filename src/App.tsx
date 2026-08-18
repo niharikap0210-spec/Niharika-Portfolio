@@ -1,9 +1,8 @@
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
-import { AnimatePresence, motion } from "framer-motion";
-import { useState, useCallback, useEffect } from "react";
+import { MotionConfig } from "framer-motion";
+import { useEffect } from "react";
 import Nav from "./components/Nav";
 import Footer from "./components/Footer";
-import SplashScreen from "./components/SplashScreen";
 import ScrollManager from "./components/ScrollManager";
 import Home from "./pages/Home";
 import About from "./pages/About";
@@ -19,22 +18,24 @@ import NotFound from "./pages/NotFound";
 
 function AnimatedRoutes() {
   const location = useLocation();
+  // Key by pathname so each page remounts (and replays its GSAP entrance) on route
+  // change. Same-path hash changes (/ -> /#projects) keep the same key, so the Home
+  // page stays mounted and ScrollManager just scrolls to the anchor. Scroll reset +
+  // ScrollTrigger.refresh are handled in ScrollManager, AFTER the new page paints.
   return (
-    <AnimatePresence mode="sync">
-      <Routes location={location} key={location.pathname}>
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/work/arko" element={<ArkoCase />} />
-        <Route path="/work/veriflow" element={<VeriflowCase />} />
-        <Route path="/work/shelfie" element={<ShelfieCase />} />
-        <Route path="/work/locallift" element={<LocalLiftCase />} />
-        <Route path="/work/:slug" element={<CaseStudy />} />
-        <Route path="/resume" element={<Resume />} />
-        <Route path="/architecture/thesis" element={<ThesisCase />} />
-        <Route path="/architecture/renders" element={<RendersCase />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </AnimatePresence>
+    <Routes location={location} key={location.pathname}>
+      <Route path="/" element={<Home />} />
+      <Route path="/about" element={<About />} />
+      <Route path="/work/arko" element={<ArkoCase />} />
+      <Route path="/work/veriflow" element={<VeriflowCase />} />
+      <Route path="/work/shelfie" element={<ShelfieCase />} />
+      <Route path="/work/locallift" element={<LocalLiftCase />} />
+      <Route path="/work/:slug" element={<CaseStudy />} />
+      <Route path="/resume" element={<Resume />} />
+      <Route path="/architecture/thesis" element={<ThesisCase />} />
+      <Route path="/architecture/renders" element={<RendersCase />} />
+      <Route path="*" element={<NotFound />} />
+    </Routes>
   );
 }
 
@@ -51,14 +52,23 @@ function AppShell() {
   );
 }
 
-/* Sets --vh CSS variable to actual viewport height — fixes 100vh on iOS Safari */
+/* Sets --vh CSS variable to actual viewport height — fixes 100vh on iOS Safari.
+   rAF-throttled so the mobile address-bar resize stream writes at most once/frame. */
 function useViewportHeight() {
   useEffect(() => {
-    const set = () =>
+    let raf = 0;
+    const write = () =>
       document.documentElement.style.setProperty("--vh", `${window.innerHeight * 0.01}px`);
-    set();
-    window.addEventListener("resize", set);
-    return () => window.removeEventListener("resize", set);
+    const onResize = () => {
+      if (raf) return;
+      raf = requestAnimationFrame(() => { raf = 0; write(); });
+    };
+    write();
+    window.addEventListener("resize", onResize);
+    return () => {
+      window.removeEventListener("resize", onResize);
+      if (raf) cancelAnimationFrame(raf);
+    };
   }, []);
 }
 
@@ -85,34 +95,12 @@ function useKeyboardNav() {
 export default function App() {
   useViewportHeight();
   useKeyboardNav();
-  const [showSplash, setShowSplash] = useState<boolean>(
-    () => !sessionStorage.getItem("np-splash-seen")
-  );
-  const [splashDone, setSplashDone] = useState<boolean>(
-    () => !!sessionStorage.getItem("np-splash-seen")
-  );
-
-  const handleSplashComplete = useCallback(() => {
-    sessionStorage.setItem("np-splash-seen", "1");
-    setShowSplash(false);
-    setSplashDone(true);
-  }, []);
 
   return (
     <BrowserRouter>
-      {/* App renders underneath — invisible until splash exits */}
-      <motion.div
-        initial={{ opacity: splashDone ? 1 : 0 }}
-        animate={{ opacity: splashDone ? 1 : 0 }}
-        transition={{ duration: 0.6, ease: [0.25, 1, 0.4, 1] }}
-      >
+      <MotionConfig reducedMotion="user">
         <AppShell />
-      </motion.div>
-      <AnimatePresence>
-        {showSplash && (
-          <SplashScreen key="splash" onComplete={handleSplashComplete} />
-        )}
-      </AnimatePresence>
+      </MotionConfig>
     </BrowserRouter>
   );
 }

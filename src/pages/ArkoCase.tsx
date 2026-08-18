@@ -5,11 +5,15 @@ import { useEffect, useRef, useState } from "react";
 import { ClockIcon as Clock, QuotesIcon as Quotes, DeviceMobileCameraIcon as DeviceMobileCamera, ApertureIcon as Aperture, LightbulbFilamentIcon as LightbulbFilament, CheckCircleIcon as CheckCircle, UsersThreeIcon as UsersThree, SparkleIcon as Sparkle, PushPinIcon as PushPin, CubeIcon as Cube, CompassIcon as Compass, ArrowUpIcon as ArrowUp, ArrowRightIcon as ArrowRight, MicrophoneIcon as Microphone, ChatCircleDotsIcon as ChatCircleDots, EyeIcon as Eye, EnvelopeSimpleIcon as Envelope, SquaresFourIcon as SquaresFour, FolderOpenIcon as FolderOpen, ClipboardTextIcon as ClipboardText } from "@phosphor-icons/react";
 import { projects, type Project } from "../data/projects";
 import { ProjectHeroStage } from "../components/ProjectHeroStage";
+import { SectionHeader, CASE_H2 } from "../components/CaseSectionHeader";
+import { GradientBackground } from "../components/GradientBackground";
+import LiquidBackground from "../components/LiquidBackground";
 
 /* ── Arko brand palette (scoped to this page only) ─────────────── */
 const arko = {
   primary: "#6E8F4E",         // Arko olive green
   light:   "#8BAD6A",         // tint
+  pale:    "#D4E4B8",         // pale tint for text on dark olive
   dark:    "#4F6B35",         // shade
   surface: "#F0F4E8",         // very light tint for soft backgrounds
   subtle:  "rgba(110, 143, 78, 0.08)",
@@ -17,14 +21,14 @@ const arko = {
 };
 
 const mono: React.CSSProperties = {
-  fontFamily: "'Space Mono', monospace",
+  fontFamily: "'Manrope', monospace",
   textTransform: "uppercase" as const,
   letterSpacing: "0.12em",
 };
-const serif = "'Playfair Display', Georgia, serif";
-const sans  = "'Inter', system-ui, sans-serif";
+const serif = "'Manrope', Georgia, serif";
+const sans  = "'Manrope', system-ui, sans-serif";
 const caption: React.CSSProperties = {
-  fontFamily: "'Playfair Display', Georgia, serif",
+  fontFamily: "'Manrope', Georgia, serif",
   fontStyle: "italic",
   fontSize: 15,
   color: "var(--text-muted)",
@@ -69,9 +73,9 @@ const t = {
   h2Section: {
     fontFamily: serif,
     fontWeight: 700,
-    fontSize: "clamp(30px, 3.6vw, 44px)",
+    fontSize: "clamp(32px, 3.9vw, 48px)",
     letterSpacing: "-0.025em",
-    lineHeight: 1.2,
+    lineHeight: 1.18,
     color: "var(--text-primary)",
   } as React.CSSProperties,
   h3Lede: {
@@ -143,66 +147,6 @@ function CountUp({
     <span ref={ref} className={className} style={style}>
       {prefix}{display}{suffix}
     </span>
-  );
-}
-
-/* ══════════════════════════════════════════════════════════════════
-   SECTION HEADER - replaces the old decorative ChapterMark
-   Clean editorial eyebrow: number · section · phase + rule line
-══════════════════════════════════════════════════════════════════ */
-function SectionHeader({
-  num, title, phase, total = "09",
-}: {
-  num: string; title: string; phase: string; total?: string;
-}) {
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-40px" });
-  return (
-    <div ref={ref} style={{ marginBottom: "clamp(40px, 5vw, 64px)" }}>
-      <div style={{
-        display: "flex", alignItems: "baseline", gap: 18, flexWrap: "wrap",
-        paddingBottom: 14,
-      }}>
-        <motion.span
-          initial={{ opacity: 0, y: 8 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.55, ease: [0.25, 1, 0.4, 1] }}
-          style={{
-            ...mono, fontSize: 14, color: arko.primary,
-            letterSpacing: "0.22em", fontWeight: 700,
-          }}>
-          {num} <span style={{ color: "var(--text-muted)", fontWeight: 400 }}>/ {total}</span>
-        </motion.span>
-        <motion.span
-          initial={{ opacity: 0, y: 8 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.08, duration: 0.55, ease: [0.25, 1, 0.4, 1] }}
-          style={{
-            ...mono, fontSize: 14, color: "var(--text-primary)",
-            letterSpacing: "0.22em", fontWeight: 600,
-          }}>
-          {title}
-        </motion.span>
-        <motion.span
-          initial={{ opacity: 0 }}
-          animate={inView ? { opacity: 1 } : {}}
-          transition={{ delay: 0.2, duration: 0.55 }}
-          style={{
-            ...mono, fontSize: 13, color: "var(--text-muted)",
-            letterSpacing: "0.2em", marginLeft: "auto",
-          }}>
-          {phase}
-        </motion.span>
-      </div>
-      <motion.div
-        initial={{ scaleX: 0 }}
-        animate={inView ? { scaleX: 1 } : {}}
-        transition={{ delay: 0.15, duration: 0.9, ease: [0.25, 1, 0.4, 1] }}
-        style={{
-          height: 1, background: arko.primary, transformOrigin: "left",
-          opacity: 0.6,
-        }} />
-    </div>
   );
 }
 
@@ -338,7 +282,7 @@ function LoopCard() {
 
   return (
     <div style={{
-      border: "1px solid var(--border)",
+      border: "1px solid rgba(79,107,53,0.28)",
       background: "var(--bg-elevated)",
       overflow: "hidden",
     }}>
@@ -484,7 +428,7 @@ function WebGallery({
 
   const tabs = screens.map((s) => {
     const parts = s.label.split(" · ");
-    return { fig: parts[0] ?? "", name: parts[1] ?? "", tail: parts.slice(2).join(" · "), Icon: s.Icon };
+    return { name: parts[0] ?? "", tail: parts.slice(1).join(" · "), Icon: s.Icon };
   });
 
   const slugFor = (name: string) => name.toLowerCase().replace(/\s+/g, "-");
@@ -509,7 +453,7 @@ function WebGallery({
             display: "grid",
             gridTemplateColumns: `repeat(${tabs.length}, minmax(0, 1fr))`,
           }),
-          borderBottom: "1px solid var(--border)",
+          borderBottom: "1px solid rgba(79,107,53,0.34)",
           marginBottom: 32,
         }}
       >
@@ -552,17 +496,6 @@ function WebGallery({
                   transition={{ duration: 0.4, ease: [0.25, 1, 0.4, 1] }}
                 />
               )}
-              <span
-                style={{
-                  ...mono,
-                  fontSize: isMobile ? 10 : 13,
-                  color: isActive ? arko.primary : "var(--text-muted)",
-                  letterSpacing: "0.2em",
-                  fontWeight: 600,
-                }}
-              >
-                {tab.fig}
-              </span>
               <span style={{ display: "inline-flex", alignItems: "center", gap: isMobile ? 8 : 12, minWidth: 0 }}>
                 {TabIcon && (
                   <TabIcon
@@ -576,13 +509,11 @@ function WebGallery({
                   style={{
                     fontFamily: serif,
                     fontWeight: 700,
-                    fontSize: isMobile ? 19 : 24,
+                    fontSize: isMobile ? 17 : 20,
                     lineHeight: 1.2,
                     letterSpacing: "-0.015em",
                     color: isActive ? "var(--text-primary)" : "var(--text-secondary)",
-                    whiteSpace: "nowrap",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
+                    whiteSpace: "normal",
                     transitionProperty: "color",
                     transitionDuration: "220ms",
                   }}
@@ -600,7 +531,7 @@ function WebGallery({
         style={{
           width: "100%",
           background: "var(--bg-elevated)",
-          border: "1px solid var(--border)",
+          border: "1px solid rgba(79,107,53,0.22)",
           borderRadius: "10px 10px 6px 6px",
           overflow: "hidden",
           boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 28px 60px -28px rgba(26,26,26,0.22)",
@@ -656,7 +587,7 @@ function WebGallery({
               {host}
             </span>
           </div>
-          {/* Right meta */}
+          {/* Right meta - live status dot */}
           <span
             aria-hidden
             style={{
@@ -672,7 +603,7 @@ function WebGallery({
             }}
           >
             <span style={{ width: 6, height: 6, borderRadius: "50%", background: arko.primary }} />
-            {tabs[active].fig}
+            Live
           </span>
         </div>
 
@@ -701,7 +632,7 @@ function WebGallery({
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.25, ease: [0.25, 1, 0.4, 1] }}
-          style={{ ...caption, fontSize: "clamp(16px, 1.2vw, 19px)", textAlign: "center", marginTop: 22 }}
+          style={{ ...caption, fontSize: "clamp(16px, 1.2vw, 19px)", color: "var(--text-secondary)", textAlign: "center", marginTop: 22 }}
         >
           {current.label}
         </motion.p>
@@ -756,7 +687,7 @@ function UserTabs() {
             </span>
             <span style={{ display: "inline-flex", alignItems: "center", gap: 12 }}>
               <x.Icon size={22} color={tab === i ? arko.primary : "var(--text-secondary)"} weight={tab === i ? "duotone" : "regular"} />
-              <span style={{ fontFamily: serif, fontWeight: 700, fontSize: isMobile ? 19 : 24, color: tab === i ? "var(--text-primary)" : "var(--text-secondary)", letterSpacing: "-0.02em" }}>
+              <span style={{ fontFamily: serif, fontWeight: 700, fontSize: isMobile ? 17 : 20, color: tab === i ? "var(--text-primary)" : "var(--text-secondary)", letterSpacing: "-0.02em" }}>
                 {x.heading}
               </span>
             </span>
@@ -778,9 +709,7 @@ function UserTabs() {
                     padding: "16px 0",
                     borderBottom: "1px solid var(--border-light)",
                   }}>
-                    <span style={{ ...mono, fontSize: 12, color: "var(--text-muted)", width: 36, flexShrink: 0, letterSpacing: "0.16em", fontWeight: 600 }}>
-                      {String(j + 1).padStart(2, "0")}
-                    </span>
+                    <span aria-hidden style={{ width: 5, height: 5, borderRadius: "50%", background: arko.primary, flexShrink: 0 }} />
                     <span style={{ fontFamily: sans, fontSize: 17, color: "var(--text-primary)", lineHeight: 1.5 }}>
                       {n}
                     </span>
@@ -899,21 +828,18 @@ function ResearchLedger() {
       {/* Header band */}
       <div style={{
         display: "flex", alignItems: "center",
-        gap: 12, marginBottom: 24,
+        gap: 12, marginBottom: "clamp(24px, 2.6vw, 34px)",
       }}>
         <span aria-hidden style={{ width: 3, height: 16, background: arko.primary, display: "inline-block" }} />
-        <p style={{ ...mono, fontSize: 13, color: arko.dark, letterSpacing: "0.22em", fontWeight: 600 }}>
-          Research depth · how I got here
+        <p style={{ ...mono, fontSize: 13, color: arko.dark, letterSpacing: "0.22em", fontWeight: 700 }}>
+          The groundwork
         </p>
       </div>
 
-      {/* Ledger */}
+      {/* Research cards */}
       <div
         className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
-        style={{
-          border: "1px solid var(--border)",
-          background: "var(--bg-elevated)",
-        }}
+        style={{ gap: "clamp(16px, 1.5vw, 22px)" }}
       >
         {methods.map((m, i) => {
           const isHover = hover === i;
@@ -926,71 +852,52 @@ function ResearchLedger() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-40px" }}
               transition={{ delay: i * 0.08, duration: 0.55, ease: [0.25, 1, 0.4, 1] }}
-              whileHover={{ y: -4 }}
+              whileHover={{ y: -5 }}
               style={{
-                padding: "32px 28px 30px",
-                borderRight: i < methods.length - 1 ? "1px solid var(--border-light)" : "none",
-                borderBottom: "none",
+                padding: "clamp(24px, 2vw, 30px)",
+                borderRadius: 16,
+                background: "var(--bg-elevated)",
+                border: `1px solid ${isHover ? arko.primary : "var(--border)"}`,
+                boxShadow: isHover
+                  ? "0 18px 40px rgba(79,107,53,0.16)"
+                  : "0 1px 2px rgba(0,0,0,0.04)",
+                transition: "border-color 260ms ease, box-shadow 260ms ease",
                 position: "relative",
                 cursor: "default",
-                background: isHover ? arko.subtle : "transparent",
-                transition: "background-color 260ms ease-out",
                 minWidth: 0,
               }}
             >
-              {/* Top accent rail */}
-              <span
-                aria-hidden
-                style={{
-                  position: "absolute", top: 0, left: 0, right: 0, height: 2,
-                  background: arko.primary,
-                  transformOrigin: "left center",
-                  transform: isHover ? "scaleX(1)" : "scaleX(0)",
-                  transition: "transform 320ms ease-out",
-                }}
-              />
-              {/* Method index + icon */}
+              {/* Icon chip */}
               <div style={{
-                display: "flex", alignItems: "center", justifyContent: "space-between",
-                marginBottom: 20,
+                width: 46, height: 46, borderRadius: 13,
+                display: "grid", placeItems: "center",
+                background: arko.subtle,
+                marginBottom: "clamp(20px, 2vw, 26px)",
               }}>
-                <span style={{
-                  ...mono, fontSize: 11, fontWeight: 600,
-                  color: isHover ? arko.primary : "var(--text-muted)",
-                  letterSpacing: "0.22em",
-                  transition: "color 240ms ease-out",
-                }}>
-                  M.0{i + 1}
-                </span>
-                <m.Icon
-                  size={22}
-                  color={arko.primary}
-                  weight={isHover ? "fill" : "duotone"}
-                />
+                <m.Icon size={23} color={arko.primary} weight={isHover ? "fill" : "duotone"} />
               </div>
               {/* Big count */}
               <p style={{
                 fontFamily: serif, fontWeight: 700,
-                fontSize: "clamp(48px, 5vw, 64px)",
+                fontSize: "clamp(44px, 4.6vw, 58px)",
                 color: arko.primary,
                 letterSpacing: "-0.035em", lineHeight: 1,
-                marginBottom: 14,
+                marginBottom: 12,
               }}>
                 <CountUp value={m.big} />
               </p>
-              {/* Unit */}
+              {/* Method */}
               <p style={{
-                ...mono, fontSize: "clamp(13px, 1vw, 15px)",
-                color: "var(--text-primary)",
-                letterSpacing: "0.16em",
-                marginBottom: 12, fontWeight: 600,
+                fontFamily: sans, fontSize: "clamp(18px, 1.5vw, 22px)",
+                color: "var(--text-primary)", fontWeight: 600,
+                letterSpacing: "-0.01em", marginBottom: 10,
               }}>
                 {m.unit}
               </p>
               {/* Sub */}
               <p style={{
-                fontFamily: sans, fontSize: "clamp(15px, 1.15vw, 17px)",
-                color: "var(--text-secondary)", lineHeight: 1.6,
+                fontFamily: sans, fontSize: "clamp(15px, 1.2vw, 17px)",
+                color: "var(--text-secondary)", lineHeight: 1.55,
               }}>
                 {m.sub}
               </p>
@@ -1090,17 +997,6 @@ function DecisionStepper() {
                   transition={{ duration: 0.4, ease: [0.25, 1, 0.4, 1] }}
                 />
               )}
-              <span
-                style={{
-                  ...mono,
-                  fontSize: 14,
-                  color: isActive ? arko.primary : "var(--text-muted)",
-                  letterSpacing: "0.2em",
-                  fontWeight: 600,
-                }}
-              >
-                {d.num}
-              </span>
               <span style={{ display: "inline-flex", alignItems: "flex-start", gap: 14, minWidth: 0 }}>
                 <d.Icon
                   size={24}
@@ -1111,7 +1007,7 @@ function DecisionStepper() {
                 <span
                   style={{
                     fontFamily: serif,
-                    fontSize: isMobile ? 19 : 24,
+                    fontSize: isMobile ? 17 : 20,
                     fontWeight: 700,
                     color: isActive ? "var(--text-primary)" : "var(--text-secondary)",
                     letterSpacing: "-0.015em",
@@ -1193,7 +1089,6 @@ function ScanFlowStepper({
     return () => window.clearInterval(id);
   }, [paused, inView, stages.length]);
 
-  const progress = ((active + 1) / stages.length) * 100;
 
   return (
     <div
@@ -1204,29 +1099,6 @@ function ScanFlowStepper({
     >
       {/* LEFT · timeline */}
       <div className="md:col-span-6">
-        {/* Header strip - progress */}
-        <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 26 }}>
-          <span style={{ ...mono, fontSize: 11, color: arko.dark, letterSpacing: "0.22em", fontWeight: 700 }}>
-            {String(active + 1).padStart(2, "0")} <span style={{ color: "var(--text-muted)", fontWeight: 400 }}>/ {String(stages.length).padStart(2, "0")}</span>
-          </span>
-          <div style={{ flex: 1, height: 1, background: "var(--border)", position: "relative", overflow: "hidden" }}>
-            <motion.span
-              aria-hidden
-              style={{
-                position: "absolute",
-                inset: 0,
-                background: arko.primary,
-                transformOrigin: "left center",
-              }}
-              animate={{ scaleX: progress / 100 }}
-              transition={{ duration: 0.6, ease: [0.25, 1, 0.4, 1] }}
-            />
-          </div>
-          <span style={{ ...mono, fontSize: 10, color: "var(--text-muted)", letterSpacing: "0.2em" }}>
-            {paused ? "Paused" : "Auto"}
-          </span>
-        </div>
-
         {/* Timeline list */}
         <ol style={{ position: "relative", listStyle: "none", padding: 0, margin: 0 }}>
           {/* Rail · base */}
@@ -1315,18 +1187,6 @@ function ScanFlowStepper({
                       <span
                         style={{
                           ...mono,
-                          fontSize: 11,
-                          color: isActive ? arko.primary : "var(--text-muted)",
-                          letterSpacing: "0.22em",
-                          fontWeight: 700,
-                          transition: "color 220ms ease-out",
-                        }}
-                      >
-                        Stage {s.num}
-                      </span>
-                      <span
-                        style={{
-                          ...mono,
                           fontSize: 10,
                           color: arko.dark,
                           letterSpacing: "0.18em",
@@ -1341,7 +1201,7 @@ function ScanFlowStepper({
                       style={{
                         fontFamily: serif,
                         fontWeight: 700,
-                        fontSize: "clamp(18px, 1.7vw, 22px)",
+                        fontSize: "clamp(21px, 2vw, 26px)",
                         color: isActive ? "var(--text-primary)" : isDone ? "var(--text-secondary)" : "var(--text-muted)",
                         letterSpacing: "-0.02em",
                         lineHeight: 1.3,
@@ -1364,7 +1224,7 @@ function ScanFlowStepper({
                           <p
                             style={{
                               fontFamily: sans,
-                              fontSize: "clamp(16px, 1.2vw, 18px)",
+                              fontSize: "clamp(17px, 1.35vw, 20px)",
                               color: "var(--text-secondary)",
                               lineHeight: 1.7,
                               marginTop: 12,
@@ -1408,7 +1268,7 @@ function ScanFlowStepper({
             minHeight: isMobile ? 0 : 440,
           }}
         >
-          {/* LEFT gutter · STAGE pill — hidden on mobile */}
+          {/* LEFT gutter · STAGE pill - hidden on mobile */}
           {!isMobile && (
           <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "flex-end", height: "100%", paddingBottom: "18%" }}>
             <AnimatePresence mode="wait">
@@ -1440,7 +1300,7 @@ function ScanFlowStepper({
                   className="status-pulse"
                 />
                 <span style={{ ...mono, fontSize: 10, color: "#FAFAFA", letterSpacing: "0.22em", fontWeight: 700 }}>
-                  Stage {stages[active].num}
+                  Scanning
                 </span>
               </motion.div>
             </AnimatePresence>
@@ -1511,7 +1371,7 @@ function ScanFlowStepper({
             </AnimatePresence>
           </div>
 
-          {/* RIGHT gutter · LIVE metric chip — hidden on mobile */}
+          {/* RIGHT gutter · LIVE metric chip - hidden on mobile */}
           {!isMobile && <div style={{ display: "flex", justifyContent: "flex-start", alignItems: "flex-start", height: "100%", paddingTop: "18%" }}>
             <AnimatePresence mode="wait">
               <motion.div
@@ -1650,7 +1510,6 @@ function ClientJourneyReel() {
     return () => window.clearInterval(id);
   }, [paused, inView, stages.length]);
 
-  const progress = ((active + 1) / stages.length) * 100;
 
   return (
     <div
@@ -1658,37 +1517,6 @@ function ClientJourneyReel() {
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      {/* Progress header strip */}
-      <div style={{
-        display: "flex", alignItems: "center", gap: 14, marginBottom: 40,
-      }}>
-        <span style={{ ...mono, fontSize: 12, color: "#FAFAFA", letterSpacing: "0.22em", fontWeight: 700 }}>
-          {String(active + 1).padStart(2, "0")}
-          <span style={{ color: "rgba(250,250,250,0.55)", fontWeight: 400 }}>
-            {" "}/ {String(stages.length).padStart(2, "0")}
-          </span>
-        </span>
-        <div style={{
-          flex: 1, height: 1,
-          background: "rgba(250,250,250,0.22)",
-          position: "relative", overflow: "hidden",
-        }}>
-          <motion.span
-            aria-hidden
-            style={{
-              position: "absolute", inset: 0,
-              background: arko.light,
-              transformOrigin: "left center",
-            }}
-            animate={{ scaleX: progress / 100 }}
-            transition={{ duration: 0.6, ease: [0.25, 1, 0.4, 1] }}
-          />
-        </div>
-        <span style={{ ...mono, fontSize: 10, color: "rgba(250,250,250,0.55)", letterSpacing: "0.22em" }}>
-          {paused ? "Paused" : "Auto"}
-        </span>
-      </div>
-
       {/* 4-up phone gallery */}
       <div
         className="grid grid-cols-2 md:grid-cols-4"
@@ -1749,16 +1577,6 @@ function ClientJourneyReel() {
                       weight={isActive ? "duotone" : "regular"}
                     />
                   </motion.span>
-                  <span style={{
-                    ...mono,
-                    fontSize: 12,
-                    color: isActive ? arko.light : "rgba(250,250,250,0.58)",
-                    letterSpacing: "0.22em",
-                    fontWeight: 700,
-                    transition: "color 240ms ease-out",
-                  }}>
-                    {s.num}
-                  </span>
                 </div>
                 {isActive && (
                   <motion.span
@@ -1844,9 +1662,9 @@ function ClientJourneyReel() {
                       transition={{ duration: 0.38, ease: [0.25, 1, 0.4, 1] }}
                       style={{
                         fontFamily: sans,
-                        fontSize: 16.5,
+                        fontSize: 18.5,
                         color: "rgba(250,250,250,0.92)",
-                        lineHeight: 1.65,
+                        lineHeight: 1.6,
                         overflow: "hidden",
                       }}
                     >
@@ -1930,17 +1748,6 @@ function ArEditorStepper({
                   transition={{ duration: 0.4, ease: [0.25, 1, 0.4, 1] }}
                 />
               )}
-              <span
-                style={{
-                  ...mono,
-                  fontSize: 14,
-                  color: isActive ? arko.primary : "var(--text-muted)",
-                  letterSpacing: "0.2em",
-                  fontWeight: 600,
-                }}
-              >
-                {s.num}
-              </span>
               <span style={{ display: "inline-flex", alignItems: isMobile ? "flex-start" : "center", gap: isMobile ? 10 : 14, minWidth: 0 }}>
                 {StepIcon && (
                   <StepIcon
@@ -1953,14 +1760,12 @@ function ArEditorStepper({
                 <span
                   style={{
                     fontFamily: serif,
-                    fontSize: isMobile ? 19 : 24,
+                    fontSize: isMobile ? 17 : 20,
                     fontWeight: 700,
                     color: isActive ? "var(--text-primary)" : "var(--text-secondary)",
                     letterSpacing: "-0.015em",
                     lineHeight: 1.3,
-                    whiteSpace: isMobile ? "normal" : "nowrap",
-                    overflow: "hidden",
-                    textOverflow: isMobile ? "unset" : "ellipsis",
+                    whiteSpace: "normal",
                     transitionProperty: "color",
                     transitionDuration: "220ms",
                   }}
@@ -1993,9 +1798,6 @@ function ArEditorStepper({
               />
             </motion.div>
             <div className="md:col-span-5">
-              <span style={{ ...mono, fontSize: 11, color: arko.dark, display: "block", marginBottom: 14, letterSpacing: "0.14em" }}>
-                Step {steps[active].num} · of {String(steps.length).padStart(2, "0")}
-              </span>
               <p style={{
                 fontFamily: serif, fontStyle: "italic",
                 fontSize: "clamp(22px, 2.6vw, 30px)",
@@ -2120,8 +1922,6 @@ function NavCard({ project }: { project: Project }) {
 ══════════════════════════════════════════════════════════════════ */
 export default function ArkoCase() {
   const otherProjects = projects.filter((p) => p.slug !== "arko").slice(-2);
-  const { scrollYProgress } = useScroll();
-  const scaleX = useSpring(scrollYProgress, { stiffness: 200, damping: 30 });
   const isMobile = useIsMobile();
 
   useEffect(() => {
@@ -2139,87 +1939,52 @@ export default function ArkoCase() {
   return (
     <motion.div
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-      transition={{ duration: 0.4 }} className="pt-14"
+      transition={{ duration: 0.4 }}
     >
-      {/* Top mask for fixed nav */}
-      <div style={{
-        position: "fixed", top: 0, left: 0, right: 0, height: 59,
-        background: "var(--bg-primary)", zIndex: 45,
-        pointerEvents: "none",
-      }} />
-
-      {/* Scroll progress */}
-      <div style={{
-        position: "fixed", top: 56, left: 0, right: 0, height: 2,
-        background: "var(--bg-primary)", zIndex: 49,
-      }}>
-        <motion.div style={{
-          height: "100%", background: arko.primary,
-          scaleX, transformOrigin: "left", opacity: 0.85,
-        }} />
-      </div>
-
       {/* ══════════════════════════════════════════════════════════════
           00 · HERO - editorial monograph cover
       ══════════════════════════════════════════════════════════════ */}
-      <section className="blueprint-grid" style={{
+      <section className="arko-hero-section" style={{
         position: "relative",
-        height: isMobile ? "auto" : "calc(var(--vh, 1vh) * 100 - 56px)",
-        minHeight: isMobile ? 0 : 640,
+        isolation: "isolate",
+        minHeight: isMobile ? 0 : "calc(var(--vh, 1vh) * 100)",
         display: "flex",
         flexDirection: "column",
+        justifyContent: "center",
         overflow: isMobile ? "visible" : "hidden",
-        paddingBottom: isMobile ? "clamp(40px, 6vw, 64px)" : 0,
+        background: "var(--bg-primary)",
+        paddingTop: "clamp(96px, 10vw, 128px)",
+        paddingBottom: "clamp(40px, 6vw, 72px)",
       }}>
-        {/* Top bar - back link + tag strip */}
-        <motion.div
-          initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.05, duration: 0.5 }}
-          className="max-w-7xl mx-auto px-6 md:px-10"
-          style={{
-            width: "100%", flexShrink: 0,
-            display: "flex", justifyContent: "space-between", alignItems: "center",
-            paddingTop: "clamp(16px, 2vw, 24px)",
-            paddingBottom: 14,
-            flexWrap: "wrap", gap: 16,
-            borderBottom: "1px solid var(--border)",
-          }}
-        >
-          <Link to="/#projects"
-            style={{
-              display: "inline-flex", alignItems: "center", gap: 10,
-              ...mono, fontSize: 11, letterSpacing: "0.22em",
-              color: "var(--text-secondary)", textDecoration: "none",
-              transitionProperty: "color", transitionDuration: "200ms",
-            }}
-            onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = arko.primary)}
-            onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = "var(--text-secondary)")}>
-            <svg width="14" height="14" viewBox="0 0 18 18" fill="none">
-              <path d="M14 9H3M6 5L2 9l4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-            Index
-          </Link>
-          <div style={{ display: "flex", gap: 20, flexWrap: "wrap", alignItems: "center" }}>
-            {["Product Design", "B2B SaaS", "Web + iOS", "AR · Spatial"].map((tag) => (
-              <span key={tag} style={{ ...mono, fontSize: 10, color: "var(--text-muted)", letterSpacing: "0.2em" }}>
-                {tag}
-              </span>
-            ))}
-          </div>
-        </motion.div>
+        {/* Olive noisy-gradient hero background */}
+        <GradientBackground
+          gradientType="radial-gradient"
+          gradientSize="150% 130%"
+          gradientOrigin="top-middle"
+          colors={[
+            { color: "rgba(110,143,78,0.20)", stop: "0%" },
+            { color: "rgba(139,173,106,0.12)", stop: "34%" },
+            { color: "rgba(174,197,140,0.07)", stop: "62%" },
+            { color: "rgba(240,244,232,0)", stop: "100%" },
+          ]}
+          noisePatternAlpha={26}
+          noiseIntensity={1}
+          noisePatternRefreshInterval={1}
+          noisePatternSize={100}
+          style={{ zIndex: 0 }}
+        />
+        {/* Dotted grid overlay */}
+        <div aria-hidden style={{
+          position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none",
+          backgroundImage: "radial-gradient(circle, rgba(79,107,53,0.07) 1px, transparent 1.5px)",
+          backgroundSize: "23px 23px",
+          backgroundPosition: "-11px -11px",
+          WebkitMaskImage: "linear-gradient(to bottom, #000 60%, transparent 100%)",
+          maskImage: "linear-gradient(to bottom, #000 60%, transparent 100%)",
+        }} />
 
-        {/* Hero body - 2-column: text left, laptop right, all in viewport */}
-        <div
-          className="max-w-7xl mx-auto px-6 md:px-10"
-          style={{
-            flex: 1, width: "100%", minHeight: 0,
-            display: "grid",
-            gridTemplateColumns: "minmax(0, 1fr)",
-            gap: "clamp(24px, 3vw, 40px)",
-            alignItems: "center",
-            paddingTop: "clamp(20px, 2.4vw, 32px)",
-            paddingBottom: "clamp(16px, 2vw, 24px)",
-          }}
-        >
+        {/* Hero body - 2-column: text left, mockups right */}
+        <div className="max-w-7xl mx-auto px-6 md:px-10" style={{ position: "relative", zIndex: 1, width: "100%" }}>
           <div
             className="grid grid-cols-1 md:grid-cols-12"
             style={{
@@ -2228,30 +1993,18 @@ export default function ArkoCase() {
               width: "100%",
             }}
           >
-            {/* LEFT - title, subtitle */}
+            {/* LEFT - title, subtitle, meta */}
             <div className="md:col-span-5" style={{ minWidth: 0 }}>
-              <motion.div
-                initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1, duration: 0.6 }}
-                style={{ display: "flex", justifyContent: "space-between", marginBottom: 18, maxWidth: 460 }}
-              >
-                <span style={{ ...mono, fontSize: 11, color: arko.primary, letterSpacing: "0.22em", fontWeight: 700 }}>
-                  Case Study · 01
-                </span>
-                <span style={{ ...mono, fontSize: 11, color: "var(--text-muted)", letterSpacing: "0.22em" }}>
-                  2025
-                </span>
-              </motion.div>
-
               <div style={{ overflow: "hidden", marginBottom: "clamp(24px, 2.6vw, 36px)" }}>
                 <motion.h1
                   initial={{ y: "110%" }} animate={{ y: 0 }}
                   transition={{ delay: 0.15, duration: 1.0, ease: [0.25, 1, 0.4, 1] }}
                   style={{
                     fontFamily: serif, fontWeight: 700,
-                    fontSize: "clamp(64px, 9.5vw, 140px)",
+                    fontSize: "clamp(52px, 7.6vw, 112px)",
                     color: "var(--text-primary)",
-                    letterSpacing: "-0.055em", lineHeight: 0.9,
-                    margin: 0,
+                    letterSpacing: "-0.055em", lineHeight: 0.92,
+                    margin: 0, whiteSpace: "nowrap",
                   }}>
                   Arko<span style={{ color: arko.primary, fontStyle: "italic" }}>.</span>
                 </motion.h1>
@@ -2259,13 +2012,13 @@ export default function ArkoCase() {
 
               <motion.p
                 initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5, duration: 0.7 }}
+                transition={{ delay: 0.45, duration: 0.7 }}
                 style={{
                   fontFamily: serif, fontStyle: "italic",
-                  fontSize: "clamp(21px, 1.9vw, 28px)",
+                  fontSize: "clamp(18px, 1.7vw, 24px)",
                   color: "var(--text-secondary)",
-                  lineHeight: 1.5, maxWidth: 520,
-                  marginBottom: "clamp(32px, 3.4vw, 48px)",
+                  lineHeight: 1.5, maxWidth: 500,
+                  marginBottom: "clamp(34px, 4.5vw, 52px)",
                   letterSpacing: "-0.01em",
                 }}
               >
@@ -2274,32 +2027,27 @@ export default function ArkoCase() {
                 in one closed loop.
               </motion.p>
 
-              {/* Meta row - compact, below subtitle */}
+              {/* Meta - airy 2-column */}
               <motion.div
-                initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8, duration: 0.6 }}
+                initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7, duration: 0.6 }}
                 style={{
+                  maxWidth: 440,
                   display: "grid",
-                  gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-                  columnGap: "clamp(20px, 3vw, 40px)",
-                  rowGap: 22,
-                  borderTop: "1px solid var(--border)",
-                  paddingTop: 24,
-                  maxWidth: 460,
+                  gridTemplateColumns: "auto auto",
+                  justifyContent: "start",
+                  columnGap: "clamp(44px, 6vw, 84px)",
+                  rowGap: "clamp(24px, 3vw, 32px)",
                 }}
               >
                 {([
                   { label: "Role",     value: "Product Designer" },
-                  { label: "Platform", value: "Web + iOS" },
+                  { label: "Platform", value: "Web · iOS" },
                   { label: "Timeline", value: "14 weeks" },
                   { label: "Tools",    value: "Figma · Framer" },
                 ] as { label: string; value: string }[]).map((m) => (
-                  <div key={m.label} style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                    <span style={{ ...mono, fontSize: 13, color: "var(--text-secondary)", letterSpacing: "0.2em", fontWeight: 600 }}>
-                      {m.label}
-                    </span>
-                    <span style={{ fontFamily: sans, fontSize: 19, fontWeight: 500, color: "var(--text-primary)" }}>
-                      {m.value}
-                    </span>
+                  <div key={m.label}>
+                    <div style={{ ...mono, fontSize: 10.5, fontWeight: 600, letterSpacing: "0.18em", color: arko.muted, marginBottom: 9 }}>{m.label}</div>
+                    <div style={{ fontFamily: sans, fontSize: "clamp(17px, 1.5vw, 20px)", fontWeight: 600, lineHeight: 1.15, letterSpacing: "-0.01em", color: "var(--text-primary)" }}>{m.value}</div>
                   </div>
                 ))}
               </motion.div>
@@ -2345,7 +2093,7 @@ export default function ArkoCase() {
               <motion.div
                 animate={{ y: [0, -6, 0] }}
                 transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-                whileHover={{ y: -14, scale: 1.025, transition: { type: "spring", stiffness: 220, damping: 18 } }}
+                whileHover={{ scale: 1.04, transition: { type: "spring", stiffness: 220, damping: 18 } }}
                 style={{
                   position: "relative",
                   zIndex: 2,
@@ -2364,7 +2112,7 @@ export default function ArkoCase() {
               <motion.div
                 animate={{ y: [0, -10, 0] }}
                 transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
-                whileHover={{ y: -18, scale: 1.04, transition: { type: "spring", stiffness: 240, damping: 18 } }}
+                whileHover={{ scale: 1.06, transition: { type: "spring", stiffness: 240, damping: 18 } }}
                 style={{
                   position: "absolute",
                   right: "-4%",
@@ -2386,32 +2134,6 @@ export default function ArkoCase() {
             </motion.div>
           </div>
         </div>
-
-        {/* Scroll cue - bottom strip */}
-        <motion.div
-          initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.1, duration: 0.6 }}
-          className="max-w-7xl mx-auto px-6 md:px-10"
-          style={{
-            width: "100%", flexShrink: 0,
-            display: "flex", justifyContent: "center", alignItems: "center",
-            paddingBottom: "clamp(14px, 1.6vw, 22px)",
-          }}
-        >
-          <motion.div
-            animate={{ y: [0, 5, 0] }}
-            transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-            style={{
-              display: "inline-flex", alignItems: "center", gap: 10,
-              ...mono, fontSize: 10, letterSpacing: "0.22em",
-              color: "var(--text-secondary)",
-            }}
-          >
-            Scroll
-            <svg width="12" height="12" viewBox="0 0 16 16" fill="none">
-              <path d="M8 3v10M4 9l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </motion.div>
-        </motion.div>
       </section>
 
       {/* ══════════════════════════════════════════════════════════════
@@ -2420,17 +2142,18 @@ export default function ArkoCase() {
       <section style={{ padding: SECTION_PAD, background: "var(--bg-primary)" }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <Reveal>
-            <SectionHeader num="01" title="Premise" phase="Weeks 01 · 02" />
+            <SectionHeader
+              num="01"
+              phase="Premise"
+              title={<>One loop.{" "}
+                <em style={{ fontStyle: "italic", color: arko.primary }}>
+                  Zero back-and-forth.
+                </em></>}              accent={arko.primary}
+            />
           </Reveal>
 
           <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-16 items-start">
             <Reveal className="md:col-span-7">
-              <h2 style={{ ...t.h2Section, marginBottom: 24 }}>
-                One loop.{" "}
-                <em style={{ fontStyle: "italic", color: arko.primary }}>
-                  Zero back-and-forth.
-                </em>
-              </h2>
               <p style={{ ...t.bodyLg, marginBottom: 40 }}>
                 Arko turns spatial design approvals from a week of emails into a single tap.
                 It is a B2B platform that replaces the three-tool handoff (design software, PDF exports,
@@ -2489,21 +2212,6 @@ export default function ArkoCase() {
                     borderRight: pos.right !== undefined ? `1.5px solid ${arko.dark}` : "none",
                   }} />
                 ))}
-
-                {/* Top meta band: figure tag + source */}
-                <div style={{
-                  display: "flex", justifyContent: "space-between", alignItems: "center",
-                  paddingBottom: 12,
-                  borderBottom: "1px solid var(--border)",
-                  marginBottom: 24,
-                }}>
-                  <span style={{ ...mono, fontSize: 10, color: arko.dark, letterSpacing: "0.22em" }}>
-                    Fig. 01.1
-                  </span>
-                  <span style={{ ...mono, fontSize: 10, color: "var(--text-muted)", letterSpacing: "0.2em" }}>
-                    hrs / project
-                  </span>
-                </div>
 
                 {/* The number with measurement bracket */}
                 <div style={{
@@ -2593,17 +2301,19 @@ export default function ArkoCase() {
       {/* ══════════════════════════════════════════════════════════════
           02 · CONTEXT - the broken workflow
       ══════════════════════════════════════════════════════════════ */}
-      <section className="blueprint-grid-subtle" style={{ padding: SECTION_PAD }}>
+      <section className="arko-liquid-section" style={{ padding: SECTION_PAD }}>
+        <LiquidBackground c0="eef3e3" c1="dce8c6" c2="bfd49c" fade={0} lift={0.28} grain={0.055} speed={0.1} />
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <Reveal>
-            <SectionHeader num="02" title="Context" phase="Weeks 02 · 03" />
+            <SectionHeader
+              num="02"
+              phase="Context"
+              title={<>Clients can't visualize a space from a floor plan.{" "}
+              <em style={{ fontStyle: "italic", color: arko.primary }}>That gap costs real money.</em></>}              accent={arko.primary}
+            />
           </Reveal>
 
           <Reveal>
-            <h2 style={{ ...t.h2Section, maxWidth: 820, marginBottom: 20 }}>
-              Clients can't visualize a space from a floor plan.{" "}
-              <em style={{ fontStyle: "italic", color: arko.primary }}>That gap costs real money.</em>
-            </h2>
             <p style={{ ...t.bodyLg, maxWidth: 760, marginBottom: 48 }}>
               A verbal yes in the meeting doesn't stick once the space is rendered. By the time
               the 3D visual arrives days later, the client's mental image has already drifted, and
@@ -2625,15 +2335,13 @@ export default function ArkoCase() {
       <section style={{ padding: SECTION_PAD, background: "var(--bg-primary)" }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <Reveal>
-            <SectionHeader num="03" title="Users & Research" phase="Weeks 03 · 04" />
-          </Reveal>
-
-          <Reveal>
-            <h2 style={{ ...t.h2Section, maxWidth: 720, marginBottom: 56 }}>
-              One platform.{" "}
+            <SectionHeader
+              num="03"
+              phase="Users & Research"
+              title={<>One platform.{" "}
               <em style={{ fontStyle: "italic", color: arko.primary }}>Two different contexts</em>{" "}
-              of use.
-            </h2>
+              of use.</>}              accent={arko.primary}
+            />
           </Reveal>
 
           <Reveal delay={0.1}>
@@ -2652,22 +2360,13 @@ export default function ArkoCase() {
       ══════════════════════════════════════════════════════════════ */}
       <section style={{
         backgroundColor: "var(--text-primary)",
-        padding: "clamp(88px, 12vw, 140px) 0",
+        padding: SECTION_PAD,
         position: "relative", overflow: "hidden",
       }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10" style={{ position: "relative", zIndex: 2 }}>
-          <motion.div
-            initial={{ opacity: 0, y: 14 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.5, ease: [0.25, 1, 0.4, 1] }}
-            style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 40 }}
-          >
-            <Quotes size={30} color={arko.light} opacity={0.7} weight="duotone" />
-            <p style={{ ...mono, fontSize: 15, color: arko.light, letterSpacing: "0.22em", fontWeight: 600 }}>
-              04 / 09 · Key insight
-            </p>
-          </motion.div>
+          <Reveal>
+            <SectionHeader num="04" phase="Key insight" accent="#fff" />
+          </Reveal>
           <InsightQuote />
           <motion.p
             initial={{ opacity: 0, y: 14 }}
@@ -2686,18 +2385,20 @@ export default function ArkoCase() {
       {/* ══════════════════════════════════════════════════════════════
           05 · WORKSPACE · WEB - desk-side platform for the designer
       ══════════════════════════════════════════════════════════════ */}
-      <section className="blueprint-grid" style={{ padding: SECTION_PAD }}>
+      <section className="arko-liquid-section" style={{ padding: SECTION_PAD }}>
+        <LiquidBackground c0="eef3e3" c1="dce8c6" c2="bfd49c" fade={0} lift={0.28} grain={0.055} speed={0.1} />
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <Reveal>
-            <SectionHeader num="05" title="Workspace · Web" phase="Weeks 05 · 08" />
+            <SectionHeader
+              num="05"
+              phase="Workspace · Web"
+              title={<>A professional workspace.{" "}
+                <em style={{ fontStyle: "italic", color: arko.primary }}>Dense, powerful, built for daily use.</em></>}              accent={arko.primary}
+            />
           </Reveal>
 
           <Reveal>
             <div style={{ maxWidth: 760, marginBottom: 56 }}>
-              <h2 style={{ ...t.h2Section, marginBottom: 22 }}>
-                A professional workspace.{" "}
-                <em style={{ fontStyle: "italic", color: arko.primary }}>Dense, powerful, built for daily use.</em>
-              </h2>
               <p style={{ ...t.bodyLg }}>
                 The designer interface doesn't compromise. Sidebar navigation, project management,
                 team activity, and AR editing tools, all accessible from a single workspace a design
@@ -2708,10 +2409,10 @@ export default function ArkoCase() {
 
           <Reveal delay={0.1}>
             <WebGallery screens={[
-              { src: "/arko/web-3.png", label: "Fig. 06.1 · Dashboard · active projects, team stats, pending approvals", Icon: SquaresFour },
-              { src: "/arko/web-4.png", label: "Fig. 06.2 · All Projects · filter by status, search, quick access", Icon: FolderOpen },
-              { src: "/arko/web-5.png", label: "Fig. 06.3 · Project Detail · rooms, progress bars, live activity log", Icon: ClipboardText },
-              { src: "/arko/web-6.png", label: "Fig. 06.4 · Comments view · client feedback pinned in context", Icon: ChatCircleDots },
+              { src: "/arko/web-3.png", label: "Dashboard · active projects, team stats, and pending approvals at a glance", Icon: SquaresFour },
+              { src: "/arko/web-4.png", label: "All Projects · filter by status, search, and jump to any space", Icon: FolderOpen },
+              { src: "/arko/web-5.png", label: "Project Detail · rooms, progress bars, and a live activity log", Icon: ClipboardText },
+              { src: "/arko/web-6.png", label: "Comments view · client feedback pinned in spatial context", Icon: ChatCircleDots },
             ]} />
           </Reveal>
         </div>
@@ -2720,19 +2421,20 @@ export default function ArkoCase() {
       {/* ══════════════════════════════════════════════════════════════
           06 · CAPTURE · iOS - scan flow + AR editor
       ══════════════════════════════════════════════════════════════ */}
-      <section style={{ padding: SECTION_PAD, background: "var(--bg-secondary)" }}>
+      <section style={{ padding: SECTION_PAD, background: "var(--bg-primary)" }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <Reveal>
-            <SectionHeader num="06" title="Capture · iOS" phase="Weeks 06 · 09" />
+            <SectionHeader
+              num="06"
+              phase="Capture · iOS"
+              title={<>From empty room to{" "}
+                <em style={{ fontStyle: "italic", color: arko.primary }}>furnished space</em>{" "}
+                in minutes.</>}              accent={arko.primary}
+            />
           </Reveal>
 
           <Reveal>
             <div style={{ maxWidth: 760, marginBottom: 64 }}>
-              <h2 style={{ ...t.h2Section, marginBottom: 22 }}>
-                From empty room to{" "}
-                <em style={{ fontStyle: "italic", color: arko.primary }}>furnished space</em>{" "}
-                in minutes.
-              </h2>
               <p style={{ ...t.bodyLg }}>
                 A guided four-stage scan confirms spatial data before the AR editor opens.
               </p>
@@ -2779,9 +2481,12 @@ export default function ArkoCase() {
           {/* AR Editor */}
           <Reveal>
             <div style={{ marginBottom: 40, maxWidth: 720 }}>
-              <p style={{ ...mono, fontSize: 11, color: arko.dark, letterSpacing: "0.22em", marginBottom: 14, fontWeight: 600 }}>
-                AR room editor
-              </p>
+              <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 14 }}>
+                <span aria-hidden style={{ width: 3, height: 16, background: arko.primary, display: "inline-block" }} />
+                <p style={{ ...mono, fontSize: 13, color: arko.dark, letterSpacing: "0.22em", fontWeight: 700 }}>
+                  AR room editor
+                </p>
+              </div>
               <h3 style={{ ...t.h3Lede }}>
                 Canvas first, tools at the edges: place, scale, swap, no modals.
               </h3>
@@ -2792,7 +2497,7 @@ export default function ArkoCase() {
             <ArEditorStepper steps={[
               {
                 src: "/arko/phone-7.png", num: "01",
-                label: "Room type breadcrumb navigation",
+                label: "Room breadcrumb · room-type navigation",
                 desc: "Navigate between room types without losing context. The full path stays visible at all times; every step in the hierarchy is one tap to reverse.",
                 Icon: Compass,
               },
@@ -2825,50 +2530,26 @@ export default function ArkoCase() {
       <section style={{
         padding: SECTION_PAD,
         backgroundColor: arko.dark,
-        backgroundImage: `
-          repeating-linear-gradient(0deg, rgba(255,255,255,0.045) 0, rgba(255,255,255,0.045) 1px, transparent 1px, transparent 20px),
-          repeating-linear-gradient(90deg, rgba(255,255,255,0.045) 0, rgba(255,255,255,0.045) 1px, transparent 1px, transparent 20px),
-          repeating-linear-gradient(0deg, rgba(255,255,255,0.09) 0, rgba(255,255,255,0.09) 1px, transparent 1px, transparent 80px),
-          repeating-linear-gradient(90deg, rgba(255,255,255,0.09) 0, rgba(255,255,255,0.09) 1px, transparent 1px, transparent 80px)
-        `,
+        backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1.5px)",
+        backgroundSize: "23px 23px",
+        backgroundPosition: "-11px -11px",
         position: "relative",
         overflow: "hidden",
       }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10" style={{ position: "relative", zIndex: 2 }}>
           <Reveal>
-            <div style={{ marginBottom: "clamp(40px, 5vw, 64px)" }}>
-              <div style={{
-                display: "flex", alignItems: "baseline", gap: 18, flexWrap: "wrap",
-                paddingBottom: 14,
-              }}>
-                <span style={{ ...mono, fontSize: 14, color: "#FAFAFA", letterSpacing: "0.22em", fontWeight: 700 }}>
-                  07 <span style={{ color: "rgba(250,250,250,0.55)", fontWeight: 400 }}>/ 09</span>
-                </span>
-                <span style={{ ...mono, fontSize: 14, color: "#FAFAFA", letterSpacing: "0.22em", fontWeight: 600 }}>
-                  Approval · Client
-                </span>
-                <span style={{ ...mono, fontSize: 13, color: "rgba(250,250,250,0.65)", letterSpacing: "0.2em", marginLeft: "auto" }}>
-                  Weeks 09 · 11
-                </span>
-              </div>
-              <div style={{ height: 1, background: "rgba(250,250,250,0.55)", transformOrigin: "left" }} />
-            </div>
+            <SectionHeader
+              num="07"
+              phase="Approval · Client"
+              title={<>No login. No jargon.{" "}<em style={{ fontStyle: "italic", color: arko.pale }}>Just the room, a comment, and an approve.</em></>}
+              accent="#fff"
+              titleColor="#FAFAFA"
+            />
           </Reveal>
 
-          {/* Hero block - statement + lede */}
+          {/* Lede */}
           <Reveal>
-            <div style={{ maxWidth: 860, marginBottom: 56 }}>
-              <h2 style={{
-                fontFamily: serif, fontWeight: 700,
-                fontSize: "clamp(32px, 4.6vw, 58px)",
-                color: "#FAFAFA", letterSpacing: "-0.035em",
-                lineHeight: 1.08, marginBottom: 28,
-              }}>
-                No login. No jargon.{" "}
-                <em style={{ fontStyle: "italic", color: "#D4E4B8" }}>
-                  Just the room, a comment, and an approve.
-                </em>
-              </h2>
+            <div style={{ maxWidth: 680, marginBottom: 56 }}>
               <p style={{
                 ...t.bodyLg,
                 color: "rgba(250,250,250,0.82)",
@@ -2976,16 +2657,12 @@ export default function ArkoCase() {
       <section style={{ padding: SECTION_PAD, background: "var(--bg-primary)" }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <Reveal>
-            <SectionHeader num="08" title="Design Decisions" phase="Weeks 10 · 12" />
-          </Reveal>
-
-          <Reveal>
-            <div style={{ maxWidth: 720, marginBottom: 48 }}>
-              <h2 style={{ ...t.h2Section }}>
-                <em style={{ fontStyle: "italic", color: arko.primary }}>Four decisions</em>{" "}
-                that defined the product.
-              </h2>
-            </div>
+            <SectionHeader
+              num="08"
+              phase="Design Decisions"
+              title={<><em style={{ fontStyle: "italic", color: arko.primary }}>Four decisions</em>{" "}
+                that defined the product.</>}              accent={arko.primary}
+            />
           </Reveal>
 
           <Reveal delay={0.05}>
@@ -2997,237 +2674,100 @@ export default function ArkoCase() {
       {/* ══════════════════════════════════════════════════════════════
           09 · OUTCOMES
       ══════════════════════════════════════════════════════════════ */}
-      <section className="blueprint-grid-subtle" style={{ padding: SECTION_PAD }}>
+      <section className="arko-liquid-section" style={{ padding: SECTION_PAD }}>
+        <LiquidBackground c0="eef3e3" c1="dce8c6" c2="bfd49c" fade={0} lift={0.28} grain={0.055} speed={0.1} />
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <Reveal>
-            <SectionHeader num="09" title="Outcomes & Reflection" phase="Weeks 13 · 14" />
+            <SectionHeader
+              num="09"
+              phase="Outcomes & Reflection"
+              title={<>Three workflows. One platform.{" "}
+              <em style={{ fontStyle: "italic", color: arko.primary }}>No compromise</em>{" "}
+              on either user.</>}              accent={arko.primary}
+            />
           </Reveal>
 
+          {/* Setup - the consolidation fact, quietly */}
           <Reveal>
-            <h2 style={{ ...t.h2Section, marginBottom: 22, maxWidth: 860 }}>
-              Three workflows. One platform.{" "}
-              <em style={{ fontStyle: "italic", color: arko.primary }}>No compromise</em>{" "}
-              on either user.
-            </h2>
-            <p style={{ ...t.bodyLg, maxWidth: 760, marginBottom: 72 }}>
-              Arko consolidates space scanning, interior design, and client approval into one
-              platform. A single product that serves two very different users without compromising
-              either experience.
+            <p style={{ ...t.bodyLg, color: "var(--text-secondary)", maxWidth: 720, marginBottom: "clamp(30px, 3.2vw, 44px)" }}>
+              Arko consolidates space scanning, interior design, and client approval into one platform. One product serving two very different users, neither compromised.
             </p>
           </Reveal>
 
-          {/* Editorial impact banner - one strip, no card borders */}
-          <Reveal delay={0.08}>
-            <div style={{ marginBottom: 96 }}>
-              {/* Eyebrow */}
-              <div style={{
-                display: "flex",
-                alignItems: "baseline",
-                justifyContent: "space-between",
-                gap: 16,
-                flexWrap: "wrap",
-                marginBottom: 36,
-              }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                  <span aria-hidden style={{ width: 3, height: 14, background: arko.primary }} />
-                  <p style={{ ...mono, fontSize: 12, color: arko.dark, letterSpacing: "0.22em", fontWeight: 700 }}>
-                    Impact
-                  </p>
-                </div>
-                <p style={{ ...mono, fontSize: 11, color: "var(--text-muted)", letterSpacing: "0.22em" }}>
-                  Pilot study · 30 days · 4 teams · 12 projects
-                </p>
-              </div>
+          {/* Thesis reflection - the argument, with a result woven in */}
+          <Reveal>
+            <p style={{ ...t.bodyLg, color: "var(--text-primary)", maxWidth: 720, marginBottom: "clamp(48px, 5.5vw, 72px)" }}>
+              <strong style={{ fontWeight: 800, letterSpacing: "-0.01em" }}>What this reinforced.</strong>{" "}
+              The best B2B products make the professional look good in front of their client. Every decision in Arko was made with that in mind, and in the pilot it bore out: approvals that once ate a working day closed in <span style={{ color: arko.primary, fontWeight: 600 }}>45 minutes</span>.
+            </p>
+          </Reveal>
 
-              {/* Metrics row */}
-              <div
-                className="grid grid-cols-2 lg:grid-cols-4"
-                style={{
-                  borderTop: `1px solid ${arko.primary}`,
-                  borderBottom: `1px solid ${arko.primary}`,
-                }}
-              >
+          {/* Connective + quiet metrics ledger (evidence) */}
+          <Reveal delay={0.05}>
+            <p style={{ ...t.bodyLg, color: "var(--text-secondary)", maxWidth: 720, marginBottom: "clamp(24px, 2.6vw, 34px)" }}>
+              Measured across a 30-day pilot of four teams and twelve projects:
+            </p>
+            <div style={{ maxWidth: 960, marginBottom: "clamp(72px, 9vw, 116px)", borderTop: "1px solid rgba(79,107,53,0.34)", borderBottom: "1px solid rgba(79,107,53,0.34)" }}>
+              <div className="grid grid-cols-2 lg:grid-cols-4">
                 {([
-                  { label: "Approval time",    num: 45,   decimals: 0, prefix: "",  unit: "min", delta: "↓ 92%",      tone: "down" as const, note: "from 6–8 hrs" },
-                  { label: "Revision cycles",  num: 1.2,  decimals: 1, prefix: "",  unit: "avg", delta: "↓ 72%",      tone: "down" as const, note: "from 4+ rounds" },
-                  { label: "Spatial accuracy", num: 92,   decimals: 0, prefix: "",  unit: "%",   delta: "→ target",   tone: "flat" as const, note: "90% threshold" },
-                  { label: "Client NPS",       num: 38,   decimals: 0, prefix: "+", unit: "pts", delta: "↑ 24 pts",   tone: "up"   as const, note: "baseline +14" },
-                ] as { label: string; num: number; decimals: number; prefix: string; unit: string; delta: string; tone: "up" | "down" | "flat"; note: string }[]).map((k, i) => {
+                  { value: 45, decimals: 0, prefix: "", unit: "min", label: "Approval time",   delta: "down 92%", note: "was 6–8 hrs" },
+                  { value: 1.2, decimals: 1, prefix: "", unit: "avg", label: "Revision cycles", delta: "down 72%", note: "from 4+ rounds" },
+                  { value: 92, decimals: 0, prefix: "", unit: "%",   label: "Spatial accuracy", delta: "on target", note: "90% threshold" },
+                  { value: 38, decimals: 0, prefix: "+", unit: "pts", label: "Client NPS",      delta: "up 24 pts", note: "baseline +14" },
+                ] as { value: number; decimals: number; prefix: string; unit: string; label: string; delta: string; note: string }[]).map((k, i) => {
                   const isRightCol = i % 2 === 1;
-                  const isFirstRow = i < 2;
                   return (
-                  <motion.div
-                    key={k.label}
-                    initial={{ opacity: 0, y: 14 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: "-40px" }}
-                    transition={{ delay: i * 0.08, duration: 0.55, ease: [0.25, 1, 0.4, 1] }}
-                    style={{
-                      padding: isMobile ? "28px 18px 24px" : "40px 28px 36px",
-                      borderLeft: (isMobile ? isRightCol : i > 0) ? "1px solid var(--border-light)" : "none",
-                      borderBottom: (isMobile && isFirstRow) ? "1px solid var(--border-light)" : "none",
-                      position: "relative",
-                    }}
-                  >
-                    <p style={{ ...mono, fontSize: 11, color: arko.dark, letterSpacing: "0.22em", marginBottom: 22, fontWeight: 700 }}>
-                      {k.label}
-                    </p>
-                    <p style={{
-                      fontFamily: serif, fontWeight: 700,
-                      fontSize: "clamp(56px, 6vw, 84px)",
-                      color: "var(--text-primary)",
-                      letterSpacing: "-0.04em", lineHeight: 0.95, marginBottom: 14,
-                    }}>
-                      <CountUp value={k.num} decimals={k.decimals} prefix={k.prefix} />
-                      <span style={{
-                        fontFamily: sans, fontSize: "clamp(14px, 1.1vw, 17px)", fontWeight: 500,
-                        color: "var(--text-secondary)", marginLeft: 8, letterSpacing: 0,
-                      }}>{k.unit}</span>
-                    </p>
-                    <div style={{ display: "flex", alignItems: "baseline", gap: 10, flexWrap: "wrap" }}>
-                      <span style={{
-                        ...mono,
-                        fontSize: 12,
-                        color: arko.primary,
-                        letterSpacing: "0.16em",
-                        fontWeight: 700,
-                      }}>
-                        {k.delta}
-                      </span>
-                      <span style={{
-                        ...mono, fontSize: 10, color: "var(--text-muted)", letterSpacing: "0.18em",
-                      }}>
-                        {k.note}
-                      </span>
-                    </div>
-                  </motion.div>
+                    <motion.div
+                      key={k.label}
+                      initial={{ opacity: 0, y: 12 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true, margin: "-40px" }}
+                      transition={{ delay: i * 0.07, duration: 0.5, ease: [0.25, 1, 0.4, 1] }}
+                      style={{
+                        padding: isMobile ? "36px 18px" : `clamp(44px, 4vw, 56px) clamp(24px, 2.2vw, 34px) clamp(44px, 4vw, 56px) ${i > 0 ? "clamp(30px, 2.6vw, 40px)" : "0"}`,
+                        borderLeft: (isMobile ? isRightCol : i > 0) ? "1px solid rgba(79,107,53,0.17)" : "none",
+                        borderTop: (isMobile && i >= 2) ? "1px solid rgba(79,107,53,0.17)" : "none",
+                        minWidth: 0,
+                      }}
+                    >
+                      <p style={{ fontFamily: serif, fontWeight: 700, fontSize: "clamp(38px, 3.6vw, 52px)", color: "var(--text-primary)", letterSpacing: "-0.03em", lineHeight: 0.98, marginBottom: 16 }}>
+                        <CountUp value={k.value} decimals={k.decimals} prefix={k.prefix} />
+                        <span style={{ fontFamily: sans, fontSize: "clamp(13px, 1vw, 15px)", fontWeight: 500, color: "var(--text-secondary)", marginLeft: 7, letterSpacing: 0 }}>{k.unit}</span>
+                      </p>
+                      <p style={{ fontFamily: sans, fontSize: 17, fontWeight: 600, color: "var(--text-primary)", letterSpacing: "-0.01em", marginBottom: 11 }}>
+                        {k.label}
+                      </p>
+                      <p style={{ fontFamily: sans, fontSize: 15, lineHeight: 1.45 }}>
+                        <span style={{ color: arko.dark, fontWeight: 600 }}>{k.delta}</span>
+                        <span style={{ color: "var(--text-secondary)" }}> · {k.note}</span>
+                      </p>
+                    </motion.div>
                   );
                 })}
               </div>
             </div>
           </Reveal>
 
-          {/* Reflection - two pull-quote editorial cards */}
-          <div
-            className="grid grid-cols-1 md:grid-cols-2"
-            style={{ gap: 32, marginBottom: 88 }}
-          >
-            {([
-              {
-                label: "What I'd build next",
-                body: "An analytics layer for designers. Which rooms clients spend the most time reviewing, which furniture items get swapped most often, where comments cluster spatially. Turning client behavior into actionable design intelligence.",
-                Icon: LightbulbFilament,
-              },
-              {
-                label: "What this reinforced",
-                body: "The best B2B products make the professional look good in front of their client. Every design decision in Arko was made with that in mind.",
-                Icon: Sparkle,
-              },
-            ] as { label: string; body: string; Icon: typeof LightbulbFilament }[]).map((c, i) => (
-              <Reveal key={i} delay={i * 0.08}>
-                <motion.div
-                  initial={{ opacity: 0, y: 14 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-40px" }}
-                  transition={{ duration: 0.55, ease: [0.25, 1, 0.4, 1] }}
-                  style={{
-                    position: "relative",
-                    padding: "44px 36px 40px",
-                    background: "var(--bg-elevated)",
-                    border: "1px solid var(--border)",
-                    height: "100%",
-                    overflow: "hidden",
-                  }}
-                >
-                  {/* Accent top bar */}
-                  <span
-                    aria-hidden
-                    style={{
-                      position: "absolute",
-                      top: 0, left: 0,
-                      width: 64, height: 3,
-                      background: arko.primary,
-                    }}
-                  />
-                  {/* Oversized background quote mark */}
-                  <span
-                    aria-hidden
-                    style={{
-                      position: "absolute",
-                      top: 18, right: 20,
-                      fontFamily: serif,
-                      fontSize: 140,
-                      fontWeight: 700,
-                      color: arko.subtle,
-                      lineHeight: 0.7,
-                      pointerEvents: "none",
-                      userSelect: "none",
-                    }}
-                  >
-                    “
-                  </span>
-
-                  <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 24 }}>
-                    <c.Icon size={22} color={arko.primary} weight="duotone" />
-                    <p style={{ ...mono, fontSize: 12, color: arko.dark, letterSpacing: "0.22em", fontWeight: 700 }}>
-                      {c.label}
-                    </p>
-                  </div>
-                  <p style={{
-                    ...t.bodyLg,
-                    color: "var(--text-primary)",
-                    position: "relative",
-                    zIndex: 1,
-                  }}>
-                    {c.body}
-                  </p>
-                </motion.div>
-              </Reveal>
-            ))}
-          </div>
-
-          {/* Closing line - cinematic */}
+          {/* Forward reflection - the next chapter */}
           <Reveal>
-            <div style={{
-              paddingTop: 56,
-              borderTop: "1px solid var(--border)",
-              position: "relative",
-            }}>
-              {/* Corner brackets */}
-              {[
-                { top: 40, left: 0 },
-                { top: 40, right: 0 },
-              ].map((pos, i) => (
-                <span
-                  key={i}
-                  aria-hidden
-                  style={{
-                    position: "absolute",
-                    top: pos.top,
-                    left: pos.left,
-                    right: pos.right,
-                    width: 18, height: 18,
-                    borderTop: `1px solid ${arko.primary}`,
-                    borderLeft: pos.left !== undefined ? `1px solid ${arko.primary}` : "none",
-                    borderRight: pos.right !== undefined ? `1px solid ${arko.primary}` : "none",
-                    opacity: 0.6,
-                  }}
-                />
-              ))}
-              <div style={{ textAlign: "center", maxWidth: 760, margin: "0 auto" }}>
-                <p style={{ ...mono, fontSize: 11, color: arko.dark, letterSpacing: "0.24em", marginBottom: 26, fontWeight: 700 }}>
-                  Fin · Arko case study
-                </p>
-                <p style={{
-                  fontFamily: serif, fontStyle: "italic",
-                  fontSize: "clamp(28px, 3.4vw, 42px)",
-                  color: "var(--text-primary)", letterSpacing: "-0.02em",
-                  lineHeight: 1.22,
-                }}>
-                  From architecture to digital product:{" "}
-                  <span style={{ color: arko.primary }}>the loop, finally closed.</span>
-                </p>
-              </div>
+            <p style={{ ...t.bodyLg, color: "var(--text-primary)", maxWidth: 720, marginBottom: "clamp(84px, 10vw, 136px)" }}>
+              <strong style={{ fontWeight: 800, letterSpacing: "-0.01em" }}>What I'd build next.</strong>{" "}
+              An analytics layer for designers: which rooms clients linger in, which furniture gets swapped most, where comments cluster in space. Client behavior turned into design intelligence.
+            </p>
+          </Reveal>
+
+          {/* Finale */}
+          <Reveal>
+            <div style={{ borderTop: "1px solid rgba(79,107,53,0.34)", paddingTop: "clamp(44px, 5.5vw, 68px)" }}>
+              <p style={{
+                fontFamily: serif, fontWeight: 700,
+                fontSize: "clamp(30px, 3.6vw, 46px)",
+                color: "var(--text-primary)", letterSpacing: "-0.03em",
+                lineHeight: 1.16, maxWidth: 940,
+              }}>
+                From architecture to digital product.{" "}
+                <span style={{ color: arko.primary, fontStyle: "italic" }}>The loop, finally closed.</span>
+              </p>
             </div>
           </Reveal>
         </div>
@@ -3238,10 +2778,12 @@ export default function ArkoCase() {
       ══════════════════════════════════════════════════════════════ */}
       <section style={{ padding: "clamp(64px, 8vw, 104px) 0", borderTop: "1px solid var(--border)" }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
-          <div style={{ display: "flex", alignItems: "baseline", gap: 14, marginBottom: 36 }}>
-            <span aria-hidden style={{ width: 3, height: 14, background: arko.primary }} />
-            <p style={{ ...mono, fontSize: 12, color: arko.dark, letterSpacing: "0.22em", fontWeight: 600 }}>
-              More case studies
+          <div style={{ marginBottom: "clamp(36px, 4.5vw, 56px)", maxWidth: 560 }}>
+            <h2 style={{ fontFamily: serif, fontWeight: 700, fontSize: "clamp(30px, 3.4vw, 44px)", letterSpacing: "-0.03em", lineHeight: 1.12, color: "var(--text-primary)", margin: 0 }}>
+              Keep exploring<span style={{ color: arko.primary, fontStyle: "italic" }}>.</span>
+            </h2>
+            <p style={{ fontFamily: sans, fontSize: "clamp(17px, 1.4vw, 19px)", color: "var(--text-secondary)", lineHeight: 1.6, margin: "16px 0 0" }}>
+              Two more case studies, start to finish.
             </p>
           </div>
 

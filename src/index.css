@@ -72,7 +72,7 @@ html {
 body {
   background-color: var(--bg-primary);
   color: var(--text-primary);
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: 'Manrope', system-ui, sans-serif;
   line-height: 1.7;
   overflow-x: hidden;
   /* Firefox scrollbar */
@@ -116,6 +116,62 @@ html {
     repeating-linear-gradient(0deg, rgba(200,200,200,0.25) 0, rgba(200,200,200,0.25) 1px, transparent 1px, transparent 80px),
     repeating-linear-gradient(90deg, rgba(200,200,200,0.25) 0, rgba(200,200,200,0.25) 1px, transparent 1px, transparent 80px);
 }
+
+/* ── Veriflow alternating liquid-blue sections (mirrors .pboard-section) ── */
+.vf-liquid-section {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  /* Fallback tint behind the semi-transparent liquid canvas (and the look if WebGL is unavailable) */
+  background: linear-gradient(180deg, var(--bg-primary) 0%, #e9f1fd 16%, #e9f1fd 84%, var(--bg-primary) 100%);
+}
+.vf-liquid-section > div { position: relative; z-index: 1; }
+
+/* ── Arko alternating liquid-green sections (mirrors .vf-liquid-section) ── */
+.arko-liquid-section {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  /* Fallback olive tint behind the semi-transparent liquid canvas */
+  background: linear-gradient(180deg, var(--bg-primary) 0%, #eef3e3 16%, #eef3e3 84%, var(--bg-primary) 100%);
+}
+.arko-liquid-section > div { position: relative; z-index: 1; }
+
+/* ── LocalLift alternating liquid-indigo sections (mirrors .vf-liquid-section) ── */
+.ll-liquid-section {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: linear-gradient(180deg, var(--bg-primary) 0%, #e9edf7 16%, #e9edf7 84%, var(--bg-primary) 100%);
+}
+.ll-liquid-section > div { position: relative; z-index: 1; }
+
+/* ── Shelfie alternating liquid-teal sections (mirrors .vf-liquid-section) ── */
+.sh-liquid-section {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: linear-gradient(180deg, var(--bg-primary) 0%, #e6f0ed 16%, #e6f0ed 84%, var(--bg-primary) 100%);
+}
+.sh-liquid-section > div { position: relative; z-index: 1; }
+
+/* ── Thesis alternating liquid-blue sections (mirrors .vf-liquid-section) ── */
+.thesis-liquid-section {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: linear-gradient(180deg, var(--bg-primary) 0%, #e9edff 16%, #e9edff 84%, var(--bg-primary) 100%);
+}
+.thesis-liquid-section > div { position: relative; z-index: 1; }
+
+/* ── About alternating liquid-blue sections (matches Selected Work theme) ── */
+.about-liquid-section {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: linear-gradient(180deg, var(--bg-primary) 0%, #eef4fd 15%, #eef4fd 85%, var(--bg-primary) 100%);
+}
+.about-liquid-section > div { position: relative; z-index: 1; }
 
 /* ── Hero Cursor ────────────────────────────────────────────────── */
 .hero-canvas {
@@ -199,6 +255,417 @@ html {
 
 /* ── iOS Safari 100vh fix via --vh CSS variable (set in App.tsx) ── */
 :root { --vh: 1vh; }
+
+/* ── Miro Canvas Hero ───────────────────────────────────────────── */
+:root {
+  --miro-blue: #4262FF;
+  --miro-blue-soft: rgba(66, 98, 255, 0.10);
+  --miro-panel: #FFFFFF;
+  --miro-ink: #1A1A2E;
+  --miro-dot: rgba(9, 30, 66, 0.09);
+  --miro-shadow: 0 1px 2px rgba(9,30,66,0.10), 0 6px 20px rgba(9,30,66,0.10);
+  --miro-shadow-lg: 0 2px 6px rgba(9,30,66,0.10), 0 14px 42px rgba(9,30,66,0.14);
+}
+
+/* Dot-grid canvas surface */
+.miro-surface {
+  background-color: var(--bg-primary);
+  /* Subtle but visible: a defined ~1.25px dot at low opacity — reads as a soft grid
+     without being prominent, and still holds up on non-retina / zoomed screens */
+  background-image: radial-gradient(circle, var(--miro-dot) 1.25px, transparent 1.6px);
+  background-size: 22px 22px;
+  background-position: -11px -11px;
+}
+
+/* Hero base fade — the dot canvas dissolves into the page colour so the hero
+   "feeds out" into the section below instead of ending on a hard edge. Sits above
+   the board/dots but below the chrome (which keeps its own z-index of 30+). */
+.hero-fade-out {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 17vh;
+  z-index: 6;
+  pointer-events: none;
+  background: linear-gradient(to bottom, transparent 0%, rgba(250, 250, 250, 0.7) 55%, var(--bg-primary) 100%);
+}
+
+/* ══ Hero — centred text stack (photo / circle / arrow removed) ══════════ */
+.hero-layout {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  pointer-events: none;
+  padding: 0 20px;
+}
+.hero-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  max-width: min(900px, 94vw);
+}
+.hero-left {
+  position: relative;
+  width: 100%;
+  text-align: center;
+}
+.hero-title {
+  font-size: clamp(34px, 6.2vw, 72px);
+}
+.hero-subwrap {
+  position: relative;
+  width: 100%;
+  max-width: 640px;
+  margin: clamp(22px, 3.6vh, 34px) auto 0;
+}
+.hero-sub {
+  font-size: clamp(16px, 2vw, 22px);
+  line-height: 1.6;
+  color: #54545F;
+}
+
+/* ── Custom hero cursor — replace the native cursor across the hero (pointer devices) ── */
+@media (hover: hover) and (pointer: fine) {
+  .hero-cursor-zone,
+  .hero-cursor-zone * { cursor: none !important; }
+}
+
+/* contentEditable placeholder */
+.miro-editable:empty::before {
+  content: attr(data-placeholder);
+  color: rgba(9, 30, 66, 0.30);
+  pointer-events: none;
+}
+
+/* Element materialize-in (runs once on mount; same value → no restart on re-render) */
+@keyframes miro-pop {
+  from { opacity: 0; transform: scale(0.92); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* Toolbar button reset */
+.miro-tool-btn {
+  transition-property: background-color, color, transform;
+  transition-duration: 140ms;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+.miro-tool-btn:active { transform: scale(0.92); }
+
+@media (prefers-reduced-motion: reduce) {
+  .miro-surface [style*="miro-pop"] { animation: none !important; }
+}
+
+/* ══ Projects — Frames on a board (clean bg, no dot grid) ══════════════ */
+.pboard-section {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: clamp(64px, 10vh, 128px) 0;
+  /* Fallback gradient — the finished look if WebGL is unavailable, and it sits
+     behind the (semi-transparent) liquid canvas. */
+  background: linear-gradient(180deg, var(--bg-primary) 0%, #eef4fd 14%, #eef4fd 86%, var(--bg-primary) 100%);
+}
+
+/* Liquid WebGL background — feathered top & bottom, fades in once the shader draws */
+.liquid {
+  position: absolute; inset: 0; width: 100%; height: 100%; display: block;
+  z-index: 0; pointer-events: none; opacity: 0; transition: opacity 0.9s ease;
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 12%, #000 88%, transparent 100%);
+          mask-image: linear-gradient(180deg, transparent 0%, #000 12%, #000 88%, transparent 100%);
+}
+.liquid.is-on { opacity: 0.85; }
+
+/* Moving, organic colour field — GSAP-drifting soft blobs, feathered in/out top & bottom */
+.pboard-bg {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 15%, #000 85%, transparent 100%);
+          mask-image: linear-gradient(to bottom, transparent 0%, #000 15%, #000 85%, transparent 100%);
+}
+.pboard-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(52px);
+  will-change: transform;
+}
+.pboard-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.4;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='170' height='170'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='170' height='170' filter='url(%23g)'/%3E%3C/svg%3E");
+  background-size: 170px 170px;
+}
+.pboard-inner { position: relative; z-index: 1; width: min(1180px, 92vw); margin: 0 auto; }
+
+/* Header — kicker + intriguing headline */
+.pboard-head { margin-bottom: 22px; }
+/* Title-block overline eyebrow: a short blue rule drawn above a sentence-case label */
+.pboard-kicker { display: inline-flex; flex-direction: column; align-items: flex-start; font-family: 'Manrope', system-ui, sans-serif; font-size: 15px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #6B6B75; }
+.pboard-kicker::before { content: ""; width: 26px; height: 2px; border-radius: 2px; background: #4262FF; margin-bottom: 10px; }
+.pboard-heading {
+  margin: 15px 0 0;
+  font-family: 'Manrope', system-ui, sans-serif;
+  font-size: clamp(28px, 4.6vw, 58px);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1.05;
+  color: #1A1A2E;
+  white-space: nowrap;   /* one line */
+}
+.pboard-heading-hl { position: relative; display: inline-block; }
+.pboard-heading-mark {
+  position: absolute; left: -5px; right: -8px; top: 20%; bottom: 9%;
+  background: rgba(66, 98, 255, 0.26);
+  border-radius: 8px 13px 8px 12px;
+  transform: rotate(-1.2deg);
+  z-index: 0;
+}
+.pboard-heading-text { position: relative; z-index: 1; }
+
+/* Intro + subtle stats (extra space above the subtext; stats are plain, no card) */
+.pboard-intro { display: flex; align-items: flex-end; justify-content: space-between; gap: 40px; margin: clamp(38px, 4.5vw, 56px) 0 clamp(48px, 6vw, 74px); }
+.pboard-notes {
+  flex: 1 1 auto; min-width: 0; max-width: 620px; margin: 0; padding-left: 16px;
+  border-left: 2px solid rgba(9, 30, 66, 0.10);
+  font-family: 'Manrope', system-ui, sans-serif; font-style: italic;
+  font-size: clamp(16px, 1.4vw, 20px); line-height: 1.55; color: #54545F;
+}
+
+/* Switcher — frosted pill with a sliding indicator */
+.pboard-switcher {
+  position: relative;
+  display: inline-flex;
+  gap: 2px;
+  padding: 6px;
+  margin-bottom: clamp(40px, 5vw, 60px);
+  background: rgba(255, 255, 255, 0.6);
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+  border: 1px solid rgba(9, 30, 66, 0.09);
+  border-radius: 999px;
+  box-shadow: 0 2px 6px rgba(9, 30, 66, 0.06);
+}
+.pboard-switch-ind {
+  position: absolute; top: 6px; left: 0; bottom: 6px;
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: 0 3px 10px rgba(9,30,66,0.15), 0 1px 2px rgba(9,30,66,0.09);
+  visibility: hidden;
+  z-index: 0;
+  pointer-events: none;
+}
+.pboard-tab {
+  position: relative; z-index: 1;
+  display: inline-flex; align-items: center; gap: 9px;
+  padding: 13px 28px; border: none; border-radius: 999px; background: transparent;
+  font-family: 'Manrope', system-ui, sans-serif; font-size: 15px; font-weight: 600; letter-spacing: -0.01em;
+  color: #6B6B75; cursor: pointer;
+  transition: color 220ms ease;
+}
+.pboard-tab[data-active="true"] { color: #1A1A2E; }
+.pboard-tab:hover { color: #1A1A2E; }
+/* Count matches the tab label — same size, weight, spacing, and colour (inherits
+   #6B6B75 by default, #1A1A2E when the tab is active/hovered). */
+.pboard-tab-count { font-size: inherit; font-weight: inherit; letter-spacing: inherit; color: inherit; }
+
+/* Cards grid */
+.pboard-grid { display: grid; grid-template-columns: 1fr; gap: clamp(44px, 4vw, 60px) clamp(28px, 3vw, 48px); }
+
+/* Card body */
+.pboard-frame {
+  position: relative; background: #fff; border: 1px solid rgba(9, 30, 66, 0.10); border-radius: 16px; padding: 18px;
+  box-shadow: 0 1px 2px rgba(9,30,66,0.05), 0 10px 30px rgba(9,30,66,0.05);
+  transition: box-shadow 320ms cubic-bezier(0.16,1,0.3,1), border-color 320ms ease;
+}
+.pboard-frame:hover { border-color: rgba(9,30,66,0.14); box-shadow: 0 2px 8px rgba(9,30,66,0.06), 0 22px 52px rgba(9,30,66,0.10); }
+.pboard-link { display: block; text-decoration: none; color: inherit; }
+
+/* Mockup */
+.pboard-mockup { position: relative; width: 100%; aspect-ratio: 3 / 2; }
+.pboard-mockup-clip { position: absolute; inset: 0; border-radius: 10px; overflow: hidden; box-shadow: 0 6px 20px rgba(9,30,66,0.10); }
+
+/* Selection overlay — deliberately subtle */
+.pboard-select { position: absolute; inset: 0; z-index: 3; pointer-events: none; transition: opacity 240ms ease; }
+.pboard-ring { position: absolute; inset: 0; border: 1.5px solid rgba(66, 98, 255, 0.30); border-radius: 10px; }
+.pboard-handle { position: absolute; width: 7px; height: 7px; background: #fff; border: 1.5px solid rgba(66, 98, 255, 0.45); border-radius: 2px; box-shadow: 0 1px 2px rgba(9,30,66,0.12); }
+
+/* Comment pin */
+.pboard-comment { position: absolute; left: 14px; bottom: 14px; z-index: 4; align-items: center; gap: 8px; }
+.pboard-comment-avatar { position: relative; width: 32px; height: 32px; border-radius: 50% 50% 50% 2px; color: #fff; display: grid; place-items: center; font-family: 'Manrope', system-ui, sans-serif; font-size: 11px; font-weight: 700; border: 2px solid #fff; box-shadow: 0 6px 16px rgba(9,30,66,0.28); }
+.pboard-comment-badge { position: absolute; top: -6px; right: -6px; min-width: 15px; height: 15px; padding: 0 4px; border-radius: 999px; background: #fff; color: #1A1A2E; font-size: 9px; font-weight: 800; display: grid; place-items: center; box-shadow: 0 1px 3px rgba(9,30,66,0.25); }
+.pboard-comment-text { display: flex; align-items: center; gap: 5px; padding: 5px 10px; background: #fff; border-radius: 10px; box-shadow: 0 4px 12px rgba(9,30,66,0.16); font-family: 'Manrope', system-ui, sans-serif; font-size: 11px; font-weight: 600; color: #54545F; }
+
+/* Text */
+.pboard-title { margin: 20px 0 0; font-family: 'Manrope', system-ui, sans-serif; font-size: clamp(22px, 2.4vw, 30px); font-weight: 700; letter-spacing: -0.025em; line-height: 1.12; color: #1A1A2E; }
+.pboard-sub { margin: 8px 0 0; font-family: 'Manrope', system-ui, sans-serif; font-style: italic; font-size: clamp(14px, 1.15vw, 16px); line-height: 1.5; color: #54545F; }
+
+/* Card footer — tags (left) + CTA (right) on one row */
+.pboard-cardfoot { display: flex; align-items: center; justify-content: space-between; gap: 12px 16px; margin-top: 20px; flex-wrap: wrap; }
+.pboard-stickies { display: flex; flex-wrap: wrap; gap: 8px; }
+.pboard-sticky { padding: 5px 11px; border-radius: 4px; box-shadow: 0 3px 9px rgba(9,30,66,0.13); font-family: 'Manrope', system-ui, sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #1A1A2E; }
+
+/* CTA — frosted, grainy glass pill */
+.pboard-cta {
+  position: relative; overflow: hidden; flex-shrink: 0;
+  display: inline-flex;
+  padding: 12px 20px; border-radius: 12px;
+  background: rgba(66, 98, 255, 0.12);
+  border: 1px solid rgba(66, 98, 255, 0.24);
+  box-shadow: 0 1px 2px rgba(66,98,255,0.10), inset 0 1px 0 rgba(255,255,255,0.55);
+  font-family: 'Manrope', system-ui, sans-serif; font-size: 13.5px; font-weight: 700; letter-spacing: 0.01em;
+  color: #2E44C9;
+  transition: background 320ms ease, border-color 320ms ease, transform 320ms cubic-bezier(0.16,1,0.3,1), box-shadow 320ms ease;
+}
+.pboard-cta-label { position: relative; z-index: 1; display: inline-flex; align-items: center; gap: 9px; }
+.pboard-cta::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  opacity: 0.55; mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='c'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23c)'/%3E%3C/svg%3E");
+  background-size: 100px 100px;
+}
+.pboard-frame:hover .pboard-cta {
+  background: rgba(66, 98, 255, 0.18);
+  border-color: rgba(66, 98, 255, 0.36);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(66,98,255,0.18), inset 0 1px 0 rgba(255,255,255,0.6);
+}
+.pboard-cta-arrow { transition: transform 220ms cubic-bezier(0.16,1,0.3,1); }
+.pboard-cta-arrow[data-on="true"] { transform: translate(2px, -2px); }
+
+/* Footer — shared-stack ticker (auto-scrolling brand logos) */
+.pboard-foot { display: flex; flex-direction: column; gap: 16px; margin-top: clamp(44px, 5vw, 64px); padding-top: 22px; border-top: 1px solid rgba(9, 30, 66, 0.08); }
+.pboard-foot-label { font-size: 10px; color: #54545F; white-space: nowrap; }
+.pboard-ticker {
+  position: relative; overflow: hidden; width: 100%;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+          mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+}
+.pboard-ticker-track { display: inline-flex; will-change: transform; }
+.pboard-ticker-item {
+  display: inline-flex; align-items: center; gap: 9px;
+  margin-right: 12px; padding: 10px 16px; border-radius: 999px;
+  background: #fff; border: 1px solid rgba(9, 30, 66, 0.08);
+  box-shadow: 0 1px 3px rgba(9,30,66,0.05);
+  white-space: nowrap; flex-shrink: 0;
+}
+.pboard-ticker-item span { font-family: 'Manrope', system-ui, sans-serif; font-size: 13px; font-weight: 600; color: #1A1A2E; }
+
+/* Desktop: two-column cards */
+@media (min-width: 1024px) { .pboard-grid { grid-template-columns: 1fr 1fr; } }
+/* Small screens: full-width switcher; stack the intro, pills back to a row */
+@media (max-width: 640px) {
+  .pboard-switcher { display: flex; width: 100%; }
+  .pboard-tab { flex: 1; justify-content: center; padding: 13px 16px; }
+  .pboard-intro { flex-direction: column; align-items: flex-start; gap: 20px; }
+}
+/* Very small screens: let the headline wrap instead of overflowing */
+@media (max-width: 500px) {
+  .pboard-heading { white-space: normal; line-height: 1.1; }
+}
+
+
+/* ══ Combined Let's-Connect + Footer (global) — CTA + nav + giant watermark ══ */
+.cfooter {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: var(--bg-primary);
+  padding: clamp(80px, 12vh, 160px) 0 clamp(120px, 16vh, 220px);
+}
+/* giant faded wordmark, cropped at the bottom edge */
+.cfooter-mark {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(-40px, -3.5vw, -14px);
+  transform: translateX(-50%);
+  z-index: 0;
+  font-family: 'Manrope', system-ui, sans-serif;
+  font-size: clamp(150px, 27vw, 440px);
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: 0.8;
+  color: rgba(9, 30, 66, 0.045);
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+}
+.cfooter-inner { position: relative; z-index: 1; width: min(1180px, 92vw); margin: 0 auto; }
+
+.cfooter-grid { display: grid; grid-template-columns: 1fr; gap: clamp(40px, 6vw, 64px); }
+
+/* CTA */
+.cfooter-kicker { display: inline-flex; flex-direction: column; align-items: flex-start; font-family: 'Manrope', system-ui, sans-serif; font-size: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #6B6B75; }
+.cfooter-kicker::before { content: ""; width: 26px; height: 2px; border-radius: 2px; background: #4262FF; margin-bottom: 10px; }
+.cfooter-heading {
+  margin: 15px 0 0;
+  font-family: 'Manrope', system-ui, sans-serif;
+  font-size: clamp(36px, 5vw, 66px);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1.06;
+  color: #1A1A2E;
+}
+.cfooter-hl { position: relative; display: inline-block; }
+.cfooter-hl-mark { position: absolute; left: -6px; right: -9px; top: 22%; bottom: 10%; background: rgba(66, 98, 255, 0.26); border-radius: 8px 13px 8px 12px; transform: rotate(-1.5deg); z-index: 0; }
+.cfooter-hl-text { position: relative; z-index: 1; }
+.cfooter-sub { margin: 22px 0 0; max-width: 520px; font-family: 'Manrope', system-ui, sans-serif; font-style: italic; font-size: clamp(16px, 1.4vw, 19px); line-height: 1.55; color: #54545F; }
+.cfooter-btn {
+  position: relative; overflow: hidden;
+  display: inline-flex; align-items: center; gap: 9px;
+  margin-top: 28px; padding: 14px 24px; border-radius: 12px;
+  background: #4262FF; color: #fff; text-decoration: none;
+  font-family: 'Manrope', system-ui, sans-serif; font-size: 14.5px; font-weight: 600; letter-spacing: -0.01em;
+  box-shadow: 0 4px 14px rgba(66,98,255,0.30), inset 0 1px 0 rgba(255,255,255,0.22);
+  transition: transform 240ms cubic-bezier(0.16,1,0.3,1), background-color 220ms ease, box-shadow 220ms ease;
+}
+.cfooter-btn-label { position: relative; z-index: 1; display: inline-flex; align-items: center; gap: 9px; }
+/* frozen, grainy frost over the blue */
+.cfooter-btn::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  opacity: 0.5; mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='cf'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23cf)'/%3E%3C/svg%3E");
+  background-size: 100px 100px;
+}
+.cfooter-btn:hover { background: #3350E0; transform: translateY(-2px); box-shadow: 0 9px 24px rgba(66,98,255,0.34), inset 0 1px 0 rgba(255,255,255,0.24); }
+
+/* nav columns — larger links with a slide-in arrow on hover */
+.cfooter-cols { display: flex; gap: clamp(40px, 6vw, 84px); }
+.cfooter-col { display: flex; flex-direction: column; gap: 12px; }
+.cfooter-col-title { display: inline-flex; flex-direction: column; align-items: flex-start; font-family: 'Manrope', system-ui, sans-serif; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #8A8A95; margin-bottom: 10px; }
+.cfooter-col-title::before { content: ""; width: 20px; height: 1px; background: currentColor; opacity: 0.55; margin-bottom: 9px; }
+.cfooter-link { position: relative; display: inline-flex; align-items: center; width: max-content; padding-right: 24px; font-family: 'Manrope', system-ui, sans-serif; font-size: 17px; font-weight: 600; letter-spacing: -0.012em; color: #1A1A2E; text-decoration: none; }
+.cfooter-link-txt { transition: color 180ms ease; }
+.cfooter-link-arrow { position: absolute; right: 2px; top: 50%; color: #4262FF; opacity: 0; transform: translate(-6px, -50%); transition: opacity 220ms ease, transform 260ms cubic-bezier(0.16,1,0.3,1); }
+.cfooter-link:hover .cfooter-link-txt { color: #4262FF; }
+.cfooter-link:hover .cfooter-link-arrow { opacity: 1; transform: translate(0, -50%); }
+
+/* bottom bar */
+.cfooter-bottom {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px 24px; flex-wrap: wrap;
+  margin-top: clamp(56px, 8vw, 96px); padding-top: 24px;
+  border-top: 1px solid rgba(9, 30, 66, 0.09);
+}
+.cfooter-brand { display: inline-flex; align-items: center; gap: 11px; text-decoration: none; }
+.cfooter-logo { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 8px; background: #4262FF; color: #fff; font-family: 'Manrope', system-ui, sans-serif; font-weight: 800; font-size: 12.5px; letter-spacing: 0.02em; }
+.cfooter-name { font-family: 'Manrope', system-ui, sans-serif; font-size: 16px; font-weight: 700; letter-spacing: -0.015em; color: #1A1A2E; }
+.cfooter-copy { font-family: 'Manrope', system-ui, sans-serif; font-size: 12.5px; color: #6B6B75; letter-spacing: 0.01em; }
+.cfooter-toptop { display: inline-flex; align-items: center; gap: 7px; background: none; border: none; padding: 0; cursor: pointer; font-family: 'Manrope', system-ui, sans-serif; font-size: 12.5px; font-weight: 600; color: #54545F; transition: color 180ms ease; }
+.cfooter-toptop:hover { color: #4262FF; }
+
+@media (min-width: 900px) {
+  .cfooter-grid { grid-template-columns: 1.5fr 1fr; align-items: start; }
+  .cfooter-cols { justify-content: flex-end; }
+}
+
 
 /* ── Prevent long words from overflowing on small screens ──────── */
 p, h1, h2, h3, h4, blockquote {

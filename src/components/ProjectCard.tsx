@@ -10,7 +10,7 @@ interface ProjectCardProps {
 }
 
 const mono: React.CSSProperties = {
-  fontFamily: "'Space Mono', monospace",
+  fontFamily: "'Manrope', monospace",
   textTransform: "uppercase",
   letterSpacing: "0.14em",
 };
@@ -135,7 +135,7 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
               <div className="flex items-baseline gap-3 mb-3">
                 <h3
                   style={{
-                    fontFamily: "'Playfair Display', Georgia, serif",
+                    fontFamily: "'Manrope', Georgia, serif",
                     fontWeight: 700,
                     fontSize: "clamp(26px, 2.6vw, 34px)",
                     color: "var(--text-primary)",
@@ -181,7 +181,7 @@ export default function ProjectCard({ project, index }: ProjectCardProps) {
 
               <p
                 style={{
-                  fontFamily: "'Playfair Display', Georgia, serif",
+                  fontFamily: "'Manrope', Georgia, serif",
                   fontStyle: "italic",
                   fontSize: "clamp(14px, 1.2vw, 16px)",
                   color: "var(--text-secondary)",

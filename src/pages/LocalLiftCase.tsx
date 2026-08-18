@@ -22,6 +22,10 @@ import {
 import type { Icon } from "@phosphor-icons/react";
 import { projects, type Project } from "../data/projects";
 import { ProjectHeroStage } from "../components/ProjectHeroStage";
+import { SectionHeader, CASE_H2 } from "../components/CaseSectionHeader";
+import { GradientBackground } from "../components/GradientBackground";
+import LiquidBackground from "../components/LiquidBackground";
+import { gsap } from "../lib/gsap";
 
 /* ══════════════════════════════════════════════════════════════════
    LOCALLIFT - scoped palette + type tokens
@@ -39,22 +43,22 @@ const ll = {
 };
 
 const mono: React.CSSProperties = {
-  fontFamily: "'Space Mono', monospace",
+  fontFamily: "'Manrope', monospace",
   textTransform: "uppercase",
   letterSpacing: "0.12em",
 };
-const serif = "'Playfair Display', Georgia, serif";
-const sans  = "'Inter', system-ui, sans-serif";
+const serif = "'Manrope', Georgia, serif";
+const sans  = "'Manrope', system-ui, sans-serif";
 
 const t = {
   eyebrow: {
-    ...mono, fontSize: 11, letterSpacing: "0.22em",
+    ...mono, fontSize: 13.5, letterSpacing: "0.22em",
     color: ll.primary, fontWeight: 700,
   } as React.CSSProperties,
   h2: {
     fontFamily: serif, fontWeight: 700,
-    fontSize: "clamp(32px, 3.8vw, 48px)",
-    letterSpacing: "-0.025em", lineHeight: 1.15,
+    fontSize: "clamp(32px, 3.9vw, 48px)",
+    letterSpacing: "-0.025em", lineHeight: 1.18,
     color: "var(--text-primary)",
   } as React.CSSProperties,
   h3: {
@@ -141,53 +145,6 @@ function CountUp({ value, suffix = "", duration = 1.6 }: { value: number; suffix
     return () => controls.stop();
   }, [inView, value, duration, mv]);
   return <span ref={ref}>{display}{suffix}</span>;
-}
-
-/* Minimal section header with numbered eyebrow */
-function SectionHeader({
-  num, title, phase,
-}: { num: string; title: string; phase: string }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-60px" });
-  return (
-    <div ref={ref} style={{ marginBottom: "clamp(44px, 5vw, 72px)" }}>
-      <div style={{
-        display: "flex", alignItems: "baseline", gap: 20, flexWrap: "wrap",
-        paddingBottom: 16,
-      }}>
-        <motion.span
-          initial={{ opacity: 0, y: 8 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.55, ease: [0.25, 1, 0.4, 1] }}
-          style={{ ...mono, fontSize: 13, color: ll.primary, letterSpacing: "0.24em", fontWeight: 700 }}
-        >
-          {num} <span style={{ color: ll.muted, fontWeight: 400 }}>/ {TOTAL}</span>
-        </motion.span>
-        <motion.span
-          initial={{ opacity: 0, y: 8 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.08, duration: 0.55, ease: [0.25, 1, 0.4, 1] }}
-          style={{ ...mono, fontSize: 13, color: "var(--text-primary)", letterSpacing: "0.24em", fontWeight: 600 }}
-        >
-          {title}
-        </motion.span>
-        <motion.span
-          initial={{ opacity: 0 }}
-          animate={inView ? { opacity: 1 } : {}}
-          transition={{ delay: 0.2, duration: 0.55 }}
-          style={{ ...mono, fontSize: 12, color: ll.muted, letterSpacing: "0.22em", marginLeft: "auto" }}
-        >
-          {phase}
-        </motion.span>
-      </div>
-      <motion.div
-        initial={{ scaleX: 0 }}
-        animate={inView ? { scaleX: 1 } : {}}
-        transition={{ delay: 0.15, duration: 1.0, ease: [0.25, 1, 0.4, 1] }}
-        style={{ height: 1, background: ll.primary, transformOrigin: "left", opacity: 0.7 }}
-      />
-    </div>
-  );
 }
 
 /* ──────────────────────────────────────────────────────────────
@@ -446,9 +403,10 @@ function LofiFilmstrip({
         justifyContent: "space-between", gap: 18, marginBottom: 20,
       }}>
         <div role="tablist" aria-label="Lo-fi flows" style={{
-          display: "flex", flexWrap: "wrap", gap: 6,
-          padding: 4, background: ll.subtle,
+          display: "inline-flex", flexWrap: "wrap", gap: 4,
+          padding: 4, background: ll.surface,
           border: `1px solid ${ll.line}`,
+          borderRadius: 12,
         }}>
           {groups.map(g => {
             const on = g.id === activeFlow;
@@ -458,23 +416,39 @@ function LofiFilmstrip({
                 role="tab"
                 aria-selected={on}
                 onClick={() => setActiveFlow(g.id)}
+                onMouseEnter={(e) => { if (!on) (e.currentTarget as HTMLButtonElement).style.color = ll.primary; }}
+                onMouseLeave={(e) => { if (!on) (e.currentTarget as HTMLButtonElement).style.color = ll.muted; }}
                 style={{
                   position: "relative",
-                  padding: "9px 14px",
-                  background: on ? "#FFFFFF" : "transparent",
-                  border: `1px solid ${on ? ll.line : "transparent"}`,
+                  padding: "9px 15px",
+                  background: "none",
+                  border: "none",
+                  borderRadius: 9,
                   ...mono, fontSize: 10, fontWeight: 700, letterSpacing: "0.22em",
                   color: on ? ll.primary : ll.muted,
-                  cursor: "pointer",
-                  transition: "color 180ms ease, background 180ms ease",
+                  cursor: on ? "default" : "pointer",
+                  transition: "color 180ms ease",
                 }}
               >
-                {g.label}
-                <span style={{
-                  marginLeft: 8, opacity: 0.7,
-                  fontSize: 9,
-                }}>
-                  {String(g.indices.length).padStart(2, "0")}
+                {on && (
+                  <motion.span
+                    aria-hidden
+                    layoutId="lofi-flow-thumb"
+                    transition={{ type: "spring", stiffness: 380, damping: 32 }}
+                    style={{
+                      position: "absolute", inset: 0,
+                      background: "#FFFFFF",
+                      borderRadius: 9,
+                      boxShadow: "0 1px 2px rgba(18,26,42,0.06), 0 4px 12px rgba(59,79,123,0.10)",
+                      zIndex: 0,
+                    }}
+                  />
+                )}
+                <span style={{ position: "relative", zIndex: 1 }}>
+                  {g.label}
+                  <span style={{ marginLeft: 8, opacity: 0.7, fontSize: 9 }}>
+                    {String(g.indices.length).padStart(2, "0")}
+                  </span>
                 </span>
               </button>
             );
@@ -648,7 +622,7 @@ function HeroMockup() {
           position: "absolute",
           right: "6%", bottom: "8%",
           width: "42%", height: "42%",
-          background: `radial-gradient(circle, ${ll.warm}44 0%, rgba(196,123,58,0) 70%)`,
+          background: `radial-gradient(circle, ${ll.primary}44 0%, rgba(59,79,123,0) 70%)`,
           filter: "blur(40px)",
           opacity: 0.6,
           zIndex: 0,
@@ -864,7 +838,7 @@ function TensionCard({
         transition={{ duration: 0.35, ease: [0.25, 1, 0.4, 1] }}
         style={{
           position: "absolute", left: 0, top: 0, bottom: 0,
-          width: 3, background: ll.warm, transformOrigin: "top",
+          width: 3, background: ll.primary, transformOrigin: "top",
         }}
       />
 
@@ -893,14 +867,6 @@ function TensionCard({
 
       {/* Right column - content */}
       <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
-          <span style={{ ...mono, fontSize: 10, color: ll.primary, letterSpacing: "0.22em", fontWeight: 700 }}>
-            {tension.tag}
-          </span>
-          <span style={{ ...mono, fontSize: 10, color: ll.muted, letterSpacing: "0.2em", fontWeight: 700 }}>
-            {tension.count} OBS
-          </span>
-        </div>
         <h4 style={{
           fontFamily: serif, fontWeight: 700,
           fontSize: "clamp(19px, 1.7vw, 23px)",
@@ -932,7 +898,7 @@ function TensionCard({
                 position: "absolute", left: 0, top: 0,
                 width: `${(tension.count / 40) * 100}%`,
                 height: "100%",
-                background: active ? ll.warm : ll.primary,
+                background: active ? ll.primary : ll.light,
                 transformOrigin: "left",
                 transition: "background 260ms ease-out",
               }}
@@ -1028,7 +994,6 @@ function AffinityOutput() {
         <Plate
           src={`${IMG}/user-stories.png`}
           alt="Affinity map of user stories from small business owner interviews."
-          caption="FIG · 01 / AFFINITY MAP · USER STORIES CLUSTERED BY TENSION"
           tag="RESEARCH"
           aspect="16 / 7"
           bg={ll.surface}
@@ -1059,6 +1024,7 @@ type Persona = {
   stage: string;
   quote: string;
   img: string;
+  imgLabel: string;
   groups: PersonaGroup[];
 };
 
@@ -1071,6 +1037,7 @@ const PERSONAS: Persona[] = [
     stage: "0–12 months in business",
     quote: "I have customers. I just need a way to actually reach more of them online.",
     img: `${IMG}/persona-1.png`,
+    imgLabel: "Affinity themes",
     groups: [
       {
         icon: Sparkle, label: "Goals",
@@ -1106,6 +1073,7 @@ const PERSONAS: Persona[] = [
     stage: "2–5 years, starting to scale",
     quote: "I don't need another dashboard. I need the right person to tell me what to fix next.",
     img: `${IMG}/persona-2.png`,
+    imgLabel: "Experience map",
     groups: [
       {
         icon: Sparkle, label: "Goals",
@@ -1140,23 +1108,18 @@ function PersonasSection() {
   const p = PERSONAS[active];
 
   return (
-    <section style={{
-      padding: SECTION_PAD,
-      ...gridSurface,
-      borderTop: `1px solid ${ll.line}`,
-      borderBottom: `1px solid ${ll.line}`,
-    }}>
+    <section className="ll-liquid-section" style={{ padding: SECTION_PAD }}>
+      <LiquidBackground c0="eaeef7" c1="d6dcec" c2="aeb8d4" fade={0} lift={0.28} grain={0.055} speed={0.1} />
       <div className="max-w-7xl mx-auto px-6 md:px-10">
-        <SectionHeader num="04" title="Personas" phase="Synthesis" />
+        <SectionHeader
+          num="04"
+          phase="Personas"
+          title={<>Two owners,<span style={{ fontStyle: "italic", color: ll.primary }}> one shared platform.</span></>}
+          accent={ll.primary}
+        />
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-12 items-end">
           <div className="lg:col-span-8">
-            <Reveal>
-              <h2 style={{ ...t.h2, marginBottom: 20 }}>
-                Two owners,
-                <span style={{ fontStyle: "italic", color: ll.primary }}> one shared platform.</span>
-              </h2>
-            </Reveal>
             <Reveal delay={0.1}>
               <p style={{ ...t.bodyLg, maxWidth: 640 }}>
                 The early-stage owner and the growth-oriented owner showed up in every interview with the
@@ -1164,80 +1127,75 @@ function PersonasSection() {
               </p>
             </Reveal>
           </div>
-          <div className="lg:col-span-4">
-            <Reveal delay={0.16}>
-              <p style={{
-                ...mono, fontSize: 11, letterSpacing: "0.22em",
-                color: ll.muted, fontWeight: 700, textAlign: "right",
-              }}>
-                02 ARCHETYPES<br />PRESSURE-TESTED ACROSS EVERY SCREEN
-              </p>
-            </Reveal>
-          </div>
         </div>
 
-        {/* Tab bar */}
+        {/* Tab bar - soft toggle */}
         <Reveal delay={0.05}>
-          <div
-            role="tablist"
-            aria-label="Personas"
-            style={{
-              display: "flex",
-              gap: 10,
-              flexWrap: "wrap",
-              marginBottom: "clamp(28px, 3vw, 40px)",
-            }}
-          >
-            {PERSONAS.map((persona, i) => {
-              const isActive = i === active;
-              return (
-                <motion.button
-                  key={persona.tag}
-                  role="tab"
-                  aria-selected={isActive}
-                  onClick={() => setActive(i)}
-                  whileTap={{ scale: 0.98 }}
-                  style={{
-                    position: "relative",
-                    display: "inline-flex", alignItems: "center", gap: 12,
-                    padding: "14px 22px",
-                    background: isActive ? ll.primary : "#FFFFFF",
-                    color: isActive ? "#FFFFFF" : ll.primary,
-                    border: `1px solid ${isActive ? ll.primary : ll.line}`,
-                    cursor: "pointer",
-                    transition: "background 240ms ease-out, color 240ms ease-out, border-color 240ms ease-out",
-                    fontFamily: sans,
-                  }}
-                  onMouseEnter={(e) => {
-                    if (!isActive) (e.currentTarget as HTMLButtonElement).style.borderColor = ll.primary;
-                  }}
-                  onMouseLeave={(e) => {
-                    if (!isActive) (e.currentTarget as HTMLButtonElement).style.borderColor = ll.line;
-                  }}
-                >
-                  <span style={{
-                    ...mono, fontSize: 10, letterSpacing: "0.22em",
-                    fontWeight: 700,
-                    color: isActive ? "rgba(255,255,255,0.75)" : ll.muted,
-                  }}>
-                    {persona.tag}
-                  </span>
-                  <span style={{ fontSize: 15, fontWeight: 500, letterSpacing: "-0.005em" }}>
-                    {persona.archetype}
-                  </span>
-                  {isActive && (
-                    <motion.span
-                      layoutId="persona-tab-underline"
-                      transition={{ type: "spring", stiffness: 380, damping: 32 }}
+          <div style={{ marginBottom: "clamp(28px, 3vw, 40px)" }}>
+            <div
+              role="tablist"
+              aria-label="Personas"
+              style={{
+                display: "inline-flex",
+                gap: 4,
+                padding: 4,
+                background: ll.surface,
+                border: `1px solid ${ll.line}`,
+                borderRadius: 12,
+                position: "relative",
+                maxWidth: "100%",
+                flexWrap: "wrap",
+              }}
+            >
+              {PERSONAS.map((persona, i) => {
+                const isActive = i === active;
+                return (
+                  <button
+                    key={persona.archetype}
+                    role="tab"
+                    aria-selected={isActive}
+                    onClick={() => setActive(i)}
+                    className={`persona-toggle-btn${isActive ? " is-active" : ""}`}
+                    style={{
+                      position: "relative",
+                      border: "none",
+                      background: "none",
+                      cursor: isActive ? "default" : "pointer",
+                      padding: "11px 20px",
+                      borderRadius: 9,
+                    }}
+                  >
+                    {isActive && (
+                      <motion.span
+                        aria-hidden
+                        layoutId="persona-toggle-thumb"
+                        transition={{ type: "spring", stiffness: 380, damping: 32 }}
+                        style={{
+                          position: "absolute", inset: 0,
+                          background: "#FFFFFF",
+                          borderRadius: 9,
+                          boxShadow: "0 1px 2px rgba(18,26,42,0.06), 0 4px 12px rgba(59,79,123,0.10)",
+                          zIndex: 0,
+                        }}
+                      />
+                    )}
+                    <span
                       style={{
-                        position: "absolute", left: 0, right: 0, bottom: -1,
-                        height: 2, background: ll.warm,
+                        position: "relative", zIndex: 1,
+                        fontFamily: sans,
+                        fontSize: "clamp(14px, 1.4vw, 16px)",
+                        fontWeight: isActive ? 600 : 500,
+                        letterSpacing: "-0.005em",
+                        color: isActive ? ll.primary : ll.muted,
+                        transition: "color 200ms ease-out",
                       }}
-                    />
-                  )}
-                </motion.button>
-              );
-            })}
+                    >
+                      {persona.archetype}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </Reveal>
 
@@ -1286,17 +1244,6 @@ function PersonasSection() {
                   }}
                 />
               ))}
-              <span style={{
-                position: "absolute", top: 20, left: 20,
-                ...mono, fontSize: 9.5, color: ll.primary,
-                letterSpacing: "0.22em", fontWeight: 700,
-                background: "rgba(255,255,255,0.92)",
-                padding: "5px 10px",
-                border: `1px solid ${ll.line}`,
-                zIndex: 3,
-              }}>
-                {p.tag}
-              </span>
               <AnimatePresence mode="wait">
                 <motion.img
                   key={p.img}
@@ -1397,7 +1344,7 @@ function PersonasSection() {
                               <I size={14} color={ll.primary} weight="regular" />
                             </span>
                             <span style={{
-                              ...mono, fontSize: 10, letterSpacing: "0.22em",
+                              ...mono, fontSize: 11, letterSpacing: "0.22em",
                               color: ll.primary, fontWeight: 700,
                             }}>
                               {g.label.toUpperCase()}
@@ -1405,17 +1352,17 @@ function PersonasSection() {
                           </div>
                           <ul style={{
                             margin: 0, paddingLeft: 0, listStyle: "none",
-                            display: "flex", flexDirection: "column", gap: 8,
+                            display: "flex", flexDirection: "column", gap: 11,
                           }}>
                             {g.items.map((item, ii) => (
                               <li key={ii} style={{
-                                position: "relative", paddingLeft: 16,
-                                fontFamily: sans, fontSize: 14.5, lineHeight: 1.55,
+                                position: "relative", paddingLeft: 18,
+                                fontFamily: sans, fontSize: 16.5, lineHeight: 1.5,
                                 color: "var(--text-secondary)",
                               }}>
                                 <span aria-hidden style={{
-                                  position: "absolute", left: 0, top: "0.75em",
-                                  width: 6, height: 1, background: ll.primary,
+                                  position: "absolute", left: 0, top: "0.72em",
+                                  width: 7, height: 1, background: ll.primary,
                                 }} />
                                 {item}
                               </li>
@@ -1432,6 +1379,8 @@ function PersonasSection() {
         </div>
 
         <style>{`
+          .persona-toggle-btn:not(.is-active):hover span { color: ${ll.primary} !important; }
+          .persona-toggle-btn:focus-visible { outline: 2px solid ${ll.primary}; outline-offset: 2px; }
           @media (max-width: 880px) {
             .persona-grid {
               grid-template-columns: minmax(0, 1fr) !important;
@@ -1488,56 +1437,73 @@ function ReflectionStepper() {
   const lesson = LESSONS[active];
   const Icon = lesson.icon;
 
+  const rootRef = useRef<HTMLDivElement>(null);
+  const fillRef = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const ghostRef = useRef<HTMLSpanElement>(null);
+  const prevActive = useRef(-1);
+
   const goPrev = () => setActive((i) => (i - 1 + LESSONS.length) % LESSONS.length);
   const goNext = () => setActive((i) => (i + 1) % LESSONS.length);
 
+  const frac = LESSONS.length > 1 ? active / (LESSONS.length - 1) : 0;
+
+  // Intro reveal — plays once when the stepper scrolls into view.
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({
+        scrollTrigger: { trigger: rootRef.current, start: "top 80%", once: true },
+      });
+      tl.from(".rf-railline", { scaleY: 0, transformOrigin: "top", duration: 0.7, ease: "power2.out" })
+        .from(".rf-node", { scale: 0.3, opacity: 0, stagger: 0.09, duration: 0.5, ease: "back.out(1.8)" }, "-=0.4")
+        .from(".rf-rail-title", { x: -14, opacity: 0, stagger: 0.09, duration: 0.5, ease: "power3.out" }, "<0.05")
+        .from(".rf-panel", { opacity: 0, y: 24, duration: 0.7, ease: "power3.out" }, "<")
+        .from(".rf-panel-el", { opacity: 0, y: 18, stagger: 0.09, duration: 0.55, ease: "power3.out" }, "<0.2")
+        .from(".rf-headline-rule", { scaleX: 0, transformOrigin: "left", duration: 0.6, ease: "power3.out" }, "<0.1")
+        .from(".rf-ghost", { opacity: 0, x: 30, duration: 0.7, ease: "power3.out" }, "<");
+    }, rootRef);
+    return () => ctx.revert();
+  }, []);
+
+  // On lesson change — move the fill, pulse the node, restage the panel.
+  useEffect(() => {
+    if (prevActive.current === -1) {
+      gsap.set(fillRef.current, { scaleY: frac });
+      prevActive.current = active;
+      return;
+    }
+    if (prevActive.current === active) return;
+    prevActive.current = active;
+
+    gsap.to(fillRef.current, { scaleY: frac, duration: 0.6, ease: "power3.inOut" });
+
+    const dot = rootRef.current?.querySelectorAll<HTMLElement>(".rf-node")[active];
+    if (dot) gsap.fromTo(dot, { scale: 0.7 }, { scale: 1, duration: 0.5, ease: "back.out(2.4)" });
+
+    const els = panelRef.current?.querySelectorAll<HTMLElement>(".rf-panel-el");
+    if (els && els.length) gsap.fromTo(els, { opacity: 0, y: 18 }, { opacity: 1, y: 0, stagger: 0.07, duration: 0.5, ease: "power3.out", overwrite: "auto" });
+
+    if (ghostRef.current) gsap.fromTo(ghostRef.current, { opacity: 0, x: 22 }, { opacity: 0.08, x: 0, duration: 0.6, ease: "power3.out", overwrite: "auto" });
+
+    const rule = panelRef.current?.querySelector<HTMLElement>(".rf-headline-rule");
+    if (rule) gsap.fromTo(rule, { scaleX: 0 }, { scaleX: 1, transformOrigin: "left", duration: 0.55, ease: "power3.out", overwrite: "auto" });
+  }, [active, frac]);
+
   return (
     <div
+      ref={rootRef}
       className="reflection-stepper"
       style={{
         display: "grid",
-        gridTemplateColumns: "minmax(240px, 0.9fr) minmax(0, 2fr)",
-        gap: "clamp(24px, 2.6vw, 44px)",
-        border: `1px solid ${ll.line}`,
-        background: "#FFFFFF",
-        padding: "clamp(24px, 2.6vw, 44px)",
+        gridTemplateColumns: "minmax(240px, 0.85fr) minmax(0, 2fr)",
+        gap: "clamp(28px, 3vw, 56px)",
+        alignItems: "start",
       }}
     >
       {/* LEFT - step rail */}
-      <div
-        role="tablist"
-        aria-label="Reflection lessons"
-        style={{
-          position: "relative",
-          display: "flex", flexDirection: "column",
-          gap: 4,
-        }}
-      >
-        {/* Vertical connector line */}
-        <div
-          aria-hidden
-          style={{
-            position: "absolute",
-            left: 15, top: 14, bottom: 14,
-            width: 1, background: ll.line,
-            zIndex: 0,
-          }}
-        />
-        {/* Active-length fill */}
-        <motion.div
-          aria-hidden
-          initial={false}
-          animate={{
-            height: `calc(${(active / (LESSONS.length - 1)) * 100}% - 28px)`,
-          }}
-          transition={{ type: "spring", stiffness: 180, damping: 24 }}
-          style={{
-            position: "absolute",
-            left: 15, top: 14,
-            width: 1, background: ll.primary,
-            zIndex: 1,
-          }}
-        />
+      <div role="tablist" aria-label="Reflection lessons" style={{ position: "relative", display: "flex", flexDirection: "column", gap: 18 }}>
+        <div aria-hidden className="rf-railline" style={{ position: "absolute", left: 17, top: 16, bottom: 16, width: 1, background: ll.line, transformOrigin: "top", zIndex: 0 }} />
+        <div ref={fillRef} aria-hidden style={{ position: "absolute", left: 17, top: 16, bottom: 16, width: 1, background: ll.primary, transformOrigin: "top", transform: "scaleY(0)", zIndex: 1 }} />
 
         {LESSONS.map((l, i) => {
           const on = i === active;
@@ -1547,59 +1513,33 @@ function ReflectionStepper() {
               role="tab"
               aria-selected={on}
               onClick={() => setActive(i)}
+              className={`rf-railtab${on ? " is-on" : ""}`}
               style={{
-                position: "relative",
-                zIndex: 2,
-                display: "grid",
-                gridTemplateColumns: "32px 1fr",
-                alignItems: "center",
-                gap: 14,
-                padding: "12px 8px 12px 0",
-                textAlign: "left",
-                background: "transparent",
-                border: "none",
-                cursor: "pointer",
+                position: "relative", zIndex: 2,
+                display: "grid", gridTemplateColumns: "36px 1fr", alignItems: "center", gap: 24,
+                padding: "10px 8px 10px 0", textAlign: "left",
+                background: "transparent", border: "none",
+                cursor: on ? "default" : "pointer",
               }}
             >
-              {/* Dot / number marker */}
-              <span
-                aria-hidden
-                style={{
-                  width: 32, height: 32,
-                  display: "grid", placeItems: "center",
-                  background: on ? ll.primary : "#FFFFFF",
-                  border: `1px solid ${on ? ll.primary : ll.line}`,
-                  borderRadius: "50%",
-                  transition: "background 180ms ease, border-color 180ms ease",
-                }}
-              >
-                <span style={{
-                  ...mono, fontSize: 9.5, fontWeight: 700,
-                  letterSpacing: "0.12em",
-                  color: on ? "#FFFFFF" : ll.muted,
-                }}>
+              <span aria-hidden className="rf-node" style={{
+                width: 36, height: 36, display: "grid", placeItems: "center",
+                background: on ? ll.primary : "#FFFFFF",
+                border: `1px solid ${on ? ll.primary : ll.line}`,
+                borderRadius: "50%",
+                transition: "background 220ms ease, border-color 220ms ease",
+              }}>
+                <span style={{ ...mono, fontSize: 13.5, fontWeight: 700, letterSpacing: "0.04em", color: on ? "#FFFFFF" : ll.muted, transition: "color 220ms ease" }}>
                   {l.num}
                 </span>
               </span>
-
-              <span style={{ display: "flex", flexDirection: "column", gap: 5 }}>
-                <span style={{
-                  ...mono, fontSize: 11, letterSpacing: "0.22em",
-                  fontWeight: 700,
-                  color: on ? ll.primary : ll.muted,
-                  transition: "color 180ms ease",
-                }}>
-                  {l.tag}
-                </span>
-                <span style={{
-                  fontFamily: serif, fontWeight: 700,
-                  fontSize: "clamp(19px, 1.5vw, 22px)", lineHeight: 1.25,
-                  letterSpacing: "-0.015em",
-                  color: on ? "var(--text-primary)" : ll.muted,
-                  transition: "color 180ms ease",
-                }}>
-                  {l.short}
-                </span>
+              <span className="rf-rail-title" style={{
+                fontFamily: serif, fontWeight: 700,
+                fontSize: "clamp(19px, 1.5vw, 22px)", lineHeight: 1.25, letterSpacing: "-0.015em",
+                color: on ? "var(--text-primary)" : ll.muted,
+                transition: "color 220ms ease, transform 220ms ease",
+              }}>
+                {l.short}
               </span>
             </button>
           );
@@ -1608,152 +1548,85 @@ function ReflectionStepper() {
 
       {/* RIGHT - active lesson panel */}
       <div
+        ref={panelRef}
+        className="rf-panel"
         role="tabpanel"
         style={{
           position: "relative",
           background: ll.surface,
           border: `1px solid ${ll.line}`,
-          padding: "clamp(28px, 3.2vw, 48px)",
-          minHeight: 360,
-          display: "flex", flexDirection: "column",
+          padding: "clamp(30px, 3.4vw, 52px)",
+          minHeight: 380,
+          display: "flex", flexDirection: "column", gap: 22,
           overflow: "hidden",
         }}
       >
-        {/* Decorative big number in back */}
-        <motion.span
-          key={`big-${active}`}
-          aria-hidden
-          initial={{ opacity: 0, x: 16 }}
-          animate={{ opacity: 0.08, x: 0 }}
-          transition={{ duration: 0.5, ease: [0.25, 1, 0.4, 1] }}
-          style={{
-            position: "absolute",
-            right: "clamp(20px, 3vw, 44px)",
-            top: "clamp(10px, 1.6vw, 20px)",
-            fontFamily: serif, fontWeight: 700,
-            fontSize: "clamp(130px, 16vw, 220px)",
-            letterSpacing: "-0.04em",
-            lineHeight: 1,
-            color: ll.primary,
-            pointerEvents: "none",
-          }}
-        >
+        <span ref={ghostRef} aria-hidden className="rf-ghost" style={{
+          position: "absolute", right: "clamp(20px, 3vw, 44px)", top: "clamp(8px, 1.6vw, 20px)",
+          fontFamily: serif, fontWeight: 700, fontSize: "clamp(130px, 16vw, 220px)",
+          letterSpacing: "-0.04em", lineHeight: 1, color: ll.primary, opacity: 0.08,
+          pointerEvents: "none", userSelect: "none",
+        }}>
           {lesson.num}
-        </motion.span>
+        </span>
 
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={active}
-            initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.45, ease: [0.25, 1, 0.4, 1] }}
-            style={{
-              position: "relative", zIndex: 1,
-              display: "flex", flexDirection: "column",
-              gap: 20,
-              height: "100%",
-            }}
-          >
-            {/* Tag row */}
-            <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-              <span style={{
-                ...mono, fontSize: 10, letterSpacing: "0.22em",
-                color: ll.primary, fontWeight: 700,
-                padding: "6px 10px",
-                background: "#FFFFFF",
-                border: `1px solid ${ll.primary}`,
-              }}>
-                {lesson.tag}
-              </span>
-              <Icon size={22} color={ll.primary} weight="regular" />
-            </div>
+        <div className="rf-panel-el" style={{ display: "flex", alignItems: "center", gap: 14, position: "relative", zIndex: 1 }}>
+          <span style={{ width: 44, height: 44, borderRadius: 12, background: "#FFFFFF", border: `1px solid ${ll.line}`, display: "inline-flex", alignItems: "center", justifyContent: "center" }}>
+            <Icon size={22} color={ll.primary} weight="regular" />
+          </span>
+        </div>
 
-            {/* Headline */}
-            <h3 style={{
-              fontFamily: serif, fontWeight: 700,
-              fontSize: "clamp(26px, 3vw, 38px)",
-              letterSpacing: "-0.02em", lineHeight: 1.15,
-              color: "var(--text-primary)",
-              maxWidth: 540,
-            }}>
-              {lesson.short}
-            </h3>
+        <div style={{ position: "relative", zIndex: 1 }}>
+          <h3 className="rf-panel-el" style={{
+            fontFamily: serif, fontWeight: 700,
+            fontSize: "clamp(26px, 3vw, 38px)", letterSpacing: "-0.02em", lineHeight: 1.15,
+            color: "var(--text-primary)", maxWidth: 540, margin: 0,
+          }}>
+            {lesson.short}
+          </h3>
+          <span aria-hidden className="rf-headline-rule" style={{ display: "block", height: 2, width: 56, background: ll.primary, marginTop: 16, transformOrigin: "left" }} />
+        </div>
 
-            {/* Body */}
-            <p style={{ ...t.bodyLg, maxWidth: 560, margin: 0 }}>
-              {lesson.body}
-            </p>
+        <p className="rf-panel-el" style={{ ...t.bodyLg, maxWidth: 560, margin: 0, position: "relative", zIndex: 1 }}>
+          {lesson.body}
+        </p>
 
-            {/* Principle pull */}
-            <div style={{
-              marginTop: "auto",
-              paddingTop: 18,
-              borderTop: `1px solid ${ll.line}`,
-              display: "flex", alignItems: "center", gap: 14,
-            }}>
-              <span style={{
-                ...mono, fontSize: 9.5, letterSpacing: "0.22em",
-                color: ll.muted, fontWeight: 700, flexShrink: 0,
-              }}>
-                PRINCIPLE
-              </span>
-              <p style={{
-                fontFamily: serif, fontStyle: "italic",
-                fontWeight: 700, fontSize: "clamp(16px, 1.4vw, 19px)",
-                letterSpacing: "-0.01em", lineHeight: 1.45,
-                color: ll.primary, margin: 0,
-              }}>
-                {lesson.principle}
-              </p>
-            </div>
-          </motion.div>
-        </AnimatePresence>
+        <div className="rf-panel-el" style={{
+          marginTop: "auto", paddingTop: 20, paddingRight: 100,
+          borderTop: `1px solid ${ll.line}`,
+          display: "flex", alignItems: "center", gap: 14,
+          position: "relative", zIndex: 1,
+        }}>
+          <span style={{ ...mono, fontSize: 9.5, letterSpacing: "0.22em", color: ll.muted, fontWeight: 700, flexShrink: 0 }}>
+            PRINCIPLE
+          </span>
+          <p style={{ fontFamily: serif, fontStyle: "italic", fontWeight: 700, fontSize: "clamp(16px, 1.4vw, 19px)", letterSpacing: "-0.01em", lineHeight: 1.45, color: ll.primary, margin: 0 }}>
+            {lesson.principle}
+          </p>
+        </div>
 
         {/* Nav controls */}
-        <div style={{
-          position: "absolute",
-          right: "clamp(20px, 3vw, 36px)",
-          bottom: "clamp(20px, 2.6vw, 32px)",
-          display: "flex", gap: 8,
-          zIndex: 2,
-        }}>
-          <button
-            aria-label="Previous lesson"
-            onClick={goPrev}
-            style={{
-              width: 38, height: 38,
-              display: "grid", placeItems: "center",
-              background: "#FFFFFF",
-              border: `1px solid ${ll.line}`,
-              cursor: "pointer",
-              transition: "background 160ms ease, border-color 160ms ease",
-            }}
-          >
+        <div style={{ position: "absolute", right: "clamp(20px, 3vw, 36px)", bottom: "clamp(20px, 2.6vw, 32px)", display: "flex", gap: 8, zIndex: 3 }}>
+          <button aria-label="Previous lesson" onClick={goPrev} className="rf-arrow" style={{ width: 40, height: 40, display: "grid", placeItems: "center", background: "#FFFFFF", border: `1px solid ${ll.line}` }}>
             <ArrowLeft size={16} color={ll.primary} weight="bold" />
           </button>
-          <button
-            aria-label="Next lesson"
-            onClick={goNext}
-            style={{
-              width: 38, height: 38,
-              display: "grid", placeItems: "center",
-              background: ll.primary,
-              border: `1px solid ${ll.primary}`,
-              cursor: "pointer",
-              transition: "background 160ms ease",
-            }}
-          >
+          <button aria-label="Next lesson" onClick={goNext} className="rf-arrow rf-arrow-primary" style={{ width: 40, height: 40, display: "grid", placeItems: "center", background: ll.primary, border: `1px solid ${ll.primary}` }}>
             <ArrowRight size={16} color="#FFFFFF" weight="bold" />
           </button>
         </div>
       </div>
 
       <style>{`
+        .rf-railtab:not(.is-on):hover .rf-rail-title { color: var(--text-primary); transform: translateX(4px); }
+        .rf-railtab:focus-visible { outline: 2px solid ${ll.primary}; outline-offset: 3px; border-radius: 4px; }
+        .rf-arrow { cursor: pointer; transition: background 180ms ease, border-color 180ms ease, transform 180ms ease; }
+        .rf-arrow:hover { transform: translateY(-2px); }
+        .rf-arrow:not(.rf-arrow-primary):hover { border-color: ${ll.primary}; }
+        .rf-arrow-primary:hover { background: ${ll.dark}; border-color: ${ll.dark}; }
+        .rf-arrow:active { transform: translateY(0); }
+        .rf-arrow:focus-visible { outline: 2px solid ${ll.primary}; outline-offset: 2px; }
         @media (max-width: 880px) {
-          .reflection-stepper {
-            grid-template-columns: minmax(0, 1fr) !important;
-          }
+          .reflection-stepper { grid-template-columns: minmax(0, 1fr) !important; }
         }
       `}</style>
     </div>
@@ -1765,8 +1638,6 @@ function ReflectionStepper() {
 ══════════════════════════════════════════════════════════════════ */
 export default function LocalLiftCase() {
   const otherProjects = projects.filter((p) => p.slug !== "locallift").slice(0, 2);
-  const { scrollYProgress } = useScroll();
-  const scaleX = useSpring(scrollYProgress, { stiffness: 200, damping: 30, restDelta: 0.001 });
   const [showTop, setShowTop] = useState(false);
 
   // Subtle parallax on hero copy
@@ -1786,25 +1657,7 @@ export default function LocalLiftCase() {
     <motion.div
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
       transition={{ duration: 0.4 }}
-      className="pt-14"
     >
-      {/* Top nav mask */}
-      <div style={{
-        position: "fixed", top: 0, left: 0, right: 0, height: 59,
-        background: "var(--bg-primary)", zIndex: 45, pointerEvents: "none",
-      }} />
-
-      {/* Scroll progress */}
-      <div style={{
-        position: "fixed", top: 56, left: 0, right: 0, height: 2,
-        background: "var(--bg-primary)", zIndex: 49,
-      }}>
-        <motion.div style={{
-          height: "100%", background: ll.primary,
-          scaleX, transformOrigin: "left", opacity: 0.9,
-        }} />
-      </div>
-
       {/* ══════════════════════════════════════════════════════════════
           00 · HERO - three-phone mockup stage
       ══════════════════════════════════════════════════════════════ */}
@@ -1812,126 +1665,74 @@ export default function LocalLiftCase() {
         ref={heroRef}
         style={{
           position: "relative",
-          minHeight: "calc(var(--vh, 1vh) * 100 - 56px)",
-          display: "flex", flexDirection: "column",
+          isolation: "isolate",
+          minHeight: "calc(var(--vh, 1vh) * 100)",
+          display: "flex", flexDirection: "column", justifyContent: "center",
           overflow: "hidden",
           background: "var(--bg-primary)",
+          paddingTop: "clamp(96px, 10vw, 128px)",
+          paddingBottom: "clamp(40px, 6vw, 72px)",
         }}
       >
-        {/* Blueprint grid backdrop */}
+        {/* Indigo noisy-gradient hero background */}
+        <GradientBackground
+          gradientType="radial-gradient"
+          gradientSize="150% 130%"
+          gradientOrigin="top-middle"
+          colors={[
+            { color: "rgba(59,79,123,0.20)", stop: "0%" },
+            { color: "rgba(101,119,160,0.12)", stop: "34%" },
+            { color: "rgba(140,155,190,0.07)", stop: "62%" },
+            { color: "rgba(237,240,247,0)", stop: "100%" },
+          ]}
+          noisePatternAlpha={26}
+          noiseIntensity={1}
+          noisePatternRefreshInterval={1}
+          noisePatternSize={100}
+          style={{ zIndex: 0 }}
+        />
+        {/* Dotted grid overlay */}
         <div aria-hidden style={{
           position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none",
-          backgroundImage: `
-            repeating-linear-gradient(0deg,  ${ll.subtle} 0 1px, transparent 1px 22px),
-            repeating-linear-gradient(90deg, ${ll.subtle} 0 1px, transparent 1px 22px),
-            repeating-linear-gradient(0deg,  ${ll.line}  0 1px, transparent 1px 88px),
-            repeating-linear-gradient(90deg, ${ll.line}  0 1px, transparent 1px 88px)
-          `,
-          opacity: 0.55,
-          maskImage: "radial-gradient(ellipse 85% 85% at 55% 50%, #000 40%, transparent 100%)",
-          WebkitMaskImage: "radial-gradient(ellipse 85% 85% at 55% 50%, #000 40%, transparent 100%)",
+          backgroundImage: "radial-gradient(circle, rgba(30,42,69,0.07) 1px, transparent 1.5px)",
+          backgroundSize: "23px 23px",
+          backgroundPosition: "-11px -11px",
+          WebkitMaskImage: "linear-gradient(to bottom, #000 60%, transparent 100%)",
+          maskImage: "linear-gradient(to bottom, #000 60%, transparent 100%)",
         }} />
 
-        {/* Top bar */}
-        <motion.div
-          initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.05, duration: 0.5 }}
-          className="max-w-7xl mx-auto px-6 md:px-10"
-          style={{
-            width: "100%", flexShrink: 0,
-            display: "flex", justifyContent: "space-between", alignItems: "center",
-            paddingTop: "clamp(16px, 2vw, 24px)",
-            paddingBottom: 14,
-            flexWrap: "wrap", gap: 16,
-            borderBottom: `1px solid ${ll.line}`,
-            position: "relative", zIndex: 1,
-          }}
-        >
-          <Link to="/#projects"
-            style={{
-              display: "inline-flex", alignItems: "center", gap: 10,
-              ...mono, fontSize: 11, letterSpacing: "0.22em",
-              color: "var(--text-secondary)", textDecoration: "none",
-              transitionProperty: "color", transitionDuration: "200ms",
-            }}
-            onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = ll.primary)}
-            onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = "var(--text-secondary)")}
-          >
-            <ArrowLeft size={14} weight="regular" />
-            Index
-          </Link>
-          <div style={{ display: "flex", gap: 20, flexWrap: "wrap", alignItems: "center" }}>
-            {["UX Research", "Service Design", "SMB", "Cross-cultural"].map((tag) => (
-              <span key={tag} style={{ ...mono, fontSize: 10, color: "var(--text-muted)", letterSpacing: "0.22em" }}>
-                {tag}
-              </span>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* Hero body */}
-        <div
-          className="max-w-7xl mx-auto px-6 md:px-10"
-          style={{
-            flex: 1, width: "100%", minHeight: 0,
-            display: "grid",
-            gridTemplateColumns: "minmax(0, 1fr)",
-            gap: "clamp(24px, 3vw, 40px)",
-            alignItems: "center",
-            paddingTop: "clamp(32px, 3.5vw, 56px)",
-            paddingBottom: "clamp(24px, 2.6vw, 40px)",
-            position: "relative", zIndex: 1,
-          }}
-        >
-          <div
-            className="grid grid-cols-1 md:grid-cols-12"
-            style={{
-              gap: "clamp(28px, 3.4vw, 52px)",
-              alignItems: "center",
-              width: "100%",
-            }}
-          >
-            {/* LEFT - title + lede + meta */}
+        {/* Hero body - 2-column: text left, mockup right */}
+        <div className="max-w-7xl mx-auto px-6 md:px-10" style={{ position: "relative", zIndex: 1, width: "100%" }}>
+          <div className="grid grid-cols-1 md:grid-cols-12" style={{ gap: "clamp(32px, 4.5vw, 60px)", alignItems: "center", width: "100%" }}>
+            {/* LEFT - title, tagline, meta */}
             <motion.div
               className="md:col-span-5"
               style={{ minWidth: 0, opacity: heroOpacity, y: heroY }}
             >
-              <motion.div
-                initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1, duration: 0.6 }}
-                style={{ display: "flex", justifyContent: "space-between", marginBottom: 18, maxWidth: 460 }}
-              >
-                <span style={{ ...mono, fontSize: 11, color: ll.primary, letterSpacing: "0.22em", fontWeight: 700 }}>
-                  Case Study · 04
-                </span>
-                <span style={{ ...mono, fontSize: 11, color: "var(--text-muted)", letterSpacing: "0.22em" }}>
-                  SMB · 2024
-                </span>
-              </motion.div>
-
-              <div style={{ overflow: "hidden", marginBottom: "clamp(22px, 2.4vw, 32px)" }}>
+              <div style={{ overflow: "hidden", marginBottom: "clamp(24px, 2.6vw, 36px)" }}>
                 <motion.h1
                   initial={{ y: "110%" }} animate={{ y: 0 }}
-                  transition={{ delay: 0.15, duration: 1.0, ease: [0.25, 1, 0.4, 1] }}
+                  transition={{ delay: 0.1, duration: 1.0, ease: [0.25, 1, 0.4, 1] }}
                   style={{
                     fontFamily: serif, fontWeight: 700,
-                    fontSize: "clamp(60px, 8.5vw, 124px)",
+                    fontSize: "clamp(52px, 7.6vw, 112px)",
                     color: "var(--text-primary)",
-                    letterSpacing: "-0.055em", lineHeight: 0.9,
-                    margin: 0,
+                    letterSpacing: "-0.055em", lineHeight: 0.92,
+                    margin: 0, whiteSpace: "nowrap",
                   }}
                 >
                   LocalLift<span style={{ color: ll.primary, fontStyle: "italic" }}>.</span>
                 </motion.h1>
               </div>
-
               <motion.p
                 initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5, duration: 0.7 }}
+                transition={{ delay: 0.45, duration: 0.7 }}
                 style={{
                   fontFamily: serif, fontStyle: "italic",
-                  fontSize: "clamp(21px, 1.9vw, 28px)",
+                  fontSize: "clamp(18px, 1.7vw, 24px)",
                   color: "var(--text-secondary)",
-                  lineHeight: 1.5, maxWidth: 520,
-                  marginBottom: "clamp(28px, 3vw, 40px)",
+                  lineHeight: 1.5, maxWidth: 500,
+                  marginBottom: "clamp(34px, 4.5vw, 52px)",
                   letterSpacing: "-0.01em",
                 }}
               >
@@ -1939,18 +1740,12 @@ export default function LocalLiftCase() {
                 <span style={{ color: ll.primary }}> the digital economy </span>
                 they're supposed to already live in.
               </motion.p>
-
-              {/* Meta - 2x2 grid */}
+              {/* Meta - airy 2-column */}
               <motion.div
-                initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8, duration: 0.6 }}
+                initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7, duration: 0.6 }}
                 style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-                  columnGap: "clamp(20px, 3vw, 40px)",
-                  rowGap: 22,
-                  borderTop: `1px solid ${ll.line}`,
-                  paddingTop: 24,
-                  maxWidth: 460,
+                  maxWidth: 440, display: "grid", gridTemplateColumns: "auto auto",
+                  justifyContent: "start", columnGap: "clamp(44px, 6vw, 84px)", rowGap: "clamp(24px, 3vw, 32px)",
                 }}
               >
                 {([
@@ -1959,49 +1754,18 @@ export default function LocalLiftCase() {
                   { label: "Timeline", value: "10 weeks" },
                   { label: "Team",     value: "5 members" },
                 ] as { label: string; value: string }[]).map((m) => (
-                  <div key={m.label} style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                    <span style={{ ...mono, fontSize: 13, color: "var(--text-secondary)", letterSpacing: "0.2em", fontWeight: 600 }}>
-                      {m.label}
-                    </span>
-                    <span style={{ fontFamily: sans, fontSize: 19, fontWeight: 500, color: "var(--text-primary)" }}>
-                      {m.value}
-                    </span>
+                  <div key={m.label}>
+                    <div style={{ ...mono, fontSize: 10.5, fontWeight: 600, letterSpacing: "0.18em", color: ll.muted, marginBottom: 9 }}>{m.label}</div>
+                    <div style={{ fontFamily: sans, fontSize: "clamp(17px, 1.5vw, 20px)", fontWeight: 600, lineHeight: 1.15, letterSpacing: "-0.01em", color: "var(--text-primary)" }}>{m.value}</div>
                   </div>
                 ))}
               </motion.div>
             </motion.div>
 
-            {/* RIGHT - phones */}
+            {/* RIGHT - phone mockups */}
             <HeroMockup />
           </div>
         </div>
-
-        {/* Scroll cue */}
-        <motion.div
-          initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2, duration: 0.6 }}
-          className="max-w-7xl mx-auto px-6 md:px-10"
-          style={{
-            width: "100%", flexShrink: 0,
-            display: "flex", justifyContent: "center", alignItems: "center",
-            paddingBottom: "clamp(14px, 1.6vw, 22px)",
-            position: "relative", zIndex: 1,
-          }}
-        >
-          <motion.div
-            animate={{ y: [0, 5, 0] }}
-            transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-            style={{
-              display: "inline-flex", alignItems: "center", gap: 10,
-              ...mono, fontSize: 10, letterSpacing: "0.22em",
-              color: "var(--text-secondary)",
-            }}
-          >
-            Scroll
-            <svg width="12" height="12" viewBox="0 0 16 16" fill="none">
-              <path d="M8 3v10M4 9l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </motion.div>
-        </motion.div>
       </section>
 
       {/* ─── 01 · CONTEXT ─────────────────────────────────────── */}
@@ -2010,15 +1774,14 @@ export default function LocalLiftCase() {
         borderTop: `1px solid ${ll.line}`,
       }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
-          <SectionHeader num="01" title="Context" phase="Setup" />
+          <SectionHeader
+            num="01"
+            phase="Context"
+            title={<>A mentorship platform,<span style={{ fontStyle: "italic", color: ll.primary }}> grounded in real owners across two markets.</span></>}
+            accent={ll.primary}
+          />
 
           <div style={{ maxWidth: 820 }}>
-            <Reveal>
-              <h2 style={{ ...t.h2, marginBottom: 22 }}>
-                A mentorship platform,
-                <span style={{ fontStyle: "italic", color: ll.primary }}> grounded in real owners across two markets.</span>
-              </h2>
-            </Reveal>
             <Reveal delay={0.1}>
               <p style={{ ...t.bodyLg, marginBottom: 20 }}>
                 LocalLift sits at the intersection of two growth markets for small business: the US Southeast
@@ -2037,23 +1800,17 @@ export default function LocalLiftCase() {
       </section>
 
       {/* ─── 02 · PROBLEM ─────────────────────────────────────── */}
-      <section style={{
-        padding: SECTION_PAD,
-        ...gridSurface,
-        borderTop: `1px solid ${ll.line}`,
-        borderBottom: `1px solid ${ll.line}`,
-      }}>
+      <section className="ll-liquid-section" style={{ padding: SECTION_PAD }}>
+        <LiquidBackground c0="eaeef7" c1="d6dcec" c2="aeb8d4" fade={0} lift={0.28} grain={0.055} speed={0.1} />
         <div className="max-w-7xl mx-auto px-6 md:px-10">
-          <SectionHeader num="02" title="The gap" phase="Problem" />
+          <SectionHeader
+            num="02"
+            phase="The gap"
+            title={<>Digital tools were built for scale.<br /><span style={{ fontStyle: "italic", color: ll.primary }}>Most small businesses are built for survival.</span></>}
+            accent={ll.primary}
+          />
 
           <div style={{ maxWidth: 820, marginBottom: "clamp(48px, 5vw, 72px)" }}>
-            <Reveal>
-              <h2 style={{ ...t.h2, marginBottom: 20 }}>
-                Digital tools were built for scale.
-                <br />
-                <span style={{ fontStyle: "italic", color: ll.primary }}>Most small businesses are built for survival.</span>
-              </h2>
-            </Reveal>
             <Reveal delay={0.12}>
               <p style={{ ...t.bodyLg }}>
                 SMB-facing platforms are either too technical, too abstract, or too generic to help a specific
@@ -2097,9 +1854,6 @@ export default function LocalLiftCase() {
                       }}>
                         <I size={22} color={ll.primary} weight="regular" />
                       </div>
-                      <p style={{ ...mono, fontSize: 9.5, color: ll.muted, letterSpacing: "0.22em", fontWeight: 700 }}>
-                        {o.tag}
-                      </p>
                     </div>
                     <h3 style={{ ...t.h3, marginBottom: 12 }}>{o.head}</h3>
                     <p style={{ ...t.body, flex: 1 }}>{o.body}</p>
@@ -2114,31 +1868,20 @@ export default function LocalLiftCase() {
       {/* ─── 03 · RESEARCH ──────────────────────────────────── */}
       <section style={{ padding: SECTION_PAD, background: "var(--bg-primary)" }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
-          <SectionHeader num="03" title="Research" phase="Method + synthesis" />
+          <SectionHeader
+            num="03"
+            phase="Research"
+            title={<>A cross-cultural study,<span style={{ fontStyle: "italic", color: ll.primary }}> shaped in partnership with local voices.</span></>}
+            accent={ll.primary}
+          />
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-16 items-end">
             <div className="lg:col-span-8">
-              <Reveal>
-                <h2 style={{ ...t.h2, marginBottom: 20 }}>
-                  A cross-cultural study,
-                  <span style={{ fontStyle: "italic", color: ll.primary }}> shaped in partnership with local voices.</span>
-                </h2>
-              </Reveal>
               <Reveal delay={0.1}>
                 <p style={{ ...t.bodyLg, maxWidth: 640 }}>
                   Three lenses: understand the owner's day, cluster what we heard across context, turn it into
                   archetypes the team could design against. Local collaborators translated insight, literally
                   and culturally, so patterns carried the texture of each market, not just one.
-                </p>
-              </Reveal>
-            </div>
-            <div className="lg:col-span-4">
-              <Reveal delay={0.16}>
-                <p style={{
-                  ...mono, fontSize: 11, letterSpacing: "0.22em",
-                  color: ll.muted, fontWeight: 700, textAlign: "right",
-                }}>
-                  03 METHODS<br />ONE SHARED TRANSCRIPT
                 </p>
               </Reveal>
             </div>
@@ -2173,9 +1916,6 @@ export default function LocalLiftCase() {
                     }}
                   >
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 26 }}>
-                      <span style={{ ...mono, fontSize: 11, color: ll.primary, letterSpacing: "0.22em", fontWeight: 700 }}>
-                        {m.num}
-                      </span>
                       <I size={22} color={ll.primary} weight="regular" />
                     </div>
                     <h3 style={{ ...t.h3, marginBottom: 12 }}>{m.title}</h3>
@@ -2216,41 +1956,35 @@ export default function LocalLiftCase() {
             ] as { num: string; finding: string; quote: string }[]).map((v, i) => (
               <Reveal key={i} delay={0.05 + i * 0.06}>
                 <motion.figure
-                  whileHover={{ y: -4 }}
-                  transition={{ type: "spring", stiffness: 240, damping: 22 }}
+                  whileHover={{ y: -3, boxShadow: "0 2px 4px rgba(30,42,69,0.06), 0 22px 46px -16px rgba(30,42,69,0.22)" }}
+                  transition={{ type: "spring", stiffness: 260, damping: 24 }}
                   style={{
-                    background: "#FFFFFF",
-                    border: `1px solid ${ll.line}`,
-                    padding: "28px 26px 24px",
+                    background: ll.surface,
+                    borderRadius: 16,
+                    padding: "clamp(26px, 2.4vw, 32px)",
                     height: "100%",
-                    display: "flex", flexDirection: "column",
-                    gap: 16, margin: 0,
+                    display: "flex", flexDirection: "column", margin: 0,
+                    boxShadow: "0 1px 2px rgba(30,42,69,0.05), 0 10px 24px -14px rgba(30,42,69,0.12)",
                   }}
                 >
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                    <span style={{ ...mono, fontSize: 11, color: ll.primary, letterSpacing: "0.22em", fontWeight: 700 }}>
-                      {v.num}
-                    </span>
-                    <span aria-hidden style={{
-                      fontFamily: serif, fontStyle: "italic", fontSize: 42,
-                      color: ll.primary, opacity: 0.22, lineHeight: 0.6,
-                    }}>"</span>
-                  </div>
                   <blockquote style={{
-                    fontFamily: serif, fontStyle: "italic",
-                    fontSize: "clamp(18px, 1.4vw, 21px)",
+                    fontFamily: sans, fontWeight: 500,
+                    fontSize: "clamp(19px, 1.45vw, 22px)",
                     color: "var(--text-primary)",
-                    lineHeight: 1.45, letterSpacing: "-0.01em",
+                    lineHeight: 1.5, letterSpacing: "-0.01em",
                     margin: 0, flex: 1,
                   }}>
                     {v.quote}
                   </blockquote>
-                  <figcaption style={{
-                    ...mono, fontSize: 9.5, letterSpacing: "0.22em",
-                    color: ll.muted, fontWeight: 700,
-                    paddingTop: 16, borderTop: `1px solid ${ll.line}`,
-                  }}>
-                    FINDING · {v.finding}
+                  <div style={{ height: 1, background: "rgba(59,79,123,0.16)", marginTop: 22 }} />
+                  <figcaption style={{ display: "flex", alignItems: "flex-start", gap: 11, marginTop: 16 }}>
+                    <span aria-hidden style={{ width: 6, height: 6, borderRadius: "50%", background: ll.primary, flexShrink: 0, marginTop: 7 }} />
+                    <span style={{
+                      fontFamily: sans, fontSize: 15, fontWeight: 600,
+                      color: ll.primary, letterSpacing: "-0.005em", lineHeight: 1.45,
+                    }}>
+                      {v.finding}
+                    </span>
                   </figcaption>
                 </motion.figure>
               </Reveal>
@@ -2265,16 +1999,15 @@ export default function LocalLiftCase() {
       {/* ─── 05 · LOFI EXPLORATION ──────────────────────────── */}
       <section style={{ padding: SECTION_PAD, background: "var(--bg-primary)" }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
-          <SectionHeader num="05" title="Lo-fi exploration" phase="Wireframes" />
+          <SectionHeader
+            num="05"
+            phase="Lo-fi exploration"
+            title={<>Start in greyscale.<span style={{ fontStyle: "italic", color: ll.primary }}> Test structure before style.</span></>}
+            accent={ll.primary}
+          />
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-16 items-end">
             <div className="lg:col-span-7">
-              <Reveal>
-                <h2 style={{ ...t.h2, marginBottom: 20 }}>
-                  Start in greyscale.
-                  <span style={{ fontStyle: "italic", color: ll.primary }}> Test structure before style.</span>
-                </h2>
-              </Reveal>
               <Reveal delay={0.1}>
                 <p style={{ ...t.bodyLg, maxWidth: 620 }}>
                   Every flow began as a lo-fi wireframe: onboarding, auth, explore, search, community, profile.
@@ -2325,23 +2058,18 @@ export default function LocalLiftCase() {
       </section>
 
       {/* ─── 06 · HIFI FINAL DESIGN ──────────────────────── */}
-      <section style={{
-        padding: SECTION_PAD,
-        ...gridSurface,
-        borderTop: `1px solid ${ll.line}`,
-        borderBottom: `1px solid ${ll.line}`,
-      }}>
+      <section className="ll-liquid-section" style={{ padding: SECTION_PAD }}>
+        <LiquidBackground c0="eaeef7" c1="d6dcec" c2="aeb8d4" fade={0} lift={0.28} grain={0.055} speed={0.1} />
         <div className="max-w-7xl mx-auto px-6 md:px-10">
-          <SectionHeader num="06" title="Final design" phase="Hi-fi UI" />
+          <SectionHeader
+            num="06"
+            phase="Final design"
+            title={<>A quiet UI for a loud week.<span style={{ fontStyle: "italic", color: ll.primary }}> Calm indigo, clear hierarchy, one action at a time.</span></>}
+            accent={ll.primary}
+          />
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-16 items-end">
             <div className="lg:col-span-7">
-              <Reveal>
-                <h2 style={{ ...t.h2, marginBottom: 20 }}>
-                  A quiet UI for a loud week.
-                  <span style={{ fontStyle: "italic", color: ll.primary }}> Calm indigo, clear hierarchy, one action at a time.</span>
-                </h2>
-              </Reveal>
               <Reveal delay={0.1}>
                 <p style={{ ...t.bodyLg, maxWidth: 620 }}>
                   The hi-fi system layered type weight, gentle elevation, and an indigo accent on a near-white
@@ -2392,7 +2120,6 @@ export default function LocalLiftCase() {
               <Plate
                 src={`${IMG}/user-flow.png`}
                 alt="Primary user flow from onboarding through mentorship match."
-                caption="FIG · 02 / PRIMARY USER FLOW · ONBOARD → MATCH → LEARN → APPLY"
                 tag="FLOW"
                 aspect="16 / 7"
                 bg="#FFFFFF"
@@ -2405,30 +2132,19 @@ export default function LocalLiftCase() {
       {/* ─── 07 · ITERATIONS ──────────────────────────────── */}
       <section style={{ padding: SECTION_PAD, background: "var(--bg-primary)" }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
-          <SectionHeader num="07" title="Iterations" phase="Usability rounds" />
+          <SectionHeader
+            num="07"
+            phase="Iterations"
+            title={<>Three rounds, three<span style={{ fontStyle: "italic", color: ll.primary }}> targeted changes.</span></>}
+            accent={ll.primary}
+          />
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-16 items-end">
             <div className="lg:col-span-8">
-              <Reveal>
-                <h2 style={{ ...t.h2, marginBottom: 20 }}>
-                  Three rounds, three
-                  <span style={{ fontStyle: "italic", color: ll.primary }}> targeted changes.</span>
-                </h2>
-              </Reveal>
               <Reveal delay={0.1}>
                 <p style={{ ...t.bodyLg, maxWidth: 640 }}>
                   Each usability round surfaced a single friction. Each iteration answered that friction with one
                   visible move, not a redesign but a correction. The outcome came from stacking the three.
-                </p>
-              </Reveal>
-            </div>
-            <div className="lg:col-span-4">
-              <Reveal delay={0.16}>
-                <p style={{
-                  ...mono, fontSize: 11, letterSpacing: "0.22em",
-                  color: ll.muted, fontWeight: 700, textAlign: "right",
-                }}>
-                  03 MOVES<br />BEFORE · AFTER
                 </p>
               </Reveal>
             </div>
@@ -2525,7 +2241,6 @@ export default function LocalLiftCase() {
                       <Plate
                         src={m.img}
                         alt={`Before and after for ${m.friction}`}
-                        tag={m.tag}
                         aspect="16 / 10"
                         fit="contain"
                         bg={ll.surface}
@@ -2550,111 +2265,93 @@ export default function LocalLiftCase() {
       {/* ─── 08 · OUTCOMES ──────────────────────────────── */}
       <section style={{
         padding: SECTION_PAD,
-        ...gridDark,
+        background: ll.dark,
+        backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1.5px)",
+        backgroundSize: "23px 23px",
+        backgroundPosition: "-11px -11px",
         color: "#FFFFFF",
         borderTop: `1px solid ${ll.dark}`,
       }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
-          <div style={{ marginBottom: "clamp(44px, 5vw, 72px)" }}>
-            <div style={{
-              display: "flex", alignItems: "baseline", gap: 20, flexWrap: "wrap",
-              paddingBottom: 16,
-            }}>
-              <span style={{ ...mono, fontSize: 13, color: "#FFFFFF", letterSpacing: "0.24em", fontWeight: 700 }}>
-                08 <span style={{ color: "rgba(255,255,255,0.55)", fontWeight: 400 }}>/ {TOTAL}</span>
-              </span>
-              <span style={{ ...mono, fontSize: 13, color: "#FFFFFF", letterSpacing: "0.24em", fontWeight: 600 }}>
-                Outcomes
-              </span>
-              <span style={{ ...mono, fontSize: 12, color: "rgba(255,255,255,0.55)", letterSpacing: "0.22em", marginLeft: "auto" }}>
-                Measured impact
-              </span>
-            </div>
-            <div style={{ height: 1, background: "rgba(255,255,255,0.3)" }} />
+          <SectionHeader
+            num="08"
+            phase="Outcomes"
+            accent="#AEBCE0"
+            titleColor="#FFFFFF"
+            title={<>Small moves,<span style={{ fontStyle: "italic", color: "#AEBCE0" }}> compounded.</span></>}
+          />
+
+          <div style={{ marginBottom: "clamp(48px, 5.5vw, 80px)" }}>
+            <Reveal delay={0.1}>
+              <p style={{
+                fontFamily: sans, fontSize: "clamp(18px, 1.4vw, 21px)",
+                lineHeight: 1.7, color: "rgba(255,255,255,0.92)",
+                maxWidth: 660,
+              }}>
+                Three iterations, three metrics. Owners scanned faster, navigated with less confusion, and
+                reached what they were looking for in less than half the time.
+              </p>
+            </Reveal>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-16 items-end">
-            <div className="lg:col-span-8">
-              <Reveal>
-                <h2 style={{
-                  fontFamily: serif, fontWeight: 700,
-                  fontSize: "clamp(32px, 3.8vw, 48px)",
-                  letterSpacing: "-0.025em", lineHeight: 1.15,
-                  color: "#FFFFFF", marginBottom: 20,
-                }}>
-                  Small moves,
-                  <span style={{ fontStyle: "italic", color: ll.warm }}> compounded.</span>
-                </h2>
-              </Reveal>
-              <Reveal delay={0.1}>
-                <p style={{
-                  fontFamily: sans, fontSize: "clamp(17px, 1.2vw, 19px)",
-                  lineHeight: 1.7, color: "rgba(255,255,255,0.92)",
-                  maxWidth: 640,
-                }}>
-                  Three iterations, three metrics. Owners scanned faster, navigated with less confusion, and
-                  reached what they were looking for in less than half the time.
-                </p>
-              </Reveal>
-            </div>
-          </div>
-
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
-              gap: 1,
-              background: "rgba(255,255,255,0.18)",
-              border: "1px solid rgba(255,255,255,0.18)",
-            }}
-          >
-            {[
-              { stat: 20, suffix: "%", label: "faster information absorption", source: "Usability Round · Cleaner cards", tag: "R·01" },
-              { stat: 20, suffix: "%", label: "less reported confusion",        source: "Usability Round · Progress bar",  tag: "R·02" },
-              { stat: 40, suffix: "%", label: "faster time-to-relevant-result", source: "Usability Round · Localised search", tag: "R·03" },
-            ].map((s, i) => (
-              <Reveal key={i} delay={0.05 + i * 0.06}>
-                <motion.div
-                  whileHover={{ y: -4 }}
-                  transition={{ type: "spring", stiffness: 240, damping: 22 }}
-                  style={{
-                    background: ll.dark,
-                    padding: "40px 30px 32px",
-                    height: "100%",
-                    display: "flex", flexDirection: "column",
-                    cursor: "default",
-                  }}
-                >
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24 }}>
-                    <ChartBar size={24} color={ll.warm} weight="regular" />
-                    <p style={{ ...mono, fontSize: 9.5, color: "rgba(255,255,255,0.65)", letterSpacing: "0.22em", fontWeight: 700 }}>
-                      {s.tag}
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+            gap: "clamp(28px, 3.2vw, 52px)",
+          }}>
+            {([
+              { stat: 20, suffix: "%", icon: Layout,          label: "faster information absorption",   source: "Usability Round · Cleaner cards" },
+              { stat: 20, suffix: "%", icon: Path,            label: "less reported confusion",         source: "Usability Round · Progress bar" },
+              { stat: 40, suffix: "%", icon: MagnifyingGlass, label: "faster time-to-relevant-result",  source: "Usability Round · Localised search" },
+            ] as { stat: number; suffix: string; icon: Icon; label: string; source: string }[]).map((s, i) => {
+              const I = s.icon;
+              return (
+                <Reveal key={i} delay={0.05 + i * 0.06}>
+                  <motion.div
+                    whileHover={{ y: -4 }}
+                    transition={{ type: "spring", stiffness: 240, damping: 22 }}
+                    style={{
+                      borderTop: "1px solid rgba(255,255,255,0.22)",
+                      paddingTop: "clamp(24px, 2.4vw, 32px)",
+                      height: "100%",
+                      display: "flex", flexDirection: "column",
+                      cursor: "default",
+                    }}
+                  >
+                    <span style={{
+                      width: 46, height: 46, borderRadius: 12,
+                      background: "rgba(255,255,255,0.06)",
+                      border: "1px solid rgba(255,255,255,0.14)",
+                      display: "inline-flex", alignItems: "center", justifyContent: "center",
+                      marginBottom: "clamp(22px, 2.2vw, 30px)",
+                    }}>
+                      <I size={22} color="#AEBCE0" weight="regular" />
+                    </span>
+                    <p style={{
+                      fontFamily: serif, fontWeight: 700,
+                      fontSize: "clamp(52px, 6.4vw, 78px)",
+                      color: "#FFFFFF", lineHeight: 1, marginBottom: 18,
+                      letterSpacing: "-0.04em",
+                    }}>
+                      <CountUp value={s.stat} suffix={s.suffix} />
                     </p>
-                  </div>
-                  <p style={{
-                    fontFamily: serif, fontWeight: 700,
-                    fontSize: "clamp(56px, 7vw, 82px)",
-                    color: "#FFFFFF", lineHeight: 1, marginBottom: 18,
-                    letterSpacing: "-0.04em",
-                  }}>
-                    <CountUp value={s.stat} suffix={s.suffix} />
-                  </p>
-                  <p style={{
-                    fontFamily: sans, fontSize: 17, lineHeight: 1.5,
-                    color: "rgba(255,255,255,0.92)", marginBottom: 20, flex: 1,
-                  }}>
-                    {s.label}
-                  </p>
-                  <p style={{
-                    ...mono, fontSize: 10, color: "rgba(255,255,255,0.65)",
-                    letterSpacing: "0.22em",
-                    paddingTop: 16, borderTop: "1px solid rgba(255,255,255,0.18)",
-                  }}>
-                    {s.source}
-                  </p>
-                </motion.div>
-              </Reveal>
-            ))}
+                    <p style={{
+                      fontFamily: sans, fontSize: 18, lineHeight: 1.5,
+                      color: "rgba(255,255,255,0.92)", marginBottom: 20, flex: 1,
+                    }}>
+                      {s.label}
+                    </p>
+                    <p style={{
+                      ...mono, fontSize: 10.5, color: "rgba(255,255,255,0.6)",
+                      letterSpacing: "0.2em",
+                      paddingTop: 16, borderTop: "1px solid rgba(255,255,255,0.15)",
+                    }}>
+                      {s.source}
+                    </p>
+                  </motion.div>
+                </Reveal>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -2662,30 +2359,19 @@ export default function LocalLiftCase() {
       {/* ─── 09 · REFLECTION ───────────────────────────── */}
       <section style={{ padding: SECTION_PAD, background: "var(--bg-primary)" }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
-          <SectionHeader num="09" title="Reflection" phase="Takeaways" />
+          <SectionHeader
+            num="09"
+            phase="Reflection"
+            title={<>A platform<span style={{ fontStyle: "italic", color: ll.primary }}> isn't a tool. It's a community the tool keeps open.</span></>}
+            accent={ll.primary}
+          />
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-16 items-end">
             <div className="lg:col-span-9">
-              <Reveal>
-                <h2 style={{ ...t.h2, marginBottom: 18 }}>
-                  A platform
-                  <span style={{ fontStyle: "italic", color: ll.primary }}> isn't a tool. It's a community the tool keeps open.</span>
-                </h2>
-              </Reveal>
               <Reveal delay={0.1}>
                 <p style={{ ...t.bodyLg, maxWidth: 640 }}>
                   The strongest thing this project left me with was a quiet reframe: stop designing around
                   the feature and start designing around the owner's week.
-                </p>
-              </Reveal>
-            </div>
-            <div className="lg:col-span-3">
-              <Reveal delay={0.16}>
-                <p style={{
-                  ...mono, fontSize: 11, letterSpacing: "0.22em",
-                  color: ll.muted, fontWeight: 700, textAlign: "right",
-                }}>
-                  04 LESSONS<br />ONE STUDY
                 </p>
               </Reveal>
             </div>
@@ -2700,10 +2386,12 @@ export default function LocalLiftCase() {
       ══════════════════════════════════════════════════════════════ */}
       <section style={{ padding: "clamp(64px, 8vw, 104px) 0", borderTop: `1px solid ${ll.line}` }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
-          <div style={{ display: "flex", alignItems: "baseline", gap: 14, marginBottom: 36 }}>
-            <span aria-hidden style={{ width: 3, height: 14, background: ll.primary }} />
-            <p style={{ ...mono, fontSize: 12, color: ll.primary, letterSpacing: "0.22em", fontWeight: 600 }}>
-              More case studies
+          <div style={{ marginBottom: "clamp(36px, 4.5vw, 56px)", maxWidth: 560 }}>
+            <h2 style={{ fontFamily: serif, fontWeight: 700, fontSize: "clamp(30px, 3.4vw, 44px)", letterSpacing: "-0.03em", lineHeight: 1.12, color: "var(--text-primary)", margin: 0 }}>
+              Keep exploring<span style={{ color: ll.primary, fontStyle: "italic" }}>.</span>
+            </h2>
+            <p style={{ fontFamily: sans, fontSize: "clamp(17px, 1.4vw, 19px)", color: "var(--text-secondary)", lineHeight: 1.6, margin: "16px 0 0" }}>
+              Two more case studies, start to finish.
             </p>
           </div>
 

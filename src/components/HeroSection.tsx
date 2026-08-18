@@ -5,7 +5,7 @@ import DrawingSheetBorder from "./DrawingSheetBorder";
 
 /* ─── Shared mono style ─────────────────────────────────────────── */
 const mono: React.CSSProperties = {
-  fontFamily: "'Space Mono', monospace",
+  fontFamily: "'Manrope', monospace",
   textTransform: "uppercase",
   letterSpacing: "0.12em",
 };
@@ -155,7 +155,7 @@ function EdgeAnnotations() {
         <svg width="18" height="22" viewBox="0 0 18 22" fill="none">
           <path d="M9 2 L9 18" stroke="var(--text-muted)" strokeWidth="1" strokeLinecap="round" />
           <path d="M9 2 L6 8 L9 6.5 L12 8 Z" fill="var(--text-muted)" />
-          <text x="9" y="21" textAnchor="middle" style={{ fontFamily: "'Space Mono', monospace", fontSize: "6px", fill: "var(--text-muted)" }}>N</text>
+          <text x="9" y="21" textAnchor="middle" style={{ fontFamily: "'Manrope', monospace", fontSize: "6px", fill: "var(--text-muted)" }}>N</text>
         </svg>
       </div>
     </>
@@ -635,7 +635,7 @@ export default function HeroSection() {
             <h1
               aria-label="I used to design buildings. Now I design the spaces between."
               style={{
-                fontFamily: "'Playfair Display', Georgia, serif",
+                fontFamily: "'Manrope', Georgia, serif",
                 fontWeight: 700,
                 fontSize: "clamp(28px, 5vw, 62px)",
                 lineHeight: 1.12,
@@ -747,7 +747,7 @@ export default function HeroSection() {
                   : { duration: 0.18 },
               }}
               style={{
-                fontFamily: "'Inter', system-ui, sans-serif",
+                fontFamily: "'Manrope', system-ui, sans-serif",
                 fontSize: "clamp(17px, 1.65vw, 21px)",
                 color: "#6B6B6B",
                 lineHeight: 1.65,

@@ -1,6 +1,9 @@
 import { motion, AnimatePresence, useScroll, useSpring, useInView, useMotionValue, useTransform, animate } from "framer-motion";
 import { Link } from "react-router-dom";
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useLayoutEffect, useRef, useState } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+gsap.registerPlugin(ScrollTrigger);
 import {
   ArrowUpIcon as ArrowUp,
   QuotesIcon as Quotes,
@@ -11,14 +14,17 @@ import {
   TelevisionIcon as Television,
   DeviceTabletIcon as Tablet,
   MonitorIcon as Monitor,
-  WarningCircleIcon as WarningCircle,
   ClockCountdownIcon as ClockCountdown,
   FileTextIcon as FileText,
   EyeSlashIcon as EyeSlash,
+  MagnifyingGlassIcon as MagnifyingGlass,
 } from "@phosphor-icons/react";
 import type { Icon } from "@phosphor-icons/react";
 import { projects, type Project } from "../data/projects";
 import { ProjectHeroStage } from "../components/ProjectHeroStage";
+import { GradientBackground } from "../components/GradientBackground";
+import LiquidBackground from "../components/LiquidBackground";
+import { SectionHeader } from "../components/CaseSectionHeader";
 
 /* ── Veriflow palette, scoped to this page ──────────────────────── */
 const vf = {
@@ -35,17 +41,17 @@ const vf = {
 };
 
 const mono: React.CSSProperties = {
-  fontFamily: "'Space Mono', monospace",
+  fontFamily: "'Manrope', monospace",
   textTransform: "uppercase" as const,
   letterSpacing: "0.12em",
 };
-const serif = "'Playfair Display', Georgia, serif";
-const sans  = "'Inter', system-ui, sans-serif";
+const serif = "'Manrope', Georgia, serif";
+const sans  = "'Manrope', system-ui, sans-serif";
 const t = {
   h2Section: {
     fontFamily: serif, fontWeight: 700,
-    fontSize: "clamp(30px, 3.6vw, 44px)",
-    letterSpacing: "-0.025em", lineHeight: 1.2,
+    fontSize: "clamp(32px, 3.9vw, 48px)",
+    letterSpacing: "-0.025em", lineHeight: 1.18,
     color: "var(--text-primary)",
   } as React.CSSProperties,
   h3Lede: {
@@ -89,68 +95,6 @@ function Reveal({
     >
       {children}
     </motion.div>
-  );
-}
-
-function CountUp({ value, suffix = "", duration = 1.4 }: { value: number; suffix?: string; duration?: number }) {
-  const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-40px" });
-  const mv = useMotionValue(0);
-  const [display, setDisplay] = useState("0");
-  useEffect(() => {
-    if (!inView) return;
-    const controls = animate(mv, value, {
-      duration, ease: [0.25, 1, 0.4, 1],
-      onUpdate: (v) => setDisplay(Math.round(v).toString()),
-    });
-    return () => controls.stop();
-  }, [inView, value, duration, mv]);
-  return <span ref={ref}>{display}{suffix}</span>;
-}
-
-function SectionHeader({
-  num, title, phase, total = TOTAL_SECTIONS,
-}: { num: string; title: string; phase: string; total?: string }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-40px" });
-  return (
-    <div ref={ref} style={{ marginBottom: "clamp(40px, 5vw, 64px)" }}>
-      <div style={{
-        display: "flex", alignItems: "baseline", gap: 18, flexWrap: "wrap",
-        paddingBottom: 14,
-      }}>
-        <motion.span
-          initial={{ opacity: 0, y: 8 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.55, ease: [0.25, 1, 0.4, 1] }}
-          style={{ ...mono, fontSize: 14, color: vf.primary, letterSpacing: "0.22em", fontWeight: 700 }}
-        >
-          {num} <span style={{ color: "var(--text-muted)", fontWeight: 400 }}>/ {total}</span>
-        </motion.span>
-        <motion.span
-          initial={{ opacity: 0, y: 8 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.08, duration: 0.55, ease: [0.25, 1, 0.4, 1] }}
-          style={{ ...mono, fontSize: 14, color: "var(--text-primary)", letterSpacing: "0.22em", fontWeight: 600 }}
-        >
-          {phase}
-        </motion.span>
-        <motion.div
-          initial={{ scaleX: 0 }}
-          animate={inView ? { scaleX: 1 } : {}}
-          transition={{ delay: 0.15, duration: 0.9, ease: [0.25, 1, 0.4, 1] }}
-          style={{ flex: 1, height: 1, background: vf.primary, opacity: 0.55, transformOrigin: "left", minWidth: 40 }}
-        />
-      </div>
-      <motion.h2
-        initial={{ opacity: 0, y: 12 }}
-        animate={inView ? { opacity: 1, y: 0 } : {}}
-        transition={{ delay: 0.22, duration: 0.8, ease: [0.25, 1, 0.4, 1] }}
-        style={{ ...t.h2Section, marginTop: 20, maxWidth: 860 }}
-      >
-        {title}
-      </motion.h2>
-    </div>
   );
 }
 
@@ -319,7 +263,7 @@ function TVFrame({ src, alt }: { src: string; alt: string }) {
 ══════════════════════════════════════════════════════════════════ */
 type Step = { src: string; label: string; note: string };
 
-function TabletStepper({ steps, figPrefix }: { steps: Step[]; figPrefix: string }) {
+function TabletStepper({ steps }: { steps: Step[] }) {
   const [active, setActive] = useState(0);
   const current = steps[active];
 
@@ -343,8 +287,9 @@ function TabletStepper({ steps, figPrefix }: { steps: Step[]; figPrefix: string 
           display: "flex", alignItems: "center", justifyContent: "space-between",
           marginTop: 22, gap: 14, flexWrap: "wrap",
         }}>
-          <span style={{ ...mono, fontSize: 13, color: vf.primary, letterSpacing: "0.22em", fontWeight: 700 }}>
-            {figPrefix}.{String(active + 1).padStart(2, "0")} · {current.label}
+          <span style={{ ...mono, fontSize: 13, color: vf.primary, letterSpacing: "0.2em", fontWeight: 700, display: "inline-flex", alignItems: "baseline", gap: 12, flexWrap: "wrap" }}>
+            {current.label}
+            <span style={{ color: vf.muted, letterSpacing: "0.14em", fontWeight: 600 }}>{String(active + 1).padStart(2, "0")} / {String(steps.length).padStart(2, "0")}</span>
           </span>
           <div style={{ display: "flex", gap: 8 }}>
             <StepperBtn disabled={active === 0} onClick={() => setActive(Math.max(0, active - 1))} dir="prev" />
@@ -359,7 +304,7 @@ function TabletStepper({ steps, figPrefix }: { steps: Step[]; figPrefix: string 
           marginBottom: 22, display: "flex", alignItems: "center", gap: 10,
         }}>
           <span aria-hidden style={{ width: 3, height: 14, background: vf.primary, display: "inline-block" }} />
-          Walkthrough · {steps.length} steps
+          Tap by tap
         </div>
         <ol style={{ listStyle: "none", padding: 0, margin: 0 }}>
           {steps.map((s, i) => {
@@ -385,15 +330,15 @@ function TabletStepper({ steps, figPrefix }: { steps: Step[]; figPrefix: string 
                 >
                   <span style={{
                     ...mono, fontSize: 13, fontWeight: 700,
-                    color: isActive ? vf.primary : "var(--text-muted)",
+                    color: isActive ? vf.primary : "var(--text-secondary)",
                     letterSpacing: "0.18em", paddingTop: 3,
                   }}>
                     {String(i + 1).padStart(2, "0")}
                   </span>
                   <div style={{ minWidth: 0 }}>
                     <div style={{
-                      fontFamily: sans, fontSize: 18, fontWeight: isActive ? 600 : 500,
-                      color: isActive ? "var(--text-primary)" : "var(--text-secondary)",
+                      fontFamily: sans, fontSize: 19, fontWeight: isActive ? 600 : 500,
+                      color: "var(--text-primary)",
                       marginBottom: 6, transition: "color 200ms", lineHeight: 1.3,
                     }}>
                       {s.label}
@@ -407,7 +352,7 @@ function TabletStepper({ steps, figPrefix }: { steps: Step[]; figPrefix: string 
                           transition={{ duration: 0.28, ease: [0.25, 1, 0.4, 1] }}
                           style={{ overflow: "hidden" }}
                         >
-                          <p style={{ fontFamily: sans, fontSize: 16, color: "var(--text-secondary)", lineHeight: 1.6, paddingTop: 4 }}>
+                          <p style={{ fontFamily: sans, fontSize: 18, color: "var(--text-secondary)", lineHeight: 1.6, paddingTop: 4 }}>
                             {s.note}
                           </p>
                         </motion.div>
@@ -468,272 +413,106 @@ function StepperBtn({ disabled, onClick, dir }: { disabled: boolean; onClick: ()
    OVERRIDE TIMELINE: failure path - forensic log treatment
 ══════════════════════════════════════════════════════════════════ */
 function OverrideTimeline() {
-  const stages: {
-    src: string; badge: string; color: string; label: string; caption: string; actor: string;
-  }[] = [
-    { src: "/veriflow/validation-failed-rotate-cooler-message.png", badge: "T+0s",  color: vf.flag,    label: "Validation fails",  caption: "Plain-language retry. No blame, no jargon.", actor: "Courier · retries" },
-    { src: "/veriflow/after-30-seconds-give-override-button.png",   badge: "T+30s", color: vf.warn,    label: "Override appears",  caption: "Pause is forced. Second attempt earns the option.", actor: "System · waits" },
-    { src: "/veriflow/override-pin-authentication.png",             badge: "T+35s", color: vf.primary, label: "Supervisor PIN",    caption: "A named person accepts responsibility for the exit.", actor: "Supervisor · signs" },
-    { src: "/veriflow/override-confirmation.png",                   badge: "T+40s", color: vf.status,  label: "Cleared",           caption: "The cooler leaves. The override leaves a trail.", actor: "Audit log · written" },
+  const rootRef = useRef<HTMLDivElement>(null);
+  const stages: { src: string; badge: string; color: string; label: string; caption: string; actor: string }[] = [
+    { src: "/veriflow/validation-failed-rotate-cooler-message.png", badge: "T + 0s",  color: vf.flag,    label: "Validation fails",  caption: "Plain-language retry. No blame, no jargon.",             actor: "Courier retries" },
+    { src: "/veriflow/after-30-seconds-give-override-button.png",   badge: "T + 30s", color: vf.warn,    label: "Override appears",  caption: "The pause is forced. A second attempt earns the option.", actor: "System waits" },
+    { src: "/veriflow/override-pin-authentication.png",             badge: "T + 35s", color: vf.primary, label: "Supervisor PIN",    caption: "A named person accepts responsibility for the exit.",     actor: "Supervisor signs" },
+    { src: "/veriflow/override-confirmation.png",                   badge: "T + 40s", color: vf.status,  label: "Cleared",           caption: "The cooler leaves. The override leaves a trail.",         actor: "Audit log written" },
   ];
-  return (
-    <div style={{ position: "relative" }}>
-      {/* Top timeline rail with ticks */}
-      <div aria-hidden style={{
-        position: "relative", height: 44, marginBottom: 12,
-      }}>
-        <div style={{
-          position: "absolute", left: "6%", right: "6%", top: 22, height: 1,
-          background: `linear-gradient(90deg, ${vf.flag} 0%, ${vf.warn} 33%, ${vf.primary} 66%, ${vf.status} 100%)`,
-          opacity: 0.35,
-        }} />
-        <div className="timeline-ticks" style={{
-          position: "absolute", inset: 0,
-          display: "grid", gridTemplateColumns: `repeat(${stages.length}, minmax(0, 1fr))`,
-          gap: "clamp(14px, 1.8vw, 22px)",
-        }}>
-          {stages.map((s, i) => (
-            <div key={i} style={{
-              display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "flex-start",
-            }}>
-              <motion.span
-                initial={{ scale: 0 }}
-                whileInView={{ scale: 1 }}
-                viewport={{ once: true, margin: "-40px" }}
-                transition={{ delay: 0.1 * i + 0.2, duration: 0.5, ease: [0.25, 1, 0.4, 1] }}
-                style={{
-                  width: 14, height: 14, borderRadius: "50%",
-                  background: "#fff", border: `2px solid ${s.color}`,
-                  boxShadow: `0 0 0 4px ${s.color}14`,
-                  marginTop: 15,
-                }}
-              />
-            </div>
-          ))}
-        </div>
-      </div>
+  const gaps = ["30-second pause", "+5s", "+5s"];
 
-      <div className="timeline-grid" style={{
-        display: "grid",
-        gridTemplateColumns: `repeat(${stages.length}, minmax(0, 1fr))`,
-        gap: "clamp(14px, 1.8vw, 22px)",
-      }}>
+  useLayoutEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+    const ctx = gsap.context(() => {
+      const q = gsap.utils.selector(root);
+      const line = q(".ovr-line")[0] as HTMLElement;
+      const nodes = q(".ovr-node") as HTMLElement[];
+      const segs = q(".ovr-seg") as HTMLElement[];
+      const cols = q(".ovr-col") as HTMLElement[];
+      const dot = q(".ovr-pause-dot")[0] as HTMLElement;
+      const mm = gsap.matchMedia();
+
+      mm.add("(prefers-reduced-motion: reduce)", () => {
+        gsap.set(line, { scaleX: 1 });
+        gsap.set([nodes, segs, cols], { opacity: 1, y: 0, scale: 1 });
+      });
+      mm.add("(prefers-reduced-motion: no-preference)", () => {
+        gsap.set(line, { scaleX: 0, transformOrigin: "left center" });
+        gsap.set(nodes, { scale: 0, opacity: 0, transformOrigin: "50% 50%" });
+        gsap.set(segs, { opacity: 0, y: 4 });
+        gsap.set(cols, { opacity: 0, y: 24 });
+
+        const tl = gsap.timeline({ scrollTrigger: { trigger: root, start: "top 78%", once: true } });
+        tl.to(line, { scaleX: 1, duration: 0.9, ease: "power2.out" }, 0);
+        tl.to(nodes, { scale: 1, opacity: 1, duration: 0.4, stagger: 0.16, ease: "back.out(1.7)" }, 0.2);
+        tl.to(segs, { opacity: 1, y: 0, duration: 0.4, stagger: 0.16, ease: "power2.out" }, 0.3);
+        tl.to(cols, { opacity: 1, y: 0, duration: 0.65, stagger: 0.14, ease: "power2.out" }, 0.35);
+
+        if (dot) gsap.to(dot, { scale: 1.5, opacity: 0.4, duration: 1.3, yoyo: true, repeat: -1, ease: "sine.inOut", transformOrigin: "50% 50%" });
+      });
+    }, rootRef);
+    return () => ctx.revert();
+  }, []);
+
+  return (
+    <div ref={rootRef} className="ovr">
+      <div className="ovr-rail" aria-hidden>
+        <div className="ovr-line" />
         {stages.map((s, i) => (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-40px" }}
-            transition={{ delay: 0.08 * i, duration: 0.6, ease: [0.25, 1, 0.4, 1] }}
-            style={{
-              background: "var(--bg-elevated)",
-              border: `1px solid ${vf.subtle}`,
-              borderRadius: 8,
-              padding: "clamp(18px, 1.8vw, 26px)",
-              position: "relative",
-              overflow: "hidden",
-            }}
-          >
-            <span aria-hidden style={{
-              position: "absolute", top: 0, left: 0, right: 0, height: 3, background: s.color,
-            }} />
-            <div style={{
-              display: "flex", alignItems: "center", justifyContent: "space-between",
-              marginBottom: 16, gap: 10,
-            }}>
-              <span style={{
-                ...mono, fontSize: 13, color: s.color, letterSpacing: "0.18em", fontWeight: 700,
-                padding: "4px 10px", border: `1px solid ${s.color}`, borderRadius: 3,
-                background: `${s.color}12`,
-              }}>
-                {s.badge}
-              </span>
-              <span style={{
-                ...mono, fontSize: 11, color: vf.muted, letterSpacing: "0.22em", fontWeight: 700,
-              }}>
-                STAGE · 0{i + 1}
-              </span>
-            </div>
-
-            <TabletFrame src={s.src} alt={s.label} slim />
-
-            <div style={{ marginTop: 20 }}>
-              <div style={{
-                fontFamily: serif, fontWeight: 600,
-                fontSize: "clamp(22px, 2.1vw, 26px)",
-                letterSpacing: "-0.01em", lineHeight: 1.25,
-                color: "var(--text-primary)", marginBottom: 10,
-              }}>
-                {s.label}
-              </div>
-              <p style={{
-                fontFamily: sans, fontSize: 18, lineHeight: 1.6,
-                color: "var(--text-secondary)", margin: 0, marginBottom: 16,
-              }}>
-                {s.caption}
-              </p>
-              <div style={{
-                display: "flex", alignItems: "center", gap: 10,
-                paddingTop: 14, borderTop: `1px dashed ${vf.subtle}`,
-              }}>
-                <span aria-hidden style={{
-                  width: 7, height: 7, borderRadius: "50%", background: s.color, flexShrink: 0,
-                }} />
-                <span style={{
-                  ...mono, fontSize: 12, color: vf.muted, letterSpacing: "0.16em",
-                  textTransform: "uppercase", fontWeight: 600,
-                }}>
-                  {s.actor}
-                </span>
-              </div>
-            </div>
-          </motion.div>
+          <span key={i} className="ovr-node" style={{ left: `${12.5 + i * 25}%`, borderColor: s.color, boxShadow: `0 0 0 4px ${s.color}1f` }} />
         ))}
-        <style>{`
-          @media (max-width: 980px) {
-            .timeline-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
-            .timeline-ticks { display: none !important; }
-          }
-          @media (max-width: 560px) {
-            .timeline-grid { grid-template-columns: minmax(0, 1fr) !important; }
-          }
-        `}</style>
+        {gaps.map((g, i) => (
+          <span key={i} className={`ovr-seg${i === 0 ? " ovr-seg-pause" : ""}`} style={{ left: `${25 + i * 25}%` }}>
+            {i === 0 ? (
+              <>
+                <ClockCountdown size={15} color={vf.warn} weight="regular" />
+                {g}
+                <span className="ovr-pause-dot" style={{ background: vf.warn }} />
+              </>
+            ) : g}
+          </span>
+        ))}
       </div>
-    </div>
-  );
-}
 
-/* ══════════════════════════════════════════════════════════════════
-   BEFORE → AFTER BAND: wide editorial contrast
-══════════════════════════════════════════════════════════════════ */
-function BeforeAfterBand() {
-  const [hover, setHover] = useState<"before" | "after" | null>(null);
-  return (
-    <div style={{ marginTop: "clamp(40px, 5vw, 64px)" }}>
-      <div style={{ ...mono, fontSize: 13, color: vf.primary, letterSpacing: "0.22em", fontWeight: 700, marginBottom: 20, display: "flex", alignItems: "center", gap: 10 }}>
-        <span aria-hidden style={{ width: 3, height: 14, background: vf.primary, display: "inline-block" }} />
-        WHAT THIS REPLACED
+      <div className="ovr-grid">
+        {stages.map((s, i) => (
+          <div key={i} className="ovr-col">
+            <div className="ovr-badge" style={{ color: s.color }}>{s.badge}</div>
+            <div className="ovr-screen"><TabletMock src={s.src} alt={`${s.label}, ${s.badge}`} /></div>
+            <h4 className="ovr-title">{s.label}</h4>
+            <p className="ovr-caption">{s.caption}</p>
+            <div className="ovr-actor" style={{ color: s.color }}>
+              <span className="ovr-actor-dot" style={{ background: s.color }} />{s.actor}
+            </div>
+          </div>
+        ))}
       </div>
-      <div className="ba-band" style={{
-        display: "grid",
-        gridTemplateColumns: "1fr auto 1fr",
-        alignItems: "stretch",
-        gap: 0,
-        border: `1px solid ${vf.subtle}`,
-        borderRadius: 8,
-        background: "var(--bg-elevated)",
-        overflow: "hidden",
-      }}>
-        {/* BEFORE */}
-        <motion.div
-          onHoverStart={() => setHover("before")}
-          onHoverEnd={() => setHover(null)}
-          style={{
-            padding: "clamp(28px, 3.2vw, 44px)",
-            position: "relative",
-            background: hover === "before" ? `${vf.flag}08` : "transparent",
-            transition: "background 300ms",
-          }}
-        >
-          <span aria-hidden style={{
-            position: "absolute", top: 0, left: 0, bottom: 0, width: 3, background: vf.flag,
-            transform: hover === "before" ? "scaleY(1)" : "scaleY(0.25)",
-            transformOrigin: "top", transition: "transform 400ms ease-out",
-          }} />
-          <div style={{
-            ...mono, fontSize: 12, color: vf.flag, letterSpacing: "0.22em", fontWeight: 700,
-            marginBottom: 14, display: "flex", alignItems: "center", gap: 8,
-          }}>
-            <span style={{
-              width: 7, height: 7, borderRadius: "50%", background: vf.flag,
-              animation: hover === "before" ? "status-pulse 1.8s ease-in-out infinite" : "none",
-            }} />
-            BEFORE
-          </div>
-          <div style={{
-            fontFamily: serif, fontWeight: 700,
-            fontSize: "clamp(26px, 2.8vw, 34px)",
-            letterSpacing: "-0.02em", lineHeight: 1.2,
-            color: "var(--text-primary)", marginBottom: 12,
-          }}>
-            A guessed journey.
-          </div>
-          <p style={{
-            fontFamily: sans, fontSize: 18, lineHeight: 1.65,
-            color: "var(--text-secondary)", margin: 0,
-          }}>
-            Clipboards, phone calls, last-mile uncertainty. The cooler left at 9am and you hoped it arrived.
-          </p>
-        </motion.div>
 
-        {/* DIVIDER with arrow */}
-        <div className="ba-divider" style={{
-          display: "flex", alignItems: "center", justifyContent: "center",
-          padding: "clamp(20px, 2.4vw, 32px) 0",
-          borderLeft: `1px solid ${vf.subtle}`,
-          borderRight: `1px solid ${vf.subtle}`,
-          background: "var(--bg-primary)",
-          minWidth: 72,
-        }}>
-          <motion.div
-            animate={{ x: hover ? 4 : 0 }}
-            transition={{ duration: 0.35, ease: [0.25, 1, 0.4, 1] }}
-            style={{
-              width: 44, height: 44, borderRadius: "50%",
-              background: vf.primary, display: "flex", alignItems: "center", justifyContent: "center",
-              boxShadow: `0 4px 14px ${vf.primary}40`,
-            }}
-          >
-            <ArrowRight size={20} color="#fff" weight="bold" />
-          </motion.div>
-        </div>
-
-        {/* AFTER */}
-        <motion.div
-          onHoverStart={() => setHover("after")}
-          onHoverEnd={() => setHover(null)}
-          style={{
-            padding: "clamp(28px, 3.2vw, 44px)",
-            position: "relative",
-            background: hover === "after" ? `${vf.status}08` : "transparent",
-            transition: "background 300ms",
-          }}
-        >
-          <span aria-hidden style={{
-            position: "absolute", top: 0, right: 0, bottom: 0, width: 3, background: vf.status,
-            transform: hover === "after" ? "scaleY(1)" : "scaleY(0.25)",
-            transformOrigin: "top", transition: "transform 400ms ease-out",
-          }} />
-          <div style={{
-            ...mono, fontSize: 12, color: vf.status, letterSpacing: "0.22em", fontWeight: 700,
-            marginBottom: 14, display: "flex", alignItems: "center", gap: 8,
-          }}>
-            <span style={{
-              width: 7, height: 7, borderRadius: "50%", background: vf.status,
-              animation: hover === "after" ? "status-pulse 1.8s ease-in-out infinite" : "none",
-            }} />
-            AFTER
-          </div>
-          <div style={{
-            fontFamily: serif, fontWeight: 700,
-            fontSize: "clamp(26px, 2.8vw, 34px)",
-            letterSpacing: "-0.02em", lineHeight: 1.2,
-            color: "var(--text-primary)", marginBottom: 12,
-          }}>
-            A recorded trip.
-          </div>
-          <p style={{
-            fontFamily: sans, fontSize: 18, lineHeight: 1.65,
-            color: "var(--text-secondary)", margin: 0,
-          }}>
-            Every handoff signed. Every sample watchable in real time. Every override an audit event.
-          </p>
-        </motion.div>
-      </div>
       <style>{`
-        @media (max-width: 760px) {
-          .ba-band { grid-template-columns: minmax(0, 1fr) !important; }
-          .ba-divider { border-left: none !important; border-right: none !important; border-top: 1px solid ${vf.subtle}; border-bottom: 1px solid ${vf.subtle}; }
+        .ovr { position: relative; }
+        .ovr-rail { position: relative; height: 46px; margin-bottom: clamp(8px, 1.2vw, 16px); }
+        .ovr-line { position: absolute; left: 12.5%; right: 12.5%; top: 30px; height: 2px; margin-top: -1px; border-radius: 2px;
+          background: linear-gradient(90deg, ${vf.flag} 0%, ${vf.warn} 34%, ${vf.primary} 67%, ${vf.status} 100%); opacity: 0.45; }
+        .ovr-node { position: absolute; top: 30px; width: 14px; height: 14px; margin-top: -7px; margin-left: -7px; border-radius: 50%; background: var(--bg-elevated); border: 2px solid; }
+        .ovr-seg { position: absolute; top: 0; transform: translateX(-50%); font-family: 'Manrope', monospace; text-transform: uppercase; font-size: 11px; letter-spacing: 0.14em; font-weight: 700; color: var(--text-muted); white-space: nowrap; }
+        .ovr-seg-pause { font-size: 12px; color: ${vf.warn}; letter-spacing: 0.12em; display: inline-flex; align-items: center; gap: 6px; }
+        .ovr-pause-dot { width: 5px; height: 5px; border-radius: 50%; display: inline-block; }
+        .ovr-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(18px, 2.4vw, 34px); }
+        .ovr-col { display: flex; flex-direction: column; outline: none; }
+        .ovr-badge { font-family: 'Manrope', monospace; text-transform: uppercase; font-size: 14px; letter-spacing: 0.14em; font-weight: 700; margin-bottom: clamp(12px, 1.4vw, 16px); }
+        .ovr-screen { margin-bottom: clamp(24px, 2.8vw, 34px); }
+        .ovr-title { font-family: ${serif}; font-weight: 700; font-size: clamp(22px, 2.1vw, 27px); letter-spacing: -0.015em; line-height: 1.2; color: var(--text-primary); margin: 0 0 15px; }
+        .ovr-caption { font-family: ${sans}; font-size: 18px; line-height: 1.6; color: var(--text-secondary); margin: 0 0 24px; }
+        .ovr-actor { margin-top: auto; font-family: 'Manrope', monospace; text-transform: uppercase; font-size: 12px; letter-spacing: 0.14em; font-weight: 700; display: inline-flex; align-items: center; gap: 8px; }
+        .ovr-actor-dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+        @media (max-width: 980px) {
+          .ovr-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(28px, 5vw, 40px); }
+          .ovr-rail { display: none; }
+        }
+        @media (max-width: 540px) {
+          .ovr-grid { grid-template-columns: 1fr; max-width: 400px; margin: 0 auto; }
         }
       `}</style>
     </div>
@@ -741,213 +520,127 @@ function BeforeAfterBand() {
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   ROLE ROW: interactive list row
-══════════════════════════════════════════════════════════════════ */
-function RoleRow({ index, line }: { index: number; line: string }) {
-  const [hovered, setHovered] = useState(false);
-  return (
-    <li
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={{
-        display: "grid",
-        gridTemplateColumns: "auto 1fr",
-        gap: 20,
-        alignItems: "center",
-        padding: "20px 18px 20px 0",
-        borderBottom: `1px solid var(--border-light)`,
-        position: "relative",
-        cursor: "default",
-        transition: "padding-left 300ms ease-out",
-        paddingLeft: hovered ? 16 : 0,
-      }}
-    >
-      <span aria-hidden style={{
-        position: "absolute", left: 0, top: "50%", transform: "translateY(-50%)",
-        width: 3, height: hovered ? "70%" : "0%", background: vf.primary,
-        transition: "height 320ms ease-out",
-      }} />
-      <span style={{
-        ...mono, fontSize: 13, fontWeight: 700,
-        color: hovered ? vf.primary : "var(--text-muted)",
-        letterSpacing: "0.18em", width: 32, flexShrink: 0,
-        transition: "color 240ms",
-      }}>
-        {String(index + 1).padStart(2, "0")}
-      </span>
-      <span style={{
-        fontFamily: sans, fontSize: 18,
-        color: hovered ? "var(--text-primary)" : "var(--text-secondary)",
-        lineHeight: 1.55, fontWeight: hovered ? 500 : 400,
-        transition: "color 240ms, font-weight 240ms",
-      }}>
-        {line}
-      </span>
-    </li>
-  );
-}
-
-/* ══════════════════════════════════════════════════════════════════
-   LESSON CARD: hover-expand takeaway
-══════════════════════════════════════════════════════════════════ */
-function LessonCard({ index, title, body, tag }: { index: number; title: string; body: string; tag: string }) {
-  const [hovered, setHovered] = useState(false);
-  return (
-    <motion.div
-      onHoverStart={() => setHovered(true)}
-      onHoverEnd={() => setHovered(false)}
-      style={{
-        position: "relative",
-        padding: "clamp(20px, 2.4vw, 28px)",
-        background: "var(--bg-elevated)",
-        border: `1px solid ${hovered ? vf.primary : vf.subtle}`,
-        borderRadius: 6,
-        cursor: "default",
-        transition: "border-color 240ms",
-        overflow: "hidden",
-      }}
-      animate={{ y: hovered ? -3 : 0 }}
-      transition={{ duration: 0.35, ease: [0.25, 1, 0.4, 1] }}
-    >
-      <span aria-hidden style={{
-        position: "absolute", top: 0, left: 0, bottom: 0, width: 3, background: vf.primary,
-        transform: hovered ? "scaleY(1)" : "scaleY(0)",
-        transformOrigin: "center", transition: "transform 380ms ease-out",
-      }} />
-      <div style={{
-        display: "flex", alignItems: "baseline", justifyContent: "space-between",
-        marginBottom: 14, gap: 12,
-      }}>
-        <span style={{
-          ...mono, fontSize: 13, fontWeight: 700,
-          color: vf.primary, letterSpacing: "0.18em",
-        }}>
-          L.0{index + 1}
-        </span>
-        <motion.span
-          animate={{ opacity: hovered ? 1 : 0, x: hovered ? 0 : 6 }}
-          transition={{ duration: 0.3 }}
-          style={{
-            ...mono, fontSize: 11, fontWeight: 700,
-            color: vf.muted, letterSpacing: "0.22em",
-          }}
-        >
-          {tag}
-        </motion.span>
-      </div>
-      <div style={{
-        fontFamily: serif, fontWeight: 700,
-        fontSize: "clamp(20px, 2vw, 24px)",
-        letterSpacing: "-0.01em", lineHeight: 1.25,
-        color: "var(--text-primary)", marginBottom: 10,
-      }}>
-        {title}
-      </div>
-      <p style={{
-        fontFamily: sans, fontSize: 18, lineHeight: 1.75,
-        color: "var(--text-secondary)", margin: 0,
-      }}>
-        {body}
-      </p>
-    </motion.div>
-  );
-}
-
-/* ══════════════════════════════════════════════════════════════════
    SYSTEM DIAGRAM: three surfaces with preview thumbnails
 ══════════════════════════════════════════════════════════════════ */
-function SystemDiagram() {
-  const [hover, setHover] = useState<number | null>(null);
-  const nodes: { label: string; role: string; Icon: Icon; qty: string; preview: string }[] = [
-    { label: "Tablet",     role: "The action. PIN, scan, verify, exit.",                  Icon: Tablet,     qty: "kiosk · 10\"",    preview: "/veriflow/start-scanning.png" },
-    { label: "Web",        role: "The memory. Dashboards, registry, per-sample journey.", Icon: Monitor,    qty: "control tower",   preview: "/veriflow/dashboard.png" },
-    { label: "Ambient TV", role: "The state. Glance, don't click.",                       Icon: Television, qty: "wall mount",      preview: "/veriflow/tv-dashboard-1.png" },
-  ];
+/* Thin, purpose-built device mockups for the System diagram. */
+function TabletMock({ src, alt }: { src: string; alt: string }) {
   return (
-    <div style={{
-      padding: "clamp(28px, 4vw, 44px)",
-      background: "var(--bg-elevated)",
-      border: `1px solid ${vf.subtle}`,
-      borderRadius: 8, position: "relative",
-    }}>
-      <div style={{
-        ...mono, fontSize: 13, color: vf.primary, letterSpacing: "0.22em", fontWeight: 700,
-        marginBottom: 32, display: "flex", alignItems: "center", gap: 10,
-      }}>
-        <span aria-hidden style={{ width: 3, height: 14, background: vf.primary }} />
-        FIG. 03 · THREE SURFACES, ONE CHAIN
+    <div style={{ width: "100%", background: "#15171c", borderRadius: "clamp(13px, 1.5vw, 19px)", padding: "clamp(5px, 0.55vw, 7px)", boxShadow: "0 1px 2px rgba(0,0,0,0.06), 0 22px 46px -18px rgba(15,42,120,0.30)", position: "relative" }}>
+      <span aria-hidden style={{ position: "absolute", top: "50%", right: 4, transform: "translateY(-50%)", width: 3, height: 3, borderRadius: "50%", background: "#41454e" }} />
+      <div style={{ aspectRatio: "16 / 10", borderRadius: "clamp(9px, 1vw, 13px)", overflow: "hidden", background: "#000" }}>
+        <img src={src} alt={alt} loading="lazy" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top center", display: "block" }} />
       </div>
-      <div style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(340px, 1fr))",
-        gap: "clamp(20px, 2.2vw, 28px)",
-      }}>
-        {nodes.map((n, i) => {
-          const pad = "clamp(22px, 2.2vw, 30px)";
-          return (
-          <motion.div
-            key={n.label}
-            onHoverStart={() => setHover(i)}
-            onHoverEnd={() => setHover(null)}
-            style={{
-              background: "#fff",
-              border: `1px solid ${hover === i ? vf.primary : vf.subtle}`, borderRadius: 6,
-              position: "relative",
-              transition: "border-color 240ms, transform 240ms",
-              transform: hover === i ? "translateY(-4px)" : "translateY(0)",
-              cursor: "default",
-              overflow: "hidden",
-            }}
-          >
-            <div style={{ padding: pad, paddingBottom: 0 }}>
-              <div style={{
-                position: "absolute", top: 14, right: 16,
-                ...mono, fontSize: 11, color: vf.muted, letterSpacing: "0.14em",
-              }}>
-                S.0{i + 1}
-              </div>
-              <div style={{
-                width: 52, height: 52, borderRadius: 6,
-                background: vf.subtle, display: "flex", alignItems: "center", justifyContent: "center",
-                marginBottom: 18,
-              }}>
-                <n.Icon size={26} color={vf.primary} weight="regular" />
-              </div>
-              <div style={{
-                fontFamily: serif, fontWeight: 600, fontSize: "clamp(22px, 2.2vw, 28px)",
-                color: "var(--text-primary)", marginBottom: 6, lineHeight: 1.2,
-              }}>
-                {n.label}
-              </div>
-              <div style={{
-                fontFamily: sans, fontSize: 18, color: "var(--text-secondary)", lineHeight: 1.75,
-                marginBottom: 16,
-              }}>
-                {n.role}
-              </div>
-              <div style={{
-                ...mono, fontSize: 12, color: vf.primary, letterSpacing: "0.18em", fontWeight: 700,
-                marginBottom: 20,
-              }}>
-                {n.qty}
+    </div>
+  );
+}
+
+function LaptopMock({ src, alt }: { src: string; alt: string }) {
+  return (
+    <div style={{ width: "100%" }}>
+      <div style={{ background: "#15171c", borderRadius: "9px 9px 4px 4px", padding: "clamp(5px, 0.55vw, 7px)", boxShadow: "0 1px 2px rgba(0,0,0,0.06), 0 22px 46px -18px rgba(15,42,120,0.28)" }}>
+        <div style={{ aspectRatio: "16 / 10", borderRadius: 4, overflow: "hidden", background: "#000" }}>
+          <img src={src} alt={alt} loading="lazy" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top center", display: "block" }} />
+        </div>
+      </div>
+      <div aria-hidden style={{ position: "relative", height: "clamp(9px, 1.1vw, 13px)", margin: "0 -6.5%", background: "linear-gradient(180deg, #2b2e35 0%, #16181d 75%)", borderRadius: "0 0 12px 12px", boxShadow: "0 10px 20px -8px rgba(0,0,0,0.22)" }}>
+        <span style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: "rgba(0,0,0,0.28)" }} />
+        <span style={{ position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)", width: "18%", height: 5, background: "#0e0f13", borderRadius: "0 0 6px 6px" }} />
+      </div>
+    </div>
+  );
+}
+
+function TVMock({ src, alt }: { src: string; alt: string }) {
+  return (
+    <div style={{ width: "100%" }}>
+      <div style={{ background: "#0e1015", borderRadius: 9, padding: "clamp(4px, 0.5vw, 6px)", paddingBottom: "clamp(13px, 1.5vw, 19px)", boxShadow: "0 1px 2px rgba(0,0,0,0.08), 0 30px 66px -22px rgba(15,42,120,0.32)", position: "relative" }}>
+        <div style={{ aspectRatio: "16 / 9", borderRadius: 3, overflow: "hidden", background: "#000" }}>
+          <img src={src} alt={alt} loading="lazy" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top center", display: "block" }} />
+        </div>
+        <span aria-hidden style={{ position: "absolute", bottom: "clamp(4px, 0.5vw, 7px)", left: "50%", transform: "translateX(-50%)", width: 6, height: 6, borderRadius: "50%", background: vf.light, boxShadow: `0 0 7px ${vf.light}` }} />
+      </div>
+      <div aria-hidden style={{ width: "17%", height: "clamp(7px, 0.9vw, 11px)", margin: "0 auto", background: "linear-gradient(180deg, #191c22 0%, #0e1015 100%)", borderRadius: "0 0 3px 3px" }} />
+      <div aria-hidden style={{ width: "40%", height: "clamp(4px, 0.5vw, 6px)", margin: "0 auto", background: "#14161b", borderRadius: 4 }} />
+    </div>
+  );
+}
+
+function SystemDiagram() {
+  const rootRef = useRef<HTMLDivElement>(null);
+  const [hover, setHover] = useState<number | null>(null);
+  const surfaces: { role: string; name: string; desc: string; tag: string; Mock: (p: { src: string; alt: string }) => JSX.Element; src: string }[] = [
+    { role: "Action", name: "Tablet",     desc: "PIN, scan, verify, exit. The clinic's kiosk.",      tag: "Kiosk · 10\"",  Mock: TabletMock,  src: "/veriflow/sample-association-4.png" },
+    { role: "Memory", name: "Web",        desc: "Dashboards, registry, and every sample's journey.", tag: "Control tower", Mock: LaptopMock,  src: "/veriflow/dashboard.png" },
+    { role: "State",  name: "Ambient TV", desc: "The live state of the lab. Glance, don't click.",   tag: "Lab · 55\"",    Mock: TVMock,      src: "/veriflow/tv-dashboard-1.png" },
+  ];
+
+  useLayoutEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+    const ctx = gsap.context(() => {
+      const q = gsap.utils.selector(root);
+      const devs = q(".vf-surf-dev") as HTMLElement[];
+      const metas = q(".vf-surf-meta") as HTMLElement[];
+      const mm = gsap.matchMedia();
+      mm.add("(prefers-reduced-motion: reduce)", () => {
+        gsap.set([...devs, ...metas], { opacity: 1, y: 0 });
+      });
+      mm.add("(prefers-reduced-motion: no-preference)", () => {
+        gsap.set([...devs, ...metas], { opacity: 0, y: 30 });
+        const tl = gsap.timeline({ scrollTrigger: { trigger: root, start: "top 78%", once: true } });
+        tl.to(devs, { opacity: 1, y: 0, duration: 0.75, stagger: 0.16, ease: "power2.out" }, 0);
+        tl.to(metas, { opacity: 1, y: 0, duration: 0.65, stagger: 0.16, ease: "power2.out" }, 0.14);
+      });
+    }, rootRef);
+    return () => ctx.revert();
+  }, []);
+
+  return (
+    <div ref={rootRef} className="vf-surfaces">
+      <div className="vf-surf-grid">
+        {surfaces.map((s, i) => (
+          <Fragment key={s.name}>
+            <div
+              className="vf-surf-dev" style={{ gridColumn: i + 1, gridRow: 1, alignSelf: "end" }}
+              tabIndex={0}
+              onMouseEnter={() => setHover(i)} onMouseLeave={() => setHover(null)}
+              onFocus={() => setHover(i)} onBlur={() => setHover(null)}
+            >
+              <div className="vf-surf-glow" aria-hidden style={{ opacity: hover === i ? 0.42 : 0 }} />
+              <div className="vf-surf-device" style={{ transform: hover === i ? "translateY(-9px)" : "none" }}>
+                <s.Mock src={s.src} alt={`${s.name}, ${s.role}`} />
               </div>
             </div>
-            <div style={{
-              aspectRatio: "16/10",
-              overflow: "hidden",
-              borderTop: `1px solid ${vf.subtle}`,
-              background: "#FAFAFA",
-            }}>
-              <img src={n.preview} alt="" style={{
-                width: "100%", height: "100%", objectFit: "cover",
-                transform: hover === i ? "scale(1.04)" : "scale(1)",
-                transition: "transform 500ms ease-out",
-              }} />
+            <div
+              className="vf-surf-meta" style={{ gridColumn: i + 1, gridRow: 2, alignSelf: "start" }}
+              onMouseEnter={() => setHover(i)} onMouseLeave={() => setHover(null)}
+            >
+              <div className="vf-surf-role">{"0" + (i + 1)} · {s.role}</div>
+              <h3 className="vf-surf-name" style={{ color: hover === i ? vf.primary : "var(--text-primary)" }}>{s.name}</h3>
+              <p className="vf-surf-desc">{s.desc}</p>
+              <div className="vf-surf-tag">{s.tag}</div>
             </div>
-          </motion.div>
-          );
-        })}
+          </Fragment>
+        ))}
       </div>
+
+      <style>{`
+        .vf-surfaces { position: relative; }
+        .vf-surf-grid { display: grid; grid-template-columns: 0.8fr 1fr 1.22fr; column-gap: clamp(24px, 3.6vw, 56px); row-gap: clamp(20px, 2.4vw, 30px); }
+        .vf-surf-dev { position: relative; display: flex; align-items: flex-end; justify-content: center; outline: none; }
+        .vf-surf-glow { position: absolute; left: -8%; right: -8%; top: 2%; bottom: -8%; z-index: 0; pointer-events: none; background: radial-gradient(55% 55% at 50% 60%, ${vf.light} 0%, ${vf.primary} 42%, rgba(30,64,175,0) 74%); filter: blur(40px); transition: opacity 420ms ease; }
+        .vf-surf-device { position: relative; z-index: 1; width: 100%; transition: transform 420ms cubic-bezier(0.25,1,0.4,1); }
+        .vf-surf-role { font-family: 'Manrope', monospace; text-transform: uppercase; font-size: 14px; color: ${vf.primary}; letter-spacing: 0.2em; font-weight: 700; margin-bottom: 13px; }
+        .vf-surf-name { font-family: ${serif}; font-weight: 700; font-size: clamp(25px, 2.5vw, 32px); letter-spacing: -0.02em; line-height: 1.15; margin: 0 0 11px; transition: color 240ms; }
+        .vf-surf-desc { font-family: ${sans}; font-size: 18px; line-height: 1.6; color: var(--text-secondary); margin: 0 0 15px; }
+        .vf-surf-tag { font-family: 'Manrope', monospace; text-transform: uppercase; font-size: 12.5px; color: var(--text-secondary); letter-spacing: 0.16em; font-weight: 700; }
+        @media (max-width: 860px) {
+          .vf-surf-grid { grid-template-columns: 1fr; max-width: 440px; margin: 0 auto; row-gap: 10px; }
+          .vf-surf-grid > * { grid-column: 1 !important; grid-row: auto !important; align-self: auto !important; }
+          .vf-surf-dev { margin-bottom: 22px; }
+          .vf-surf-meta { margin-bottom: 40px; }
+        }
+      `}</style>
     </div>
   );
 }
@@ -956,9 +649,9 @@ function SystemDiagram() {
    LAPTOP SPREAD: full-width laptop + alternating text column
 ══════════════════════════════════════════════════════════════════ */
 function LaptopSpread({
-  fig, title, body, src, kicker, reverse = false,
+  title, body, src, kicker, reverse = false,
 }: {
-  fig: string; title: string; body: string; src: string; kicker: string; reverse?: boolean;
+  title: string; body: string; src: string; kicker: string; reverse?: boolean;
 }) {
   return (
     <div className="laptop-spread" style={{
@@ -980,7 +673,7 @@ function LaptopSpread({
       </div>
       <div style={{ direction: "ltr" }}>
         <div style={{ ...mono, fontSize: 13, color: vf.primary, letterSpacing: "0.22em", fontWeight: 700, marginBottom: 12 }}>
-          {fig} · {kicker}
+          {kicker}
         </div>
         <h3 style={{
           fontFamily: serif, fontWeight: 700, fontSize: "clamp(26px, 2.8vw, 34px)",
@@ -1006,309 +699,354 @@ function LaptopSpread({
 /* ══════════════════════════════════════════════════════════════════
    PRINCIPLE CARD
 ══════════════════════════════════════════════════════════════════ */
-function PrincipleCard({
-  num, title, description, IconComp,
-}: {
-  num: string; title: string; description: string; IconComp: Icon;
-}) {
-  const [hovered, setHovered] = useState(false);
+/* ══════════════════════════════════════════════════════════════════
+   STAT RULER: three problem metrics measured out by a swept caliper
+══════════════════════════════════════════════════════════════════ */
+function StatRuler() {
+  const rootRef = useRef<HTMLDivElement>(null);
+  const stations = [
+    { n: 5,  suffix: "",  label: "Hands per sample", sub: "between patient draw and pathologist screen." },
+    { n: 40, suffix: "m", label: "Delay",            sub: "before anyone even notices a cooler is late." },
+    { n: 3,  suffix: "",  label: "Custody zones",    sub: "clinic, transit, lab." },
+  ];
+
+  useLayoutEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+    const ctx = gsap.context(() => {
+      const q = gsap.utils.selector(root);
+      const nums    = q(".vf-rl-num") as HTMLElement[];
+      const majors  = q(".vf-rl-major") as HTMLElement[];
+      const labels  = q(".vf-rl-label") as HTMLElement[];
+      const caliper = q(".vf-rl-caliper")[0] as HTMLElement;
+      const axis    = q(".vf-rl-axisline")[0] as HTMLElement;
+      const baseline = q(".vf-rl-base")[0] as HTMLElement;
+      const mission = q(".vf-rl-mission")[0] as HTMLElement;
+      const offsets = [1 / 6, 1 / 2, 5 / 6];
+      const counters = stations.map(() => ({ v: 0 }));
+      const setNum = (i: number, v: number) => { if (nums[i]) nums[i].textContent = String(Math.round(v)) + stations[i].suffix; };
+
+      const mm = gsap.matchMedia();
+
+      mm.add("(prefers-reduced-motion: reduce)", () => {
+        stations.forEach((s, i) => setNum(i, s.n));
+        gsap.set(majors, { scaleY: 1, backgroundColor: vf.primary });
+        gsap.set(labels, { color: vf.primary });
+        gsap.set(baseline, { scaleX: 1 });
+        gsap.set(caliper, { left: "100%", x: -14, opacity: 1 });
+        gsap.set(mission, { opacity: 1, y: 0 });
+      });
+
+      mm.add("(prefers-reduced-motion: no-preference)", () => {
+        gsap.set(baseline, { scaleX: 0, transformOrigin: "left center" });
+        gsap.set(majors, { scaleY: 0.35, backgroundColor: vf.muted, transformOrigin: "50% 100%" });
+        gsap.set(labels, { color: "var(--text-secondary)" });
+        gsap.set(caliper, { x: 0, opacity: 1 });
+        gsap.set(mission, { opacity: 0, y: 14 });
+        stations.forEach((_, i) => setNum(i, 0));
+
+        gsap.to(baseline, {
+          scaleX: 1, duration: 0.9, ease: "power2.out",
+          scrollTrigger: { trigger: root, start: "top 80%", once: true },
+        });
+
+        const tl = gsap.timeline({
+          scrollTrigger: { trigger: root, start: "top 74%", end: "top 34%", scrub: 0.6, invalidateOnRefresh: true },
+        });
+        tl.fromTo(caliper, { x: 0 }, {
+          x: () => Math.max(0, axis.clientWidth - caliper.offsetWidth),
+          ease: "none", duration: 1,
+        }, 0);
+        stations.forEach((s, i) => {
+          const off = offsets[i];
+          tl.to(counters[i], { v: s.n, duration: 0.14, ease: "none", onUpdate: () => setNum(i, counters[i].v) }, Math.max(0, off - 0.05));
+          tl.to(majors[i], { scaleY: 1, backgroundColor: vf.primary, duration: 0.12, ease: "power2.out" }, off);
+          tl.to(labels[i], { color: vf.primary, duration: 0.12 }, off);
+        });
+        tl.to(mission, { opacity: 1, y: 0, duration: 0.16, ease: "power3.out" }, 0.9);
+      });
+    }, rootRef);
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <div
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={{
-        padding: "clamp(24px, 3vw, 32px)",
-        background: "var(--bg-elevated)",
-        border: `1px solid ${hovered ? vf.primary : vf.subtle}`, borderRadius: 6,
-        position: "relative", height: "100%",
-        transform: hovered ? "translateY(-4px)" : "translateY(0)",
-        transition: "border-color 240ms, transform 240ms",
-        cursor: "default",
-      }}
-    >
-      <span aria-hidden style={{
-        position: "absolute", top: 0, left: 0, right: 0, height: 2,
-        background: vf.primary,
-        transform: hovered ? "scaleX(1)" : "scaleX(0)",
-        transformOrigin: "left",
-        transition: "transform 320ms ease-out",
-      }} />
-      <div style={{
-        position: "absolute", top: 16, right: 18,
-        ...mono, fontSize: 12, color: vf.muted, letterSpacing: "0.16em",
-      }}>
-        {num}
+    <div ref={rootRef} className="vf-ruler">
+      <div style={{ ...mono, fontSize: 13, color: vf.primary, letterSpacing: "0.2em", fontWeight: 700, marginBottom: "clamp(28px, 3.5vw, 44px)" }}>
+        The old handoff, measured
       </div>
-      <div style={{
-        width: 48, height: 48, borderRadius: 6,
-        background: hovered ? vf.primary : vf.subtle,
-        display: "flex", alignItems: "center", justifyContent: "center",
-        marginBottom: 22, transition: "background 240ms",
-      }}>
-        <IconComp size={24} color={hovered ? "#fff" : vf.primary} weight="regular" />
+
+      <div className="vf-rl-stations">
+        {stations.map((s) => (
+          <div key={s.label} className="vf-rl-station" tabIndex={0}>
+            <div className="vf-rl-num">{s.n}{s.suffix}</div>
+            <div className="vf-rl-label" style={{ ...mono, fontSize: 14, letterSpacing: "0.18em", fontWeight: 700 }}>{s.label}</div>
+            <div className="vf-rl-brk" aria-hidden />
+            <p className="vf-rl-sub">{s.sub}</p>
+          </div>
+        ))}
       </div>
-      <div style={{
-        fontFamily: serif, fontWeight: 600, fontSize: "clamp(20px, 1.9vw, 24px)",
-        color: "var(--text-primary)", marginBottom: 12, letterSpacing: "-0.01em", lineHeight: 1.25,
-      }}>
-        {title}
+
+      <div className="vf-rl-axisline" aria-hidden>
+        <div className="vf-rl-base" />
+        {stations.map((s, i) => (
+          <span key={s.label} className="vf-rl-major-wrap" style={{ left: `${((2 * i + 1) / 6) * 100}%` }}>
+            <span className="vf-rl-major" />
+          </span>
+        ))}
+        <div className="vf-rl-caliper"><span className="vf-rl-caliper-head" /></div>
       </div>
-      <div style={{
-        fontFamily: sans, fontSize: 18, color: "var(--text-secondary)", lineHeight: 1.75,
-      }}>
-        {description}
+
+      <div className="vf-rl-mission">
+        <span className="vf-rl-mission-rule" aria-hidden />
+        <p>Veriflow replaces the clipboard with a <em>verified tap</em> at every handoff.</p>
       </div>
+
+      <style>{`
+        .vf-ruler { margin-top: clamp(40px, 5vw, 64px); }
+        .vf-rl-stations { display: grid; grid-template-columns: repeat(3, 1fr); }
+        .vf-rl-station { text-align: center; padding: 0 clamp(10px, 2vw, 28px); position: relative; outline: none; }
+        .vf-rl-station:focus-visible { outline: 2px solid ${vf.primary}; outline-offset: 6px; border-radius: 2px; }
+        .vf-rl-num { font-family: ${serif}; font-weight: 700; font-size: clamp(52px, 7vw, 92px); color: ${vf.ink}; letter-spacing: -0.045em; line-height: 0.9; font-variant-numeric: tabular-nums; }
+        .vf-rl-label { margin-top: 14px; color: var(--text-secondary); transition: color 240ms; }
+        .vf-rl-brk { height: 2px; width: 0; margin: 12px auto 0; background: ${vf.primary}; transition: width 360ms cubic-bezier(0.25,1,0.4,1); }
+        .vf-rl-station:hover .vf-rl-brk, .vf-rl-station:focus-visible .vf-rl-brk { width: 44px; }
+        .vf-rl-sub { font-family: ${sans}; font-size: 17px; line-height: 1.55; color: var(--text-secondary); margin: 12px auto 0; max-width: 260px; opacity: 0; transform: translateY(6px); transition: opacity 360ms, transform 360ms; }
+        .vf-rl-station:hover .vf-rl-sub, .vf-rl-station:focus-visible .vf-rl-sub { opacity: 1; transform: none; }
+        .vf-rl-axisline { position: relative; height: 40px; margin-top: clamp(22px, 3vw, 34px); }
+        .vf-rl-axisline::before { content: ""; position: absolute; left: 0; right: 0; top: 14px; height: 12px; background-image: repeating-linear-gradient(90deg, ${vf.subtle} 0 1px, transparent 1px, transparent 14px); }
+        .vf-rl-base { position: absolute; left: 0; right: 0; top: 20px; height: 1px; background: ${vf.primary}; opacity: 0.55; transform: scaleX(0); transform-origin: left center; }
+        .vf-rl-major-wrap { position: absolute; top: 8px; transform: translateX(-50%); }
+        .vf-rl-major { display: block; width: 2px; height: 24px; background: ${vf.muted}; }
+        .vf-rl-caliper { position: absolute; left: 0; top: 2px; width: 14px; height: 36px; display: flex; flex-direction: column; align-items: center; pointer-events: none; }
+        .vf-rl-caliper::before { content: ""; width: 1.5px; height: 100%; background: ${vf.light}; }
+        .vf-rl-caliper-head { position: absolute; top: 0; width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 9px solid ${vf.primary}; }
+        .vf-rl-mission { margin-top: clamp(44px, 6vw, 68px); display: flex; align-items: flex-start; gap: 16px; }
+        .vf-rl-mission-rule { width: 3px; align-self: stretch; background: ${vf.primary}; flex-shrink: 0; }
+        .vf-rl-mission p { font-family: ${serif}; font-style: italic; font-size: clamp(20px, 1.9vw, 26px); line-height: 1.45; color: var(--text-primary); margin: 0; max-width: 820px; }
+        .vf-rl-mission em { color: ${vf.primary}; font-style: italic; }
+        @media (max-width: 720px) {
+          .vf-rl-stations { grid-template-columns: 1fr; gap: 28px; text-align: left; }
+          .vf-rl-station { padding: 0; }
+          .vf-rl-brk { margin-left: 0; margin-right: auto; }
+          .vf-rl-sub { margin-left: 0; opacity: 1; transform: none; }
+          .vf-rl-axisline { display: none; }
+        }
+      `}</style>
     </div>
   );
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   GAP ROW: editorial row (big numeral · title · body · icon)
+   GAP CARDS: the old process's three blind spots, as cards
 ══════════════════════════════════════════════════════════════════ */
-function GapRow({
-  index, Icon: IconComp, k, t,
-}: {
-  index: number; Icon: Icon; k: string; t: string;
-}) {
-  const [hovered, setHovered] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-40px" });
-  return (
-    <motion.div
-      ref={ref}
-      onHoverStart={() => setHovered(true)}
-      onHoverEnd={() => setHovered(false)}
-      initial={{ opacity: 0, y: 16 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ delay: index * 0.12, duration: 0.7, ease: [0.25, 1, 0.4, 1] }}
-      className="vf-gap-row"
-      style={{
-        display: "grid",
-        gridTemplateColumns: "clamp(96px, 10vw, 140px) minmax(0, 1fr) auto",
-        gap: "clamp(24px, 3vw, 48px)",
-        alignItems: "center",
-        padding: "clamp(28px, 3.5vw, 40px) 0",
-        borderBottom: `1px solid ${vf.subtle}`,
-        position: "relative",
-      }}
-    >
-      {/* Sweep indicator on hover */}
-      <motion.span
-        aria-hidden
-        initial={false}
-        animate={{ scaleX: hovered ? 1 : 0 }}
-        transition={{ duration: 0.5, ease: [0.25, 1, 0.4, 1] }}
-        style={{
-          position: "absolute", left: 0, right: 0, bottom: -1, height: 2,
-          background: vf.flag, transformOrigin: "left",
-        }}
-      />
-      {/* Big serif numeral in flag color */}
-      <motion.div
-        animate={{ x: hovered ? 6 : 0 }}
-        transition={{ duration: 0.4, ease: [0.25, 1, 0.4, 1] }}
-        style={{
-          fontFamily: serif, fontWeight: 700,
-          fontSize: "clamp(64px, 7.5vw, 104px)",
-          color: vf.flag, letterSpacing: "-0.045em", lineHeight: 0.9,
-        }}
-      >
-        {String(index + 1).padStart(2, "0")}
-      </motion.div>
+function GapCards() {
+  const rootRef = useRef<HTMLDivElement>(null);
+  const cards = [
+    { Icon: FileText, title: "No trail",            status: "None",   body: "Handoffs left no record. Couriers scribbled cooler numbers on the same sheet, every day." },
+    { Icon: HandTap,  title: "Manual verification", status: "By eye", body: "Pathologists matched sample IDs by hand. One digit off, and the wrong lab received the tube." },
+    { Icon: EyeSlash, title: "No live view",        status: "Blind",  body: "Labs had no forecast of incoming work. Staffing and storage stayed guesswork until a cooler arrived." },
+  ];
 
-      {/* Title + body */}
-      <div>
-        <div style={{ ...mono, fontSize: 13, color: vf.flag, letterSpacing: "0.22em", fontWeight: 700, marginBottom: 10 }}>
-          GAP {String(index + 1).padStart(2, "0")}
-        </div>
-        <h3 style={{
-          fontFamily: serif, fontWeight: 700,
-          fontSize: "clamp(22px, 2.2vw, 30px)",
-          letterSpacing: "-0.02em", lineHeight: 1.25,
-          color: "var(--text-primary)", marginBottom: 10,
-        }}>
-          {k}
-        </h3>
-        <p style={{
-          fontFamily: sans, fontSize: 19, lineHeight: 1.7,
-          color: "var(--text-secondary)", margin: 0, maxWidth: 680,
-        }}>
-          {t}
-        </p>
+  useLayoutEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+    const ctx = gsap.context(() => {
+      const q = gsap.utils.selector(root);
+      const cardEls = q(".vf-gap-card") as HTMLElement[];
+      const mm = gsap.matchMedia();
+      mm.add("(prefers-reduced-motion: reduce)", () => {
+        gsap.set(cardEls, { opacity: 1, y: 0 });
+      });
+      mm.add("(prefers-reduced-motion: no-preference)", () => {
+        gsap.set(cardEls, { opacity: 0, y: 22 });
+        gsap.to(cardEls, {
+          opacity: 1, y: 0, duration: 0.6, stagger: 0.12, ease: "power2.out",
+          scrollTrigger: { trigger: root, start: "top 80%", once: true },
+        });
+      });
+    }, rootRef);
+    return () => ctx.revert();
+  }, []);
+
+  return (
+    <div ref={rootRef} className="vf-gaps" style={{ marginTop: "clamp(56px, 7vw, 80px)" }}>
+      <div style={{ ...mono, fontSize: 13, color: vf.primary, letterSpacing: "0.2em", fontWeight: 700, marginBottom: "clamp(22px, 3vw, 34px)" }}>
+        Three blind spots
       </div>
 
-      {/* Icon ornament, circular outlined */}
-      <motion.div
-        animate={{ rotate: hovered ? 8 : 0, scale: hovered ? 1.05 : 1 }}
-        transition={{ duration: 0.45, ease: [0.25, 1, 0.4, 1] }}
-        style={{
-          width: 60, height: 60, borderRadius: "50%",
-          border: `1px solid ${hovered ? vf.flag : vf.subtle}`,
-          display: "flex", alignItems: "center", justifyContent: "center",
-          flexShrink: 0,
-          transition: "border-color 240ms",
-        }}
-      >
-        <IconComp size={24} color={hovered ? vf.flag : vf.primary} weight="regular" />
-      </motion.div>
+      <div className="vf-gap-cards">
+        {cards.map((c) => (
+          <div key={c.title} className="vf-gap-card" tabIndex={0}>
+            <div className="vf-gap-card-top">
+              <span className="vf-gap-icon"><c.Icon size={26} weight="regular" color="currentColor" /></span>
+              <span className="vf-gap-status">{c.status}</span>
+            </div>
+            <h3 className="vf-gap-title">{c.title}</h3>
+            <p className="vf-gap-body">{c.body}</p>
+          </div>
+        ))}
+      </div>
 
       <style>{`
-        @media (max-width: 720px) {
-          .vf-gap-row {
-            grid-template-columns: clamp(72px, 18vw, 96px) minmax(0, 1fr) !important;
-          }
-          .vf-gap-row > :last-child { display: none !important; }
+        .vf-gap-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(16px, 1.8vw, 24px); }
+        .vf-gap-card {
+          display: flex; flex-direction: column;
+          background: var(--bg-elevated);
+          border: 1px solid rgba(30,64,175,0.14);
+          border-radius: 14px;
+          padding: clamp(24px, 2.6vw, 34px);
+          outline: none;
+          transition: transform 380ms cubic-bezier(0.25,1,0.4,1), border-color 300ms, box-shadow 380ms;
+        }
+        .vf-gap-card:hover, .vf-gap-card:focus-visible {
+          transform: translateY(-5px);
+          border-color: ${vf.primary};
+          box-shadow: 0 1px 2px rgba(15,42,120,0.05), 0 18px 40px rgba(15,42,120,0.12);
+        }
+        .vf-gap-card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: clamp(22px, 2.6vw, 32px); }
+        .vf-gap-icon { color: ${vf.primary}; display: inline-flex; }
+        .vf-gap-status {
+          font-family: 'Manrope', monospace; text-transform: uppercase; letter-spacing: 0.1em;
+          font-size: 11px; font-weight: 700; color: ${vf.primary};
+          background: ${vf.surface}; border: 1px solid rgba(30,64,175,0.16);
+          padding: 5px 12px; border-radius: 100px; white-space: nowrap;
+        }
+        .vf-gap-title { font-family: ${serif}; font-weight: 700; font-size: clamp(21px, 2vw, 25px); letter-spacing: -0.02em; line-height: 1.2; color: var(--text-primary); margin: 0 0 13px; }
+        .vf-gap-body { font-family: ${sans}; font-size: 16px; line-height: 1.62; color: var(--text-secondary); margin: 0; }
+        @media (max-width: 780px) {
+          .vf-gap-cards { grid-template-columns: 1fr; }
         }
       `}</style>
-    </motion.div>
+    </div>
   );
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   JOURNEY ILLUSTRATION: clinic → courier → lab
+   TICK-MEASURED PATH: the sample's journey as a ruler of five hands
 ══════════════════════════════════════════════════════════════════ */
-function JourneyIllustration() {
-  const ref = useRef<SVGSVGElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-60px" });
-  const nodes = [
-    { x: 140, label: "CLINIC",  sub: "patient draw"      },
-    { x: 500, label: "COURIER", sub: "pickup + transit"  },
-    { x: 860, label: "LAB",     sub: "receive + analyse" },
+function DiagramTickPath() {
+  const rootRef = useRef<HTMLDivElement>(null);
+  const [active, setActive] = useState<number | null>(null);
+  const hands = [
+    { x: 120, n: "01", verb: "draw",    detail: "Blood drawn, tube labelled by hand." },
+    { x: 250, n: "02", verb: "log",     detail: "Cooler number written on the day's sheet." },
+    { x: 470, n: "03", verb: "pickup",  detail: "Courier collects the cooler from reception." },
+    { x: 600, n: "04", verb: "transit", detail: "In the van. No scan, no signal." },
+    { x: 880, n: "05", verb: "receive", detail: "Lab logs the tube, if the paperwork survived." },
   ];
-  const handLabels = ["HAND 01", "HAND 03", "HAND 05"];
+  const zones = [
+    { label: "CLINIC",  cx: 185 },
+    { label: "COURIER", cx: 535 },
+    { label: "LAB",     cx: 880 },
+  ];
+  const X0 = 90, X1 = 930, Y = 92;
+
+  useLayoutEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+    const ctx = gsap.context(() => {
+      const q = gsap.utils.selector(root);
+      const drawn = q(".vf-pt-drawn")[0] as unknown as SVGElement;
+      const ticks = q(".vf-pt-tick") as unknown as SVGElement[];
+      const nums  = q(".vf-pt-num") as unknown as SVGElement[];
+      const verbs = q(".vf-pt-verb") as unknown as SVGElement[];
+      const zlabels = q(".vf-pt-zone") as unknown as SVGElement[];
+      const token = q(".vf-pt-token")[0] as unknown as SVGElement;
+      const len = X1 - X0;
+
+      const mm = gsap.matchMedia();
+
+      mm.add("(prefers-reduced-motion: reduce)", () => {
+        gsap.set(drawn, { strokeDasharray: len, strokeDashoffset: 0 });
+        gsap.set(ticks, { scaleY: 1, opacity: 1 });
+        gsap.set([...nums, ...verbs, ...zlabels], { opacity: 1, y: 0 });
+        gsap.set(token, { x: 0 });
+      });
+
+      mm.add("(prefers-reduced-motion: no-preference)", () => {
+        gsap.set(drawn, { strokeDasharray: len, strokeDashoffset: len });
+        gsap.set(ticks, { scaleY: 0, opacity: 0, transformOrigin: "50% 100%" });
+        gsap.set(nums, { opacity: 0, y: 6 });
+        gsap.set(verbs, { opacity: 0, y: 6 });
+        gsap.set(zlabels, { opacity: 0, y: 8 });
+        gsap.set(token, { x: 0 });
+
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: root, start: "top 80%", end: "bottom 58%", scrub: 0.6, invalidateOnRefresh: true,
+            onUpdate: (self) => {
+              const idx = Math.min(hands.length - 1, Math.floor(self.progress * hands.length));
+              gsap.set(token, { x: hands[idx].x - hands[0].x });
+            },
+          },
+        });
+        tl.to(zlabels, { opacity: 1, y: 0, duration: 0.14, stagger: 0.1, ease: "power2.out" }, 0);
+        tl.to(drawn, { strokeDashoffset: 0, ease: "none", duration: 1 }, 0);
+        hands.forEach((h, i) => {
+          const off = ((h.x - X0) / len) * 0.9;
+          tl.to(ticks[i], { scaleY: 1, opacity: 1, duration: 0.1, ease: "power3.out" }, off);
+          tl.to(nums[i], { opacity: 1, y: 0, duration: 0.12 }, off + 0.02);
+          tl.to(verbs[i], { opacity: 1, y: 0, duration: 0.12 }, off + 0.03);
+        });
+      });
+    }, rootRef);
+    return () => ctx.revert();
+  }, []);
 
   return (
-    <div style={{
-      padding: "clamp(24px, 3vw, 40px)",
-      background: "var(--bg-elevated)",
-      border: `1px solid ${vf.subtle}`,
-      borderRadius: 6, position: "relative", overflow: "hidden",
-    }}>
-      <div style={{
-        ...mono, fontSize: 13, color: vf.primary, letterSpacing: "0.22em", fontWeight: 700,
-        marginBottom: 22, display: "flex", alignItems: "center", gap: 10,
-      }}>
-        <span aria-hidden style={{ width: 3, height: 14, background: vf.primary }} />
-        FIG. 01 · FIVE HANDS, THREE BUILDINGS
+    <div ref={rootRef} className="vf-path" style={{ marginTop: "clamp(56px, 7vw, 80px)", paddingTop: "clamp(24px, 3vw, 34px)", borderTop: "1px solid var(--border)" }}>
+      <div style={{ ...mono, fontSize: 13, color: vf.primary, letterSpacing: "0.2em", fontWeight: 700, marginBottom: "clamp(18px, 2.4vw, 30px)" }}>
+        One tube, clinic to lab
       </div>
-      <svg ref={ref} viewBox="0 0 1000 340" preserveAspectRatio="xMidYMid meet" style={{
-        width: "100%", height: "auto", display: "block",
-      }}>
-        <defs>
-          <pattern id="vf-grid-sm" width="20" height="20" patternUnits="userSpaceOnUse">
-            <path d="M 20 0 L 0 0 0 20" fill="none" stroke={vf.subtle} strokeWidth="1" />
-          </pattern>
-          <pattern id="vf-grid-lg" width="80" height="80" patternUnits="userSpaceOnUse">
-            <path d="M 80 0 L 0 0 0 80" fill="none" stroke={vf.subtle} strokeWidth="1" />
-          </pattern>
-          <marker id="vf-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-            <path d="M 0 0 L 10 5 L 0 10 z" fill={vf.primary} />
-          </marker>
-        </defs>
-        <rect x="0" y="0" width="1000" height="340" fill="url(#vf-grid-sm)" opacity="0.8" />
-        <rect x="0" y="0" width="1000" height="340" fill="url(#vf-grid-lg)" opacity="0.6" />
 
-        {/* Guide line between first and last node */}
-        <motion.line
-          x1={nodes[0].x + 60} y1="170"
-          x2={nodes[nodes.length - 1].x - 60} y2="170"
-          stroke={vf.primary} strokeWidth="1.2" strokeDasharray="2 6" opacity="0.4"
-          initial={{ pathLength: 0 }}
-          animate={inView ? { pathLength: 1 } : {}}
-          transition={{ duration: 1.6, ease: [0.25, 1, 0.4, 1], delay: 0.2 }}
-        />
-
-        {/* HAND labels, well clear of the circles, high-contrast primary */}
-        {handLabels.map((label, i) => (
-          <motion.g
-            key={label}
-            initial={{ opacity: 0, y: -6 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ delay: 0.3 + i * 0.15, duration: 0.6, ease: [0.25, 1, 0.4, 1] }}
-          >
-            <line
-              x1={nodes[i].x} y1="72"
-              x2={nodes[i].x} y2="120"
-              stroke={vf.primary} strokeWidth="0.8" strokeDasharray="2 3" opacity="0.55"
-            />
-            <rect
-              x={nodes[i].x - 44} y="38" width="88" height="28" rx="3"
-              fill={vf.surface} stroke={vf.primary} strokeWidth="1"
-            />
-            <text
-              x={nodes[i].x} y="57" textAnchor="middle"
-              style={{ ...mono, fontSize: 14, fill: vf.primary, letterSpacing: "0.22em", fontWeight: 700 }}
-            >
-              {label}
-            </text>
-          </motion.g>
+      <svg viewBox="0 0 1000 165" preserveAspectRatio="xMidYMid meet" style={{ width: "100%", height: "auto", display: "block", overflow: "visible" }}>
+        {/* zone labels */}
+        {zones.map((z) => (
+          <text key={z.label} className="vf-pt-zone" x={z.cx} y="38" textAnchor="middle"
+            style={{ ...mono, fontSize: 16.5, fill: vf.primary, letterSpacing: "0.18em", fontWeight: 700 }}>
+            {z.label}
+          </text>
         ))}
 
-        {/* Nodes */}
-        {nodes.map((n, i) => (
-          <motion.g
-            key={n.label}
-            initial={{ opacity: 0, y: 8 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ delay: 0.45 + i * 0.16, duration: 0.7, ease: [0.25, 1, 0.4, 1] }}
-          >
-            <circle cx={n.x} cy="170" r="48" fill={vf.surface} stroke={vf.primary} strokeWidth="1.4" />
-            <circle cx={n.x} cy="170" r="7" fill={vf.primary} />
-            <text x={n.x} y="254" textAnchor="middle"
-              style={{ ...mono, fontSize: 17, fill: vf.primary, letterSpacing: "0.22em", fontWeight: 700 }}>
-              {n.label}
+        {/* guide underlay + drawn hairline */}
+        <line x1={X0} y1={Y} x2={X1} y2={Y} stroke={vf.subtle} strokeWidth="1" />
+        <line className="vf-pt-drawn" x1={X0} y1={Y} x2={X1} y2={Y} stroke={vf.muted} strokeWidth="1.4" />
+
+        {/* ticks + numbers + verbs + interaction hit-areas */}
+        {hands.map((h, i) => (
+          <g key={h.n}>
+            <line className="vf-pt-tick" x1={h.x} y1={active === i ? 72 : 78} x2={h.x} y2={106}
+              stroke={vf.primary} strokeWidth="1.6" />
+            <text className="vf-pt-num" x={h.x} y="130" textAnchor="middle"
+              style={{ ...mono, fontSize: 16, fill: active === i ? vf.primary : "var(--text-primary)", letterSpacing: "0.08em", fontWeight: 700 }}>
+              {h.n}
             </text>
-            <text x={n.x} y="282" textAnchor="middle"
-              style={{ fontFamily: sans, fontSize: 17, fill: "var(--text-primary)", fontWeight: 500 }}>
-              {n.sub}
+            <text className="vf-pt-verb" x={h.x} y="150" textAnchor="middle"
+              style={{ fontFamily: sans, fontSize: 14.5, fill: active === i ? "var(--text-primary)" : "var(--text-muted)", fontWeight: 500 }}>
+              {h.verb}
             </text>
-          </motion.g>
+            <rect x={h.x - 26} y="60" width="52" height="96" fill="transparent" tabIndex={0}
+              role="button" aria-label={`Hand ${h.n}, ${h.verb}`} style={{ cursor: "pointer", outline: "none" }}
+              onMouseEnter={() => setActive(i)} onMouseLeave={() => setActive(null)}
+              onFocus={() => setActive(i)} onBlur={() => setActive(null)} />
+          </g>
         ))}
 
-        {/* Arrows between nodes */}
-        {nodes.slice(0, -1).map((n, i) => (
-          <motion.line
-            key={`arrow-${i}`}
-            x1={n.x + 52} y1="170"
-            x2={nodes[i + 1].x - 54} y2="170"
-            stroke={vf.primary} strokeWidth="1.6"
-            markerEnd="url(#vf-arrow)"
-            initial={{ pathLength: 0, opacity: 0 }}
-            animate={inView ? { pathLength: 1, opacity: 0.75 } : {}}
-            transition={{ delay: 1.0 + i * 0.18, duration: 0.9, ease: [0.25, 1, 0.4, 1] }}
-          />
-        ))}
-
-        {/* Travelling cooler: sits at Hand 01 → travels to Hand 03 → Hand 05 → loops */}
-        <motion.g
-          initial={{ x: 0, opacity: 0 }}
-          animate={inView ? {
-            x:       [0, 0,    nodes[1].x - nodes[0].x, nodes[1].x - nodes[0].x, nodes[2].x - nodes[0].x, nodes[2].x - nodes[0].x, nodes[2].x - nodes[0].x],
-            opacity: [1, 1,    1,                        1,                        1,                        1,                        0],
-          } : {}}
-          transition={{
-            duration: 6.4,
-            times:   [0, 0.08, 0.38,                     0.5,                      0.82,                     0.92,                     1],
-            ease: [0.25, 1, 0.4, 1],
-            repeat: Infinity,
-            repeatDelay: 0.4,
-            delay: 1.6,
-          }}
-        >
-          <rect x={nodes[0].x - 18} y="155" width="36" height="30" rx="3"
-            fill={vf.primary} opacity="0.95" />
-          <rect x={nodes[0].x - 11} y="150" width="22" height="5" rx="1" fill={vf.primary} />
-          <line x1={nodes[0].x - 7} y1="167" x2={nodes[0].x + 7} y2="167"
-            stroke="#fff" strokeWidth="1.3" strokeLinecap="round" />
-          <line x1={nodes[0].x - 7} y1="175" x2={nodes[0].x + 7} y2="175"
-            stroke="#fff" strokeWidth="1.3" strokeLinecap="round" />
-        </motion.g>
+        {/* travelling sample token */}
+        <rect className="vf-pt-token" x={hands[0].x - 5} y={Y - 5} width="10" height="10" rx="1.5" fill={vf.primary} />
       </svg>
-      <div style={{
-        marginTop: 18, ...mono, fontSize: 13, color: vf.primary, letterSpacing: "0.22em",
-        textAlign: "center", fontWeight: 600, opacity: 0.85,
-      }}>
-        A TUBE'S JOURNEY · 5 HANDS · 3 BUILDINGS · PAPER CHAIN
+
+      <div style={{ marginTop: 18, minHeight: 22, textAlign: "center" }}>
+        {active === null ? (
+          <span style={{ ...mono, fontSize: 13, color: vf.muted, letterSpacing: "0.2em", fontWeight: 600 }}>
+            A paper chain with no live tracking
+          </span>
+        ) : (
+          <span style={{ fontFamily: sans, fontSize: 16, color: "var(--text-secondary)" }}>
+            <strong style={{ ...mono, fontSize: 13, color: vf.primary, letterSpacing: "0.14em", marginRight: 10 }}>HAND {hands[active].n}</strong>
+            {hands[active].detail}
+          </span>
+        )}
       </div>
     </div>
   );
@@ -1419,118 +1157,139 @@ function HeroMockups() {
 /* ══════════════════════════════════════════════════════════════════
    COOLER SKETCH: hand-drawn blueprint-style illustration
 ══════════════════════════════════════════════════════════════════ */
-function CoolerSketch() {
-  const ref = useRef<SVGSVGElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-60px" });
+function PrincipleRow({
+  title, description, IconComp,
+}: {
+  title: string; description: string; IconComp: Icon;
+}) {
   return (
-    <div style={{
-      padding: "clamp(28px, 3.5vw, 44px)",
-      background: "var(--bg-elevated)",
-      border: `1px solid ${vf.subtle}`,
-      borderRadius: 6, position: "relative", overflow: "hidden",
-    }}>
-      <div aria-hidden style={{
-        position: "absolute", inset: 0,
-        backgroundImage:
-          "repeating-linear-gradient(0deg, rgba(30,64,175,0.05) 0, rgba(30,64,175,0.05) 1px, transparent 1px, transparent 24px)," +
-          "repeating-linear-gradient(90deg, rgba(30,64,175,0.05) 0, rgba(30,64,175,0.05) 1px, transparent 1px, transparent 24px)",
-        pointerEvents: "none",
-      }} />
-      <div style={{
-        position: "relative", zIndex: 1,
-        display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(180px, 260px)",
-        gap: "clamp(24px, 3vw, 40px)", alignItems: "center",
-      }} className="sketch-grid">
-        <svg ref={ref} viewBox="0 0 400 260" preserveAspectRatio="xMidYMid meet" style={{
-          width: "100%", height: "auto", display: "block",
-        }}>
-          <defs>
-            <pattern id="vf-hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-              <line x1="0" y1="0" x2="0" y2="6" stroke={vf.primary} strokeWidth="0.6" opacity="0.3" />
-            </pattern>
-          </defs>
-
-          {/* Cooler body */}
-          <motion.g
-            initial={{ opacity: 0, y: 12 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8, ease: [0.25, 1, 0.4, 1] }}
-          >
-            <rect x="80" y="90" width="240" height="140" rx="6"
-              fill="url(#vf-hatch)" stroke={vf.primary} strokeWidth="1.4" />
-            {/* Lid */}
-            <rect x="76" y="78" width="248" height="20" rx="4"
-              fill={vf.surface} stroke={vf.primary} strokeWidth="1.4" />
-            {/* Handle */}
-            <path d="M 160 78 Q 160 56, 200 56 Q 240 56, 240 78"
-              fill="none" stroke={vf.primary} strokeWidth="1.4" strokeLinecap="round" />
-            {/* QR sticker */}
-            <rect x="110" y="132" width="44" height="44" rx="2"
-              fill="#fff" stroke={vf.primary} strokeWidth="1" />
-            <rect x="116" y="138" width="12" height="12" fill={vf.primary} />
-            <rect x="136" y="138" width="12" height="12" fill={vf.primary} />
-            <rect x="116" y="158" width="12" height="12" fill={vf.primary} />
-            <rect x="138" y="158" width="4"  height="4"  fill={vf.primary} />
-            <rect x="146" y="160" width="4"  height="4"  fill={vf.primary} />
-            {/* Label */}
-            <rect x="180" y="148" width="110" height="18" rx="2"
-              fill="#fff" stroke={vf.primary} strokeWidth="0.8" />
-            <line x1="186" y1="156" x2="280" y2="156" stroke={vf.primary} strokeWidth="0.6" opacity="0.5" />
-            <line x1="186" y1="160" x2="260" y2="160" stroke={vf.primary} strokeWidth="0.6" opacity="0.5" />
-          </motion.g>
-
-          {/* Callout lines */}
-          <motion.g
-            initial={{ opacity: 0 }}
-            animate={inView ? { opacity: 1 } : {}}
-            transition={{ duration: 0.6, delay: 0.8 }}
-          >
-            <line x1="132" y1="132" x2="60" y2="60" stroke={vf.primary} strokeWidth="0.8" strokeDasharray="2 3" />
-            <circle cx="60" cy="60" r="3" fill={vf.primary} />
-            <text x="18" y="50" style={{ ...mono, fontSize: 9, fill: vf.primary, letterSpacing: "0.2em", fontWeight: 700 }}>
-              QR · PAIRED
-            </text>
-
-            <line x1="235" y1="157" x2="370" y2="50" stroke={vf.primary} strokeWidth="0.8" strokeDasharray="2 3" />
-            <circle cx="370" cy="50" r="3" fill={vf.primary} />
-            <text x="316" y="40" style={{ ...mono, fontSize: 9, fill: vf.primary, letterSpacing: "0.2em", fontWeight: 700 }}>
-              COOLER ID
-            </text>
-
-            <line x1="200" y1="78" x2="200" y2="30" stroke={vf.primary} strokeWidth="0.8" strokeDasharray="2 3" />
-            <circle cx="200" cy="30" r="3" fill={vf.primary} />
-            <text x="160" y="22" style={{ ...mono, fontSize: 9, fill: vf.primary, letterSpacing: "0.2em", fontWeight: 700 }}>
-              TEMP-LOCK
-            </text>
-          </motion.g>
-
-          {/* Dimension ticks */}
-          <motion.g
-            initial={{ opacity: 0 }}
-            animate={inView ? { opacity: 1 } : {}}
-            transition={{ duration: 0.6, delay: 1.1 }}
-          >
-            <line x1="80" y1="248" x2="320" y2="248" stroke={vf.muted} strokeWidth="0.6" />
-            <line x1="80" y1="244" x2="80" y2="252" stroke={vf.muted} strokeWidth="0.6" />
-            <line x1="320" y1="244" x2="320" y2="252" stroke={vf.muted} strokeWidth="0.6" />
-            <text x="200" y="258" textAnchor="middle" style={{ ...mono, fontSize: 8, fill: vf.muted, letterSpacing: "0.22em" }}>
-              ONE UNIT OF TRUST
-            </text>
-          </motion.g>
-        </svg>
-        <div>
-          <div style={{ ...mono, fontSize: 13, color: vf.primary, letterSpacing: "0.22em", fontWeight: 700, marginBottom: 14 }}>
-            FIG. 02 · THE COOLER
-          </div>
-          <p style={{ fontFamily: sans, fontSize: 18, color: "var(--text-secondary)", lineHeight: 1.65, margin: 0 }}>
-            Every rule on this page exists so this one object never disappears between two people.
-          </p>
-        </div>
+    <div className="vf-prin-row" tabIndex={0}>
+      <span className="vf-prin-icon"><IconComp size={22} weight="regular" color="currentColor" /></span>
+      <div className="vf-prin-main">
+        <h3 className="vf-prin-title">{title}</h3>
+        <p className="vf-prin-desc">{description}</p>
       </div>
+    </div>
+  );
+}
+
+function CoolerBlueprint() {
+  const rootRef = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+    const ctx = gsap.context(() => {
+      const q = gsap.utils.selector(root);
+      const cooler = q(".cb-cooler");
+      const leaders = q(".cb-leader");
+      const labels = q(".cb-label");
+      const dim = q(".cb-dim");
+      const mm = gsap.matchMedia();
+
+      mm.add("(prefers-reduced-motion: reduce)", () => {
+        gsap.set([cooler, labels, dim], { opacity: 1, y: 0 });
+        gsap.set(leaders, { strokeDashoffset: 0 });
+      });
+      mm.add("(prefers-reduced-motion: no-preference)", () => {
+        gsap.set(cooler, { opacity: 0, y: 16 });
+        gsap.set(leaders, { strokeDashoffset: 1 });
+        gsap.set(labels, { opacity: 0, y: 6 });
+        gsap.set(dim, { opacity: 0 });
+        const tl = gsap.timeline({ scrollTrigger: { trigger: root, start: "top 80%", once: true } });
+        tl.to(cooler, { opacity: 1, y: 0, duration: 0.7, ease: "power2.out" }, 0);
+        tl.to(leaders, { strokeDashoffset: 0, duration: 0.6, stagger: 0.12, ease: "power1.inOut" }, 0.35);
+        tl.to(labels, { opacity: 1, y: 0, duration: 0.4, stagger: 0.12, ease: "power2.out" }, 0.55);
+        tl.to(dim, { opacity: 1, duration: 0.5, ease: "power2.out" }, 0.9);
+      });
+    }, rootRef);
+    return () => ctx.revert();
+  }, []);
+
+  return (
+    <div ref={rootRef} className="vf-cooler">
+      <div className="vf-cooler-cap">The cooler</div>
+      <svg viewBox="0 0 460 360" preserveAspectRatio="xMidYMid meet" style={{ width: "100%", height: "auto", display: "block" }}>
+        {/* cooler */}
+        <g className="cb-cooler">
+          <rect x="98" y="152" width="264" height="156" rx="10" fill={vf.surface} stroke={vf.primary} strokeWidth="1.6" />
+          <line x1="106" y1="196" x2="354" y2="196" stroke={vf.primary} strokeWidth="0.7" opacity="0.3" />
+          <line x1="106" y1="288" x2="354" y2="288" stroke={vf.primary} strokeWidth="0.7" opacity="0.3" />
+          <rect x="90" y="130" width="280" height="28" rx="6" fill="#fff" stroke={vf.primary} strokeWidth="1.6" />
+          <path d="M 186 130 Q 186 102, 230 102 Q 274 102, 274 130" fill="none" stroke={vf.primary} strokeWidth="1.6" strokeLinecap="round" />
+          <rect x="94" y="154" width="9" height="14" rx="1.5" fill="#fff" stroke={vf.primary} strokeWidth="1.2" />
+          <rect x="357" y="154" width="9" height="14" rx="1.5" fill="#fff" stroke={vf.primary} strokeWidth="1.2" />
+          {/* QR sticker */}
+          <rect x="128" y="196" width="54" height="54" rx="3" fill="#fff" stroke={vf.primary} strokeWidth="1" />
+          <rect x="134" y="202" width="13" height="13" fill="none" stroke={vf.primary} strokeWidth="2" />
+          <rect x="138" y="206" width="5" height="5" fill={vf.primary} />
+          <rect x="163" y="202" width="13" height="13" fill="none" stroke={vf.primary} strokeWidth="2" />
+          <rect x="167" y="206" width="5" height="5" fill={vf.primary} />
+          <rect x="134" y="231" width="13" height="13" fill="none" stroke={vf.primary} strokeWidth="2" />
+          <rect x="138" y="235" width="5" height="5" fill={vf.primary} />
+          <rect x="163" y="231" width="4" height="4" fill={vf.primary} />
+          <rect x="171" y="231" width="4" height="4" fill={vf.primary} />
+          <rect x="163" y="239" width="4" height="4" fill={vf.primary} />
+          <rect x="171" y="239" width="4" height="4" fill={vf.primary} />
+          {/* label plate */}
+          <rect x="206" y="204" width="128" height="42" rx="3" fill="#fff" stroke={vf.primary} strokeWidth="0.9" />
+          <line x1="214" y1="216" x2="326" y2="216" stroke={vf.primary} strokeWidth="0.7" opacity="0.45" />
+          <line x1="214" y1="225" x2="300" y2="225" stroke={vf.primary} strokeWidth="0.7" opacity="0.45" />
+          <line x1="214" y1="234" x2="314" y2="234" stroke={vf.primary} strokeWidth="0.7" opacity="0.45" />
+          {/* temp pill */}
+          <rect x="266" y="262" width="76" height="25" rx="12.5" fill={vf.primary} />
+          <text x="304" y="279" textAnchor="middle" style={{ ...mono, fontSize: 11, fill: "#fff", letterSpacing: "0.06em", fontWeight: 700 }}>2–8°C</text>
+        </g>
+
+        {/* callout leaders */}
+        <line className="cb-leader" x1="155" y1="196" x2="82" y2="98" stroke={vf.primary} strokeWidth="0.9" strokeDasharray="1 1" pathLength={1} />
+        <line className="cb-leader" x1="270" y1="204" x2="392" y2="98" stroke={vf.primary} strokeWidth="0.9" strokeDasharray="1 1" pathLength={1} />
+        <line className="cb-leader" x1="342" y1="274" x2="408" y2="250" stroke={vf.primary} strokeWidth="0.9" strokeDasharray="1 1" pathLength={1} />
+
+        {/* callout dots + labels */}
+        <g className="cb-label">
+          <circle cx="82" cy="98" r="2.6" fill={vf.primary} />
+          <text x="40" y="90" style={{ ...mono, fontSize: 10, fill: vf.primary, letterSpacing: "0.18em", fontWeight: 700 }}>QR · PAIRED</text>
+        </g>
+        <g className="cb-label">
+          <circle cx="392" cy="98" r="2.6" fill={vf.primary} />
+          <text x="352" y="90" textAnchor="middle" style={{ ...mono, fontSize: 10, fill: vf.primary, letterSpacing: "0.18em", fontWeight: 700 }}>CHAIN · ID</text>
+        </g>
+        <g className="cb-label">
+          <circle cx="408" cy="250" r="2.6" fill={vf.primary} />
+          <text x="414" y="254" style={{ ...mono, fontSize: 10, fill: vf.primary, letterSpacing: "0.18em", fontWeight: 700 }}>TEMP · LOCK</text>
+        </g>
+
+        {/* dimension */}
+        <g className="cb-dim">
+          <line x1="98" y1="330" x2="362" y2="330" stroke={vf.muted} strokeWidth="0.7" />
+          <line x1="98" y1="325" x2="98" y2="335" stroke={vf.muted} strokeWidth="0.7" />
+          <line x1="362" y1="325" x2="362" y2="335" stroke={vf.muted} strokeWidth="0.7" />
+          <text x="230" y="348" textAnchor="middle" style={{ ...mono, fontSize: 9, fill: vf.muted, letterSpacing: "0.22em", fontWeight: 600 }}>ONE UNIT OF TRUST</text>
+        </g>
+      </svg>
+
       <style>{`
-        @media (max-width: 720px) {
-          .sketch-grid { grid-template-columns: minmax(0, 1fr) !important; }
-        }
+        .vf-cooler { position: relative; padding: clamp(22px, 3vw, 40px); border: 1px solid ${vf.subtle}; border-radius: 10px; background:
+          radial-gradient(circle, rgba(30,64,175,0.08) 1px, transparent 1.6px) -11px -11px / 22px 22px,
+          var(--bg-elevated); overflow: hidden; }
+        .vf-cooler-cap { position: absolute; top: clamp(18px, 2.2vw, 26px); left: clamp(22px, 3vw, 40px); font-family: 'Manrope', monospace; text-transform: uppercase; font-size: 12px; color: ${vf.primary}; letter-spacing: 0.2em; font-weight: 700; }
+
+        /* Principles layout */
+        .vf-prin-layout { display: grid; grid-template-columns: minmax(0, 1.04fr) minmax(0, 1fr); gap: clamp(32px, 4vw, 64px); align-items: start; }
+        .vf-cooler-lede { font-family: ${serif}; font-style: italic; font-size: clamp(18px, 1.6vw, 22px); line-height: 1.55; color: var(--text-primary); margin: clamp(22px, 2.6vw, 30px) 0 0; max-width: 460px; }
+        .vf-cooler-lede em { color: ${vf.primary}; font-style: italic; }
+        @media (max-width: 900px) { .vf-prin-layout { grid-template-columns: 1fr; gap: clamp(28px, 5vw, 44px); } .vf-cooler-lede { max-width: none; } }
+
+        /* Principles list */
+        .vf-prin-list { display: flex; flex-direction: column; }
+        .vf-prin-row { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: clamp(16px, 1.6vw, 22px); align-items: start; padding: clamp(20px, 2.2vw, 28px) clamp(8px, 1vw, 14px); border-top: 1px solid ${vf.subtle}; outline: none; transition: background 260ms; }
+        .vf-prin-row:last-child { border-bottom: 1px solid ${vf.subtle}; }
+        .vf-prin-row:hover, .vf-prin-row:focus-visible { background: ${vf.surface}; }
+        .vf-prin-icon { width: 46px; height: 46px; border-radius: 8px; background: ${vf.subtle}; color: ${vf.primary}; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background 260ms, color 260ms; }
+        .vf-prin-row:hover .vf-prin-icon, .vf-prin-row:focus-visible .vf-prin-icon { background: ${vf.primary}; color: #fff; }
+        .vf-prin-title { font-family: ${serif}; font-weight: 700; font-size: clamp(21px, 2vw, 25px); letter-spacing: -0.015em; line-height: 1.2; color: var(--text-primary); margin: 0 0 10px; }
+        .vf-prin-desc { font-family: ${sans}; font-size: 18px; line-height: 1.6; color: var(--text-secondary); margin: 0; }
       `}</style>
     </div>
   );
@@ -1638,8 +1397,6 @@ function NavCard({ project }: { project: Project }) {
 }
 
 export default function VeriflowCase() {
-  const { scrollYProgress } = useScroll();
-  const scaleX = useSpring(scrollYProgress, { stiffness: 200, damping: 30, restDelta: 0.001 });
   const [showTop, setShowTop] = useState(false);
   const otherProjects = projects.filter((p) => p.slug !== "veriflow").slice(-2);
 
@@ -1653,115 +1410,63 @@ export default function VeriflowCase() {
   return (
     <motion.div
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-      transition={{ duration: 0.4 }} className="pt-14"
+      transition={{ duration: 0.4 }}
     >
-      {/* Top mask for fixed nav */}
-      <div style={{
-        position: "fixed", top: 0, left: 0, right: 0, height: 59,
-        background: "var(--bg-primary)", zIndex: 45, pointerEvents: "none",
-      }} />
-
-      {/* Scroll progress */}
-      <div style={{
-        position: "fixed", top: 56, left: 0, right: 0, height: 2,
-        background: "var(--bg-primary)", zIndex: 49,
-      }}>
-        <motion.div style={{
-          height: "100%", background: vf.primary,
-          scaleX, transformOrigin: "left", opacity: 0.85,
-        }} />
-      </div>
-
       {/* ══════════════════════════════════════════════════════════════
           00 · HERO: laptop (admin web) + tablet overlay
       ══════════════════════════════════════════════════════════════ */}
-      <section className="blueprint-grid vf-hero-section" style={{
+      <section className="vf-hero-section" style={{
         position: "relative",
-        height: "calc(var(--vh, 1vh) * 100 - 56px)",
-        minHeight: 640,
+        isolation: "isolate",
+        minHeight: "calc(var(--vh, 1vh) * 100)",
         display: "flex",
         flexDirection: "column",
+        justifyContent: "center",
         overflow: "hidden",
+        background: "var(--bg-primary)",
+        paddingTop: "clamp(96px, 10vw, 128px)",
+        paddingBottom: "clamp(40px, 5vw, 72px)",
       }}>
-        <motion.div
-          initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.05, duration: 0.5 }}
-          className="max-w-7xl mx-auto px-6 md:px-10"
-          style={{
-            width: "100%", flexShrink: 0,
-            display: "flex", justifyContent: "space-between", alignItems: "center",
-            paddingTop: "clamp(16px, 2vw, 24px)",
-            paddingBottom: 14,
-            flexWrap: "wrap", gap: 16,
-            borderBottom: "1px solid var(--border)",
-          }}
-        >
-          <Link to="/#projects"
-            style={{
-              display: "inline-flex", alignItems: "center", gap: 10,
-              ...mono, fontSize: 11, letterSpacing: "0.22em",
-              color: "var(--text-secondary)", textDecoration: "none",
-              transitionProperty: "color", transitionDuration: "200ms",
-            }}
-            onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = vf.primary)}
-            onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = "var(--text-secondary)")}>
-            <svg width="14" height="14" viewBox="0 0 18 18" fill="none">
-              <path d="M14 9H3M6 5L2 9l4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-            Index
-          </Link>
-          <div style={{ display: "flex", gap: 20, flexWrap: "wrap", alignItems: "center" }}>
-            {["Healthcare", "Enterprise", "Web + Tablet + TV"].map((tag) => (
-              <span key={tag} style={{ ...mono, fontSize: 10, color: "var(--text-muted)", letterSpacing: "0.2em" }}>
-                {tag}
-              </span>
-            ))}
-          </div>
-        </motion.div>
-
-        <div
-          className="max-w-7xl mx-auto px-6 md:px-10"
-          style={{
-            flex: 1, width: "100%", minHeight: 0,
-            display: "grid",
-            gridTemplateColumns: "minmax(0, 1fr)",
-            gap: "clamp(24px, 3vw, 40px)",
-            alignItems: "center",
-            paddingTop: "clamp(20px, 2.4vw, 32px)",
-            paddingBottom: "clamp(16px, 2vw, 24px)",
-          }}
-        >
-          <div
-            className="grid grid-cols-1 md:grid-cols-12"
-            style={{
-              gap: "clamp(24px, 3vw, 48px)",
-              alignItems: "center",
-              width: "100%",
-            }}
-          >
-            {/* LEFT: copy */}
+        {/* Blue noisy-gradient hero background (replaces the blueprint grid) */}
+        <GradientBackground
+          gradientType="radial-gradient"
+          gradientSize="150% 130%"
+          gradientOrigin="top-middle"
+          colors={[
+            { color: "rgba(59,130,246,0.20)", stop: "0%" },
+            { color: "rgba(96,165,250,0.12)", stop: "34%" },
+            { color: "rgba(147,197,253,0.07)", stop: "62%" },
+            { color: "rgba(239,244,253,0)", stop: "100%" },
+          ]}
+          noisePatternAlpha={26}
+          noiseIntensity={1}
+          noisePatternRefreshInterval={1}
+          noisePatternSize={100}
+          style={{ zIndex: 0 }}
+        />
+        {/* Subtle dotted Miro-canvas grid, over the gradient, behind the content */}
+        <div aria-hidden style={{
+          position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none",
+          backgroundImage: "radial-gradient(circle, rgba(30,64,175,0.07) 1px, transparent 1.5px)",
+          backgroundSize: "23px 23px",
+          backgroundPosition: "-11px -11px",
+          WebkitMaskImage: "linear-gradient(to bottom, #000 60%, transparent 100%)",
+          maskImage: "linear-gradient(to bottom, #000 60%, transparent 100%)",
+        }} />
+        <div className="max-w-7xl mx-auto px-6 md:px-10" style={{ position: "relative", zIndex: 1, width: "100%" }}>
+          <div className="grid grid-cols-1 md:grid-cols-12" style={{ gap: "clamp(32px, 4.5vw, 60px)", alignItems: "center", width: "100%" }}>
+            {/* LEFT: copy (left-aligned) */}
             <div className="md:col-span-5" style={{ minWidth: 0 }}>
-              <motion.div
-                initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1, duration: 0.6 }}
-                style={{ display: "flex", justifyContent: "space-between", marginBottom: 18, maxWidth: 460 }}
-              >
-                <span style={{ ...mono, fontSize: 11, color: vf.primary, letterSpacing: "0.22em", fontWeight: 700 }}>
-                  Case Study · 02
-                </span>
-                <span style={{ ...mono, fontSize: 11, color: "var(--text-muted)", letterSpacing: "0.22em" }}>
-                  Healthcare · 2024
-                </span>
-              </motion.div>
-
               <div style={{ overflow: "hidden", marginBottom: "clamp(24px, 2.6vw, 36px)" }}>
                 <motion.h1
                   initial={{ y: "110%" }} animate={{ y: 0 }}
-                  transition={{ delay: 0.15, duration: 1.0, ease: [0.25, 1, 0.4, 1] }}
+                  transition={{ delay: 0.1, duration: 1.0, ease: [0.25, 1, 0.4, 1] }}
                   style={{
                     fontFamily: serif, fontWeight: 700,
-                    fontSize: "clamp(56px, 8.2vw, 120px)",
+                    fontSize: "clamp(52px, 7.6vw, 112px)",
                     color: "var(--text-primary)",
-                    letterSpacing: "-0.055em", lineHeight: 0.9,
-                    margin: 0,
+                    letterSpacing: "-0.055em", lineHeight: 0.92,
+                    margin: 0, whiteSpace: "nowrap",
                   }}>
                   Veriflow<span style={{ color: vf.primary, fontStyle: "italic" }}>.</span>
                 </motion.h1>
@@ -1769,30 +1474,30 @@ export default function VeriflowCase() {
 
               <motion.p
                 initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5, duration: 0.7 }}
+                transition={{ delay: 0.45, duration: 0.7 }}
                 style={{
                   fontFamily: serif, fontStyle: "italic",
-                  fontSize: "clamp(21px, 1.9vw, 28px)",
+                  fontSize: "clamp(18px, 1.7vw, 24px)",
                   color: "var(--text-secondary)",
-                  lineHeight: 1.5, maxWidth: 520,
-                  marginBottom: "clamp(28px, 3vw, 42px)",
+                  lineHeight: 1.5, maxWidth: 500,
+                  marginBottom: "clamp(34px, 4.5vw, 52px)",
                   letterSpacing: "-0.01em",
                 }}
               >
-                Specimen chain-of-custody. <span style={{ color: vf.primary }}>Tap, verify, hand off</span>
+                Specimen chain-of-custody. <span style={{ color: vf.primary }}>Tap, verify, hand off</span>{" "}
                 across a clinic tablet, a web control tower, and a lab wall.
               </motion.p>
 
+              {/* Meta - airy 2-column: label whispers above value, no ornament */}
               <motion.div
-                initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8, duration: 0.6 }}
+                initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7, duration: 0.6 }}
                 style={{
+                  maxWidth: 440,
                   display: "grid",
-                  gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-                  columnGap: "clamp(20px, 3vw, 40px)",
-                  rowGap: 22,
-                  borderTop: "1px solid var(--border)",
-                  paddingTop: 24,
-                  maxWidth: 460,
+                  gridTemplateColumns: "auto auto",
+                  justifyContent: "start",
+                  columnGap: "clamp(44px, 6vw, 84px)",
+                  rowGap: "clamp(24px, 3vw, 32px)",
                 }}
               >
                 {([
@@ -1801,47 +1506,18 @@ export default function VeriflowCase() {
                   { label: "Timeline", value: "3 months" },
                   { label: "Tools",    value: "Figma · FigJam" },
                 ] as { label: string; value: string }[]).map((m) => (
-                  <div key={m.label} style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                    <span style={{ ...mono, fontSize: 13, color: "var(--text-secondary)", letterSpacing: "0.2em", fontWeight: 600 }}>
-                      {m.label}
-                    </span>
-                    <span style={{ fontFamily: sans, fontSize: 19, fontWeight: 500, color: "var(--text-primary)" }}>
-                      {m.value}
-                    </span>
+                  <div key={m.label}>
+                    <div style={{ ...mono, fontSize: 10.5, fontWeight: 600, letterSpacing: "0.18em", color: vf.muted, marginBottom: 9 }}>{m.label}</div>
+                    <div style={{ fontFamily: sans, fontSize: "clamp(17px, 1.5vw, 20px)", fontWeight: 600, lineHeight: 1.15, letterSpacing: "-0.01em", color: "var(--text-primary)" }}>{m.value}</div>
                   </div>
                 ))}
               </motion.div>
             </div>
 
-            {/* RIGHT: laptop (admin web) + floating tablet overlay, both react to cursor */}
+            {/* RIGHT: laptop (admin web) + floating tablet, cursor-reactive */}
             <HeroMockups />
           </div>
         </div>
-
-        <motion.div
-          initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.1, duration: 0.6 }}
-          className="max-w-7xl mx-auto px-6 md:px-10"
-          style={{
-            width: "100%", flexShrink: 0,
-            display: "flex", justifyContent: "center", alignItems: "center",
-            paddingBottom: "clamp(14px, 1.6vw, 22px)",
-          }}
-        >
-          <motion.div
-            animate={{ y: [0, 5, 0] }}
-            transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-            style={{
-              display: "inline-flex", alignItems: "center", gap: 10,
-              ...mono, fontSize: 10, letterSpacing: "0.22em",
-              color: "var(--text-secondary)",
-            }}
-          >
-            Scroll
-            <svg width="12" height="12" viewBox="0 0 16 16" fill="none">
-              <path d="M8 3v10M4 9l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </motion.div>
-        </motion.div>
       </section>
 
       {/* ══════════════════════════════════════════════════════════════
@@ -1860,7 +1536,7 @@ export default function VeriflowCase() {
                 or not at all. The brief asked for a system that
                 <em style={{ color: vf.primary, fontStyle: "italic" }}> knew where every sample was, right now.</em>
               </p>
-              <p style={{ ...t.body, marginBottom: 22 }}>
+              <p style={{ ...t.bodyLg, marginBottom: 22 }}>
                 Blood is time- and temperature-sensitive. A single lost cooler is a patient re-drawn,
                 a diagnosis delayed, a clinic day lost.
               </p>
@@ -1887,116 +1563,22 @@ export default function VeriflowCase() {
             </Reveal>
           </div>
 
-          {/* Journey illustration: clinic → courier → lab */}
-          <Reveal delay={0.08}>
-            <div style={{ marginTop: "clamp(56px, 7vw, 80px)" }}>
-              <JourneyIllustration />
-            </div>
-          </Reveal>
+          {/* Journey - tick-measured path */}
+          <DiagramTickPath />
 
-          {/* Three gaps */}
-          <Reveal>
-            <div style={{
-              marginTop: "clamp(56px, 7vw, 80px)",
-              display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap", marginBottom: 24,
-            }}>
-              <WarningCircle size={20} color={vf.flag} weight="regular" />
-              <span style={{ ...mono, fontSize: 12, color: vf.flag, letterSpacing: "0.22em", fontWeight: 700 }}>
-                THREE GAPS THAT COULDN'T BE AFFORDED
-              </span>
-              <span aria-hidden style={{ flex: 1, height: 1, background: vf.subtle, minWidth: 40 }} />
-            </div>
-          </Reveal>
+          {/* Three gaps - blind-spot audit */}
+          <GapCards />
 
-          {/* Editorial gap list: big numerals, horizontal rules, not cards */}
-          <div style={{ borderTop: `1px solid ${vf.subtle}` }}>
-            {[
-              { Icon: FileText, k: "No trail",            t: "Handoffs had no record. Couriers scribbled cooler numbers on the same sheet every day." },
-              { Icon: HandTap,  k: "Manual verification", t: "Pathologists matched sample IDs by eye. One digit off and the wrong lab received the tube." },
-              { Icon: EyeSlash, k: "No live view",        t: "Labs had no forecast of incoming work. Staffing and storage were guesswork until a cooler arrived." },
-            ].map((g, i) => (
-              <GapRow key={g.k} index={i} {...g} />
-            ))}
-          </div>
-
-          {/* Stat band: one flat horizontal band with thin dividers, no cards */}
-          <Reveal delay={0.08}>
-            <div className="vf-stat-band" style={{
-              marginTop: "clamp(40px, 5vw, 64px)",
-              display: "grid",
-              gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
-              padding: "clamp(32px, 4vw, 56px) 0",
-              borderTop: `1px solid ${vf.subtle}`,
-              borderBottom: `1px solid ${vf.subtle}`,
-              position: "relative",
-            }}>
-              {[
-                { n: 5,  suffix: "",   k: "Hands per sample",    v: "between patient draw and pathologist screen." },
-                { n: 40, suffix: "m",  k: "Invisible delay",     v: "before anyone notices a cooler is late." },
-                { n: 3,  suffix: "",   k: "Buildings",           v: "clinic, transit, lab. Three custody zones." },
-              ].map((c, i) => (
-                <motion.div
-                  key={c.k}
-                  initial={{ opacity: 0, y: 12 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-40px" }}
-                  transition={{ delay: i * 0.1, duration: 0.7, ease: [0.25, 1, 0.4, 1] }}
-                  style={{
-                    padding: "0 clamp(18px, 3vw, 40px)",
-                    borderLeft: i > 0 ? `1px solid ${vf.subtle}` : undefined,
-                    display: "flex", flexDirection: "column", gap: 12,
-                  }}
-                >
-                  <div style={{
-                    fontFamily: serif, fontWeight: 700,
-                    fontSize: "clamp(56px, 7vw, 96px)",
-                    color: vf.flag, letterSpacing: "-0.045em", lineHeight: 0.95,
-                  }}>
-                    <CountUp value={c.n} suffix={c.suffix} />
-                  </div>
-                  <div style={{ ...mono, fontSize: 13, color: vf.flag, letterSpacing: "0.22em", fontWeight: 700 }}>
-                    {c.k}
-                  </div>
-                  <p style={{ fontFamily: sans, fontSize: 18, color: "var(--text-primary)", lineHeight: 1.6, margin: 0 }}>
-                    {c.v}
-                  </p>
-                </motion.div>
-              ))}
-              <style>{`
-                @media (max-width: 820px) {
-                  .vf-stat-band { grid-template-columns: minmax(0, 1fr) !important; }
-                  .vf-stat-band > div { border-left: none !important; padding: 24px 0 !important; }
-                  .vf-stat-band > div + div { border-top: 1px solid ${vf.subtle}; }
-                }
-              `}</style>
-            </div>
-          </Reveal>
-
-          {/* Mission rule */}
-          <Reveal delay={0.1}>
-            <div style={{
-              marginTop: "clamp(48px, 6vw, 72px)",
-              display: "flex", alignItems: "flex-start", gap: 16,
-              paddingTop: 22, borderTop: "1px solid var(--border)",
-            }}>
-              <span style={{ width: 3, alignSelf: "stretch", background: vf.primary, flexShrink: 0 }} />
-              <p style={{
-                fontFamily: serif, fontStyle: "italic",
-                fontSize: "clamp(20px, 1.9vw, 26px)",
-                lineHeight: 1.45, color: "var(--text-primary)", margin: 0,
-                maxWidth: 820,
-              }}>
-                Veriflow replaces the clipboard with a verified tap at every handoff.
-              </p>
-            </div>
-          </Reveal>
+          {/* Stats + mission - measured ruler */}
+          <StatRuler />
         </div>
       </section>
 
       {/* ══════════════════════════════════════════════════════════════
           02 · SYSTEM
       ══════════════════════════════════════════════════════════════ */}
-      <section className="blueprint-grid-subtle" style={{ padding: SECTION_PAD }}>
+      <section className="vf-liquid-section" style={{ padding: SECTION_PAD }}>
+        <LiquidBackground c0="eff5fe" c1="dae8fc" c2="aecaf0" fade={0} lift={0.28} grain={0.055} speed={0.1} />
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <Reveal><SectionHeader num="02" phase="The system" title="Three surfaces, one unbroken chain." /></Reveal>
 
@@ -2019,35 +1601,28 @@ export default function VeriflowCase() {
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <Reveal><SectionHeader num="03" phase="Principles" title="Four rules that shaped every screen." /></Reveal>
 
-          <Reveal delay={0.05}>
-            <div style={{ marginBottom: "clamp(40px, 5vw, 64px)" }}>
-              <CoolerSketch />
-            </div>
-          </Reveal>
-
-          <div style={{
-            display: "grid", gap: 20,
-            gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
-          }}>
-            <Reveal delay={0}>
-              <PrincipleCard num="P.01" title="Linear, not branching"
-                description="A fork in a flow is an error waiting to happen. One next step, always visible."
-                IconComp={ArrowRight} />
+          <div className="vf-prin-layout">
+            <Reveal delay={0.05}>
+              <div>
+                <CoolerBlueprint />
+                <p className="vf-cooler-lede">Every rule on this page exists so this one object never <em>disappears</em> between two people.</p>
+              </div>
             </Reveal>
-            <Reveal delay={0.08}>
-              <PrincipleCard num="P.02" title="Gate at every handoff"
-                description="A sample leaves one custody only when the next is confirmed. Small gate, always there."
-                IconComp={ShieldCheck} />
-            </Reveal>
-            <Reveal delay={0.16}>
-              <PrincipleCard num="P.03" title="Forgive the hurry"
-                description="A missed scan is a retry, not a failure. Override exists, with a PIN and a record."
-                IconComp={HandTap} />
-            </Reveal>
-            <Reveal delay={0.24}>
-              <PrincipleCard num="P.04" title="Ambient over alert"
-                description="A wall replaces the phone on the counter. Glance, know. No notifications."
-                IconComp={Television} />
+            <Reveal delay={0.12}>
+              <div className="vf-prin-list">
+                <PrincipleRow title="Linear, not branching"
+                  description="A fork in a flow is an error waiting to happen. One next step, always visible."
+                  IconComp={ArrowRight} />
+                <PrincipleRow title="Gate at every handoff"
+                  description="A sample leaves one custody only when the next is confirmed. Small gate, always there."
+                  IconComp={ShieldCheck} />
+                <PrincipleRow title="Forgive the hurry"
+                  description="A missed scan is a retry, not a failure. Override exists, with a PIN and a record."
+                  IconComp={HandTap} />
+                <PrincipleRow title="Ambient over alert"
+                  description="A wall replaces the phone on the counter. Glance, know. No notifications."
+                  IconComp={Television} />
+              </div>
             </Reveal>
           </div>
         </div>
@@ -2056,10 +1631,11 @@ export default function VeriflowCase() {
       {/* ══════════════════════════════════════════════════════════════
           04 · CLINIC FLOW
       ══════════════════════════════════════════════════════════════ */}
-      <section className="blueprint-grid-subtle" style={{ padding: SECTION_PAD }}>
+      <section className="vf-liquid-section" style={{ padding: SECTION_PAD }}>
+        <LiquidBackground c0="eff5fe" c1="dae8fc" c2="aecaf0" fade={0} lift={0.28} grain={0.055} speed={0.1} />
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <Reveal>
-            <SectionHeader num="04" phase="Flow · Clinic" title="A. Association. Tube becomes a trackable object." />
+            <SectionHeader num="04" phase="Flow · Clinic" title="Association. Tube becomes a trackable object." />
           </Reveal>
 
           <Reveal>
@@ -2070,7 +1646,6 @@ export default function VeriflowCase() {
 
           <Reveal delay={0.05}>
             <TabletStepper
-              figPrefix="FIG. 04"
               steps={[
                 { src: "/veriflow/start-scanning.png",         label: "Choose action",       note: "The clinic tablet's home. Two big targets for gloved hands." },
                 { src: "/veriflow/sample-association.png",     label: "Scan both QRs",       note: "The tube's barcode and the sample ID bind in a single paired scan." },
@@ -2088,7 +1663,7 @@ export default function VeriflowCase() {
       <section style={{ padding: SECTION_PAD, background: "var(--bg-primary)" }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <Reveal>
-            <SectionHeader num="05" phase="Flow · Courier" title="B. Pickup, validation, override." />
+            <SectionHeader num="05" phase="Flow · Courier" title="Pickup, validation, override." />
           </Reveal>
 
           <Reveal>
@@ -2099,7 +1674,6 @@ export default function VeriflowCase() {
 
           <Reveal delay={0.05}>
             <TabletStepper
-              figPrefix="FIG. 05"
               steps={[
                 { src: "/veriflow/home-pin.png",                         label: "PIN in",             note: "Four digits on the tablet. Every action is attributable to a named courier." },
                 { src: "/veriflow/pickup-dashboard.png",                 label: "Ready coolers",      note: "Cards of cooler batches waiting for pickup. One tap claims it." },
@@ -2142,7 +1716,8 @@ export default function VeriflowCase() {
       {/* ══════════════════════════════════════════════════════════════
           06 · BEYOND THE KIOSKS (web, laptop mockups)
       ══════════════════════════════════════════════════════════════ */}
-      <section className="blueprint-grid-subtle" style={{ padding: SECTION_PAD }}>
+      <section className="vf-liquid-section" style={{ padding: SECTION_PAD }}>
+        <LiquidBackground c0="eff5fe" c1="dae8fc" c2="aecaf0" fade={0} lift={0.28} grain={0.055} speed={0.1} />
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <Reveal>
             <SectionHeader num="06" phase="Beyond the kiosks" title="The kiosks handle the handoff. Everything else lives on the web." />
@@ -2157,7 +1732,6 @@ export default function VeriflowCase() {
           <div style={{ display: "flex", flexDirection: "column", gap: "clamp(80px, 10vw, 140px)" }}>
             <Reveal>
               <LaptopSpread
-                fig="W.01"
                 kicker="Operations overview"
                 title="Everything, one glance."
                 body="Compliance rate, active hospitals, RFID reader health, ticket load. Built for a lab director who opens one tab each morning to know whether today is going to be quiet."
@@ -2166,7 +1740,6 @@ export default function VeriflowCase() {
             </Reveal>
             <Reveal>
               <LaptopSpread
-                fig="W.02"
                 kicker="Sample registry"
                 title="Every sample, addressable."
                 body="Filterable by clinic, status, and date. The evidence layer for audits, morning standups, and any call that starts with 'where is sample #...'."
@@ -2176,7 +1749,6 @@ export default function VeriflowCase() {
             </Reveal>
             <Reveal>
               <LaptopSpread
-                fig="W.03"
                 kicker="Single sample"
                 title="One sample, whole journey."
                 body="A small isometric map of Clinic → Courier → Lab, paired with a vertical timeline of status changes. One glance beats four columns of text when a cooler is overdue."
@@ -2192,27 +1764,8 @@ export default function VeriflowCase() {
       ══════════════════════════════════════════════════════════════ */}
       <section style={{ padding: SECTION_PAD, background: vf.ink, color: "#fff" }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
-          <div style={{ marginBottom: "clamp(40px, 5vw, 64px)" }}>
-            <div style={{
-              display: "flex", alignItems: "baseline", gap: 18, flexWrap: "wrap", paddingBottom: 14,
-            }}>
-              <span style={{ ...mono, fontSize: 14, color: vf.light, letterSpacing: "0.22em", fontWeight: 700 }}>
-                07 <span style={{ color: "rgba(255,255,255,0.4)", fontWeight: 400 }}>/ {TOTAL_SECTIONS}</span>
-              </span>
-              <span style={{ ...mono, fontSize: 14, color: "#fff", letterSpacing: "0.22em", fontWeight: 600 }}>
-                AMBIENT · THE WALL
-              </span>
-              <div style={{ flex: 1, height: 1, background: vf.light, opacity: 0.4, minWidth: 40 }} />
-            </div>
-            <h2 style={{
-              fontFamily: serif, fontWeight: 700,
-              fontSize: "clamp(30px, 3.6vw, 44px)",
-              letterSpacing: "-0.025em", lineHeight: 1.2,
-              color: "#fff", marginTop: 20, maxWidth: 860,
-            }}>
-              Readable across the room.
-            </h2>
-          </div>
+          <SectionHeader num="07" phase="Ambient · the wall" title="Readable across the room." accent="#fff" titleColor="#fff" />
+
 
           <div className="tv-grid" style={{
             display: "grid", gridTemplateColumns: "minmax(0, 1.15fr) minmax(260px, 1fr)",
@@ -2258,66 +1811,83 @@ export default function VeriflowCase() {
       {/* ══════════════════════════════════════════════════════════════
           08 · ROLE + TAKEAWAYS
       ══════════════════════════════════════════════════════════════ */}
-      <section className="blueprint-grid-subtle" style={{ padding: SECTION_PAD }}>
+      <section className="vf-liquid-section" style={{ padding: SECTION_PAD }}>
+        <LiquidBackground c0="eff5fe" c1="dae8fc" c2="aecaf0" fade={0} lift={0.28} grain={0.055} speed={0.1} />
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <Reveal><SectionHeader num="08" phase="Role · Takeaways" title="What I owned, and what this project taught me." /></Reveal>
 
-          {/* ── BEFORE → AFTER: wide contrast band ─────────────────── */}
+          {/* Impact - before → after, distilled */}
           <Reveal>
-            <BeforeAfterBand />
+            <div className="vf-impact">
+              <div className="vf-impact-cell">
+                <span className="vf-impact-tag" style={{ color: "var(--text-muted)" }}>Before</span>
+                <span className="vf-impact-line" style={{ color: "var(--text-secondary)" }}>A guessed journey.</span>
+              </div>
+              <span aria-hidden className="vf-impact-arrow"><ArrowRight size={24} color={vf.primary} weight="bold" /></span>
+              <div className="vf-impact-cell">
+                <span className="vf-impact-tag" style={{ color: vf.primary }}>After</span>
+                <span className="vf-impact-line" style={{ color: "var(--text-primary)" }}>A recorded trip.</span>
+              </div>
+            </div>
           </Reveal>
 
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-16 items-start" style={{ marginTop: "clamp(56px, 7vw, 88px)" }}>
-            {/* ── LEFT: what I owned (interactive rows) ───────────── */}
-            <Reveal className="md:col-span-6">
-              <div style={{ ...mono, fontSize: 13, color: vf.primary, letterSpacing: "0.22em", fontWeight: 700, marginBottom: 20, display: "flex", alignItems: "center", gap: 10 }}>
-                <span aria-hidden style={{ width: 3, height: 14, background: vf.primary, display: "inline-block" }} />
-                ROLE · PRODUCT DESIGNER
+          <div className="vf-close-grid">
+            <Reveal>
+              <div>
+                <div className="vf-close-eyebrow">Role · Product Designer</div>
+                <ol className="vf-owned">
+                  {[
+                    "Mapped the clinic, courier, and lab chain across three roles.",
+                    "Designed the tablet kiosks: association, pickup, validation, override.",
+                    "Shipped the web control tower for admin, ops, and sample journeys.",
+                    "Laid out the TV wall: six-foot type, colour as status.",
+                    "Authored the validation-failure and 30-second override pattern.",
+                  ].map((line, j) => (
+                    <li key={j} className="vf-owned-row">
+                      <span className="vf-owned-num">{String(j + 1).padStart(2, "0")}</span>
+                      <span className="vf-owned-text">{line}</span>
+                    </li>
+                  ))}
+                </ol>
               </div>
-              <h3 style={{
-                fontFamily: serif, fontWeight: 700, fontSize: "clamp(26px, 2.8vw, 34px)",
-                letterSpacing: "-0.02em", lineHeight: 1.25, color: "var(--text-primary)",
-                marginBottom: 28, maxWidth: 520,
-              }}>
-                I owned the chain, end to end.
-              </h3>
-              <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-                {[
-                  "Mapped the clinic, courier, lab chain across three roles.",
-                  "Designed the tablet kiosks: association, pickup, validation, override.",
-                  "Shipped the web control tower (admin, ops, sample journey).",
-                  "Laid out the TV wall: six-foot type, color as status encoding.",
-                  "Authored the validation-failure plus 30-second override pattern.",
-                ].map((line, j) => (
-                  <RoleRow key={j} index={j} line={line} />
-                ))}
-              </ul>
             </Reveal>
-
-            {/* ── RIGHT: what I learned (flip cards) ──────────────── */}
-            <Reveal className="md:col-span-6" delay={0.1}>
-              <div style={{ ...mono, fontSize: 13, color: vf.primary, letterSpacing: "0.22em", fontWeight: 700, marginBottom: 20, display: "flex", alignItems: "center", gap: 10 }}>
-                <span aria-hidden style={{ width: 3, height: 14, background: vf.primary, display: "inline-block" }} />
-                THREE LESSONS
-              </div>
-              <h3 style={{
-                fontFamily: serif, fontWeight: 700, fontSize: "clamp(26px, 2.8vw, 34px)",
-                letterSpacing: "-0.02em", lineHeight: 1.25, color: "var(--text-primary)",
-                marginBottom: 28, maxWidth: 520,
-              }}>
-                What this project taught me.
-              </h3>
-              <div style={{ display: "grid", gap: 14 }}>
-                {[
-                  { title: "Constraint is the feature.", body: "In healthcare, flexibility is a liability. A linear flow is the design, not a limitation of it.", tag: "DESIGN POSTURE" },
-                  { title: "Error pathways are the product.", body: "The work lives in the moment a cooler is off and someone still needs to move. Happy paths are a warm-up.", tag: "FAILURE DESIGN" },
-                  { title: "Ambient information is calm information.", body: "A wall you glance at beats a phone that nags. Make the status findable, not pushable.", tag: "CALM UX" },
-                ].map((x, i) => (
-                  <LessonCard key={i} index={i} {...x} />
-                ))}
+            <Reveal delay={0.1}>
+              <div>
+                <div className="vf-close-eyebrow">What I learned</div>
+                <div className="vf-lessons">
+                  {[
+                    { title: "Constraint is the feature.", body: "In healthcare, flexibility is a liability. A linear flow is the design, not a limitation of it." },
+                    { title: "Error pathways are the product.", body: "The work lives in the moment a cooler is off and someone still needs to move. Happy paths are a warm-up." },
+                    { title: "Ambient information is calm information.", body: "A wall you glance at beats a phone that nags. Make the status findable, not pushable." },
+                  ].map((x, i) => (
+                    <div key={i} className="vf-lesson">
+                      <h4 className="vf-lesson-title">{x.title}</h4>
+                      <p className="vf-lesson-body">{x.body}</p>
+                    </div>
+                  ))}
+                </div>
               </div>
             </Reveal>
           </div>
+
+          <style>{`
+            .vf-impact { display: flex; align-items: center; gap: clamp(22px, 3.4vw, 48px); flex-wrap: wrap; margin: clamp(2px, 0.8vw, 10px) 0 clamp(52px, 7vw, 88px); }
+            .vf-impact-cell { display: flex; flex-direction: column; gap: 9px; }
+            .vf-impact-tag { font-family: 'Manrope', monospace; text-transform: uppercase; font-size: 12px; letter-spacing: 0.2em; font-weight: 700; }
+            .vf-impact-line { font-family: ${serif}; font-weight: 700; font-size: clamp(25px, 2.7vw, 36px); letter-spacing: -0.02em; line-height: 1.12; }
+            .vf-impact-arrow { display: inline-flex; }
+            .vf-close-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(40px, 6vw, 96px); align-items: start; }
+            .vf-close-eyebrow { font-family: 'Manrope', monospace; text-transform: uppercase; font-size: 13px; color: ${vf.primary}; letter-spacing: 0.2em; font-weight: 700; margin-bottom: clamp(22px, 3vw, 34px); }
+            .vf-owned { list-style: none; padding: 0; margin: 0; }
+            .vf-owned-row { display: grid; grid-template-columns: 34px 1fr; gap: 16px; align-items: baseline; padding: clamp(15px, 1.7vw, 20px) 0; border-top: 1px solid ${vf.subtle}; }
+            .vf-owned-row:last-child { border-bottom: 1px solid ${vf.subtle}; }
+            .vf-owned-num { font-family: 'Manrope', monospace; font-size: 13px; font-weight: 700; color: ${vf.muted}; letter-spacing: 0.14em; }
+            .vf-owned-text { font-family: ${sans}; font-size: 18px; line-height: 1.55; color: var(--text-primary); }
+            .vf-lessons { display: flex; flex-direction: column; gap: clamp(28px, 3.2vw, 40px); }
+            .vf-lesson-title { font-family: ${serif}; font-weight: 700; font-size: clamp(21px, 2vw, 25px); letter-spacing: -0.015em; line-height: 1.2; color: var(--text-primary); margin: 0 0 11px; }
+            .vf-lesson-body { font-family: ${sans}; font-size: 18px; line-height: 1.6; color: var(--text-secondary); margin: 0; }
+            @media (max-width: 860px) { .vf-close-grid { grid-template-columns: 1fr; gap: clamp(44px, 9vw, 60px); } }
+          `}</style>
         </div>
       </section>
 
@@ -2326,10 +1896,12 @@ export default function VeriflowCase() {
       ══════════════════════════════════════════════════════════════ */}
       <section style={{ padding: "clamp(64px, 8vw, 104px) 0", borderTop: "1px solid var(--border)" }}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
-          <div style={{ display: "flex", alignItems: "baseline", gap: 14, marginBottom: 36 }}>
-            <span aria-hidden style={{ width: 3, height: 14, background: vf.primary }} />
-            <p style={{ ...mono, fontSize: 12, color: vf.primary, letterSpacing: "0.22em", fontWeight: 600 }}>
-              More case studies
+          <div style={{ marginBottom: "clamp(36px, 4.5vw, 56px)", maxWidth: 560 }}>
+            <h2 style={{ fontFamily: serif, fontWeight: 700, fontSize: "clamp(30px, 3.4vw, 44px)", letterSpacing: "-0.03em", lineHeight: 1.12, color: "var(--text-primary)", margin: 0 }}>
+              Keep exploring<span style={{ color: vf.primary, fontStyle: "italic" }}>.</span>
+            </h2>
+            <p style={{ fontFamily: sans, fontSize: "clamp(17px, 1.4vw, 19px)", color: "var(--text-secondary)", lineHeight: 1.6, margin: "16px 0 0" }}>
+              Two more case studies, start to finish.
             </p>
           </div>
 
