@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 const navLinks = [
   { label: "Work", href: "/" },
   { label: "About", href: "/about" },
-  { label: "Resume", href: "https://drive.google.com/file/d/1WbopauZ0xwmOnLNuEb1XZX5TmzxQCA6K/view?usp=sharing", external: true },
+  { label: "Resume", href: "https://drive.google.com/file/d/1pEj1aNMwB63MY4fGcF0qG9LOwt-UVK6s/view?usp=sharing", external: true },
   { label: "LinkedIn", href: "https://www.linkedin.com/in/niharika-pundlik-63a9a1288/", external: true },
 ];
 

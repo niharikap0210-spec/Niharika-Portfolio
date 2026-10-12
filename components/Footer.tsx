@@ -2,7 +2,7 @@ import Link from "next/link";
 
 const socialLinks = [
   { label: "LinkedIn", href: "https://www.linkedin.com/in/niharika-pundlik-63a9a1288/" },
-  { label: "Resume", href: "https://drive.google.com/file/d/1WbopauZ0xwmOnLNuEb1XZX5TmzxQCA6K/view?usp=sharing" },
+  { label: "Resume", href: "https://drive.google.com/file/d/1pEj1aNMwB63MY4fGcF0qG9LOwt-UVK6s/view?usp=sharing" },
 ];
 
 export default function Footer() {

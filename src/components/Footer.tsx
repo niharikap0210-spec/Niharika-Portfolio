@@ -13,7 +13,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 const EMAIL = "mailto:niharikap0210@gmail.com";
 const LINKEDIN = "https://www.linkedin.com/in/niharika-pundlik-63a9a1288/";
-const RESUME = "https://drive.google.com/file/d/1wXRAfG2Os-Kbt9WtR1W2ET0YSC9HRoaf/view?usp=sharing";
+const RESUME = "https://drive.google.com/file/d/1pEj1aNMwB63MY4fGcF0qG9LOwt-UVK6s/view?usp=sharing";
 
 const pages = [
   { label: "Home", href: "/" },
